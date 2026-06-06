@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
+import '../theme/hos_theme_extension.dart';
 import '../theme/hos_typography.dart';
 
 /// 统一输入框组件。
@@ -100,6 +101,7 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
   @override
   Widget build(BuildContext context) {
     final borderRadius = BorderRadius.circular(SHOAppSpacing.buttonRadius);
+    final theme = context.shoTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,18 +134,18 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
             errorText: _hasError ? widget.error : null,
             counterText: widget.maxLength != null ? '' : null,
             filled: true,
-            fillColor: SHOAppColors.surfaceMuted,
+            fillColor: theme.surfaceMuted,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: SHOAppSpacing.lg,
               vertical: SHOAppSpacing.md,
             ),
             border: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: const BorderSide(color: SHOAppColors.border),
+              borderSide: BorderSide(color: theme.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: const BorderSide(color: SHOAppColors.border),
+              borderSide: BorderSide(color: theme.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: borderRadius,

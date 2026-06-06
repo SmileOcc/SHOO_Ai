@@ -8,6 +8,7 @@ abstract final class SHOAppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';
+  static const settingsAbout = '/settings/about';
   static const messages = '/messages';
   static const search = '/search';
   static const checkout = '/checkout';

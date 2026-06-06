@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
 import '../../../core/feedback/hos_toast.dart';
-import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/utils/hos_debouncer.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_paged_scroll_view.dart';
@@ -77,6 +77,9 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
+        backgroundColor: context.shoSurface,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         title: Padding(
           padding: const EdgeInsets.only(right: SHOAppSpacing.pagePadding),
           child: SHOAppTextField(
@@ -164,6 +167,7 @@ class _SHOSearchSuggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = context.shoTheme;
 
     return ListView(
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -199,7 +203,8 @@ class _SHOSearchSuggestions extends StatelessWidget {
                         (keyword) => ActionChip(
                           avatar: const Icon(Icons.history, size: 16),
                           label: Text(keyword),
-                          backgroundColor: SHOAppColors.surface,
+                          backgroundColor: context.shoSurface,
+                          side: BorderSide(color: theme.border),
                           onPressed: () => onKeywordTap(keyword),
                         ),
                       )
@@ -233,7 +238,8 @@ class _SHOSearchSuggestions extends StatelessWidget {
                 .map(
                   (keyword) => ActionChip(
                     label: Text(keyword),
-                    backgroundColor: SHOAppColors.surfaceMuted,
+                    backgroundColor: theme.surfaceMuted,
+                    side: BorderSide(color: theme.border),
                     onPressed: () => onKeywordTap(keyword),
                   ),
                 )

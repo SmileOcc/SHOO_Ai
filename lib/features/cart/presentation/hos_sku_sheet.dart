@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../app/router/hos_routes.dart';
 import '../../../core/constants/hos_constants.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
@@ -12,16 +14,27 @@ import '../../../l10n/app_localizations.dart';
 import '../../product/domain/hos_product_detail.dart';
 import 'hos_cart_controller.dart';
 
-/// SKU 选择底部面板：尺码 + 数量 + 加入购物袋。
+enum SHOSkuSheetIntent { addToCart, buyNow }
+
+/// SKU 选择底部面板：尺码 + 数量 + 加入购物袋 / 立即购买。
 class SHOSkuSheet extends ConsumerStatefulWidget {
-  const SHOSkuSheet({super.key, required this.product});
+  const SHOSkuSheet({
+    super.key,
+    required this.product,
+    this.intent = SHOSkuSheetIntent.addToCart,
+  });
 
   final SHOProductDetail product;
+  final SHOSkuSheetIntent intent;
 
-  static Future<void> show(BuildContext context, SHOProductDetail product) {
+  static Future<void> show(
+    BuildContext context,
+    SHOProductDetail product, {
+    SHOSkuSheetIntent intent = SHOSkuSheetIntent.addToCart,
+  }) {
     return SHOAppDialog.showBottomSheet(
       context,
-      child: SHOSkuSheet(product: product),
+      child: SHOSkuSheet(product: product, intent: intent),
     );
   }
 
@@ -39,7 +52,7 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
     _size = SHOAppConstants.defaultSkuSizes[1];
   }
 
-  Future<void> _addToCart() async {
+  Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
     final variantLabel = '${l10n.skuSizeLabel} $_size';
     await ref.read(cartProvider.notifier).addProduct(
@@ -47,12 +60,17 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
           variantLabel: variantLabel,
           quantity: _quantity,
         );
-    if (mounted) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.productAddToBagSuccess)),
-      );
+    if (!mounted) return;
+    Navigator.pop(context);
+
+    if (widget.intent == SHOSkuSheetIntent.buyNow) {
+      context.push(SHOAppRoutes.checkout);
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.productAddToBagSuccess)),
+    );
   }
 
   @override
@@ -151,9 +169,14 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
           ),
           const SizedBox(height: SHOAppSpacing.xl),
           SHOAppButton(
-            label: l10n.productAddToBag,
+            label: widget.intent == SHOSkuSheetIntent.buyNow
+                ? l10n.productBuyNow
+                : l10n.productAddToBag,
+            variant: widget.intent == SHOSkuSheetIntent.buyNow
+                ? SHOAppButtonVariant.accent
+                : SHOAppButtonVariant.primary,
             isExpanded: true,
-            onPressed: _addToCart,
+            onPressed: _submit,
           ),
         ],
       ),

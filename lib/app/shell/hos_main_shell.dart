@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/debug/core/hos_debug_tap_detector.dart';
 import '../../core/navigation/hos_tab_badge_provider.dart';
-import '../../core/theme/hos_colors.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';
 import '../../features/home/presentation/hos_home_page.dart';
 import '../../l10n/app_localizations.dart';
@@ -56,24 +55,31 @@ class SHOMainShell extends ConsumerWidget {
     final current = navigationShell.currentIndex;
     final showSearch = _tabs[current].showSearchBar;
 
+    final isProfileTab = current == 3;
+
     return Scaffold(
-      backgroundColor: SHOAppColors.background,
-      appBar: SHODebugTapAppBar(
-        appBar: showSearch
-            ? AppBar(
-                toolbarHeight: 52,
-                title: SHOHomeSearchBar(
-                  onSearchTap: () => context.push(SHOAppRoutes.search),
-                ),
-                titleSpacing: 0,
-              )
-            : AppBar(
-                title: Text(
-                  _tabLabel(l10n, current),
-                  style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 0.5),
-                ),
-              ),
-      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: isProfileTab
+          ? null
+          : SHODebugTapAppBar(
+              appBar: showSearch
+                  ? AppBar(
+                      toolbarHeight: 52,
+                      title: SHOHomeSearchBar(
+                        onSearchTap: () => context.push(SHOAppRoutes.search),
+                      ),
+                      titleSpacing: 0,
+                    )
+                  : AppBar(
+                      title: Text(
+                        _tabLabel(l10n, current),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+            ),
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: current,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_paged_scroll_view.dart';
 import '../../../l10n/app_localizations.dart';
@@ -102,7 +103,8 @@ class _SHOReviewsPageState extends ConsumerState<SHOReviewsPage> {
                       .loadMore(widget.productId),
                   isLoadingMore: paged.isLoadingMore,
                   hasMore: paged.hasMore,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, __) =>
+                      Divider(height: 1, color: context.shoTheme.divider),
                   itemBuilder: (context, index) =>
                       SHOReviewTile(review: paged.items[index]),
                 ),

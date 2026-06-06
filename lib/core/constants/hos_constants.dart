@@ -2,6 +2,9 @@ abstract final class SHOAppConstants {
   static const String appName = 'SHOO';
   static const String appVersion = '0.4.0';
 
+  static const String privacyPolicyUrl = 'https://shoo.app/privacy';
+  static const String termsOfServiceUrl = 'https://shoo.app/terms';
+
   /// 本地 Mock API Server（`server/` 目录，`npm run dev`）
   static const String defaultLocalApiBaseUrl = 'http://127.0.0.1:3847/api/v1';
 

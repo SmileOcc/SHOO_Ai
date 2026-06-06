@@ -236,6 +236,60 @@ abstract class AppLocalizations {
   /// **'中文'**
   String get settingsLanguageZh;
 
+  /// No description provided for @settingsGroupGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get settingsGroupGeneral;
+
+  /// No description provided for @settingsGroupAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsGroupAccount;
+
+  /// No description provided for @settingsGroupAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsGroupAbout;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About Us'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'SHOO is a fashion e-commerce app for young shoppers — curated trends, fast checkout, and reliable after-sales support.'**
+  String get settingsAboutDescription;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get settingsTermsOfService;
+
+  /// No description provided for @settingsCompanyName.
+  ///
+  /// In en, this message translates to:
+  /// **'SHOO COMMERCE TECHNOLOGY PTE. LTD.'**
+  String get settingsCompanyName;
+
+  /// No description provided for @ordersAllShort.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get ordersAllShort;
+
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:
@@ -1177,6 +1231,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add to Bag'**
   String get productAddToBag;
+
+  /// No description provided for @productBuyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Now'**
+  String get productBuyNow;
+
+  /// No description provided for @productCustomerService.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get productCustomerService;
+
+  /// No description provided for @productCartShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get productCartShort;
+
+  /// No description provided for @productMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get productMore;
+
+  /// No description provided for @productCustomerServiceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer support coming soon (mock)'**
+  String get productCustomerServiceHint;
 
   /// No description provided for @productAddToBagHint.
   ///

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router/hos_routes.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/utils/hos_price_formatter.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_network_image.dart';
@@ -123,9 +124,9 @@ class _SHOOrderCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(SHOAppSpacing.lg),
         decoration: BoxDecoration(
-          color: SHOAppColors.surface,
+          color: context.shoSurface,
           borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-          border: Border.all(color: SHOAppColors.border),
+          border: Border.all(color: context.shoTheme.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

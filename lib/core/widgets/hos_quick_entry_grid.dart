@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/category/domain/hos_category.dart';
-import '../theme/hos_colors.dart';
+import '../theme/hos_theme_extension.dart';
 import '../theme/hos_spacing.dart';
 
 class SHOQuickEntryGrid extends StatelessWidget {
@@ -40,7 +40,7 @@ class SHOQuickEntryGrid extends StatelessWidget {
                   height: 44,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: SHOAppColors.surfaceMuted,
+                    color: context.shoTheme.surfaceMuted,
                     borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                   ),
                   child: Text(item.icon, style: const TextStyle(fontSize: 20)),
@@ -52,7 +52,7 @@ class SHOQuickEntryGrid extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 10,
-                        color: SHOAppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                 ),
               ],

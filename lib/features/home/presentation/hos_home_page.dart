@@ -6,6 +6,7 @@ import '../../../app/router/hos_routes.dart';
 
 import '../../../core/marketing/hos_popup_orchestrator.dart';
 import '../../../core/theme/hos_colors.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_async_value_ui.dart';
@@ -177,12 +178,16 @@ class SHOHomeSearchBar extends StatelessWidget {
                 height: 34,
                 padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
                 decoration: BoxDecoration(
-                  color: SHOAppColors.surfaceMuted,
+                  color: context.shoTheme.surfaceMuted,
                   borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.search, size: 18, color: SHOAppColors.textMuted),
+                    Icon(
+                      Icons.search,
+                      size: 18,
+                      color: context.shoTheme.textMuted,
+                    ),
                     const SizedBox(width: SHOAppSpacing.sm),
                     Text(
                       l10n.searchHint,

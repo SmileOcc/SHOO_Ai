@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
 import '../../../core/pricing/hos_price_calculator.dart';
-import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/utils/hos_price_formatter.dart';
 import '../../../core/widgets/hos_button.dart';
 import '../../../core/widgets/hos_loading_state.dart';
@@ -155,8 +155,9 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(SHOAppSpacing.lg),
               decoration: BoxDecoration(
-                color: SHOAppColors.surfaceMuted,
+                color: context.shoTheme.surfaceMuted,
                 borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                border: Border.all(color: context.shoTheme.border),
               ),
               child: addressAsync.when(
                 loading: () => Text(l10n.loading),
@@ -201,8 +202,9 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(SHOAppSpacing.lg),
               decoration: BoxDecoration(
-                color: SHOAppColors.surfaceMuted,
+                color: context.shoTheme.surfaceMuted,
                 borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                border: Border.all(color: context.shoTheme.border),
               ),
               child: Row(
                 children: [

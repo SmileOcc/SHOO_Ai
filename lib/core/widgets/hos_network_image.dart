@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../storage/hos_image_cache_manager.dart';
 import '../theme/hos_colors.dart';
+import '../theme/hos_theme_extension.dart';
 import 'hos_skeleton_box.dart';
 
 class SHOAppNetworkImage extends StatelessWidget {
@@ -21,6 +22,8 @@ class SHOAppNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final muted = context.shoTheme.surfaceMuted;
+
     final image = CachedNetworkImage(
       imageUrl: url,
       cacheManager: SHOImageCacheManager.instance,
@@ -40,8 +43,8 @@ class SHOAppNetworkImage extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    SHOAppColors.surfaceMuted.withValues(alpha: 0.3),
-                    SHOAppColors.surfaceMuted.withValues(alpha: 0.6),
+                    muted.withValues(alpha: 0.3),
+                    muted.withValues(alpha: 0.6),
                   ],
                 ),
               ),
@@ -58,8 +61,8 @@ class SHOAppNetworkImage extends StatelessWidget {
             ),
         ],
       ),
-      errorWidget: (_, __, ___) => const ColoredBox(
-        color: SHOAppColors.surfaceMuted,
+      errorWidget: (_, __, ___) => ColoredBox(
+        color: muted,
         child: Center(
           child: Icon(Icons.image_not_supported_outlined, color: SHOAppColors.textMuted, size: 24),
         ),

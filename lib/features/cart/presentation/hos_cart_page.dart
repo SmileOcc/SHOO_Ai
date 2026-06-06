@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router/hos_routes.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/theme/hos_colors.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_price_formatter.dart';
 import '../../../core/widgets/hos_button.dart';
@@ -105,6 +106,9 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
             separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
             itemBuilder: (context, index) => _SHOCartLineTile(
               item: cart.items[index],
+              onOpenProduct: () => context.push(
+                SHOAppRoutes.product(cart.items[index].productId),
+              ),
               onToggle: () => ref
                   .read(cartProvider.notifier)
                   .toggleSelected(cart.items[index].id),
@@ -152,6 +156,7 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
 class _SHOCartLineTile extends StatelessWidget {
   const _SHOCartLineTile({
     required this.item,
+    required this.onOpenProduct,
     required this.onToggle,
     required this.onIncrement,
     required this.onDecrement,
@@ -159,6 +164,7 @@ class _SHOCartLineTile extends StatelessWidget {
   });
 
   final SHOCartItem item;
+  final VoidCallback onOpenProduct;
   final VoidCallback onToggle;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
@@ -178,49 +184,76 @@ class _SHOCartLineTile extends StatelessWidget {
             onChanged: item.unavailable ? null : (_) => onToggle(),
             activeColor: SHOAppColors.primary,
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            child: SizedBox(
-              width: 72,
-              height: 72,
-              child: SHOAppNetworkImage(
-                url: item.imageUrl,
-                fit: BoxFit.cover,
-                memCacheWidth: 144,
-              ),
-            ),
-          ),
-          const SizedBox(width: SHOAppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  item.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 13),
+                InkWell(
+                  onTap: onOpenProduct,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(SHOAppSpacing.cardRadius),
+                        child: SizedBox(
+                          width: 72,
+                          height: 72,
+                          child: SHOAppNetworkImage(
+                            url: item.imageUrl,
+                            fit: BoxFit.cover,
+                            memCacheWidth: 144,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: SHOAppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontSize: 13),
+                            ),
+                            if (item.unavailable)
+                              Text(
+                                l10n.cartItemUnavailable,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: SHOAppColors.error),
+                              ),
+                            if (item.priceChanged && !item.unavailable)
+                              Text(
+                                l10n.cartItemPriceUpdated,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: SHOAppColors.warning),
+                              ),
+                            if (item.variantLabel.isNotEmpty) ...[
+                              const SizedBox(height: SHOAppSpacing.xxs),
+                              Text(
+                                item.variantLabel,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                if (item.unavailable)
-                  Text(
-                    l10n.cartItemUnavailable,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: SHOAppColors.error,
-                        ),
-                  ),
-                if (item.priceChanged && !item.unavailable)
-                  Text(
-                    l10n.cartItemPriceUpdated,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: SHOAppColors.warning,
-                        ),
-                  ),
-                if (item.variantLabel.isNotEmpty) ...[
-                  const SizedBox(height: SHOAppSpacing.xxs),
-                  Text(item.variantLabel, style: Theme.of(context).textTheme.bodySmall),
-                ],
                 const SizedBox(height: SHOAppSpacing.sm),
-                Row(
+                Padding(
+                  padding: const EdgeInsets.only(left: 84),
+                  child: Row(
                   children: [
                     Text(
                       priceFormatter.formatCents(item.price),
@@ -242,6 +275,7 @@ class _SHOCartLineTile extends StatelessWidget {
                       icon: const Icon(Icons.add, size: 16),
                     ),
                   ],
+                  ),
                 ),
               ],
             ),
@@ -275,9 +309,9 @@ class _SHOCartFooter extends StatelessWidget {
       top: false,
       child: Container(
         padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        decoration: const BoxDecoration(
-          color: SHOAppColors.surface,
-          border: Border(top: BorderSide(color: SHOAppColors.border)),
+        decoration: BoxDecoration(
+          color: context.shoSurface,
+          border: Border(top: BorderSide(color: context.shoTheme.border)),
         ),
         child: Row(
           children: [

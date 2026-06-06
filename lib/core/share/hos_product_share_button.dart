@@ -25,11 +25,11 @@ class _SHOProductShareButtonState extends ConsumerState<SHOProductShareButton> {
     final link = share.productLink(widget.product.id);
 
     return Stack(
-      clipBehavior: Clip.none,
+      clipBehavior: Clip.hardEdge,
+      alignment: Alignment.center,
       children: [
-        Positioned(
-          left: -2000,
-          top: 0,
+        Offstage(
+          offstage: true,
           child: SHOShareService.offscreenShareCard(
             cardKey: _cardKey,
             product: widget.product,

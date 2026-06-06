@@ -78,6 +78,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsLanguageZh => '中文';
 
   @override
+  String get settingsGroupGeneral => '通用';
+
+  @override
+  String get settingsGroupAccount => '账号';
+
+  @override
+  String get settingsGroupAbout => '关于';
+
+  @override
+  String get settingsAbout => '关于我们';
+
+  @override
+  String get settingsAboutDescription =>
+      'SHOO 是一款面向年轻消费者的时尚电商应用，提供精选潮流商品、快捷结算与贴心售后服务。';
+
+  @override
+  String get settingsPrivacyPolicy => '隐私协议';
+
+  @override
+  String get settingsTermsOfService => '用户服务协议';
+
+  @override
+  String get settingsCompanyName => 'SHOO COMMERCE TECHNOLOGY PTE. LTD.';
+
+  @override
+  String get ordersAllShort => '全部';
+
+  @override
   String get loginTitle => '登录';
 
   @override
@@ -573,6 +601,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get productAddToBag => '加入购物袋';
+
+  @override
+  String get productBuyNow => '立即购买';
+
+  @override
+  String get productCustomerService => '客服';
+
+  @override
+  String get productCartShort => '购物车';
+
+  @override
+  String get productMore => '更多';
+
+  @override
+  String get productCustomerServiceHint => '客服功能即将上线（Mock）';
 
   @override
   String get productAddToBagHint => '已加入购物袋（Mock）';

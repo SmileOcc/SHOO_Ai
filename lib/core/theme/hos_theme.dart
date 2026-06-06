@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'hos_colors.dart';
 import 'hos_spacing.dart';
+import 'hos_theme_extension.dart';
 import 'hos_typography.dart';
 
 /// 应用主题管理：亮色 + 暗色，配合 [ThemeMode.system] 自动切换。
@@ -111,6 +112,7 @@ abstract final class SHOAppTheme {
         selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
+      extensions: const [SHOAppThemeColors.light],
     );
   }
 
@@ -176,12 +178,13 @@ abstract final class SHOAppTheme {
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF1A1A1A),
         selectedItemColor: Color(0xFFE8E8E8),
-        unselectedItemColor: SHOAppColors.textMuted,
+        unselectedItemColor: Color(0xFF888888),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
         selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
+      extensions: const [SHOAppThemeColors.dark],
     );
   }
 }

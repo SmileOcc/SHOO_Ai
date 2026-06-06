@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
+import '../theme/hos_theme_extension.dart';
 import '../theme/hos_spacing.dart';
 import '../theme/hos_typography.dart';
 import 'hos_button.dart';
@@ -46,7 +46,7 @@ abstract final class SHOAppDialog {
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SHOAppColors.surface,
+        backgroundColor: ctx.shoSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
         ),
@@ -82,7 +82,7 @@ abstract final class SHOAppDialog {
     return showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SHOAppColors.surface,
+        backgroundColor: ctx.shoSurface,
         title: Text(title, style: SHOAppTypography.textTheme.titleLarge),
         content: message != null
             ? Text(message, style: SHOAppTypography.textTheme.bodyMedium)
@@ -108,7 +108,7 @@ abstract final class SHOAppDialog {
       context: context,
       isDismissible: isDismissible,
       isScrollControlled: isScrollControlled,
-      backgroundColor: SHOAppColors.surface,
+      backgroundColor: context.shoSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(SHOAppSpacing.xl)),
       ),

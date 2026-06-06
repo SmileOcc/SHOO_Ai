@@ -67,14 +67,14 @@ class SHOShareService {
     await Share.share(message != null ? '$message\n$link' : link);
   }
 
-  /// 离屏渲染分享卡片并返回用于截图的 [GlobalKey]。
+  /// 离屏渲染分享卡片（固定尺寸，避免 [OverflowBox] 在 Stack 中引发布局异常）。
   static Widget offscreenShareCard({
     required GlobalKey cardKey,
     required SHOProductDetail product,
   }) {
-    return OverflowBox(
-      alignment: Alignment.topLeft,
-      maxWidth: 320,
+    return SizedBox(
+      width: 320,
+      height: 420,
       child: RepaintBoundary(
         key: cardKey,
         child: SHOShareProductCard(product: product),

@@ -78,6 +78,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageZh => '中文';
 
   @override
+  String get settingsGroupGeneral => 'General';
+
+  @override
+  String get settingsGroupAccount => 'Account';
+
+  @override
+  String get settingsGroupAbout => 'About';
+
+  @override
+  String get settingsAbout => 'About Us';
+
+  @override
+  String get settingsAboutDescription =>
+      'SHOO is a fashion e-commerce app for young shoppers — curated trends, fast checkout, and reliable after-sales support.';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get settingsTermsOfService => 'Terms of Service';
+
+  @override
+  String get settingsCompanyName => 'SHOO COMMERCE TECHNOLOGY PTE. LTD.';
+
+  @override
+  String get ordersAllShort => 'All';
+
+  @override
   String get loginTitle => 'Sign In';
 
   @override
@@ -588,6 +616,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get productAddToBag => 'Add to Bag';
+
+  @override
+  String get productBuyNow => 'Buy Now';
+
+  @override
+  String get productCustomerService => 'Support';
+
+  @override
+  String get productCartShort => 'Cart';
+
+  @override
+  String get productMore => 'More';
+
+  @override
+  String get productCustomerServiceHint =>
+      'Customer support coming soon (mock)';
 
   @override
   String get productAddToBagHint => 'Added to bag (mock)';

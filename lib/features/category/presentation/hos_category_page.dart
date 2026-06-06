@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/hos_colors.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_async_value_ui.dart';
 import '../../../core/widgets/hos_error_view.dart';
@@ -34,6 +34,9 @@ class SHOCategoryPage extends ConsumerWidget {
           return SHOEmptyState(title: AppLocalizations.of(context).noData);
         }
 
+        final theme = context.shoTheme;
+        final onSurface = Theme.of(context).colorScheme.onSurface;
+
         return Row(
           children: [
             SizedBox(
@@ -48,13 +51,13 @@ class SHOCategoryPage extends ConsumerWidget {
                       horizontal: SHOAppSpacing.md,
                       vertical: SHOAppSpacing.lg,
                     ),
-                    color: selected ? SHOAppColors.surface : SHOAppColors.surfaceMuted,
+                    color: selected ? context.shoSurface : theme.surfaceMuted,
                     child: Text(
                       item.name,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                        color: selected ? SHOAppColors.textPrimary : SHOAppColors.textSecondary,
+                        color: selected ? onSurface : theme.textSecondary,
                       ),
                     ),
                   );
@@ -82,7 +85,7 @@ class SHOCategoryPage extends ConsumerWidget {
                         height: 56,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: SHOAppColors.surfaceMuted,
+                          color: theme.surfaceMuted,
                           borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                         ),
                         child: Text(item.icon, style: const TextStyle(fontSize: 24)),
@@ -92,7 +95,7 @@ class SHOCategoryPage extends ConsumerWidget {
                         item.name,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 11,
-                              color: SHOAppColors.textPrimary,
+                              color: onSurface,
                             ),
                       ),
                     ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
+import '../theme/hos_theme_extension.dart';
 
 /// 骨架屏基础块，带渐变闪烁动画。
 ///
@@ -45,6 +45,8 @@ class _SHOSkeletonBoxState extends State<SHOSkeletonBox>
 
   @override
   Widget build(BuildContext context) {
+    final skeleton = context.shoTheme;
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -57,13 +59,13 @@ class _SHOSkeletonBoxState extends State<SHOSkeletonBox>
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                SHOAppColors.skeletonBase,
+                skeleton.skeletonBase,
                 Color.lerp(
-                  SHOAppColors.skeletonBase,
-                  SHOAppColors.skeletonHighlight,
+                  skeleton.skeletonBase,
+                  skeleton.skeletonHighlight,
                   _controller.value,
                 )!,
-                SHOAppColors.skeletonBase,
+                skeleton.skeletonBase,
               ],
             ),
           ),

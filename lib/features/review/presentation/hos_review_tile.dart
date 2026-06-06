@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/widgets/hos_network_image.dart';
 import '../domain/hos_review.dart';
 
@@ -24,7 +25,7 @@ class SHOReviewTile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: SHOAppColors.surfaceMuted,
+                backgroundColor: context.shoTheme.surfaceMuted,
                 backgroundImage: review.userAvatarUrl.isNotEmpty
                     ? NetworkImage(review.userAvatarUrl)
                     : null,
@@ -74,7 +75,7 @@ class SHOReviewTile extends StatelessWidget {
             Text(
               review.variantLabel,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: SHOAppColors.textMuted,
+                    color: context.shoTheme.textMuted,
                   ),
             ),
           ],
