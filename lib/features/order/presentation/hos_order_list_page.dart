@@ -14,28 +14,70 @@ import 'hos_order_controller.dart';
 import 'hos_order_status_label.dart';
 
 class SHOOrderListPage extends ConsumerWidget {
-  const SHOOrderListPage({super.key});
+  const SHOOrderListPage({super.key, this.statusFilter});
+
+  /// Query param `status`: pending_payment | shipped | delivered
+  final String? statusFilter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final ordersAsync = ref.watch(ordersProvider);
+    final filter = _parseStatusFilter(statusFilter);
+    final title = _titleForFilter(l10n, filter);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.ordersTitle)),
+      appBar: AppBar(title: Text(title)),
       body: ordersAsync.whenLoadingState(
         onRetry: () => ref.invalidate(ordersProvider),
-        empty: (orders) => orders.isEmpty,
-        data: (orders) => ListView.separated(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          itemCount: orders.length,
-          separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
-          itemBuilder: (context, index) =>
-              _SHOOrderCard(order: orders[index]),
-        ),
+        empty: (orders) => _filterOrders(orders, filter).isEmpty,
+        data: (orders) {
+          final filtered = _filterOrders(orders, filter);
+          if (filtered.isEmpty) {
+            return SHOAppLoadingState(
+              state: SHOLoadingState.empty,
+              message: l10n.ordersEmpty,
+              emptyIcon: Icons.receipt_long_outlined,
+            );
+          }
+          return ListView.separated(
+            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+            itemCount: filtered.length,
+            separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
+            itemBuilder: (context, index) =>
+                _SHOOrderCard(order: filtered[index]),
+          );
+        },
       ),
     );
   }
+}
+
+SHOOrderStatus? _parseStatusFilter(String? raw) {
+  if (raw == null || raw.isEmpty) return null;
+  return switch (raw) {
+    'pending_payment' => SHOOrderStatus.pendingPayment,
+    'shipped' => SHOOrderStatus.shipped,
+    'delivered' => SHOOrderStatus.delivered,
+    _ => null,
+  };
+}
+
+List<SHOOrderSummary> _filterOrders(
+  List<SHOOrderSummary> orders,
+  SHOOrderStatus? status,
+) {
+  if (status == null) return orders;
+  return orders.where((o) => o.status == status).toList();
+}
+
+String _titleForFilter(AppLocalizations l10n, SHOOrderStatus? status) {
+  return switch (status) {
+    SHOOrderStatus.pendingPayment => l10n.ordersPendingPayment,
+    SHOOrderStatus.shipped => l10n.ordersShipped,
+    SHOOrderStatus.delivered => l10n.ordersReviews,
+    _ => l10n.ordersTitle,
+  };
 }
 
 class _SHOOrderCard extends StatelessWidget {

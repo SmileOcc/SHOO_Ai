@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/debug/hos_debug_activity_config_page.dart';
-import '../../core/debug/hos_debug_panel_page.dart';
-import '../../core/debug/hos_debug_update_config_page.dart';
+import '../../core/debug/modules/activity/hos_debug_activity_config_page.dart';
+import '../../core/debug/modules/native/hos_debug_native_example_page.dart';
+import '../../core/debug/modules/native/hos_debug_native_examples.dart';
+import '../../core/debug/modules/native/hos_debug_native_hub_page.dart';
+import '../../core/debug/modules/update/hos_debug_update_config_page.dart';
+import '../../core/debug/panel/hos_debug_panel_page.dart';
+import '../../features/address/presentation/hos_address_list_page.dart';
+import '../../features/after_sale/presentation/hos_after_sale_apply_page.dart';
+import '../../features/after_sale/presentation/hos_after_sale_list_page.dart';
+import '../../features/coupon/presentation/hos_coupon_list_page.dart';
 import '../../features/auth/presentation/hos_login_page.dart';
 import '../../features/auth/presentation/hos_register_page.dart';
 import '../../features/cart/presentation/hos_cart_page.dart';
+import '../../features/checkout/presentation/hos_checkout_page.dart';
+import '../../features/checkout/presentation/hos_payment_page.dart';
 import '../../features/category/presentation/hos_category_page.dart';
 import '../../features/home/presentation/hos_home_page.dart';
 import '../../features/message/presentation/hos_message_page.dart';
@@ -78,9 +87,50 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: SHOAppRoutes.checkout,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SHOCheckoutPage(),
+      ),
+      GoRoute(
+        path: '/payment/:orderId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => SHOPaymentPage(
+          orderId: state.pathParameters['orderId']!,
+        ),
+      ),
+      GoRoute(
+        path: SHOAppRoutes.coupons,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => SHOCouponListPage(
+          selectMode: state.uri.queryParameters['select'] == '1',
+        ),
+      ),
+      GoRoute(
+        path: SHOAppRoutes.afterSales,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SHOAfterSaleListPage(),
+        routes: [
+          GoRoute(
+            path: 'apply/:orderId',
+            builder: (context, state) => SHOAfterSaleApplyPage(
+              orderId: state.pathParameters['orderId']!,
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: SHOAppRoutes.addresses,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => SHOAddressListPage(
+          selectMode: state.uri.queryParameters['select'] == '1',
+        ),
+      ),
+      GoRoute(
         path: SHOAppRoutes.orders,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const SHOOrderListPage(),
+        builder: (context, state) => SHOOrderListPage(
+          statusFilter: state.uri.queryParameters['status'],
+        ),
         routes: [
           GoRoute(
             path: ':id',
@@ -125,6 +175,22 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'activity',
             builder: (context, state) => const SHODebugActivityConfigPage(),
+          ),
+          GoRoute(
+            path: 'native',
+            builder: (context, state) => const SHODebugNativeHubPage(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (context, state) {
+                  final example = findNativeDebugExample(state.pathParameters['id']!);
+                  if (example == null) {
+                    return const SHODebugNativeHubPage();
+                  }
+                  return SHODebugNativeExamplePage(example: example);
+                },
+              ),
+            ],
           ),
         ],
       ),

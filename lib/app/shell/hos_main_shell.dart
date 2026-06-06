@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/debug/hos_debug_tap_detector.dart';
+import '../../core/debug/core/hos_debug_tap_detector.dart';
 import '../../core/navigation/hos_tab_badge_provider.dart';
 import '../../core/theme/hos_colors.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';

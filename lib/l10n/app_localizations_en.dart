@@ -114,7 +114,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String versionLabel(String appName, String version) {
-    return '$appName v$version — Phase 2';
+    return '$appName v$version — Phase 3';
   }
 
   @override
@@ -358,6 +358,91 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugActivityMaxDaily => 'Max shows per day';
 
   @override
+  String get debugNativeEntry => 'Native Bridge';
+
+  @override
+  String get debugNativeEntryHint =>
+      'Test MethodChannel, EventChannel, MessageChannel';
+
+  @override
+  String get debugNativeHubTitle => 'Native Bridge Debug';
+
+  @override
+  String get debugNativeHubHint =>
+      'Tap an example to invoke native code and inspect the response.';
+
+  @override
+  String get debugNativeCategoryMethod => 'MethodChannel — one-shot calls';
+
+  @override
+  String get debugNativeCategoryMessage =>
+      'BasicMessageChannel — bidirectional';
+
+  @override
+  String get debugNativeCategoryEvent => 'EventChannel — continuous stream';
+
+  @override
+  String get debugNativeExamplePingTitle => 'Ping';
+
+  @override
+  String get debugNativeExamplePingDesc =>
+      'Call native `ping` and verify connectivity.';
+
+  @override
+  String get debugNativeExampleVersionTitle => 'Platform version';
+
+  @override
+  String get debugNativeExampleVersionDesc =>
+      'Read OS version string from native side.';
+
+  @override
+  String get debugNativeExampleMessageTitle => 'Message echo';
+
+  @override
+  String get debugNativeExampleMessageDesc =>
+      'Send a map via BasicMessageChannel and get echo reply.';
+
+  @override
+  String get debugNativeExampleEventTitle => 'Tick stream';
+
+  @override
+  String get debugNativeExampleEventDesc =>
+      'Subscribe to native EventChannel; receive tick every second.';
+
+  @override
+  String get debugNativeRun => 'Run';
+
+  @override
+  String get debugNativeStartStream => 'Start stream';
+
+  @override
+  String get debugNativeStopStream => 'Stop';
+
+  @override
+  String get debugNativeResult => 'Result';
+
+  @override
+  String get debugNativeStreamLog => 'Stream log';
+
+  @override
+  String get debugNativeWaiting => 'Running…';
+
+  @override
+  String get debugNativeNoResult => 'Tap Run to invoke native code';
+
+  @override
+  String get debugNativeStreamIdle => 'Tap Start stream to listen';
+
+  @override
+  String get debugNativeInputHint => 'Message payload';
+
+  @override
+  String get debugNativeCopy => 'Copy';
+
+  @override
+  String get debugNativeCopied => 'Copied to clipboard';
+
+  @override
   String get debugSaveConfig => 'Save config';
 
   @override
@@ -410,6 +495,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ordersReviews => 'Reviews';
+
+  @override
+  String get ordersEmpty => 'No orders in this category';
 
   @override
   String orderMoreItems(int count) {
@@ -469,4 +557,172 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logisticsCopied => 'Tracking number copied';
+
+  @override
+  String get productAddToBagSuccess => 'Added to your bag';
+
+  @override
+  String get skuSelectSize => 'Select size';
+
+  @override
+  String get skuSizeLabel => 'Size';
+
+  @override
+  String get skuQuantity => 'Quantity';
+
+  @override
+  String get cartSelectAll => 'Select all';
+
+  @override
+  String get cartTotalLabel => 'Subtotal';
+
+  @override
+  String cartCheckout(int count) {
+    return 'Checkout ($count)';
+  }
+
+  @override
+  String get cartRemoveTitle => 'Remove item?';
+
+  @override
+  String get cartRemoveMessage => 'This item will be removed from your bag.';
+
+  @override
+  String get cartRemoveConfirm => 'Remove';
+
+  @override
+  String get checkoutTitle => 'Checkout';
+
+  @override
+  String get checkoutAddressSection => 'Shipping address';
+
+  @override
+  String get checkoutAddAddress => 'Tap to select an address';
+
+  @override
+  String get checkoutNoAddress => 'Please select a shipping address';
+
+  @override
+  String get checkoutPlaceOrder => 'Place Order';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentMockTitle => 'Mock Checkout';
+
+  @override
+  String get paymentMockHint =>
+      'This is a simulated payment. No real charge will be made.';
+
+  @override
+  String get paymentPayNow => 'Pay Now';
+
+  @override
+  String get paymentSuccessTitle => 'Payment Successful';
+
+  @override
+  String get paymentSuccessMessage =>
+      'Your order has been placed. Thank you for shopping!';
+
+  @override
+  String get paymentViewOrder => 'View Order';
+
+  @override
+  String get paymentContinueShopping => 'Continue Shopping';
+
+  @override
+  String get addressListTitle => 'Addresses';
+
+  @override
+  String get addressSelectTitle => 'Select Address';
+
+  @override
+  String get profileAddresses => 'Addresses';
+
+  @override
+  String get profileCoupons => 'Coupons';
+
+  @override
+  String get profileAfterSales => 'After-Sales';
+
+  @override
+  String get checkoutCouponSection => 'Coupon';
+
+  @override
+  String get couponSelectHint => 'Select a coupon';
+
+  @override
+  String get couponListTitle => 'My Coupons';
+
+  @override
+  String get couponSelectTitle => 'Select Coupon';
+
+  @override
+  String get couponNone => 'No coupon';
+
+  @override
+  String couponMinOrder(String amount) {
+    return 'Min. order $amount';
+  }
+
+  @override
+  String get couponNotEligible => 'Does not meet minimum order';
+
+  @override
+  String get priceSubtotal => 'Subtotal';
+
+  @override
+  String get priceDiscount => 'Coupon discount';
+
+  @override
+  String get priceShipping => 'Shipping';
+
+  @override
+  String get afterSaleListTitle => 'After-Sales';
+
+  @override
+  String get afterSaleApplyTitle => 'Apply for After-Sales';
+
+  @override
+  String get afterSaleApplyAction => 'Apply for After-Sales';
+
+  @override
+  String get afterSaleTypeLabel => 'Request type';
+
+  @override
+  String get afterSaleTypeRefund => 'Refund only';
+
+  @override
+  String get afterSaleTypeReturnRefund => 'Return & refund';
+
+  @override
+  String get afterSaleReasonLabel => 'Reason';
+
+  @override
+  String get afterSaleReasonHint => 'Describe the issue...';
+
+  @override
+  String get afterSaleReasonRequired => 'Please enter a reason';
+
+  @override
+  String get afterSaleSubmit => 'Submit Request';
+
+  @override
+  String get afterSaleSubmitSuccess => 'After-sales request submitted';
+
+  @override
+  String get afterSaleGoOrders => 'View Orders';
+
+  @override
+  String get afterSaleStatusPending => 'Pending review';
+
+  @override
+  String get afterSaleStatusApproved => 'Approved';
+
+  @override
+  String get afterSaleStatusRejected => 'Rejected';
+
+  @override
+  String get afterSaleStatusCompleted => 'Completed';
 }

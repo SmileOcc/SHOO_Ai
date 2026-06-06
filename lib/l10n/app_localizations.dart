@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @versionLabel.
   ///
   /// In en, this message translates to:
-  /// **'{appName} v{version} — Phase 2'**
+  /// **'{appName} v{version} — Phase 3'**
   String versionLabel(String appName, String version);
 
   /// No description provided for @validationRequired.
@@ -764,6 +764,162 @@ abstract class AppLocalizations {
   /// **'Max shows per day'**
   String get debugActivityMaxDaily;
 
+  /// No description provided for @debugNativeEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Native Bridge'**
+  String get debugNativeEntry;
+
+  /// No description provided for @debugNativeEntryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Test MethodChannel, EventChannel, MessageChannel'**
+  String get debugNativeEntryHint;
+
+  /// No description provided for @debugNativeHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Native Bridge Debug'**
+  String get debugNativeHubTitle;
+
+  /// No description provided for @debugNativeHubHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an example to invoke native code and inspect the response.'**
+  String get debugNativeHubHint;
+
+  /// No description provided for @debugNativeCategoryMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'MethodChannel — one-shot calls'**
+  String get debugNativeCategoryMethod;
+
+  /// No description provided for @debugNativeCategoryMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'BasicMessageChannel — bidirectional'**
+  String get debugNativeCategoryMessage;
+
+  /// No description provided for @debugNativeCategoryEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'EventChannel — continuous stream'**
+  String get debugNativeCategoryEvent;
+
+  /// No description provided for @debugNativeExamplePingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ping'**
+  String get debugNativeExamplePingTitle;
+
+  /// No description provided for @debugNativeExamplePingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Call native `ping` and verify connectivity.'**
+  String get debugNativeExamplePingDesc;
+
+  /// No description provided for @debugNativeExampleVersionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform version'**
+  String get debugNativeExampleVersionTitle;
+
+  /// No description provided for @debugNativeExampleVersionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Read OS version string from native side.'**
+  String get debugNativeExampleVersionDesc;
+
+  /// No description provided for @debugNativeExampleMessageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Message echo'**
+  String get debugNativeExampleMessageTitle;
+
+  /// No description provided for @debugNativeExampleMessageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a map via BasicMessageChannel and get echo reply.'**
+  String get debugNativeExampleMessageDesc;
+
+  /// No description provided for @debugNativeExampleEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick stream'**
+  String get debugNativeExampleEventTitle;
+
+  /// No description provided for @debugNativeExampleEventDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to native EventChannel; receive tick every second.'**
+  String get debugNativeExampleEventDesc;
+
+  /// No description provided for @debugNativeRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get debugNativeRun;
+
+  /// No description provided for @debugNativeStartStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Start stream'**
+  String get debugNativeStartStream;
+
+  /// No description provided for @debugNativeStopStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get debugNativeStopStream;
+
+  /// No description provided for @debugNativeResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get debugNativeResult;
+
+  /// No description provided for @debugNativeStreamLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream log'**
+  String get debugNativeStreamLog;
+
+  /// No description provided for @debugNativeWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Running…'**
+  String get debugNativeWaiting;
+
+  /// No description provided for @debugNativeNoResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Run to invoke native code'**
+  String get debugNativeNoResult;
+
+  /// No description provided for @debugNativeStreamIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Start stream to listen'**
+  String get debugNativeStreamIdle;
+
+  /// No description provided for @debugNativeInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Message payload'**
+  String get debugNativeInputHint;
+
+  /// No description provided for @debugNativeCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get debugNativeCopy;
+
+  /// No description provided for @debugNativeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get debugNativeCopied;
+
   /// No description provided for @debugSaveConfig.
   ///
   /// In en, this message translates to:
@@ -871,6 +1027,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews'**
   String get ordersReviews;
+
+  /// No description provided for @ordersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders in this category'**
+  String get ordersEmpty;
 
   /// No description provided for @orderMoreItems.
   ///
@@ -985,6 +1147,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tracking number copied'**
   String get logisticsCopied;
+
+  /// No description provided for @productAddToBagSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your bag'**
+  String get productAddToBagSuccess;
+
+  /// No description provided for @skuSelectSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Select size'**
+  String get skuSelectSize;
+
+  /// No description provided for @skuSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get skuSizeLabel;
+
+  /// No description provided for @skuQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get skuQuantity;
+
+  /// No description provided for @cartSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get cartSelectAll;
+
+  /// No description provided for @cartTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get cartTotalLabel;
+
+  /// No description provided for @cartCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout ({count})'**
+  String cartCheckout(int count);
+
+  /// No description provided for @cartRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove item?'**
+  String get cartRemoveTitle;
+
+  /// No description provided for @cartRemoveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This item will be removed from your bag.'**
+  String get cartRemoveMessage;
+
+  /// No description provided for @cartRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get cartRemoveConfirm;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkoutTitle;
+
+  /// No description provided for @checkoutAddressSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping address'**
+  String get checkoutAddressSection;
+
+  /// No description provided for @checkoutAddAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select an address'**
+  String get checkoutAddAddress;
+
+  /// No description provided for @checkoutNoAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a shipping address'**
+  String get checkoutNoAddress;
+
+  /// No description provided for @checkoutPlaceOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Place Order'**
+  String get checkoutPlaceOrder;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentMockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock Checkout'**
+  String get paymentMockTitle;
+
+  /// No description provided for @paymentMockHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a simulated payment. No real charge will be made.'**
+  String get paymentMockHint;
+
+  /// No description provided for @paymentPayNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Now'**
+  String get paymentPayNow;
+
+  /// No description provided for @paymentSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful'**
+  String get paymentSuccessTitle;
+
+  /// No description provided for @paymentSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been placed. Thank you for shopping!'**
+  String get paymentSuccessMessage;
+
+  /// No description provided for @paymentViewOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'View Order'**
+  String get paymentViewOrder;
+
+  /// No description provided for @paymentContinueShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Shopping'**
+  String get paymentContinueShopping;
+
+  /// No description provided for @addressListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Addresses'**
+  String get addressListTitle;
+
+  /// No description provided for @addressSelectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Address'**
+  String get addressSelectTitle;
+
+  /// No description provided for @profileAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Addresses'**
+  String get profileAddresses;
+
+  /// No description provided for @profileCoupons.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get profileCoupons;
+
+  /// No description provided for @profileAfterSales.
+  ///
+  /// In en, this message translates to:
+  /// **'After-Sales'**
+  String get profileAfterSales;
+
+  /// No description provided for @checkoutCouponSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon'**
+  String get checkoutCouponSection;
+
+  /// No description provided for @couponSelectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a coupon'**
+  String get couponSelectHint;
+
+  /// No description provided for @couponListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Coupons'**
+  String get couponListTitle;
+
+  /// No description provided for @couponSelectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Coupon'**
+  String get couponSelectTitle;
+
+  /// No description provided for @couponNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No coupon'**
+  String get couponNone;
+
+  /// No description provided for @couponMinOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Min. order {amount}'**
+  String couponMinOrder(String amount);
+
+  /// No description provided for @couponNotEligible.
+  ///
+  /// In en, this message translates to:
+  /// **'Does not meet minimum order'**
+  String get couponNotEligible;
+
+  /// No description provided for @priceSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get priceSubtotal;
+
+  /// No description provided for @priceDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon discount'**
+  String get priceDiscount;
+
+  /// No description provided for @priceShipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get priceShipping;
+
+  /// No description provided for @afterSaleListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'After-Sales'**
+  String get afterSaleListTitle;
+
+  /// No description provided for @afterSaleApplyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply for After-Sales'**
+  String get afterSaleApplyTitle;
+
+  /// No description provided for @afterSaleApplyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply for After-Sales'**
+  String get afterSaleApplyAction;
+
+  /// No description provided for @afterSaleTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Request type'**
+  String get afterSaleTypeLabel;
+
+  /// No description provided for @afterSaleTypeRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund only'**
+  String get afterSaleTypeRefund;
+
+  /// No description provided for @afterSaleTypeReturnRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Return & refund'**
+  String get afterSaleTypeReturnRefund;
+
+  /// No description provided for @afterSaleReasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get afterSaleReasonLabel;
+
+  /// No description provided for @afterSaleReasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the issue...'**
+  String get afterSaleReasonHint;
+
+  /// No description provided for @afterSaleReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a reason'**
+  String get afterSaleReasonRequired;
+
+  /// No description provided for @afterSaleSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Request'**
+  String get afterSaleSubmit;
+
+  /// No description provided for @afterSaleSubmitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'After-sales request submitted'**
+  String get afterSaleSubmitSuccess;
+
+  /// No description provided for @afterSaleGoOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'View Orders'**
+  String get afterSaleGoOrders;
+
+  /// No description provided for @afterSaleStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending review'**
+  String get afterSaleStatusPending;
+
+  /// No description provided for @afterSaleStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get afterSaleStatusApproved;
+
+  /// No description provided for @afterSaleStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get afterSaleStatusRejected;
+
+  /// No description provided for @afterSaleStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get afterSaleStatusCompleted;
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../platform/hos_native_bridge_exception.dart';
 import 'hos_exception.dart';
 
 SHOAppException mapDioError(DioException error) {
@@ -25,6 +26,13 @@ SHOAppException mapDioError(DioException error) {
     case DioExceptionType.unknown:
       return SHOUnknownException(error.message ?? 'Unexpected network error');
   }
+}
+
+SHOAppException mapNativeBridgeError(SHONativeBridgeException error) {
+  if (error.isNotImplemented) {
+    return SHOUnknownException('Feature not available on this platform');
+  }
+  return SHOUnknownException(error.message);
 }
 
 String userFacingMessage(SHOAppException error) {

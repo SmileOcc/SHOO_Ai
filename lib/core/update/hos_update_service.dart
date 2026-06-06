@@ -4,8 +4,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config/hos_config.dart';
-import '../debug/hos_debug_config_repository.dart';
-import '../debug/models/hos_debug_update_config.dart';
+import '../debug/core/hos_debug_config_repository.dart';
+import '../debug/modules/update/hos_debug_update_config.dart';
 import '../network/hos_dio_client.dart';
 import '../logging/hos_logger.dart';
 import '../utils/hos_version_utils.dart';

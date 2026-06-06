@@ -1,6 +1,6 @@
 # SHOO
 
-Shein-style Flutter e-commerce app — **Phase 0.5 complete**.
+Shein-style Flutter e-commerce app — **Phase 3 complete** (v0.4.0).
 
 ## Confirmed decisions
 
@@ -65,40 +65,47 @@ flutter run \
   --dart-define=API_BASE_URL=https://api.example.com/v1
 ```
 
-## Phase 0.5 deliverables
+## Phase 1 deliverables (v0.3)
 
-- [x] **AppConfig** — 环境 / Mock 开关 / API BaseURL
-- [x] **freezed** — Product / Banner / Category / AuthUser / PageResult
-- [x] **Session** — SecureStorage Token + 登录/恢复/登出 + 路由守卫
-- [x] **Mock 扩展** — 注册表 + auth / product detail / cart 接口
-- [x] **Validators** — 表单校验器（required / phone / email / minLength）
-- [x] **暗黑模式** — ThemeMode 持久化 + 设置页切换
-- [x] **国际化** — 中英 ARB + Locale 持久化 + 设置页切换
-- [x] **离线检测** — 顶部离线提示条
-- [x] **AppLogger** — 分级日志
+- [x] **购物车 CRUD** — 本地持久化 + Tab 角标 + 全选/结算 (`features/cart/`)
+- [x] **SKU 面板** — 尺码 + 数量 + 加入购物袋
+- [x] **地址管理** — Mock 地址列表 + 默认选中 (`features/address/`)
+- [x] **确认订单** — 地址 + 商品清单 + 提交 (`/checkout`)
+- [x] **模拟支付** — 2s 模拟收银台 + 支付成功页 (`/payment/:id`)
+- [x] **Mock 接口** — `POST /orders`、`POST /orders/{id}/pay`、`GET /addresses`
+
+## Phase 2 (v0.2)
+
+搜索、商品详情、评价、订单列表、物流轨迹 — 见 `features/search|product|review|order/`
+
+## Phase 3 deliverables (v0.4)
+
+- [x] **价格计算 Domain** — `SHOPriceCalculator` 纯函数 + 单元测试 (`core/pricing/`)
+- [x] **优惠券** — 列表 + 结算页选券抵扣 (`features/coupon/`, `/coupons`)
+- [x] **售后** — 申请 + 列表 + 订单详情入口 (`features/after_sale/`, `/after-sales`)
+- [x] **价格明细 UI** — `HOSPriceBreakdown` 组件 (`core/widgets/hos_price_breakdown.dart`)
+- [x] **Mock 接口** — `GET /coupons`、`GET|POST /after-sales`
 
 ## Project structure
 
 ```
 lib/
 ├── app/              # 入口、路由、Tab Shell
-├── core/
-│   ├── config/       # AppConfig / AppEnvironment
-│   ├── l10n/         # Locale Provider
-│   ├── logging/      # AppLogger
-│   ├── models/       # PageResult (freezed)
-│   ├── network/      # Dio / Mock / Auth / Connectivity
-│   ├── storage/      # Local + Secure Storage
-│   ├── theme/        # Token + ThemeMode Provider
-│   ├── utils/        # Validators / Debouncer / Price
-│   └── widgets/      # 组件库
+├── core/             # config / network / theme / widgets ...
 ├── features/
-│   ├── auth/         # 登录 / Session
-│   ├── home/
-│   ├── category/
-│   ├── cart/
-│   └── profile/      # 个人中心 + Settings
-└── l10n/             # app_en.arb / app_zh.arb
+│   ├── auth/ home/ category/ cart/ profile/
+│   ├── pricing/      # Phase 3 (core/pricing)
+│   ├── search/       # Phase 2
+│   ├── product/      # Phase 2
+│   ├── review/       # Phase 2
+│   ├── order/        # Phase 2
+│   ├── checkout/     # Phase 1
+│   ├── address/      # Phase 1
+│   ├── coupon/       # Phase 3
+│   └── after_sale/   # Phase 3
+├── l10n/
+server/               # 本地 Mock API（可选）
+assets/mock/          # Mock JSON 单一数据源
 ```
 
 ## Docs
@@ -114,7 +121,6 @@ lib/
 
 项目内副本：`.cursor/skills/flutter-ecommerce-scaffold/`
 
-## Next: Phase 1
+## Next: Phase 4
 
-MVP 交易闭环 — 商品详情、购物车、确认订单、模拟支付、订单列表。
-# SHOO_Ai
+Sentry 监控、真支付接入、CI 打包、AppConfig flavors。

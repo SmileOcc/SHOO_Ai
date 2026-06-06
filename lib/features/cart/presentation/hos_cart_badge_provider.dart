@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Placeholder cart badge count — wired in Phase 1.
-final cartBadgeCountProvider = StateProvider<int>((ref) => 0);
+import 'hos_cart_controller.dart';
+
+final cartBadgeCountProvider = Provider<int>((ref) {
+  return ref.watch(cartProvider).itemCount;
+});

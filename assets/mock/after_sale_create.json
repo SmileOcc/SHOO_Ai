@@ -1,0 +1,14 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "id": "as-new",
+    "orderId": "o1",
+    "orderNo": "SH20260528001",
+    "type": "refund",
+    "status": "pending",
+    "reason": "Customer request",
+    "createdAt": "2026-06-06 14:00",
+    "productTitle": "Ribbed Knit Crop Top"
+  }
+}

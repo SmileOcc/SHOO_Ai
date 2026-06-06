@@ -2,7 +2,7 @@
 name: new-project
 description: >-
   Scaffolds a production-ready Flutter e-commerce app from the SHOO reference
-  (Phase 0 + 0.5 + Phase 2: search, reviews, logistics). Use when bootstrapping
+  (Phase 0 + 0.5 + Phase 1–3: cart, search, coupons, after-sales). Use when bootstrapping
   a new Flutter e-commerce project, copying SHOO infrastructure, 一键搭建基建,
   new_project skill, or setting up Clean Architecture + Riverpod + go_router + Mock API.
 ---
@@ -28,14 +28,16 @@ description: >-
 | 技术方案 | [docs/Flutter电商项目基建技术方案.md](../../docs/Flutter电商项目基建技术方案.md) |
 | 参考实现 | 本仓库 `lib/` + `assets/mock/` |
 
-## 当前 SHOO 基建范围（v0.2）
+## 当前 SHOO 基建范围（v0.4）
 
 | 阶段 | 内容 |
 |------|------|
 | Phase 0 | 四 Tab + Shein 风格 Token + 17+ 组件 + Mock 首页 |
 | Phase 0.5 | AppConfig / Session / MockRouteRegistry / i18n / 暗黑 / 离线条 |
+| Phase 1 | 购物车 CRUD、SKU 面板、结算、模拟支付、地址 |
 | Phase 2 | 搜索、商品详情、评价、订单列表、物流轨迹 |
-| 未含 | Phase 1 购物车结算、Phase 3 优惠券售后 |
+| Phase 3 | 优惠券、售后、价格计算 Domain |
+| 未含 | Phase 4 Sentry / 真支付 / CI flavors |
 
 ## 验收
 

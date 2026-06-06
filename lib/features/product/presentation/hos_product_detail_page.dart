@@ -14,6 +14,7 @@ import '../../../core/widgets/hos_promo_tag.dart';
 import '../../../core/widgets/hos_skeleton_box.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../home/domain/hos_banner.dart';
+import '../../cart/presentation/hos_sku_sheet.dart';
 import '../../review/presentation/hos_review_controller.dart';
 import '../../review/presentation/hos_review_tile.dart';
 import 'hos_product_controller.dart';
@@ -155,11 +156,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                   child: SHOAppButton(
                     label: l10n.productAddToBag,
                     isExpanded: true,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.productAddToBagHint)),
-                      );
-                    },
+                    onPressed: () => SHOSkuSheet.show(context, detail),
                   ),
                 ),
               ),

@@ -7,6 +7,7 @@ import '../../../core/utils/hos_async_value_ui.dart';
 import '../../../core/widgets/hos_error_view.dart';
 import '../../../core/widgets/hos_empty_state.dart';
 import '../../../core/widgets/hos_skeleton_box.dart';
+import '../../../l10n/app_localizations.dart';
 import 'hos_category_controller.dart';
 
 class SHOCategoryPage extends ConsumerWidget {
@@ -30,7 +31,7 @@ class SHOCategoryPage extends ConsumerWidget {
       ),
       data: (categories) {
         if (categories.isEmpty) {
-          return const SHOEmptyState(title: 'No categories yet');
+          return SHOEmptyState(title: AppLocalizations.of(context).noData);
         }
 
         return Row(

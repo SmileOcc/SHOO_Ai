@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/hos_config.dart';
 import '../logging/hos_logger.dart';
+import '../storage/hos_image_cache_manager.dart';
 import '../storage/hos_local_storage.dart';
-import '../debug/models/hos_debug_activity_config.dart';
+import '../debug/modules/activity/hos_debug_activity_config.dart';
 import 'hos_activity_popup_service.dart';
 
 const activityPrefetchConfigPrefix = 'activity_prefetch_config_';
@@ -21,7 +21,6 @@ class SHOActivityPrefetchService {
   SHOActivityPrefetchService(this._storage);
 
   final SHOLocalStorage _storage;
-  final _cacheManager = DefaultCacheManager();
 
   Future<void> prefetch(SHOActivityPopup activity) async {
     if (!activity.prefetchEnabled) return;
@@ -32,7 +31,7 @@ class SHOActivityPrefetchService {
     );
 
     try {
-      final file = await _cacheManager.downloadFile(activity.imageUrl);
+      final file = await SHOImageCacheManager.instance.downloadFile(activity.imageUrl);
       await _storage.write('$activityPrefetchImagePrefix${activity.id}', file.file.path);
       SHOAppLogger.info('Activity prefetch ok: ${activity.id}');
     } catch (e) {

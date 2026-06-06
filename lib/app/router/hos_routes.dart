@@ -10,25 +10,40 @@ abstract final class SHOAppRoutes {
   static const settings = '/settings';
   static const messages = '/messages';
   static const search = '/search';
+  static const checkout = '/checkout';
+  static const coupons = '/coupons';
+  static const couponsSelect = '/coupons?select=1';
+  static const afterSales = '/after-sales';
+  static const addresses = '/addresses';
+  static const addressesSelect = '/addresses?select=1';
   static const orders = '/orders';
+
+  static String ordersFiltered(String status) => '/orders?status=$status';
   static const debug = '/debug';
 
   static String product(String id) => '/product/$id';
   static String productReviews(String id) => '/product/$id/reviews';
   static String order(String id) => '/orders/$id';
   static String orderLogistics(String id) => '/orders/$id/logistics';
+  static String payment(String orderId) => '/payment/$orderId';
+  static String afterSaleApply(String orderId) => '/after-sales/apply/$orderId';
   static const debugUpdate = '/debug/update';
   static const debugActivity = '/debug/activity';
+  static const debugNative = '/debug/native';
+
+  static String debugNativeExample(String id) => '/debug/native/$id';
 
   static const debugRoutes = <String>[
     debug,
     debugUpdate,
     debugActivity,
+    debugNative,
   ];
 
   static const protectedRoutes = <String>[
     settings,
     messages,
+    checkout,
   ];
 
   static bool requiresAuth(String location) {

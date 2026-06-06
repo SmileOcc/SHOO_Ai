@@ -10,8 +10,14 @@ import '../../../core/widgets/hos_button.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_network_image.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/hos_order.dart';
 import 'hos_order_controller.dart';
 import 'hos_order_status_label.dart';
+
+bool _canApplyAfterSale(SHOOrderStatus status) =>
+    status == SHOOrderStatus.shipped ||
+    status == SHOOrderStatus.delivered ||
+    status == SHOOrderStatus.paid;
 
 class SHOOrderDetailPage extends ConsumerWidget {
   const SHOOrderDetailPage({super.key, required this.orderId});
@@ -140,6 +146,16 @@ class SHOOrderDetailPage extends ConsumerWidget {
                 isExpanded: true,
                 onPressed: () =>
                     context.push(SHOAppRoutes.orderLogistics(orderId)),
+              ),
+            ],
+            if (_canApplyAfterSale(detail.status)) ...[
+              const SizedBox(height: SHOAppSpacing.md),
+              SHOAppButton(
+                label: l10n.afterSaleApplyAction,
+                isExpanded: true,
+                variant: SHOAppButtonVariant.outline,
+                onPressed: () =>
+                    context.push(SHOAppRoutes.afterSaleApply(orderId)),
               ),
             ],
           ],

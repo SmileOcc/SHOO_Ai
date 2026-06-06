@@ -88,10 +88,14 @@ class SHOProfilePage extends ConsumerWidget {
             l10n.ordersReviews,
           ],
           onItemTap: (item) {
-            if (item == l10n.ordersAll ||
-                item == l10n.ordersPendingPayment ||
-                item == l10n.ordersShipped) {
+            if (item == l10n.ordersAll) {
               context.push(SHOAppRoutes.orders);
+            } else if (item == l10n.ordersPendingPayment) {
+              context.push(SHOAppRoutes.ordersFiltered('pending_payment'));
+            } else if (item == l10n.ordersShipped) {
+              context.push(SHOAppRoutes.ordersFiltered('shipped'));
+            } else if (item == l10n.ordersReviews) {
+              context.push(SHOAppRoutes.ordersFiltered('delivered'));
             }
           },
         ),
@@ -102,13 +106,19 @@ class SHOProfilePage extends ConsumerWidget {
             l10n.profileMessages,
             l10n.profileShareDemo,
             l10n.profileCameraPermission,
-            'Coupons',
-            'Addresses',
-            'Customer Service',
+            l10n.profileCoupons,
+            l10n.profileAddresses,
+            l10n.profileAfterSales,
             l10n.profileSettings,
           ],
           onItemTap: (item) async {
-            if (item == l10n.profileSettings) {
+            if (item == l10n.profileCoupons) {
+              context.push(SHOAppRoutes.coupons);
+            } else if (item == l10n.profileAddresses) {
+              context.push(SHOAppRoutes.addresses);
+            } else if (item == l10n.profileAfterSales) {
+              context.push(SHOAppRoutes.afterSales);
+            } else if (item == l10n.profileSettings) {
               context.push(SHOAppRoutes.settings);
             } else if (item == l10n.profileMessages) {
               context.push(SHOAppRoutes.messages);

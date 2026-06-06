@@ -1,6 +1,6 @@
 abstract final class SHOAppConstants {
   static const String appName = 'SHOO';
-  static const String appVersion = '0.2.0';
+  static const String appVersion = '0.4.0';
 
   /// 本地 Mock API Server（`server/` 目录，`npm run dev`）
   static const String defaultLocalApiBaseUrl = 'http://127.0.0.1:3847/api/v1';
@@ -16,4 +16,8 @@ abstract final class SHOAppConstants {
   static const String themeModeKey = 'theme_mode';
   static const String localeKey = 'locale_code';
   static const String secureTokenKey = 'auth_token';
+  static const String cartStorageKey = 'cart_snapshot';
+  static const String selectedAddressIdKey = 'selected_address_id';
+
+  static const List<String> defaultSkuSizes = ['S', 'M', 'L', 'XL'];
 }

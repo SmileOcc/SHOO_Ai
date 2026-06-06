@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../storage/hos_image_cache_manager.dart';
 import '../theme/hos_colors.dart';
 import 'hos_skeleton_box.dart';
 
@@ -20,6 +21,7 @@ class SHOAppNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final image = CachedNetworkImage(
       imageUrl: url,
+      cacheManager: SHOImageCacheManager.instance,
       fit: fit,
       placeholder: (_, __) => const SHOSkeletonBox(),
       errorWidget: (_, __, ___) => const ColoredBox(

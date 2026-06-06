@@ -114,7 +114,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String versionLabel(String appName, String version) {
-    return '$appName v$version — Phase 2';
+    return '$appName v$version — Phase 3';
   }
 
   @override
@@ -350,6 +350,86 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugActivityMaxDaily => '每日最多展示次数';
 
   @override
+  String get debugNativeEntry => '原生交互调试';
+
+  @override
+  String get debugNativeEntryHint =>
+      '测试 MethodChannel / EventChannel / MessageChannel';
+
+  @override
+  String get debugNativeHubTitle => '原生交互调试';
+
+  @override
+  String get debugNativeHubHint => '点击示例调用原生代码并查看返回结果。';
+
+  @override
+  String get debugNativeCategoryMethod => 'MethodChannel — 单次调用';
+
+  @override
+  String get debugNativeCategoryMessage => 'BasicMessageChannel — 双向通信';
+
+  @override
+  String get debugNativeCategoryEvent => 'EventChannel — 持续事件流';
+
+  @override
+  String get debugNativeExamplePingTitle => 'Ping 连通性';
+
+  @override
+  String get debugNativeExamplePingDesc => '调用原生 `ping` 方法，验证 Channel 是否注册成功。';
+
+  @override
+  String get debugNativeExampleVersionTitle => '系统版本';
+
+  @override
+  String get debugNativeExampleVersionDesc => '从原生侧读取当前操作系统版本号。';
+
+  @override
+  String get debugNativeExampleMessageTitle => '消息回声';
+
+  @override
+  String get debugNativeExampleMessageDesc =>
+      '通过 BasicMessageChannel 发送 Map，原生回传 echo。';
+
+  @override
+  String get debugNativeExampleEventTitle => 'Tick 事件流';
+
+  @override
+  String get debugNativeExampleEventDesc => '订阅 EventChannel，原生每秒推送一次 tick 事件。';
+
+  @override
+  String get debugNativeRun => '执行';
+
+  @override
+  String get debugNativeStartStream => '开始监听';
+
+  @override
+  String get debugNativeStopStream => '停止';
+
+  @override
+  String get debugNativeResult => '执行结果';
+
+  @override
+  String get debugNativeStreamLog => '事件日志';
+
+  @override
+  String get debugNativeWaiting => '执行中…';
+
+  @override
+  String get debugNativeNoResult => '点击「执行」调用原生代码';
+
+  @override
+  String get debugNativeStreamIdle => '点击「开始监听」订阅事件流';
+
+  @override
+  String get debugNativeInputHint => '消息内容';
+
+  @override
+  String get debugNativeCopy => '复制';
+
+  @override
+  String get debugNativeCopied => '已复制到剪贴板';
+
+  @override
   String get debugSaveConfig => '保存配置';
 
   @override
@@ -402,6 +482,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ordersReviews => '待评价';
+
+  @override
+  String get ordersEmpty => '该分类下暂无订单';
 
   @override
   String orderMoreItems(int count) {
@@ -461,4 +544,170 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get logisticsCopied => '运单号已复制';
+
+  @override
+  String get productAddToBagSuccess => '已加入购物袋';
+
+  @override
+  String get skuSelectSize => '选择尺码';
+
+  @override
+  String get skuSizeLabel => '尺码';
+
+  @override
+  String get skuQuantity => '数量';
+
+  @override
+  String get cartSelectAll => '全选';
+
+  @override
+  String get cartTotalLabel => '小计';
+
+  @override
+  String cartCheckout(int count) {
+    return '结算 ($count)';
+  }
+
+  @override
+  String get cartRemoveTitle => '移除商品？';
+
+  @override
+  String get cartRemoveMessage => '该商品将从购物袋中移除。';
+
+  @override
+  String get cartRemoveConfirm => '移除';
+
+  @override
+  String get checkoutTitle => '确认订单';
+
+  @override
+  String get checkoutAddressSection => '收货地址';
+
+  @override
+  String get checkoutAddAddress => '点击选择收货地址';
+
+  @override
+  String get checkoutNoAddress => '请选择收货地址';
+
+  @override
+  String get checkoutPlaceOrder => '提交订单';
+
+  @override
+  String get paymentTitle => '收银台';
+
+  @override
+  String get paymentMockTitle => '模拟支付';
+
+  @override
+  String get paymentMockHint => '此为模拟支付，不会产生真实扣款。';
+
+  @override
+  String get paymentPayNow => '立即支付';
+
+  @override
+  String get paymentSuccessTitle => '支付成功';
+
+  @override
+  String get paymentSuccessMessage => '订单已提交，感谢购物！';
+
+  @override
+  String get paymentViewOrder => '查看订单';
+
+  @override
+  String get paymentContinueShopping => '继续购物';
+
+  @override
+  String get addressListTitle => '收货地址';
+
+  @override
+  String get addressSelectTitle => '选择地址';
+
+  @override
+  String get profileAddresses => '收货地址';
+
+  @override
+  String get profileCoupons => '优惠券';
+
+  @override
+  String get profileAfterSales => '售后服务';
+
+  @override
+  String get checkoutCouponSection => '优惠券';
+
+  @override
+  String get couponSelectHint => '选择优惠券';
+
+  @override
+  String get couponListTitle => '我的优惠券';
+
+  @override
+  String get couponSelectTitle => '选择优惠券';
+
+  @override
+  String get couponNone => '不使用优惠券';
+
+  @override
+  String couponMinOrder(String amount) {
+    return '满 $amount 可用';
+  }
+
+  @override
+  String get couponNotEligible => '未满足使用门槛';
+
+  @override
+  String get priceSubtotal => '商品小计';
+
+  @override
+  String get priceDiscount => '优惠券抵扣';
+
+  @override
+  String get priceShipping => '运费';
+
+  @override
+  String get afterSaleListTitle => '售后服务';
+
+  @override
+  String get afterSaleApplyTitle => '申请售后';
+
+  @override
+  String get afterSaleApplyAction => '申请售后';
+
+  @override
+  String get afterSaleTypeLabel => '售后类型';
+
+  @override
+  String get afterSaleTypeRefund => '仅退款';
+
+  @override
+  String get afterSaleTypeReturnRefund => '退货退款';
+
+  @override
+  String get afterSaleReasonLabel => '申请原因';
+
+  @override
+  String get afterSaleReasonHint => '请描述问题...';
+
+  @override
+  String get afterSaleReasonRequired => '请填写申请原因';
+
+  @override
+  String get afterSaleSubmit => '提交申请';
+
+  @override
+  String get afterSaleSubmitSuccess => '售后申请已提交';
+
+  @override
+  String get afterSaleGoOrders => '查看订单';
+
+  @override
+  String get afterSaleStatusPending => '审核中';
+
+  @override
+  String get afterSaleStatusApproved => '已通过';
+
+  @override
+  String get afterSaleStatusRejected => '已拒绝';
+
+  @override
+  String get afterSaleStatusCompleted => '已完成';
 }
