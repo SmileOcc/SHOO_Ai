@@ -1,0 +1,19 @@
+{
+  "name": "shoo-mock-api",
+  "version": "1.0.0",
+  "description": "SHOO local mock API server — serves assets/mock JSON over HTTP",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "check": "node scripts/check-routes.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

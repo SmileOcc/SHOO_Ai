@@ -51,5 +51,10 @@
 	<string>SHOO needs photo library access to upload images.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>SHOO uses your location for delivery estimates.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

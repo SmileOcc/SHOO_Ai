@@ -41,7 +41,9 @@ class SHOAppConfig {
     const mockDelayMs = int.fromEnvironment('MOCK_DELAY_MS', defaultValue: 600);
 
     final environment = SHOAppEnvironment.fromString(envRaw);
-    final useMockApi = useMockRaw.toLowerCase() == 'true';
+    final useMockApi = environment.usesLocalServer
+        ? false
+        : useMockRaw.toLowerCase() == 'true';
     final apiBaseUrl = apiBaseUrlRaw.isNotEmpty
         ? apiBaseUrlRaw
         : defaultApiBaseUrl(environment);
@@ -58,6 +60,7 @@ class SHOAppConfig {
 
   static String defaultApiBaseUrl(SHOAppEnvironment env) => switch (env) {
         SHOAppEnvironment.dev => SHOAppConstants.defaultDevApiBaseUrl,
+        SHOAppEnvironment.local => SHOAppConstants.defaultLocalApiBaseUrl,
         SHOAppEnvironment.staging => SHOAppConstants.defaultStagingApiBaseUrl,
         SHOAppEnvironment.prod => SHOAppConstants.defaultProdApiBaseUrl,
       };
@@ -96,7 +99,7 @@ final effectiveConfigProvider = Provider<SHOAppConfig>((ref) {
   return base.copyWith(
     environment: override,
     apiBaseUrl: SHOAppConfig.defaultApiBaseUrl(override),
-    useMockApi: override != SHOAppEnvironment.prod,
+    useMockApi: override != SHOAppEnvironment.prod && !override.usesLocalServer,
     enableNetworkLogging: !override.isProd,
   );
 });
