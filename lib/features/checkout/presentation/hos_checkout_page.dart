@@ -13,8 +13,10 @@ import '../../../core/widgets/hos_network_image.dart';
 import '../../../core/widgets/hos_price_breakdown.dart';
 import '../../../features/auth/presentation/hos_session_provider.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../address/domain/hos_address.dart';
 import '../../address/presentation/hos_address_controller.dart';
 import '../../cart/presentation/hos_cart_controller.dart';
+import '../../coupon/domain/hos_coupon.dart';
 import '../../coupon/presentation/hos_coupon_controller.dart';
 import '../data/hos_checkout_api.dart';
 
@@ -27,6 +29,23 @@ class SHOCheckoutPage extends ConsumerStatefulWidget {
 
 class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
   bool _submitting = false;
+  SHOAddress? _pickedAddress;
+  String? _pickedCouponId;
+
+  Future<void> _pickAddress() async {
+    final result = await context.push<SHOAddress>(SHOAppRoutes.addressesSelect);
+    if (result != null && mounted) {
+      setState(() => _pickedAddress = result);
+    }
+  }
+
+  Future<void> _pickCoupon() async {
+    final result = await context.push<String>(SHOAppRoutes.couponsSelect);
+    if (result == null || !mounted) return;
+    setState(() {
+      _pickedCouponId = result.isEmpty ? null : result;
+    });
+  }
 
   Future<void> _placeOrder() async {
     final l10n = AppLocalizations.of(context);
@@ -36,7 +55,8 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
       return;
     }
 
-    final address = ref.read(selectedAddressProvider).valueOrNull;
+    final address =
+        _pickedAddress ?? ref.read(selectedAddressProvider).valueOrNull;
     if (address == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.checkoutNoAddress)),
@@ -47,8 +67,8 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
     final items = ref.read(cartProvider).selectedItems;
     if (items.isEmpty) return;
 
-    final couponId = ref.read(selectedCouponIdProvider);
-    final coupon = ref.read(selectedCouponProvider);
+    final couponId = _pickedCouponId ?? ref.read(selectedCouponIdProvider);
+    final coupon = _resolveCoupon(couponId);
 
     setState(() => _submitting = true);
     try {
@@ -86,13 +106,24 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
     }
   }
 
+  SHOCoupon? _resolveCoupon(String? couponId) {
+    if (couponId == null) return null;
+    final coupons = ref.read(couponsProvider).valueOrNull ?? [];
+    final matches = coupons.where((c) => c.id == couponId);
+    return matches.isEmpty ? null : matches.first;
+  }
+
+  SHOCoupon? _displayCoupon() {
+    return _resolveCoupon(_pickedCouponId ?? ref.read(selectedCouponIdProvider));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final cart = ref.watch(cartProvider);
     final items = cart.selectedItems;
     final addressAsync = ref.watch(selectedAddressProvider);
-    final selectedCoupon = ref.watch(selectedCouponProvider);
+    final selectedCoupon = _displayCoupon();
     final breakdown = SHOPriceCalculator.calculateOrderPrice(
       subtotalCents: cart.selectedTotalCents,
       coupon: selectedCoupon,
@@ -118,7 +149,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
           ),
           const SizedBox(height: SHOAppSpacing.md),
           InkWell(
-            onTap: () => context.push(SHOAppRoutes.addressesSelect),
+            onTap: _pickAddress,
             borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
             child: Container(
               width: double.infinity,
@@ -131,21 +162,22 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
                 loading: () => Text(l10n.loading),
                 error: (_, __) => Text(l10n.loadFailed),
                 data: (address) {
-                  if (address == null) {
+                  final display = _pickedAddress ?? address;
+                  if (display == null) {
                     return Text(l10n.checkoutAddAddress);
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${address.name}  ${address.phone}',
+                        '${display.name}  ${display.phone}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                       ),
                       const SizedBox(height: SHOAppSpacing.xs),
                       Text(
-                        address.fullLine,
+                        display.fullLine,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -163,7 +195,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
           ),
           const SizedBox(height: SHOAppSpacing.md),
           InkWell(
-            onTap: () => context.push(SHOAppRoutes.couponsSelect),
+            onTap: _pickCoupon,
             borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
             child: Container(
               width: double.infinity,

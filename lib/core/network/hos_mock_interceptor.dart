@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../config/hos_config.dart';
 import '../logging/hos_logger.dart';
+import 'hos_mock_pagination.dart';
 import 'hos_mock_route_registry.dart';
 
 /// 拦截 Dio 请求并返回本地 JSON Mock 数据。
@@ -39,7 +40,14 @@ class SHOMockInterceptor extends Interceptor {
 
     try {
       final raw = await rootBundle.loadString(entry.asset);
-      final data = jsonDecode(raw) as Map<String, dynamic>;
+      var data = jsonDecode(raw) as Map<String, dynamic>;
+
+      final page = mockQueryInt(options.queryParameters, 'page', 0);
+      if (page > 0) {
+        final pageSize = mockQueryInt(options.queryParameters, 'pageSize', 10);
+        data = paginateMockEnvelope(data, page: page, pageSize: pageSize);
+      }
+
       SHOAppLogger.debug('Mock hit', '${options.method} $path → ${entry.asset}');
       handler.resolve(
         Response(requestOptions: options, statusCode: 200, data: data),

@@ -50,6 +50,9 @@ _$SHOAfterSaleCreateRequestImpl _$$SHOAfterSaleCreateRequestImplFromJson(
   orderId: json['orderId'] as String,
   type: $enumDecode(_$SHOAfterSaleTypeEnumMap, json['type']),
   reason: json['reason'] as String,
+  imageUrls:
+      (json['imageUrls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$$SHOAfterSaleCreateRequestImplToJson(
@@ -58,4 +61,5 @@ Map<String, dynamic> _$$SHOAfterSaleCreateRequestImplToJson(
   'orderId': instance.orderId,
   'type': _$SHOAfterSaleTypeEnumMap[instance.type]!,
   'reason': instance.reason,
+  'imageUrls': instance.imageUrls,
 };

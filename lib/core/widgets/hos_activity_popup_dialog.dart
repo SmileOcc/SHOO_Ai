@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
+import '../../app/router/hos_route_navigator.dart';
+import '../../l10n/app_localizations.dart';
 import '../marketing/hos_activity_popup_service.dart';
 import '../theme/hos_spacing.dart';
 import 'hos_button.dart';
@@ -23,8 +24,16 @@ class SHOActivityPopupDialog extends StatelessWidget {
     );
   }
 
+  void _onCta(BuildContext context) {
+    Navigator.pop(context);
+    if (activity.link.trim().isNotEmpty) {
+      SHORouteNavigator.followLink(context, activity.link);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final style = Theme.of(context).textTheme.bodyMedium;
     final lineHeight = (style?.fontSize ?? 14) * (style?.height ?? 1.4);
     final maxDescHeight = lineHeight * _maxScrollLines;
@@ -36,7 +45,10 @@ class SHOActivityPopupDialog extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 3 / 4,
-            child: _buildImage(),
+            child: InkWell(
+              onTap: activity.link.trim().isNotEmpty ? () => _onCta(context) : null,
+              child: _buildImage(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -64,11 +76,11 @@ class SHOActivityPopupDialog extends StatelessWidget {
                   label: activity.buttonText,
                   isExpanded: true,
                   variant: SHOAppButtonVariant.accent,
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => _onCta(context),
                 ),
                 const SizedBox(height: SHOAppSpacing.sm),
                 SHOAppButton(
-                  label: 'Close',
+                  label: l10n.dialogClose,
                   isExpanded: true,
                   variant: SHOAppButtonVariant.ghost,
                   onPressed: () => Navigator.pop(context),

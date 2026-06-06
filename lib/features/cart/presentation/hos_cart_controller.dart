@@ -104,4 +104,16 @@ class SHOCartNotifier extends StateNotifier<SHOCartSnapshot> {
     state = const SHOCartSnapshot();
     await _storage.clear();
   }
+
+  Future<void> applyReconciledItems(List<SHOCartItem> items) async {
+    state = SHOCartSnapshot(items: items);
+    await _persist();
+  }
+
+  Future<void> removeUnavailableItems() async {
+    state = SHOCartSnapshot(
+      items: state.items.where((item) => !item.unavailable).toList(),
+    );
+    await _persist();
+  }
 }

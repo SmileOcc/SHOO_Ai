@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/router/hos_route_navigator.dart';
 import '../../features/home/domain/hos_banner.dart';
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
@@ -49,33 +50,44 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
             onPageChanged: (i) => setState(() => _index = i),
             itemBuilder: (context, index) {
               final banner = widget.banners[index];
+              final hasLink = banner.link.trim().isNotEmpty;
+
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    SHOAppNetworkImage(
-                      url: banner.imageUrl,
-                      borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                    ),
-                    Positioned(
-                      left: SHOAppSpacing.md,
-                      bottom: SHOAppSpacing.md,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        color: SHOAppColors.primary.withValues(alpha: 0.72),
-                        child: Text(
-                          banner.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.8,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: hasLink
+                        ? () => SHORouteNavigator.followLink(context, banner.link)
+                        : null,
+                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        SHOAppNetworkImage(
+                          url: banner.imageUrl,
+                          borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                        ),
+                        Positioned(
+                          left: SHOAppSpacing.md,
+                          bottom: SHOAppSpacing.md,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            color: SHOAppColors.primary.withValues(alpha: 0.72),
+                            child: Text(
+                              banner.title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },

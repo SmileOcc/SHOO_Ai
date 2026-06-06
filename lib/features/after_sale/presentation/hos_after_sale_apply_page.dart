@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../app/router/hos_routes.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/widgets/hos_button.dart';
+import '../../../core/widgets/hos_image_picker_field.dart';
 import '../../../core/widgets/hos_text_field.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../order/presentation/hos_order_controller.dart';
@@ -26,6 +28,7 @@ class SHOAfterSaleApplyPage extends ConsumerStatefulWidget {
 class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
   SHOAfterSaleType _type = SHOAfterSaleType.refund;
   final _reasonController = TextEditingController();
+  final List<XFile> _evidenceImages = [];
   bool _submitting = false;
 
   @override
@@ -51,6 +54,7 @@ class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
               orderId: widget.orderId,
               type: _type,
               reason: reason,
+              imageUrls: _evidenceImages.map((f) => f.name).toList(),
             ),
           );
       ref.invalidate(afterSalesProvider);
@@ -114,6 +118,17 @@ class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
               label: l10n.afterSaleReasonLabel,
               hint: l10n.afterSaleReasonHint,
               maxLines: 4,
+            ),
+            const SizedBox(height: SHOAppSpacing.xl),
+            SHOImagePickerField(
+              label: l10n.afterSaleEvidenceLabel,
+              images: _evidenceImages,
+              maxCount: 4,
+              onChanged: (next) => setState(() {
+                _evidenceImages
+                  ..clear()
+                  ..addAll(next);
+              }),
             ),
           ],
         ),

@@ -51,6 +51,21 @@
 	<string>SHOO needs photo library access to upload images.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>SHOO uses your location for delivery estimates.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.shoo.shoo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>shoo</string>
+			</array>
+		</dict>
+	</array>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>

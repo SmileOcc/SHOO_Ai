@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
 import 'hos_empty_state.dart';
 
@@ -15,26 +17,32 @@ class SHOAppErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SHOEmptyState(
       icon: Icons.wifi_off_rounded,
-      title: 'Unable to load',
+      title: l10n.loadFailed,
       subtitle: message,
-      actionLabel: onRetry != null ? 'Retry' : null,
+      actionLabel: onRetry != null ? l10n.retry : null,
       onAction: onRetry,
     );
   }
 }
 
 class SHOAppRefreshHeader extends StatelessWidget {
-  const SHOAppRefreshHeader({super.key, required this.child});
+  const SHOAppRefreshHeader({
+    super.key,
+    required this.child,
+    required this.onRefresh,
+  });
 
   final Widget child;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      color: Theme.of(context).colorScheme.secondary,
-      onRefresh: () async {},
+      color: SHOAppColors.accent,
+      onRefresh: onRefresh,
       child: child,
     );
   }

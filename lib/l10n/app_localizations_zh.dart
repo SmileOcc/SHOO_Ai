@@ -237,6 +237,52 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareMore => '更多';
 
   @override
+  String get shareProductCard => '分享商品卡片';
+
+  @override
+  String get shareLinkCopied => '链接已复制';
+
+  @override
+  String get imagePickerGallery => '相册';
+
+  @override
+  String get imagePickerCamera => '拍照';
+
+  @override
+  String imagePickerHint(int count) {
+    return '最多 $count 张';
+  }
+
+  @override
+  String get afterSaleEvidenceLabel => '上传凭证图片';
+
+  @override
+  String get reviewSubmitTitle => '发表评价';
+
+  @override
+  String get reviewSubmitContentLabel => '评价内容';
+
+  @override
+  String get reviewSubmitContentHint => '分享你对这件商品的使用感受';
+
+  @override
+  String get reviewSubmitPhotosLabel => '晒图';
+
+  @override
+  String get reviewSubmitAction => '提交评价';
+
+  @override
+  String get reviewSubmitContentRequired => '请填写评价内容';
+
+  @override
+  String reviewSubmitSuccess(int count) {
+    return '评价已提交，含 $count 张图片';
+  }
+
+  @override
+  String get logisticsLiveUpdates => '原生推送实时更新';
+
+  @override
   String get updateTitle => '发现新版本';
 
   @override
@@ -249,6 +295,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get updateNow => '立即更新';
+
+  @override
+  String updateDownloadProgress(int percent) {
+    return '正在下载更新... $percent%';
+  }
+
+  @override
+  String get notFoundTitle => '页面不存在';
+
+  @override
+  String get notFoundMessage => '找不到你要访问的页面。';
+
+  @override
+  String notFoundLocation(String location) {
+    return '未知路由：$location';
+  }
+
+  @override
+  String get notFoundGoHome => '返回首页';
+
+  @override
+  String get dialogClose => '关闭';
 
   @override
   String get debugToolsSection => '调试工具';
@@ -446,6 +514,56 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get searchHotTitle => '热门搜索';
+
+  @override
+  String get searchHistoryTitle => '最近搜索';
+
+  @override
+  String get searchHistoryClear => '清空';
+
+  @override
+  String get searchHistoryCleared => '已清空搜索历史';
+
+  @override
+  String get searchNoResults => '没有找到相关商品';
+
+  @override
+  String get pagedListNoMore => '没有更多了';
+
+  @override
+  String reviewsCount(int count) {
+    return '$count 条评价';
+  }
+
+  @override
+  String cartIssuesUnavailable(int count) {
+    return '$count 件商品已下架';
+  }
+
+  @override
+  String cartIssuesPriceChanged(int count) {
+    return '$count 件商品价格已更新';
+  }
+
+  @override
+  String cartIssuesBoth(int unavailable, int changed) {
+    return '$unavailable 件下架，$changed 件变价';
+  }
+
+  @override
+  String get cartUnavailableBanner => '部分商品已失效，请移除后再结算';
+
+  @override
+  String get cartRemoveUnavailable => '移除失效商品';
+
+  @override
+  String get cartItemUnavailable => '已失效';
+
+  @override
+  String get cartItemPriceUpdated => '价格已更新';
+
+  @override
+  String get paymentPollingStatus => '正在确认支付状态...';
 
   @override
   String get productDetailTitle => '商品详情';

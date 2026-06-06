@@ -11,11 +11,13 @@ class SHOAppNetworkImage extends StatelessWidget {
     required this.url,
     this.fit = BoxFit.cover,
     this.borderRadius,
+    this.memCacheWidth,
   });
 
   final String url;
   final BoxFit fit;
   final BorderRadius? borderRadius;
+  final int? memCacheWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,39 @@ class SHOAppNetworkImage extends StatelessWidget {
       imageUrl: url,
       cacheManager: SHOImageCacheManager.instance,
       fit: fit,
-      placeholder: (_, __) => const SHOSkeletonBox(),
+      memCacheWidth: memCacheWidth,
+      fadeInDuration: const Duration(milliseconds: 280),
+      fadeOutDuration: const Duration(milliseconds: 120),
+      progressIndicatorBuilder: (context, url, progress) => Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
+        children: [
+          const SHOSkeletonBox(),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    SHOAppColors.surfaceMuted.withValues(alpha: 0.3),
+                    SHOAppColors.surfaceMuted.withValues(alpha: 0.6),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (progress.progress != null)
+            SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                value: progress.progress,
+              ),
+            ),
+        ],
+      ),
       errorWidget: (_, __, ___) => const ColoredBox(
         color: SHOAppColors.surfaceMuted,
         child: Center(

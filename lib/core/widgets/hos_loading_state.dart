@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
+import '../errors/hos_exception.dart';
+import '../errors/hos_error_mapper.dart';
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
 import '../theme/hos_typography.dart';
-import 'hos_button.dart';
+import 'hos_error_view.dart';
 import 'hos_skeleton_box.dart';
 
 /// 页面数据状态枚举：loading / empty / error / success。
@@ -60,19 +63,25 @@ class SHOAppLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return switch (state) {
       SHOLoadingState.loading => loadingWidget ??
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(SHOAppColors.accent),
+                const SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(SHOAppColors.accent),
+                  ),
                 ),
                 const SizedBox(height: SHOAppSpacing.lg),
                 Text(
-                  message ?? 'Loading...',
+                  message ?? l10n.loading,
                   style: SHOAppTypography.textTheme.bodyMedium,
                 ),
               ],
@@ -87,7 +96,7 @@ class SHOAppLoadingState extends StatelessWidget {
                 Icon(emptyIcon, size: 48, color: SHOAppColors.textMuted),
                 const SizedBox(height: SHOAppSpacing.lg),
                 Text(
-                  message ?? 'No data yet',
+                  message ?? l10n.noData,
                   textAlign: TextAlign.center,
                   style: SHOAppTypography.textTheme.titleMedium,
                 ),
@@ -95,31 +104,9 @@ class SHOAppLoadingState extends StatelessWidget {
             ),
           ),
         ),
-      SHOLoadingState.error => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: SHOAppColors.error),
-                const SizedBox(height: SHOAppSpacing.lg),
-                Text(
-                  message ?? 'Failed to load. Please retry.',
-                  textAlign: TextAlign.center,
-                  style: SHOAppTypography.textTheme.bodyMedium,
-                ),
-                if (onRetry != null) ...[
-                  const SizedBox(height: SHOAppSpacing.xl),
-                  SHOAppButton(
-                    label: 'Retry',
-                    onPressed: onRetry,
-                    variant: SHOAppButtonVariant.outline,
-                    size: SHOAppButtonSize.sm,
-                  ),
-                ],
-              ],
-            ),
-          ),
+      SHOLoadingState.error => SHOAppErrorView(
+          message: message ?? l10n.loadFailed,
+          onRetry: onRetry,
         ),
       SHOLoadingState.success => child ?? const SizedBox.shrink(),
     };
@@ -150,7 +137,10 @@ extension SHOAsyncValueLoadingState<T> on AsyncValue<T> {
       ),
       error: (error, _) => SHOAppLoadingState(
         state: SHOLoadingState.error,
-        message: errorMessage?.call(error) ?? error.toString(),
+        message: errorMessage?.call(error) ??
+            (error is SHOAppException
+                ? userFacingMessage(error)
+                : error.toString()),
         onRetry: onRetry,
       ),
       data: (value) {

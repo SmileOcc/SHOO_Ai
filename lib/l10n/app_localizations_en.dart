@@ -239,6 +239,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareMore => 'More options';
 
   @override
+  String get shareProductCard => 'Share product card';
+
+  @override
+  String get shareLinkCopied => 'Link copied';
+
+  @override
+  String get imagePickerGallery => 'Gallery';
+
+  @override
+  String get imagePickerCamera => 'Camera';
+
+  @override
+  String imagePickerHint(int count) {
+    return 'Up to $count photos';
+  }
+
+  @override
+  String get afterSaleEvidenceLabel => 'Upload evidence photos';
+
+  @override
+  String get reviewSubmitTitle => 'Write a review';
+
+  @override
+  String get reviewSubmitContentLabel => 'Your review';
+
+  @override
+  String get reviewSubmitContentHint =>
+      'Share your experience with this product';
+
+  @override
+  String get reviewSubmitPhotosLabel => 'Photos';
+
+  @override
+  String get reviewSubmitAction => 'Submit review';
+
+  @override
+  String get reviewSubmitContentRequired => 'Please write your review';
+
+  @override
+  String reviewSubmitSuccess(int count) {
+    return 'Review submitted with $count photo(s)';
+  }
+
+  @override
+  String get logisticsLiveUpdates => 'Live updates from native push';
+
+  @override
   String get updateTitle => 'Update Available';
 
   @override
@@ -251,6 +298,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateNow => 'Update Now';
+
+  @override
+  String updateDownloadProgress(int percent) {
+    return 'Downloading update... $percent%';
+  }
+
+  @override
+  String get notFoundTitle => 'Page not found';
+
+  @override
+  String get notFoundMessage => 'The page you are looking for does not exist.';
+
+  @override
+  String notFoundLocation(String location) {
+    return 'Unknown route: $location';
+  }
+
+  @override
+  String get notFoundGoHome => 'Back to home';
+
+  @override
+  String get dialogClose => 'Close';
 
   @override
   String get debugToolsSection => 'Debug Tools';
@@ -459,6 +528,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchHotTitle => 'Trending searches';
+
+  @override
+  String get searchHistoryTitle => 'Recent searches';
+
+  @override
+  String get searchHistoryClear => 'Clear';
+
+  @override
+  String get searchHistoryCleared => 'Search history cleared';
+
+  @override
+  String get searchNoResults => 'No products found';
+
+  @override
+  String get pagedListNoMore => 'No more items';
+
+  @override
+  String reviewsCount(int count) {
+    return '$count reviews';
+  }
+
+  @override
+  String cartIssuesUnavailable(int count) {
+    return '$count item(s) are no longer available';
+  }
+
+  @override
+  String cartIssuesPriceChanged(int count) {
+    return '$count item price(s) updated';
+  }
+
+  @override
+  String cartIssuesBoth(int unavailable, int changed) {
+    return '$unavailable unavailable, $changed price updated';
+  }
+
+  @override
+  String get cartUnavailableBanner =>
+      'Some items are unavailable. Remove them to checkout.';
+
+  @override
+  String get cartRemoveUnavailable => 'Remove unavailable';
+
+  @override
+  String get cartItemUnavailable => 'Unavailable';
+
+  @override
+  String get cartItemPriceUpdated => 'Price updated';
+
+  @override
+  String get paymentPollingStatus => 'Confirming payment status...';
 
   @override
   String get productDetailTitle => 'Product';

@@ -542,6 +542,90 @@ abstract class AppLocalizations {
   /// **'More options'**
   String get shareMore;
 
+  /// No description provided for @shareProductCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Share product card'**
+  String get shareProductCard;
+
+  /// No description provided for @shareLinkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get shareLinkCopied;
+
+  /// No description provided for @imagePickerGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get imagePickerGallery;
+
+  /// No description provided for @imagePickerCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get imagePickerCamera;
+
+  /// No description provided for @imagePickerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {count} photos'**
+  String imagePickerHint(int count);
+
+  /// No description provided for @afterSaleEvidenceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload evidence photos'**
+  String get afterSaleEvidenceLabel;
+
+  /// No description provided for @reviewSubmitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review'**
+  String get reviewSubmitTitle;
+
+  /// No description provided for @reviewSubmitContentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review'**
+  String get reviewSubmitContentLabel;
+
+  /// No description provided for @reviewSubmitContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your experience with this product'**
+  String get reviewSubmitContentHint;
+
+  /// No description provided for @reviewSubmitPhotosLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get reviewSubmitPhotosLabel;
+
+  /// No description provided for @reviewSubmitAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit review'**
+  String get reviewSubmitAction;
+
+  /// No description provided for @reviewSubmitContentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write your review'**
+  String get reviewSubmitContentRequired;
+
+  /// No description provided for @reviewSubmitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Review submitted with {count} photo(s)'**
+  String reviewSubmitSuccess(int count);
+
+  /// No description provided for @logisticsLiveUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates from native push'**
+  String get logisticsLiveUpdates;
+
   /// No description provided for @updateTitle.
   ///
   /// In en, this message translates to:
@@ -565,6 +649,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Now'**
   String get updateNow;
+
+  /// No description provided for @updateDownloadProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update... {percent}%'**
+  String updateDownloadProgress(int percent);
+
+  /// No description provided for @notFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get notFoundTitle;
+
+  /// No description provided for @notFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The page you are looking for does not exist.'**
+  String get notFoundMessage;
+
+  /// No description provided for @notFoundLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown route: {location}'**
+  String notFoundLocation(String location);
+
+  /// No description provided for @notFoundGoHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get notFoundGoHome;
+
+  /// No description provided for @dialogClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get dialogClose;
 
   /// No description provided for @debugToolsSection.
   ///
@@ -955,6 +1075,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trending searches'**
   String get searchHotTitle;
+
+  /// No description provided for @searchHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get searchHistoryTitle;
+
+  /// No description provided for @searchHistoryClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get searchHistoryClear;
+
+  /// No description provided for @searchHistoryCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history cleared'**
+  String get searchHistoryCleared;
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found'**
+  String get searchNoResults;
+
+  /// No description provided for @pagedListNoMore.
+  ///
+  /// In en, this message translates to:
+  /// **'No more items'**
+  String get pagedListNoMore;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reviews'**
+  String reviewsCount(int count);
+
+  /// No description provided for @cartIssuesUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item(s) are no longer available'**
+  String cartIssuesUnavailable(int count);
+
+  /// No description provided for @cartIssuesPriceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item price(s) updated'**
+  String cartIssuesPriceChanged(int count);
+
+  /// No description provided for @cartIssuesBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'{unavailable} unavailable, {changed} price updated'**
+  String cartIssuesBoth(int unavailable, int changed);
+
+  /// No description provided for @cartUnavailableBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Some items are unavailable. Remove them to checkout.'**
+  String get cartUnavailableBanner;
+
+  /// No description provided for @cartRemoveUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove unavailable'**
+  String get cartRemoveUnavailable;
+
+  /// No description provided for @cartItemUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get cartItemUnavailable;
+
+  /// No description provided for @cartItemPriceUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Price updated'**
+  String get cartItemPriceUpdated;
+
+  /// No description provided for @paymentPollingStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirming payment status...'**
+  String get paymentPollingStatus;
 
   /// No description provided for @productDetailTitle.
   ///

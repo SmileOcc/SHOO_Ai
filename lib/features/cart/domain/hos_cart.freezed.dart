@@ -29,6 +29,8 @@ mixin _$SHOCartItem {
   int get quantity => throw _privateConstructorUsedError;
   String get variantLabel => throw _privateConstructorUsedError;
   bool get selected => throw _privateConstructorUsedError;
+  bool get unavailable => throw _privateConstructorUsedError;
+  bool get priceChanged => throw _privateConstructorUsedError;
 
   /// Serializes this SHOCartItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,6 +58,8 @@ abstract class $SHOCartItemCopyWith<$Res> {
     int quantity,
     String variantLabel,
     bool selected,
+    bool unavailable,
+    bool priceChanged,
   });
 }
 
@@ -82,6 +86,8 @@ class _$SHOCartItemCopyWithImpl<$Res, $Val extends SHOCartItem>
     Object? quantity = null,
     Object? variantLabel = null,
     Object? selected = null,
+    Object? unavailable = null,
+    Object? priceChanged = null,
   }) {
     return _then(
       _value.copyWith(
@@ -117,6 +123,14 @@ class _$SHOCartItemCopyWithImpl<$Res, $Val extends SHOCartItem>
                 ? _value.selected
                 : selected // ignore: cast_nullable_to_non_nullable
                       as bool,
+            unavailable: null == unavailable
+                ? _value.unavailable
+                : unavailable // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            priceChanged: null == priceChanged
+                ? _value.priceChanged
+                : priceChanged // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -141,6 +155,8 @@ abstract class _$$SHOCartItemImplCopyWith<$Res>
     int quantity,
     String variantLabel,
     bool selected,
+    bool unavailable,
+    bool priceChanged,
   });
 }
 
@@ -166,6 +182,8 @@ class __$$SHOCartItemImplCopyWithImpl<$Res>
     Object? quantity = null,
     Object? variantLabel = null,
     Object? selected = null,
+    Object? unavailable = null,
+    Object? priceChanged = null,
   }) {
     return _then(
       _$SHOCartItemImpl(
@@ -201,6 +219,14 @@ class __$$SHOCartItemImplCopyWithImpl<$Res>
             ? _value.selected
             : selected // ignore: cast_nullable_to_non_nullable
                   as bool,
+        unavailable: null == unavailable
+            ? _value.unavailable
+            : unavailable // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        priceChanged: null == priceChanged
+            ? _value.priceChanged
+            : priceChanged // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -218,6 +244,8 @@ class _$SHOCartItemImpl implements _SHOCartItem {
     this.quantity = 1,
     this.variantLabel = '',
     this.selected = true,
+    this.unavailable = false,
+    this.priceChanged = false,
   });
 
   factory _$SHOCartItemImpl.fromJson(Map<String, dynamic> json) =>
@@ -242,10 +270,16 @@ class _$SHOCartItemImpl implements _SHOCartItem {
   @override
   @JsonKey()
   final bool selected;
+  @override
+  @JsonKey()
+  final bool unavailable;
+  @override
+  @JsonKey()
+  final bool priceChanged;
 
   @override
   String toString() {
-    return 'SHOCartItem(id: $id, productId: $productId, title: $title, imageUrl: $imageUrl, price: $price, quantity: $quantity, variantLabel: $variantLabel, selected: $selected)';
+    return 'SHOCartItem(id: $id, productId: $productId, title: $title, imageUrl: $imageUrl, price: $price, quantity: $quantity, variantLabel: $variantLabel, selected: $selected, unavailable: $unavailable, priceChanged: $priceChanged)';
   }
 
   @override
@@ -265,7 +299,11 @@ class _$SHOCartItemImpl implements _SHOCartItem {
             (identical(other.variantLabel, variantLabel) ||
                 other.variantLabel == variantLabel) &&
             (identical(other.selected, selected) ||
-                other.selected == selected));
+                other.selected == selected) &&
+            (identical(other.unavailable, unavailable) ||
+                other.unavailable == unavailable) &&
+            (identical(other.priceChanged, priceChanged) ||
+                other.priceChanged == priceChanged));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -280,6 +318,8 @@ class _$SHOCartItemImpl implements _SHOCartItem {
     quantity,
     variantLabel,
     selected,
+    unavailable,
+    priceChanged,
   );
 
   /// Create a copy of SHOCartItem
@@ -306,6 +346,8 @@ abstract class _SHOCartItem implements SHOCartItem {
     final int quantity,
     final String variantLabel,
     final bool selected,
+    final bool unavailable,
+    final bool priceChanged,
   }) = _$SHOCartItemImpl;
 
   factory _SHOCartItem.fromJson(Map<String, dynamic> json) =
@@ -327,6 +369,10 @@ abstract class _SHOCartItem implements SHOCartItem {
   String get variantLabel;
   @override
   bool get selected;
+  @override
+  bool get unavailable;
+  @override
+  bool get priceChanged;
 
   /// Create a copy of SHOCartItem
   /// with the given fields replaced by the non-null parameter values.

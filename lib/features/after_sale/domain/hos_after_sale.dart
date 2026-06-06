@@ -44,6 +44,7 @@ class SHOAfterSaleCreateRequest with _$SHOAfterSaleCreateRequest {
     required String orderId,
     required SHOAfterSaleType type,
     required String reason,
+    @Default([]) List<String> imageUrls,
   }) = _SHOAfterSaleCreateRequest;
 
   factory SHOAfterSaleCreateRequest.fromJson(Map<String, dynamic> json) =>

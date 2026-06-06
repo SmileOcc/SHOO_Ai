@@ -22,11 +22,51 @@
         "discountLabel": "-42%",
         "rating": 4.6,
         "soldCount": 8920
+      },
+      {
+        "id": "p3",
+        "title": "Oversized Blazer Jacket",
+        "imageUrl": "https://picsum.photos/seed/p3/400/500",
+        "price": 2499,
+        "originalPrice": 4999,
+        "discountLabel": "-50%",
+        "rating": 4.9,
+        "soldCount": 5621
+      },
+      {
+        "id": "p4",
+        "title": "Floral Midi Dress",
+        "imageUrl": "https://picsum.photos/seed/p4/400/500",
+        "price": 1599,
+        "originalPrice": 2799,
+        "discountLabel": "-43%",
+        "rating": 4.7,
+        "soldCount": 21033
+      },
+      {
+        "id": "p5",
+        "title": "Chunky Platform Sandals",
+        "imageUrl": "https://picsum.photos/seed/p5/400/500",
+        "price": 999,
+        "originalPrice": 1999,
+        "discountLabel": "-50%",
+        "rating": 4.5,
+        "soldCount": 15440
+      },
+      {
+        "id": "p6",
+        "title": "Satin Slip Skirt",
+        "imageUrl": "https://picsum.photos/seed/p6/400/500",
+        "price": 1199,
+        "originalPrice": 2199,
+        "discountLabel": "-45%",
+        "rating": 4.8,
+        "soldCount": 9876
       }
     ],
     "page": 1,
     "pageSize": 20,
-    "total": 2,
-    "hasMore": false
+    "total": 6,
+    "hasMore": true
   }
 }

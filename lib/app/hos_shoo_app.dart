@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../core/deeplink/hos_deeplink_listener.dart';
+import '../core/feedback/hos_toast.dart';
 import '../core/l10n/hos_locale_provider.dart';
 import '../core/theme/hos_theme.dart';
 import '../core/theme/hos_theme_mode_provider.dart';
@@ -15,10 +17,12 @@ class SHOApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    ref.watch(deepLinkListenerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       debugShowCheckedModeBanner: false,
       theme: SHOAppTheme.light,

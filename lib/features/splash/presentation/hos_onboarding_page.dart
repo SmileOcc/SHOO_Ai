@@ -32,7 +32,7 @@ class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage> {
   Future<void> _finish() async {
     await ref.read(localStorageProvider).write(_onboardingSeenKey, true);
     if (!mounted) return;
-    context.go(SHOAppRoutes.home);
+    context.replace(SHOAppRoutes.home);
   }
 
   @override

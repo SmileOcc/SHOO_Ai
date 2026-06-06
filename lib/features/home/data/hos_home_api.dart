@@ -24,9 +24,13 @@ class SHOHomeApi {
     );
   }
 
-  Future<SHOPageResult<SHOProduct>> fetchProducts({int page = 1}) {
+  Future<SHOPageResult<SHOProduct>> fetchProducts({
+    int page = 1,
+    int pageSize = 50,
+  }) {
     return _dio.getData<SHOPageResult<SHOProduct>>(
       '/products',
+      queryParameters: {'page': page, 'pageSize': pageSize},
       parser: (data) => SHOPageResult.fromJson(
         data as Map<String, dynamic>,
         (json) => SHOProduct.fromJson(json as Map<String, dynamic>),

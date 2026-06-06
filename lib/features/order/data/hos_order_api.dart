@@ -14,9 +14,13 @@ class SHOOrderApi {
 
   final Dio _dio;
 
-  Future<SHOPageResult<SHOOrderSummary>> fetchOrders() {
+  Future<SHOPageResult<SHOOrderSummary>> fetchOrders({
+    int page = 1,
+    int pageSize = 10,
+  }) {
     return _dio.getData<SHOPageResult<SHOOrderSummary>>(
       '/orders',
+      queryParameters: {'page': page, 'pageSize': pageSize},
       parser: (data) => SHOPageResult.fromJson(
         data as Map<String, dynamic>,
         (json) => SHOOrderSummary.fromJson(json as Map<String, dynamic>),

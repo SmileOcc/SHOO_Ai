@@ -13,9 +13,14 @@ class SHOReviewApi {
 
   final Dio _dio;
 
-  Future<SHOProductReviewSummary> fetchReviews(String productId) {
+  Future<SHOProductReviewSummary> fetchReviews(
+    String productId, {
+    int page = 1,
+    int pageSize = 10,
+  }) {
     return _dio.getData<SHOProductReviewSummary>(
       '/products/$productId/reviews',
+      queryParameters: {'page': page, 'pageSize': pageSize},
       parser: (data) =>
           SHOProductReviewSummary.fromJson(data as Map<String, dynamic>),
     );

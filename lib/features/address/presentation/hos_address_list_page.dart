@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/hos_address.dart';
 import 'hos_address_controller.dart';
 
 class SHOAddressListPage extends ConsumerWidget {
@@ -52,10 +53,14 @@ class SHOAddressListPage extends ConsumerWidget {
                 address.fullLine,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
-              onTap: () async {
-                await ref.read(selectedAddressIdProvider.notifier).select(address.id);
-                if (context.mounted) context.pop();
-              },
+              onTap: selectMode
+                  ? () async {
+                      await ref
+                          .read(selectedAddressIdProvider.notifier)
+                          .select(address.id);
+                      if (context.mounted) context.pop<SHOAddress>(address);
+                    }
+                  : null,
             );
           },
         ),

@@ -90,6 +90,26 @@
   "shareWechat": "WeChat",
   "shareWechatMock": "WeChat share (mock)",
   "shareMore": "More options",
+  "shareProductCard": "Share product card",
+  "shareLinkCopied": "Link copied",
+  "imagePickerGallery": "Gallery",
+  "imagePickerCamera": "Camera",
+  "imagePickerHint": "Up to {count} photos",
+  "@imagePickerHint": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "afterSaleEvidenceLabel": "Upload evidence photos",
+  "reviewSubmitTitle": "Write a review",
+  "reviewSubmitContentLabel": "Your review",
+  "reviewSubmitContentHint": "Share your experience with this product",
+  "reviewSubmitPhotosLabel": "Photos",
+  "reviewSubmitAction": "Submit review",
+  "reviewSubmitContentRequired": "Please write your review",
+  "reviewSubmitSuccess": "Review submitted with {count} photo(s)",
+  "@reviewSubmitSuccess": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "logisticsLiveUpdates": "Live updates from native push",
   "updateTitle": "Update Available",
   "updateNewVersion": "Version {version} is available",
   "@updateNewVersion": {
@@ -99,6 +119,18 @@
   },
   "updateLater": "Later",
   "updateNow": "Update Now",
+  "updateDownloadProgress": "Downloading update... {percent}%",
+  "@updateDownloadProgress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "notFoundTitle": "Page not found",
+  "notFoundMessage": "The page you are looking for does not exist.",
+  "notFoundLocation": "Unknown route: {location}",
+  "@notFoundLocation": {
+    "placeholders": { "location": { "type": "String" } }
+  },
+  "notFoundGoHome": "Back to home",
+  "dialogClose": "Close",
   "debugToolsSection": "Debug Tools",
   "debugUpdateEntry": "Update Popup",
   "debugUpdateEntryHint": "Configure version, notes, force update",
@@ -164,6 +196,37 @@
   "debugPreviewNoActivity": "No activity available in current flow",
   "debugConfigSaved": "Debug config saved",
   "searchHotTitle": "Trending searches",
+  "searchHistoryTitle": "Recent searches",
+  "searchHistoryClear": "Clear",
+  "searchHistoryCleared": "Search history cleared",
+  "searchNoResults": "No products found",
+  "pagedListNoMore": "No more items",
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cartIssuesUnavailable": "{count} item(s) are no longer available",
+  "@cartIssuesUnavailable": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartIssuesPriceChanged": "{count} item price(s) updated",
+  "@cartIssuesPriceChanged": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartIssuesBoth": "{unavailable} unavailable, {changed} price updated",
+  "@cartIssuesBoth": {
+    "placeholders": {
+      "unavailable": { "type": "int" },
+      "changed": { "type": "int" }
+    }
+  },
+  "cartUnavailableBanner": "Some items are unavailable. Remove them to checkout.",
+  "cartRemoveUnavailable": "Remove unavailable",
+  "cartItemUnavailable": "Unavailable",
+  "cartItemPriceUpdated": "Price updated",
+  "paymentPollingStatus": "Confirming payment status...",
   "productDetailTitle": "Product",
   "productDescriptionTitle": "Description",
   "productAddToBag": "Add to Bag",

@@ -17,6 +17,9 @@ abstract final class SHOAppConstants {
   static const String localeKey = 'locale_code';
   static const String secureTokenKey = 'auth_token';
   static const String cartStorageKey = 'cart_snapshot';
+  static const String searchHistoryKey = 'search_history_v1';
+  static const int searchHistoryMax = 10;
+  static const int listPageSize = 10;
   static const String selectedAddressIdKey = 'selected_address_id';
 
   static const List<String> defaultSkuSizes = ['S', 'M', 'L', 'XL'];

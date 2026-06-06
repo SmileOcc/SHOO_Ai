@@ -18,3 +18,6 @@ export 'hos_native_event_bridge.dart';
 export 'hos_native_message_bridge.dart';
 export 'hos_native_stream_service.dart';
 export 'hos_native_type_caster.dart';
+export 'hos_native_event_kinds.dart';
+export 'hos_native_business_event.dart';
+export 'hos_native_business_event_service.dart';

@@ -13,5 +13,13 @@ class SHOReviewRepository {
   final SHOReviewApi _api;
 
   Future<SHOProductReviewSummary> getReviews(String productId) =>
-      _api.fetchReviews(productId);
+      getReviewsPage(productId);
+
+  Future<SHOProductReviewSummary> getReviewsPage(
+    String productId, {
+    int page = 1,
+    int pageSize = 10,
+  }) {
+    return _api.fetchReviews(productId, page: page, pageSize: pageSize);
+  }
 }

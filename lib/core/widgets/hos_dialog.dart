@@ -102,10 +102,12 @@ abstract final class SHOAppDialog {
     BuildContext context, {
     required Widget child,
     bool isDismissible = true,
+    bool isScrollControlled = false,
   }) {
     return showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
+      isScrollControlled: isScrollControlled,
       backgroundColor: SHOAppColors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(SHOAppSpacing.xl)),

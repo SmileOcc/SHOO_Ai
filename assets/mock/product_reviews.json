@@ -37,7 +37,28 @@
         "createdAt": "2026-05-12",
         "imageUrls": ["https://picsum.photos/seed/r3a/200/200"],
         "variantLabel": "Size L · Beige"
+      },
+      {
+        "id": "r4",
+        "userName": "Luna T.",
+        "userAvatarUrl": "https://picsum.photos/seed/u4/80/80",
+        "rating": 5.0,
+        "content": "Bought two colors — both are amazing.",
+        "createdAt": "2026-05-08",
+        "imageUrls": [],
+        "variantLabel": "Size M · Pink"
+      },
+      {
+        "id": "r5",
+        "userName": "Zoe W.",
+        "userAvatarUrl": "",
+        "rating": 4.5,
+        "content": "True to size. Would recommend.",
+        "createdAt": "2026-05-01",
+        "imageUrls": [],
+        "variantLabel": "Size S · Black"
       }
-    ]
+    ],
+    "hasMore": true
   }
 }

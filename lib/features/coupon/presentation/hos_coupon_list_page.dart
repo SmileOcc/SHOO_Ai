@@ -42,7 +42,7 @@ class SHOCouponListPage extends ConsumerWidget {
                 selected: selectedId == null,
                 onTap: () {
                   ref.read(selectedCouponIdProvider.notifier).state = null;
-                  context.pop();
+                  context.pop<String>('');
                 },
               );
             }
@@ -60,7 +60,7 @@ class SHOCouponListPage extends ConsumerWidget {
               onTap: selectMode && ineligible == null
                   ? () {
                       ref.read(selectedCouponIdProvider.notifier).state = coupon.id;
-                      context.pop();
+                      context.pop<String>(coupon.id);
                     }
                   : null,
             );

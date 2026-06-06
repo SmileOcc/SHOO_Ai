@@ -358,6 +358,9 @@ mixin _$SHOProductReviewSummary {
   double get averageRating => throw _privateConstructorUsedError;
   int get totalCount => throw _privateConstructorUsedError;
   List<SHOProductReview> get items => throw _privateConstructorUsedError;
+  bool get hasMore => throw _privateConstructorUsedError;
+  int get page => throw _privateConstructorUsedError;
+  int get pageSize => throw _privateConstructorUsedError;
 
   /// Serializes this SHOProductReviewSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -380,6 +383,9 @@ abstract class $SHOProductReviewSummaryCopyWith<$Res> {
     double averageRating,
     int totalCount,
     List<SHOProductReview> items,
+    bool hasMore,
+    int page,
+    int pageSize,
   });
 }
 
@@ -404,6 +410,9 @@ class _$SHOProductReviewSummaryCopyWithImpl<
     Object? averageRating = null,
     Object? totalCount = null,
     Object? items = null,
+    Object? hasMore = null,
+    Object? page = null,
+    Object? pageSize = null,
   }) {
     return _then(
       _value.copyWith(
@@ -419,6 +428,18 @@ class _$SHOProductReviewSummaryCopyWithImpl<
                 ? _value.items
                 : items // ignore: cast_nullable_to_non_nullable
                       as List<SHOProductReview>,
+            hasMore: null == hasMore
+                ? _value.hasMore
+                : hasMore // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            page: null == page
+                ? _value.page
+                : page // ignore: cast_nullable_to_non_nullable
+                      as int,
+            pageSize: null == pageSize
+                ? _value.pageSize
+                : pageSize // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -438,6 +459,9 @@ abstract class _$$SHOProductReviewSummaryImplCopyWith<$Res>
     double averageRating,
     int totalCount,
     List<SHOProductReview> items,
+    bool hasMore,
+    int page,
+    int pageSize,
   });
 }
 
@@ -462,6 +486,9 @@ class __$$SHOProductReviewSummaryImplCopyWithImpl<$Res>
     Object? averageRating = null,
     Object? totalCount = null,
     Object? items = null,
+    Object? hasMore = null,
+    Object? page = null,
+    Object? pageSize = null,
   }) {
     return _then(
       _$SHOProductReviewSummaryImpl(
@@ -477,6 +504,18 @@ class __$$SHOProductReviewSummaryImplCopyWithImpl<$Res>
             ? _value._items
             : items // ignore: cast_nullable_to_non_nullable
                   as List<SHOProductReview>,
+        hasMore: null == hasMore
+            ? _value.hasMore
+            : hasMore // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        page: null == page
+            ? _value.page
+            : page // ignore: cast_nullable_to_non_nullable
+                  as int,
+        pageSize: null == pageSize
+            ? _value.pageSize
+            : pageSize // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -489,6 +528,9 @@ class _$SHOProductReviewSummaryImpl implements _SHOProductReviewSummary {
     required this.averageRating,
     this.totalCount = 0,
     final List<SHOProductReview> items = const <SHOProductReview>[],
+    this.hasMore = false,
+    this.page = 1,
+    this.pageSize = 10,
   }) : _items = items;
 
   factory _$SHOProductReviewSummaryImpl.fromJson(Map<String, dynamic> json) =>
@@ -509,8 +551,18 @@ class _$SHOProductReviewSummaryImpl implements _SHOProductReviewSummary {
   }
 
   @override
+  @JsonKey()
+  final bool hasMore;
+  @override
+  @JsonKey()
+  final int page;
+  @override
+  @JsonKey()
+  final int pageSize;
+
+  @override
   String toString() {
-    return 'SHOProductReviewSummary(averageRating: $averageRating, totalCount: $totalCount, items: $items)';
+    return 'SHOProductReviewSummary(averageRating: $averageRating, totalCount: $totalCount, items: $items, hasMore: $hasMore, page: $page, pageSize: $pageSize)';
   }
 
   @override
@@ -522,7 +574,11 @@ class _$SHOProductReviewSummaryImpl implements _SHOProductReviewSummary {
                 other.averageRating == averageRating) &&
             (identical(other.totalCount, totalCount) ||
                 other.totalCount == totalCount) &&
-            const DeepCollectionEquality().equals(other._items, _items));
+            const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.hasMore, hasMore) || other.hasMore == hasMore) &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.pageSize, pageSize) ||
+                other.pageSize == pageSize));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -532,6 +588,9 @@ class _$SHOProductReviewSummaryImpl implements _SHOProductReviewSummary {
     averageRating,
     totalCount,
     const DeepCollectionEquality().hash(_items),
+    hasMore,
+    page,
+    pageSize,
   );
 
   /// Create a copy of SHOProductReviewSummary
@@ -556,6 +615,9 @@ abstract class _SHOProductReviewSummary implements SHOProductReviewSummary {
     required final double averageRating,
     final int totalCount,
     final List<SHOProductReview> items,
+    final bool hasMore,
+    final int page,
+    final int pageSize,
   }) = _$SHOProductReviewSummaryImpl;
 
   factory _SHOProductReviewSummary.fromJson(Map<String, dynamic> json) =
@@ -567,6 +629,12 @@ abstract class _SHOProductReviewSummary implements SHOProductReviewSummary {
   int get totalCount;
   @override
   List<SHOProductReview> get items;
+  @override
+  bool get hasMore;
+  @override
+  int get page;
+  @override
+  int get pageSize;
 
   /// Create a copy of SHOProductReviewSummary
   /// with the given fields replaced by the non-null parameter values.

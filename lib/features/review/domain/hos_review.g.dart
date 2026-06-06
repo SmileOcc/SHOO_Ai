@@ -44,6 +44,9 @@ _$SHOProductReviewSummaryImpl _$$SHOProductReviewSummaryImplFromJson(
           ?.map((e) => SHOProductReview.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <SHOProductReview>[],
+  hasMore: json['hasMore'] as bool? ?? false,
+  page: (json['page'] as num?)?.toInt() ?? 1,
+  pageSize: (json['pageSize'] as num?)?.toInt() ?? 10,
 );
 
 Map<String, dynamic> _$$SHOProductReviewSummaryImplToJson(
@@ -52,4 +55,7 @@ Map<String, dynamic> _$$SHOProductReviewSummaryImplToJson(
   'averageRating': instance.averageRating,
   'totalCount': instance.totalCount,
   'items': instance.items,
+  'hasMore': instance.hasMore,
+  'page': instance.page,
+  'pageSize': instance.pageSize,
 };

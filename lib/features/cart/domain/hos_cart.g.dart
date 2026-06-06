@@ -16,6 +16,8 @@ _$SHOCartItemImpl _$$SHOCartItemImplFromJson(Map<String, dynamic> json) =>
       quantity: (json['quantity'] as num?)?.toInt() ?? 1,
       variantLabel: json['variantLabel'] as String? ?? '',
       selected: json['selected'] as bool? ?? true,
+      unavailable: json['unavailable'] as bool? ?? false,
+      priceChanged: json['priceChanged'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$SHOCartItemImplToJson(_$SHOCartItemImpl instance) =>
@@ -28,6 +30,8 @@ Map<String, dynamic> _$$SHOCartItemImplToJson(_$SHOCartItemImpl instance) =>
       'quantity': instance.quantity,
       'variantLabel': instance.variantLabel,
       'selected': instance.selected,
+      'unavailable': instance.unavailable,
+      'priceChanged': instance.priceChanged,
     };
 
 _$SHOCartSnapshotImpl _$$SHOCartSnapshotImplFromJson(

@@ -8,31 +8,51 @@ import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_price_formatter.dart';
 import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_network_image.dart';
+import '../../../core/widgets/hos_paged_scroll_view.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/hos_order.dart';
-import 'hos_order_controller.dart';
 import 'hos_order_status_label.dart';
+import 'hos_orders_paged_controller.dart';
 
-class SHOOrderListPage extends ConsumerWidget {
+class SHOOrderListPage extends ConsumerStatefulWidget {
   const SHOOrderListPage({super.key, this.statusFilter});
 
-  /// Query param `status`: pending_payment | shipped | delivered
   final String? statusFilter;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHOOrderListPage> createState() => _SHOOrderListPageState();
+}
+
+class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage> {
+  final _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final ordersAsync = ref.watch(ordersProvider);
-    final filter = _parseStatusFilter(statusFilter);
+    final ordersAsync = ref.watch(ordersPagedProvider);
+    final filter = _parseStatusFilter(widget.statusFilter);
     final title = _titleForFilter(l10n, filter);
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: ordersAsync.whenLoadingState(
-        onRetry: () => ref.invalidate(ordersProvider),
-        empty: (orders) => _filterOrders(orders, filter).isEmpty,
-        data: (orders) {
-          final filtered = _filterOrders(orders, filter);
+      body: ordersAsync.when(
+        loading: () => const SHOAppLoadingState(
+          state: SHOLoadingState.loading,
+          loadingWidget: SHOAppListSkeleton(itemCount: 5, itemHeight: 120),
+        ),
+        error: (error, _) => SHOAppLoadingState(
+          state: SHOLoadingState.error,
+          message: error.toString(),
+          onRetry: () => ref.invalidate(ordersPagedProvider),
+        ),
+        data: (paged) {
+          final filtered = _filterOrders(paged.items, filter);
           if (filtered.isEmpty) {
             return SHOAppLoadingState(
               state: SHOLoadingState.empty,
@@ -40,9 +60,16 @@ class SHOOrderListPage extends ConsumerWidget {
               emptyIcon: Icons.receipt_long_outlined,
             );
           }
-          return ListView.separated(
-            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+
+          return SHOPagedScrollView(
+            controller: _scrollController,
             itemCount: filtered.length,
+            onRefresh: () => ref.read(ordersPagedProvider.notifier).refresh(),
+            onLoadMore: filter == null
+                ? () => ref.read(ordersPagedProvider.notifier).loadMore()
+                : null,
+            isLoadingMore: paged.isLoadingMore,
+            hasMore: filter == null && paged.hasMore,
             separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
             itemBuilder: (context, index) =>
                 _SHOOrderCard(order: filtered[index]),
@@ -106,10 +133,7 @@ class _SHOOrderCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  order.orderNo,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(order.orderNo, style: Theme.of(context).textTheme.bodySmall),
                 Text(
                   shoOrderStatusLabel(context, order.status),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -124,14 +148,14 @@ class _SHOOrderCard extends StatelessWidget {
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                     child: SizedBox(
                       width: 64,
                       height: 64,
                       child: SHOAppNetworkImage(
                         url: firstItem.imageUrl,
                         fit: BoxFit.cover,
+                        memCacheWidth: 128,
                       ),
                     ),
                   ),
@@ -165,10 +189,7 @@ class _SHOOrderCard extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: SHOAppSpacing.sm),
-            Text(
-              order.createdAt,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(order.createdAt, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

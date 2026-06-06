@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/feedback/hos_toast.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_price_formatter.dart';
@@ -11,16 +12,67 @@ import '../../../core/widgets/hos_dialog.dart';
 import '../../../core/widgets/hos_empty_state.dart';
 import '../../../core/widgets/hos_network_image.dart';
 import '../../../l10n/app_localizations.dart';
+import '../data/hos_cart_reconcile_service.dart';
 import '../domain/hos_cart.dart';
 import 'hos_cart_controller.dart';
 
-class SHOCartPage extends ConsumerWidget {
+class SHOCartPage extends ConsumerStatefulWidget {
   const SHOCartPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHOCartPage> createState() => _SHOCartPageState();
+}
+
+class _SHOCartPageState extends ConsumerState<SHOCartPage> {
+  bool _reconciling = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reconcileCart());
+  }
+
+  Future<void> _reconcileCart() async {
+    final cart = ref.read(cartProvider);
+    if (cart.items.isEmpty || _reconciling) return;
+
+    setState(() => _reconciling = true);
+    try {
+      final report =
+          await ref.read(cartReconcileServiceProvider).reconcile(cart);
+      if (report.hasIssues) {
+        await ref
+            .read(cartProvider.notifier)
+            .applyReconciledItems(report.updatedItems);
+        if (mounted) {
+          SHOAppToast.info(_cartIssueMessage(AppLocalizations.of(context), report));
+        }
+      }
+    } catch (_) {
+      // 静默失败，不影响购物车主流程
+    } finally {
+      if (mounted) setState(() => _reconciling = false);
+    }
+  }
+
+  String _cartIssueMessage(AppLocalizations l10n, SHOCartReconcileReport report) {
+    if (report.unavailableCount > 0 && report.priceChangedCount > 0) {
+      return l10n.cartIssuesBoth(
+        report.unavailableCount,
+        report.priceChangedCount,
+      );
+    }
+    if (report.unavailableCount > 0) {
+      return l10n.cartIssuesUnavailable(report.unavailableCount);
+    }
+    return l10n.cartIssuesPriceChanged(report.priceChangedCount);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final cart = ref.watch(cartProvider);
+    final hasUnavailable = cart.items.any((item) => item.unavailable);
 
     if (cart.items.isEmpty) {
       return SHOEmptyState(
@@ -34,6 +86,18 @@ class SHOCartPage extends ConsumerWidget {
 
     return Column(
       children: [
+        if (hasUnavailable)
+          MaterialBanner(
+            content: Text(l10n.cartUnavailableBanner),
+            leading: const Icon(Icons.warning_amber_rounded),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    ref.read(cartProvider.notifier).removeUnavailableItems(),
+                child: Text(l10n.cartRemoveUnavailable),
+              ),
+            ],
+          ),
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -76,7 +140,7 @@ class SHOCartPage extends ConsumerWidget {
         _SHOCartFooter(
           cart: cart,
           onSelectAll: (v) => ref.read(cartProvider.notifier).selectAll(v),
-          onCheckout: cart.selectedCount > 0
+          onCheckout: cart.selectedCount > 0 && !hasUnavailable
               ? () => context.push(SHOAppRoutes.checkout)
               : null,
         ),
@@ -102,72 +166,92 @@ class _SHOCartLineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Checkbox(
-          value: item.selected,
-          onChanged: (_) => onToggle(),
-          activeColor: SHOAppColors.primary,
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-          child: SizedBox(
-            width: 72,
-            height: 72,
-            child: SHOAppNetworkImage(url: item.imageUrl, fit: BoxFit.cover),
+    final l10n = AppLocalizations.of(context);
+
+    return Opacity(
+      opacity: item.unavailable ? 0.45 : 1,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: item.selected && !item.unavailable,
+            onChanged: item.unavailable ? null : (_) => onToggle(),
+            activeColor: SHOAppColors.primary,
           ),
-        ),
-        const SizedBox(width: SHOAppSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+            child: SizedBox(
+              width: 72,
+              height: 72,
+              child: SHOAppNetworkImage(
+                url: item.imageUrl,
+                fit: BoxFit.cover,
+                memCacheWidth: 144,
               ),
-              if (item.variantLabel.isNotEmpty) ...[
-                const SizedBox(height: SHOAppSpacing.xxs),
+            ),
+          ),
+          const SizedBox(width: SHOAppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  item.variantLabel,
-                  style: Theme.of(context).textTheme.bodySmall,
+                  item.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 13),
                 ),
-              ],
-              const SizedBox(height: SHOAppSpacing.sm),
-              Row(
-                children: [
+                if (item.unavailable)
                   Text(
-                    priceFormatter.formatCents(item.price),
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: SHOAppColors.sale,
+                    l10n.cartItemUnavailable,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: SHOAppColors.error,
                         ),
                   ),
-                  const Spacer(),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: onDecrement,
-                    icon: const Icon(Icons.remove, size: 16),
+                if (item.priceChanged && !item.unavailable)
+                  Text(
+                    l10n.cartItemPriceUpdated,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: SHOAppColors.warning,
+                        ),
                   ),
-                  Text('${item.quantity}'),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: onIncrement,
-                    icon: const Icon(Icons.add, size: 16),
-                  ),
+                if (item.variantLabel.isNotEmpty) ...[
+                  const SizedBox(height: SHOAppSpacing.xxs),
+                  Text(item.variantLabel, style: Theme.of(context).textTheme.bodySmall),
                 ],
-              ),
-            ],
+                const SizedBox(height: SHOAppSpacing.sm),
+                Row(
+                  children: [
+                    Text(
+                      priceFormatter.formatCents(item.price),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: SHOAppColors.sale,
+                          ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      onPressed: item.unavailable ? null : onDecrement,
+                      icon: const Icon(Icons.remove, size: 16),
+                    ),
+                    Text('${item.quantity}'),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      onPressed: item.unavailable ? null : onIncrement,
+                      icon: const Icon(Icons.add, size: 16),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        IconButton(
-          onPressed: onRemove,
-          icon: const Icon(Icons.delete_outline, size: 18),
-        ),
-      ],
+          IconButton(
+            onPressed: onRemove,
+            icon: const Icon(Icons.delete_outline, size: 18),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -207,10 +291,7 @@ class _SHOCartFooter extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  l10n.cartTotalLabel,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(l10n.cartTotalLabel, style: Theme.of(context).textTheme.bodySmall),
                 Text(
                   priceFormatter.formatCents(cart.selectedTotalCents),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(

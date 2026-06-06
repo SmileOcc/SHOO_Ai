@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../errors/hos_exception.dart';
 import '../errors/hos_error_mapper.dart';
 import '../widgets/hos_error_view.dart';
+import '../widgets/hos_loading_state.dart';
 
 extension SHOAsyncValueUI<T> on AsyncValue<T> {
   Widget whenWidget({
@@ -13,13 +14,20 @@ extension SHOAsyncValueUI<T> on AsyncValue<T> {
   }) {
     return when(
       data: data,
-      loading: () => loading ?? const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      loading: () =>
+          loading ??
+          const SHOAppLoadingState(
+            state: SHOLoadingState.loading,
+          ),
       error: (err, stack) {
         if (error != null) return error(err, stack);
         final message = err is SHOAppException
             ? userFacingMessage(err)
-            : 'Something went wrong';
-        return SHOAppErrorView(message: message);
+            : err.toString();
+        return SHOAppErrorView(
+          message: message,
+          onRetry: null,
+        );
       },
     );
   }

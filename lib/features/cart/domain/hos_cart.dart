@@ -14,6 +14,8 @@ class SHOCartItem with _$SHOCartItem {
     @Default(1) int quantity,
     @Default('') String variantLabel,
     @Default(true) bool selected,
+    @Default(false) bool unavailable,
+    @Default(false) bool priceChanged,
   }) = _SHOCartItem;
 
   factory SHOCartItem.fromJson(Map<String, dynamic> json) =>

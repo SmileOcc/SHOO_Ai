@@ -11,6 +11,7 @@ import '../../../core/widgets/hos_button.dart';
 import '../../../core/widgets/hos_error_view.dart';
 import '../../../core/widgets/hos_price_text.dart';
 import '../../../core/widgets/hos_promo_tag.dart';
+import '../../../core/share/hos_product_share_button.dart';
 import '../../../core/widgets/hos_skeleton_box.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../home/domain/hos_banner.dart';
@@ -29,9 +30,15 @@ class SHOProductDetailPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final detailAsync = ref.watch(productDetailProvider(productId));
     final reviewsAsync = ref.watch(productReviewsProvider(productId));
+    final detail = detailAsync.asData?.value;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.productDetailTitle)),
+      appBar: AppBar(
+        title: Text(l10n.productDetailTitle),
+        actions: [
+          if (detail != null) SHOProductShareButton(product: detail),
+        ],
+      ),
       body: detailAsync.whenWidget(
         loading: const _SHOProductDetailSkeleton(),
         error: (error, _) => SHOAppErrorView(

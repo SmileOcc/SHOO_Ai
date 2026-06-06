@@ -48,6 +48,8 @@ class SHOLocalStorage {
     }
   }
 
+  Future<void> remove(String key) => _prefs.remove(key);
+
   Future<void> write<T>(String key, T value) async {
     try {
       if (value is String) {

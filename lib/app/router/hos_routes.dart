@@ -22,6 +22,8 @@ abstract final class SHOAppRoutes {
   static const debug = '/debug';
 
   static String product(String id) => '/product/$id';
+
+  static String productDeepLink(String id) => 'https://shoo.app/product/$id';
   static String productReviews(String id) => '/product/$id/reviews';
   static String order(String id) => '/orders/$id';
   static String orderLogistics(String id) => '/orders/$id/logistics';

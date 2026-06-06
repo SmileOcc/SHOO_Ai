@@ -23,10 +23,18 @@ class SHOSearchApi {
     );
   }
 
-  Future<SHOPageResult<SHOProduct>> searchProducts(String query) {
+  Future<SHOPageResult<SHOProduct>> searchProducts(
+    String query, {
+    int page = 1,
+    int pageSize = 10,
+  }) {
     return _dio.getData<SHOPageResult<SHOProduct>>(
       '/search',
-      queryParameters: {'q': query},
+      queryParameters: {
+        'q': query,
+        'page': page,
+        'pageSize': pageSize,
+      },
       parser: (data) => SHOPageResult.fromJson(
         data as Map<String, dynamic>,
         (json) => SHOProduct.fromJson(json as Map<String, dynamic>),

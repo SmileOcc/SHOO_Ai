@@ -345,6 +345,7 @@ mixin _$SHOAfterSaleCreateRequest {
   String get orderId => throw _privateConstructorUsedError;
   SHOAfterSaleType get type => throw _privateConstructorUsedError;
   String get reason => throw _privateConstructorUsedError;
+  List<String> get imageUrls => throw _privateConstructorUsedError;
 
   /// Serializes this SHOAfterSaleCreateRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -363,7 +364,12 @@ abstract class $SHOAfterSaleCreateRequestCopyWith<$Res> {
     $Res Function(SHOAfterSaleCreateRequest) then,
   ) = _$SHOAfterSaleCreateRequestCopyWithImpl<$Res, SHOAfterSaleCreateRequest>;
   @useResult
-  $Res call({String orderId, SHOAfterSaleType type, String reason});
+  $Res call({
+    String orderId,
+    SHOAfterSaleType type,
+    String reason,
+    List<String> imageUrls,
+  });
 }
 
 /// @nodoc
@@ -387,6 +393,7 @@ class _$SHOAfterSaleCreateRequestCopyWithImpl<
     Object? orderId = null,
     Object? type = null,
     Object? reason = null,
+    Object? imageUrls = null,
   }) {
     return _then(
       _value.copyWith(
@@ -402,6 +409,10 @@ class _$SHOAfterSaleCreateRequestCopyWithImpl<
                 ? _value.reason
                 : reason // ignore: cast_nullable_to_non_nullable
                       as String,
+            imageUrls: null == imageUrls
+                ? _value.imageUrls
+                : imageUrls // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
           )
           as $Val,
     );
@@ -417,7 +428,12 @@ abstract class _$$SHOAfterSaleCreateRequestImplCopyWith<$Res>
   ) = __$$SHOAfterSaleCreateRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String orderId, SHOAfterSaleType type, String reason});
+  $Res call({
+    String orderId,
+    SHOAfterSaleType type,
+    String reason,
+    List<String> imageUrls,
+  });
 }
 
 /// @nodoc
@@ -441,6 +457,7 @@ class __$$SHOAfterSaleCreateRequestImplCopyWithImpl<$Res>
     Object? orderId = null,
     Object? type = null,
     Object? reason = null,
+    Object? imageUrls = null,
   }) {
     return _then(
       _$SHOAfterSaleCreateRequestImpl(
@@ -456,6 +473,10 @@ class __$$SHOAfterSaleCreateRequestImplCopyWithImpl<$Res>
             ? _value.reason
             : reason // ignore: cast_nullable_to_non_nullable
                   as String,
+        imageUrls: null == imageUrls
+            ? _value._imageUrls
+            : imageUrls // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
       ),
     );
   }
@@ -468,7 +489,8 @@ class _$SHOAfterSaleCreateRequestImpl implements _SHOAfterSaleCreateRequest {
     required this.orderId,
     required this.type,
     required this.reason,
-  });
+    final List<String> imageUrls = const [],
+  }) : _imageUrls = imageUrls;
 
   factory _$SHOAfterSaleCreateRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$SHOAfterSaleCreateRequestImplFromJson(json);
@@ -479,10 +501,18 @@ class _$SHOAfterSaleCreateRequestImpl implements _SHOAfterSaleCreateRequest {
   final SHOAfterSaleType type;
   @override
   final String reason;
+  final List<String> _imageUrls;
+  @override
+  @JsonKey()
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageUrls);
+  }
 
   @override
   String toString() {
-    return 'SHOAfterSaleCreateRequest(orderId: $orderId, type: $type, reason: $reason)';
+    return 'SHOAfterSaleCreateRequest(orderId: $orderId, type: $type, reason: $reason, imageUrls: $imageUrls)';
   }
 
   @override
@@ -492,12 +522,22 @@ class _$SHOAfterSaleCreateRequestImpl implements _SHOAfterSaleCreateRequest {
             other is _$SHOAfterSaleCreateRequestImpl &&
             (identical(other.orderId, orderId) || other.orderId == orderId) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.reason, reason) || other.reason == reason));
+            (identical(other.reason, reason) || other.reason == reason) &&
+            const DeepCollectionEquality().equals(
+              other._imageUrls,
+              _imageUrls,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, orderId, type, reason);
+  int get hashCode => Object.hash(
+    runtimeType,
+    orderId,
+    type,
+    reason,
+    const DeepCollectionEquality().hash(_imageUrls),
+  );
 
   /// Create a copy of SHOAfterSaleCreateRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -521,6 +561,7 @@ abstract class _SHOAfterSaleCreateRequest implements SHOAfterSaleCreateRequest {
     required final String orderId,
     required final SHOAfterSaleType type,
     required final String reason,
+    final List<String> imageUrls,
   }) = _$SHOAfterSaleCreateRequestImpl;
 
   factory _SHOAfterSaleCreateRequest.fromJson(Map<String, dynamic> json) =
@@ -532,6 +573,8 @@ abstract class _SHOAfterSaleCreateRequest implements SHOAfterSaleCreateRequest {
   SHOAfterSaleType get type;
   @override
   String get reason;
+  @override
+  List<String> get imageUrls;
 
   /// Create a copy of SHOAfterSaleCreateRequest
   /// with the given fields replaced by the non-null parameter values.

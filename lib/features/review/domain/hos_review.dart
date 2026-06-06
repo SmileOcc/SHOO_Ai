@@ -26,6 +26,9 @@ class SHOProductReviewSummary with _$SHOProductReviewSummary {
     required double averageRating,
     @Default(0) int totalCount,
     @Default(<SHOProductReview>[]) List<SHOProductReview> items,
+    @Default(false) bool hasMore,
+    @Default(1) int page,
+    @Default(10) int pageSize,
   }) = _SHOProductReviewSummary;
 
   factory SHOProductReviewSummary.fromJson(Map<String, dynamic> json) =>

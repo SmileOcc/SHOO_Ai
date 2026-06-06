@@ -34,9 +34,9 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
     final seen = await storage.read<bool>(_onboardingSeenKey) ?? false;
 
     if (!seen) {
-      context.go(SHOAppRoutes.onboarding);
+      context.replace(SHOAppRoutes.onboarding);
     } else {
-      context.go(SHOAppRoutes.home);
+      context.replace(SHOAppRoutes.home);
     }
   }
 

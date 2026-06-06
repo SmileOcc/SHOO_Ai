@@ -110,6 +110,7 @@ assets/mock/          # Mock JSON 单一数据源
 
 ## Docs
 
+- [SHOO 项目搭建框架技术方案](docs/SHOO项目搭建框架技术方案.md) — 三方组件、路由方案、基建清单、待补全 roadmap
 - [项目方案报告](docs/项目方案报告.md)
 - [Flutter 电商项目基建技术方案](docs/Flutter电商项目基建技术方案.md) — 可复刻到其他项目的完整基建文档
 
