@@ -1,0 +1,32 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "p1",
+        "title": "Ribbed Knit Crop Top",
+        "imageUrl": "https://picsum.photos/seed/p1/400/500",
+        "price": 1299,
+        "originalPrice": 2599,
+        "discountLabel": "-50%",
+        "rating": 4.8,
+        "soldCount": 12840
+      },
+      {
+        "id": "p2",
+        "title": "High Waist Wide Leg Pants",
+        "imageUrl": "https://picsum.photos/seed/p2/400/500",
+        "price": 1899,
+        "originalPrice": 3299,
+        "discountLabel": "-42%",
+        "rating": 4.6,
+        "soldCount": 8920
+      }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "total": 2,
+    "hasMore": false
+  }
+}
