@@ -29,6 +29,7 @@ mixin _$SHOProduct {
   String get discountLabel => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
   int get soldCount => throw _privateConstructorUsedError;
+  String get categoryId => throw _privateConstructorUsedError;
 
   /// Serializes this SHOProduct to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $SHOProductCopyWith<$Res> {
     String discountLabel,
     double rating,
     int soldCount,
+    String categoryId,
   });
 }
 
@@ -82,6 +84,7 @@ class _$SHOProductCopyWithImpl<$Res, $Val extends SHOProduct>
     Object? discountLabel = null,
     Object? rating = null,
     Object? soldCount = null,
+    Object? categoryId = null,
   }) {
     return _then(
       _value.copyWith(
@@ -117,6 +120,10 @@ class _$SHOProductCopyWithImpl<$Res, $Val extends SHOProduct>
                 ? _value.soldCount
                 : soldCount // ignore: cast_nullable_to_non_nullable
                       as int,
+            categoryId: null == categoryId
+                ? _value.categoryId
+                : categoryId // ignore: cast_nullable_to_non_nullable
+                      as String,
           )
           as $Val,
     );
@@ -141,6 +148,7 @@ abstract class _$$SHOProductImplCopyWith<$Res>
     String discountLabel,
     double rating,
     int soldCount,
+    String categoryId,
   });
 }
 
@@ -166,6 +174,7 @@ class __$$SHOProductImplCopyWithImpl<$Res>
     Object? discountLabel = null,
     Object? rating = null,
     Object? soldCount = null,
+    Object? categoryId = null,
   }) {
     return _then(
       _$SHOProductImpl(
@@ -201,6 +210,10 @@ class __$$SHOProductImplCopyWithImpl<$Res>
             ? _value.soldCount
             : soldCount // ignore: cast_nullable_to_non_nullable
                   as int,
+        categoryId: null == categoryId
+            ? _value.categoryId
+            : categoryId // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -218,6 +231,7 @@ class _$SHOProductImpl implements _SHOProduct {
     this.discountLabel = '',
     required this.rating,
     this.soldCount = 0,
+    this.categoryId = '',
   });
 
   factory _$SHOProductImpl.fromJson(Map<String, dynamic> json) =>
@@ -241,10 +255,13 @@ class _$SHOProductImpl implements _SHOProduct {
   @override
   @JsonKey()
   final int soldCount;
+  @override
+  @JsonKey()
+  final String categoryId;
 
   @override
   String toString() {
-    return 'SHOProduct(id: $id, title: $title, imageUrl: $imageUrl, price: $price, originalPrice: $originalPrice, discountLabel: $discountLabel, rating: $rating, soldCount: $soldCount)';
+    return 'SHOProduct(id: $id, title: $title, imageUrl: $imageUrl, price: $price, originalPrice: $originalPrice, discountLabel: $discountLabel, rating: $rating, soldCount: $soldCount, categoryId: $categoryId)';
   }
 
   @override
@@ -263,7 +280,9 @@ class _$SHOProductImpl implements _SHOProduct {
                 other.discountLabel == discountLabel) &&
             (identical(other.rating, rating) || other.rating == rating) &&
             (identical(other.soldCount, soldCount) ||
-                other.soldCount == soldCount));
+                other.soldCount == soldCount) &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -278,6 +297,7 @@ class _$SHOProductImpl implements _SHOProduct {
     discountLabel,
     rating,
     soldCount,
+    categoryId,
   );
 
   /// Create a copy of SHOProduct
@@ -304,6 +324,7 @@ abstract class _SHOProduct implements SHOProduct {
     final String discountLabel,
     required final double rating,
     final int soldCount,
+    final String categoryId,
   }) = _$SHOProductImpl;
 
   factory _SHOProduct.fromJson(Map<String, dynamic> json) =
@@ -325,6 +346,8 @@ abstract class _SHOProduct implements SHOProduct {
   double get rating;
   @override
   int get soldCount;
+  @override
+  String get categoryId;
 
   /// Create a copy of SHOProduct
   /// with the given fields replaced by the non-null parameter values.

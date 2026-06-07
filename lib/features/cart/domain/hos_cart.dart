@@ -35,6 +35,11 @@ class SHOCartSnapshot with _$SHOCartSnapshot {
 
   int get itemCount => items.fold(0, (sum, i) => sum + i.quantity);
 
+  /// 可购买商品数量（排除已下架/失效行）。
+  int get availableItemCount => items
+      .where((i) => !i.unavailable)
+      .fold(0, (sum, i) => sum + i.quantity);
+
   int get selectedCount =>
       items.where((i) => i.selected).fold(0, (sum, i) => sum + i.quantity);
 

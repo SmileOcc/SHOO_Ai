@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/analytics/hos_analytics.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/platform/hos_native_business_event.dart';
 import '../../../core/platform/hos_native_business_event_service.dart';
@@ -30,6 +31,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
   bool _paying = false;
   bool _paid = false;
   bool _polling = false;
+  bool _paymentTracked = false;
   Timer? _pollTimer;
   int _pollAttempts = 0;
   StreamSubscription<SHONativeBusinessEvent>? _nativePaymentSub;
@@ -67,6 +69,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
         });
         _stopPolling();
         ref.invalidate(ordersProvider);
+        _trackPaymentSuccess();
       }
     });
   }
@@ -77,7 +80,23 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
       if (!mounted) return;
       if (_isPaidStatus(detail.status)) {
         setState(() => _paid = true);
+        _trackPaymentSuccess();
       }
+    } catch (_) {}
+  }
+
+  Future<void> _trackPaymentSuccess() async {
+    if (_paymentTracked) return;
+    _paymentTracked = true;
+    try {
+      final detail = await ref.read(orderDetailProvider(widget.orderId).future);
+      await SHOAnalyticsManager.instance.trackEvent(
+        SHOAnalyticsRegistry.paymentSuccess,
+        {
+          'order_id': widget.orderId,
+          'amount': detail.totalCents / 100.0,
+        },
+      );
     } catch (_) {}
   }
 
@@ -99,6 +118,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
       ref.invalidate(ordersProvider);
       if (!mounted) return;
       setState(() => _paid = true);
+      await _trackPaymentSuccess();
       SHOAppToast.success(AppLocalizations.of(context).paymentSuccessTitle);
       _startPolling();
     } catch (error) {

@@ -116,6 +116,24 @@ abstract class AppLocalizations {
   /// **'Category'**
   String get tabCategory;
 
+  /// No description provided for @categorySortAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get categorySortAll;
+
+  /// No description provided for @categorySortHot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get categorySortHot;
+
+  /// No description provided for @categorySortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get categorySortNewest;
+
   /// No description provided for @tabBag.
   ///
   /// In en, this message translates to:
@@ -410,6 +428,12 @@ abstract class AppLocalizations {
   /// **'You are offline. Some features may be unavailable.'**
   String get offlineBanner;
 
+  /// No description provided for @localServerBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Local mock server is not running. Start it: cd server && npm run dev'**
+  String get localServerBanner;
+
   /// No description provided for @splashTagline.
   ///
   /// In en, this message translates to:
@@ -565,6 +589,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset to build default'**
   String get debugResetEnv;
+
+  /// No description provided for @debugEnvRestarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching environment, restarting app…'**
+  String get debugEnvRestarting;
+
+  /// No description provided for @debugShowEnvBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Show environment badge'**
+  String get debugShowEnvBadge;
+
+  /// No description provided for @debugShowEnvBadgeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Display current env at top-right (9pt red text)'**
+  String get debugShowEnvBadgeHint;
+
+  /// No description provided for @envBadgeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Env: {env}'**
+  String envBadgeLabel(String env);
+
+  /// No description provided for @dialogCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get dialogCancel;
+
+  /// No description provided for @dialogConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get dialogConfirm;
+
+  /// No description provided for @settingsGroupDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics & data'**
+  String get settingsGroupDiagnostics;
+
+  /// No description provided for @settingsReportLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Report logs'**
+  String get settingsReportLogs;
+
+  /// No description provided for @settingsReportLogsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Export cached logs via system share'**
+  String get settingsReportLogsHint;
+
+  /// No description provided for @settingsReportLogsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No logs to report'**
+  String get settingsReportLogsEmpty;
+
+  /// No description provided for @settingsReportLogsConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report logs'**
+  String get settingsReportLogsConfirmTitle;
+
+  /// No description provided for @settingsReportLogsConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Export local log file via share sheet. Continue?'**
+  String get settingsReportLogsConfirmMessage;
+
+  /// No description provided for @settingsReportLogsSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Share sheet opened'**
+  String get settingsReportLogsSuccess;
+
+  /// No description provided for @settingsClearCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cache'**
+  String get settingsClearCache;
+
+  /// No description provided for @settingsClearCacheHint.
+  ///
+  /// In en, this message translates to:
+  /// **'View and clear cache by category'**
+  String get settingsClearCacheHint;
+
+  /// No description provided for @settingsCacheTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cache'**
+  String get settingsCacheTitle;
+
+  /// No description provided for @settingsCacheTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total cache size'**
+  String get settingsCacheTotal;
+
+  /// No description provided for @settingsCacheLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'App logs'**
+  String get settingsCacheLogs;
+
+  /// No description provided for @settingsCacheLogsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Locally cached runtime logs'**
+  String get settingsCacheLogsHint;
+
+  /// No description provided for @settingsCacheImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Image cache'**
+  String get settingsCacheImages;
+
+  /// No description provided for @settingsCacheImagesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Network image disk cache'**
+  String get settingsCacheImagesHint;
+
+  /// No description provided for @settingsCacheSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history'**
+  String get settingsCacheSearch;
+
+  /// No description provided for @settingsCacheSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent search keywords'**
+  String get settingsCacheSearchHint;
+
+  /// No description provided for @settingsCacheCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart snapshot'**
+  String get settingsCacheCart;
+
+  /// No description provided for @settingsCacheCartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Local cart data'**
+  String get settingsCacheCartHint;
+
+  /// No description provided for @settingsCacheActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity prefetch'**
+  String get settingsCacheActivity;
+
+  /// No description provided for @settingsCacheActivityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Marketing activity config and images'**
+  String get settingsCacheActivityHint;
+
+  /// No description provided for @settingsCachePreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Other preferences'**
+  String get settingsCachePreferences;
+
+  /// No description provided for @settingsCachePreferencesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Local prefs except theme and language'**
+  String get settingsCachePreferencesHint;
+
+  /// No description provided for @settingsCacheClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cache'**
+  String get settingsCacheClearTitle;
+
+  /// No description provided for @settingsCacheClearMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear \"{name}\"?'**
+  String settingsCacheClearMessage(String name);
+
+  /// No description provided for @settingsCacheClearConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get settingsCacheClearConfirm;
+
+  /// No description provided for @settingsCacheClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all cache'**
+  String get settingsCacheClearAll;
+
+  /// No description provided for @settingsCacheClearAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all cache'**
+  String get settingsCacheClearAllTitle;
+
+  /// No description provided for @settingsCacheClearAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will clear all local cache categories. Cannot be undone.'**
+  String get settingsCacheClearAllMessage;
+
+  /// No description provided for @settingsCacheCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleared'**
+  String get settingsCacheCleared;
 
   /// No description provided for @debugClearCache.
   ///
@@ -757,6 +997,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get dialogClose;
+
+  /// No description provided for @debugNetworkLogEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Network log debug'**
+  String get debugNetworkLogEntry;
+
+  /// No description provided for @debugNetworkLogEntryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure request/response logging and API filters'**
+  String get debugNetworkLogEntryHint;
+
+  /// No description provided for @debugNetworkLogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Network log debug'**
+  String get debugNetworkLogTitle;
+
+  /// No description provided for @debugNetworkLogHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes apply immediately. Logs go to console and local log cache (DEBUG level).'**
+  String get debugNetworkLogHint;
+
+  /// No description provided for @debugNetworkLogEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable network logging'**
+  String get debugNetworkLogEnabled;
+
+  /// No description provided for @debugNetworkLogEnabledHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off to suppress all API logs'**
+  String get debugNetworkLogEnabledHint;
+
+  /// No description provided for @debugNetworkLogRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Log request params'**
+  String get debugNetworkLogRequest;
+
+  /// No description provided for @debugNetworkLogRequestHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes query string and body'**
+  String get debugNetworkLogRequestHint;
+
+  /// No description provided for @debugNetworkLogResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Log response body'**
+  String get debugNetworkLogResponse;
+
+  /// No description provided for @debugNetworkLogResponseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes response data payload'**
+  String get debugNetworkLogResponseHint;
+
+  /// No description provided for @debugNetworkLogMockRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock remote reporting'**
+  String get debugNetworkLogMockRemote;
+
+  /// No description provided for @debugNetworkLogMockRemoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When on, analytics and network logs are simulated locally only'**
+  String get debugNetworkLogMockRemoteHint;
+
+  /// No description provided for @debugNetworkLogRemoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When Mock is off, logs go to local server (127.0.0.1:3847). In-app Mock API auto-targets local server. Android emulator: API_BASE_URL=http://10.0.2.2:3847/api/v1'**
+  String get debugNetworkLogRemoteHint;
+
+  /// No description provided for @debugNetworkLogFilterEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by API path'**
+  String get debugNetworkLogFilterEnabled;
+
+  /// No description provided for @debugNetworkLogFilterEnabledHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only log APIs whose path contains listed keywords'**
+  String get debugNetworkLogFilterEnabledHint;
+
+  /// No description provided for @debugNetworkLogFilterPaths.
+  ///
+  /// In en, this message translates to:
+  /// **'API path keywords'**
+  String get debugNetworkLogFilterPaths;
+
+  /// No description provided for @debugNetworkLogFilterPathsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'One per line or comma-separated, e.g. /products, /banners'**
+  String get debugNetworkLogFilterPathsHint;
+
+  /// No description provided for @debugAnalyticsEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Business analytics'**
+  String get debugAnalyticsEntry;
+
+  /// No description provided for @debugAnalyticsEntryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'View event keys, fields, and preview reporting backends'**
+  String get debugAnalyticsEntryHint;
+
+  /// No description provided for @debugAnalyticsTabEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get debugAnalyticsTabEvents;
+
+  /// No description provided for @debugAnalyticsTabBackends.
+  ///
+  /// In en, this message translates to:
+  /// **'Backends'**
+  String get debugAnalyticsTabBackends;
+
+  /// No description provided for @debugAnalyticsTabHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get debugAnalyticsTabHistory;
+
+  /// No description provided for @debugAnalyticsEventKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Event key'**
+  String get debugAnalyticsEventKey;
+
+  /// No description provided for @debugAnalyticsFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Fields'**
+  String get debugAnalyticsFields;
+
+  /// No description provided for @debugAnalyticsFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get debugAnalyticsFire;
+
+  /// No description provided for @debugAnalyticsFired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fired: {key}'**
+  String debugAnalyticsFired(String key);
+
+  /// No description provided for @debugAnalyticsBackendsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered backends; extend via registerBackend()'**
+  String get debugAnalyticsBackendsHint;
+
+  /// No description provided for @debugAnalyticsBackendOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get debugAnalyticsBackendOn;
+
+  /// No description provided for @debugAnalyticsBackendOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get debugAnalyticsBackendOff;
+
+  /// No description provided for @debugAnalyticsMockRemoteQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock remote queue'**
+  String get debugAnalyticsMockRemoteQueue;
+
+  /// No description provided for @debugAnalyticsHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No analytics records yet'**
+  String get debugAnalyticsHistoryEmpty;
+
+  /// No description provided for @debugAnalyticsClearHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear history'**
+  String get debugAnalyticsClearHistory;
+
+  /// No description provided for @debugAnalyticsBackendsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Backends'**
+  String get debugAnalyticsBackendsUsed;
 
   /// No description provided for @debugToolsSection.
   ///
@@ -1339,6 +1777,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reviews'**
   String get ordersReviews;
+
+  /// No description provided for @ordersToUse.
+  ///
+  /// In en, this message translates to:
+  /// **'To Use'**
+  String get ordersToUse;
+
+  /// No description provided for @ordersAfterSalesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Returns'**
+  String get ordersAfterSalesShort;
+
+  /// No description provided for @profileFootprints.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get profileFootprints;
+
+  /// No description provided for @profileFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get profileFavorites;
+
+  /// No description provided for @profileFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get profileFollowing;
+
+  /// No description provided for @profileDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get profileDiscover;
+
+  /// No description provided for @profileDiscoverBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get profileDiscoverBadge;
+
+  /// No description provided for @profileFootprintsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Browsing history coming soon'**
+  String get profileFootprintsHint;
+
+  /// No description provided for @profileFootprintsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No browsing history yet'**
+  String get profileFootprintsEmpty;
+
+  /// No description provided for @profileActivityDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get profileActivityDelete;
+
+  /// No description provided for @profileActivitySelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get profileActivitySelectAll;
+
+  /// No description provided for @profileActivitySelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String profileActivitySelected(int count);
+
+  /// No description provided for @profileActivityDeleteSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete ({count})'**
+  String profileActivityDeleteSelected(int count);
+
+  /// No description provided for @profileActivityDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {count} items'**
+  String profileActivityDeleted(int count);
+
+  /// No description provided for @profileFollowingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Following list coming soon'**
+  String get profileFollowingHint;
+
+  /// No description provided for @profileCouponCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get profileCouponCenter;
+
+  /// No description provided for @profileCouponMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get profileCouponMore;
+
+  /// No description provided for @profileCouponClaim.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim'**
+  String get profileCouponClaim;
+
+  /// No description provided for @profileTabGuessYouLike.
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get profileTabGuessYouLike;
+
+  /// No description provided for @profileTabMyFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get profileTabMyFavorites;
+
+  /// No description provided for @profileTabMyReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'My Reviews'**
+  String get profileTabMyReviews;
+
+  /// No description provided for @profileServiceCoupons.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get profileServiceCoupons;
+
+  /// No description provided for @profileServiceAfterSale.
+  ///
+  /// In en, this message translates to:
+  /// **'After-sale'**
+  String get profileServiceAfterSale;
+
+  /// No description provided for @profileServiceShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get profileServiceShare;
+
+  /// No description provided for @profileServiceMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get profileServiceMessages;
+
+  /// No description provided for @profileServiceSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get profileServiceSearch;
+
+  /// No description provided for @profileFavoritesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved items yet'**
+  String get profileFavoritesEmpty;
+
+  /// No description provided for @profileFavoriteAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to saved items'**
+  String get profileFavoriteAdded;
+
+  /// No description provided for @profileFavoriteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from saved items'**
+  String get profileFavoriteRemoved;
+
+  /// No description provided for @profileReviewsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your delivered orders and share feedback'**
+  String get profileReviewsHint;
 
   /// No description provided for @ordersEmpty.
   ///

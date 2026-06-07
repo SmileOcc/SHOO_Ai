@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../features/product/domain/hos_product_detail.dart';
 import '../deeplink/hos_deeplink_config.dart';
+import '../analytics/hos_analytics.dart';
 import '../logging/hos_logger.dart';
 import '../utils/hos_widget_capture.dart';
 import 'hos_share_card.dart';
@@ -39,6 +40,16 @@ class SHOShareService {
       await Share.share('$title\n$link', subject: title);
     }
     SHOAppLogger.info('Shared product: $title');
+    final productId = link.contains('/product/')
+        ? link.split('/product/').last.split('?').first
+        : 'unknown';
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.shareProduct,
+      {
+        'product_id': productId,
+        'channel': files != null && files.isNotEmpty ? 'card_share' : 'text_share',
+      },
+    );
   }
 
   Future<void> shareProductCard({

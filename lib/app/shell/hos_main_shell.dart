@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/debug/core/hos_debug_tap_detector.dart';
 import '../../core/navigation/hos_tab_badge_provider.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';
+import '../../features/category/presentation/hos_category_controller.dart';
 import '../../features/home/presentation/hos_home_page.dart';
 import '../../l10n/app_localizations.dart';
 import '../router/hos_routes.dart';
@@ -54,6 +55,8 @@ class SHOMainShell extends ConsumerWidget {
     final badges = ref.watch(tabBadgesProvider);
     final current = navigationShell.currentIndex;
     final showSearch = _tabs[current].showSearchBar;
+    final isCategoryTab = current == 1;
+    final categoryTitle = ref.watch(categoryAppBarTitleProvider);
 
     final isProfileTab = current == 3;
 
@@ -72,7 +75,9 @@ class SHOMainShell extends ConsumerWidget {
                     )
                   : AppBar(
                       title: Text(
-                        _tabLabel(l10n, current),
+                        isCategoryTab && categoryTitle.isNotEmpty
+                            ? categoryTitle
+                            : _tabLabel(l10n, current),
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.5,

@@ -31,24 +31,48 @@ class SHOLocalStorage {
   Future<void> clear() async {
     final theme = getThemeMode();
     final locale = getLocaleCode();
+    final envOverride = _prefs.getString(SHOAppConstants.debugEnvOverrideKey);
+    final showEnvBadge = _prefs.getBool(SHOAppConstants.debugShowEnvBadgeKey);
     await _prefs.clear();
     if (theme != null) await setThemeMode(theme);
     if (locale != null) await setLocaleCode(locale);
-  }
-
-  Future<T?> read<T>(String key) async {
-    try {
-      if (T == String) return _prefs.getString(key) as T?;
-      if (T == int) return _prefs.getInt(key) as T?;
-      if (T == bool) return _prefs.getBool(key) as T?;
-      if (T == double) return _prefs.getDouble(key) as T?;
-      throw SHOCacheException('Unsupported type: $T');
-    } catch (_) {
-      throw const SHOCacheException('Failed to read local data');
+    if (envOverride != null) {
+      await _prefs.setString(SHOAppConstants.debugEnvOverrideKey, envOverride);
+    }
+    if (showEnvBadge != null) {
+      await _prefs.setBool(SHOAppConstants.debugShowEnvBadgeKey, showEnvBadge);
     }
   }
 
+  T? readSync<T>(String key) {
+    if (!_prefs.containsKey(key)) return null;
+    try {
+      final value = _prefs.get(key);
+      if (value == null) return null;
+      return value as T?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<T?> read<T>(String key) async => readSync<T>(key);
+
+  /// 估算 SharedPreferences 单条键值占用（字节，近似值）。
+  int estimateKeyBytes(String key) {
+    if (!_prefs.containsKey(key)) return 0;
+    final value = _prefs.get(key);
+    if (value == null) return key.length;
+    final payload = switch (value) {
+      String s => s,
+      List<String> list => list.join(','),
+      _ => value.toString(),
+    };
+    return key.length + payload.length;
+  }
+
   Future<void> remove(String key) => _prefs.remove(key);
+
+  Set<String> get keys => _prefs.getKeys();
 
   Future<void> write<T>(String key, T value) async {
     try {

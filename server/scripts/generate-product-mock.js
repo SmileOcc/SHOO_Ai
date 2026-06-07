@@ -1,6 +1,7 @@
 /**
- * 按分类生成商品列表与详情 Mock 数据 → assets/mock/
- * Usage: npm run generate-products && npm run sync-mock
+ * 按三级分类叶子节点生成商品 Mock → assets/mock/
+ * T-Shirts (c1-g1-l1) 固定 65 条，其余叶子默认 6 条。
+ * Usage: npm run mock:refresh
  */
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -8,94 +9,106 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.resolve(__dirname, '../../assets/mock');
+const categoriesPath = path.join(outDir, 'categories.json');
 
-const categories = [
-  { id: 'c1', name: 'Women', icon: '👗' },
-  { id: 'c2', name: 'Men', icon: '👔' },
-  { id: 'c3', name: 'Kids', icon: '🧒' },
-  { id: 'c4', name: 'Shoes', icon: '👟' },
-  { id: 'c5', name: 'Bags', icon: '👜' },
-  { id: 'c6', name: 'Beauty', icon: '💄' },
-  { id: 'c7', name: 'Home', icon: '🏠' },
-  { id: 'c8', name: 'Sale', icon: '🔥' },
-];
-
-const templates = {
-  c1: [
-    ['Ribbed Knit Crop Top', 'Soft ribbed knit with a flattering crop fit.', 1299, 2599, '-50%'],
-    ['Floral Midi Dress', 'Lightweight floral print, perfect for summer.', 1599, 2799, '-43%'],
-    ['Satin Slip Skirt', 'Silky satin fabric with a bias cut.', 1199, 2199, '-45%'],
-    ['Oversized Blazer Jacket', 'Structured shoulders with relaxed silhouette.', 2499, 4999, '-50%'],
-  ],
-  c2: [
-    ['Classic Cotton Tee', 'Breathable cotton, everyday essential.', 899, 1499, '-40%'],
-    ['Slim Fit Chinos', 'Stretch twill with tapered leg.', 1699, 2899, '-41%'],
-    ['Bomber Jacket', 'Lightweight nylon with ribbed trims.', 2199, 3999, '-45%'],
-    ['Oxford Button Shirt', 'Crisp weave, office or weekend ready.', 1399, 2299, '-39%'],
-  ],
-  c3: [
-    ['Cartoon Print Hoodie', 'Cozy fleece with fun graphic print.', 999, 1799, '-44%'],
-    ['Denim Overalls', 'Adjustable straps, durable denim.', 1299, 2199, '-41%'],
-    ['Striped Cotton Tee', 'Soft jersey, easy mix-and-match.', 599, 999, '-40%'],
-    ['Lightweight Puffer Vest', 'Warm without bulk, zip front.', 1499, 2599, '-42%'],
-  ],
-  c4: [
-    ['Chunky Platform Sandals', 'Cushioned sole, statement look.', 999, 1999, '-50%'],
-    ['Mesh Running Sneakers', 'Breathable upper, flexible outsole.', 1899, 3299, '-42%'],
-    ['Ankle Chelsea Boots', 'Elastic side panels, everyday boot.', 2299, 3999, '-43%'],
-    ['Leather Loafers', 'Polished finish, slip-on comfort.', 1799, 2999, '-40%'],
-  ],
-  c5: [
-    ['Mini Crossbody Bag', 'Compact size, adjustable strap.', 1299, 2199, '-41%'],
-    ['Canvas Tote Bag', 'Roomy interior, reinforced handles.', 899, 1599, '-44%'],
-    ['City Mini Backpack', 'Lightweight nylon, multiple pockets.', 1599, 2799, '-43%'],
-    ['Evening Clutch', 'Sleek metallic finish for nights out.', 799, 1399, '-43%'],
-  ],
-  c6: [
-    ['Velvet Lip Tint Set', 'Long-wear colors in a 3-piece set.', 699, 1199, '-42%'],
-    ['Hydrating Face Serum', 'Niacinamide blend for daily glow.', 999, 1699, '-41%'],
-    ['Eyeshadow Palette', '12 matte and shimmer shades.', 1299, 2199, '-41%'],
-    ['Floral Body Mist', 'Light fragrance, travel-friendly.', 499, 899, '-44%'],
-  ],
-  c7: [
-    ['Woven Throw Pillow', 'Textured cover, plush insert.', 899, 1599, '-44%'],
-    ['Matte Ceramic Vase', 'Minimal shape for fresh or dried blooms.', 1299, 2199, '-41%'],
-    ['USB Bedside Lamp', 'Warm dimmable light, touch control.', 1899, 3299, '-42%'],
-    ['Rattan Storage Basket', 'Natural weave, handles for carrying.', 1099, 1899, '-42%'],
-  ],
-  c8: [
-    ['Clearance Basic Tee', 'Last-chance colors at outlet price.', 399, 999, '-60%'],
-    ['Outlet Wrap Dress', 'Limited stock, easy wrap style.', 799, 1999, '-60%'],
-    ['Flash Deal Midi Skirt', 'Today only — high waist A-line.', 599, 1499, '-60%'],
-    ['Final Sale Puffer', 'End-of-season insulated jacket.', 1499, 3999, '-63%'],
-  ],
+const LEAF_PRODUCT_COUNTS = {
+  'c1-g1-l1': 65, // T-Shirts
 };
 
-function productId(categoryId, index) {
-  return `${categoryId}-p${index + 1}`;
+const DEFAULT_LEAF_COUNT = 6;
+
+const tshirtAdjectives = [
+  'Classic',
+  'Soft',
+  'Slim',
+  'Oversized',
+  'Vintage',
+  'Essential',
+  'Relaxed',
+  'Premium',
+  'Lightweight',
+  'Organic',
+];
+
+const tshirtStyles = [
+  'Crew Neck',
+  'V-Neck',
+  'Graphic',
+  'Striped',
+  'Plain',
+  'Pocket',
+  'Long Sleeve',
+  'Henley',
+];
+
+async function loadLeaves() {
+  const raw = await fs.readFile(categoriesPath, 'utf8');
+  const envelope = JSON.parse(raw);
+  const categories = envelope.data ?? [];
+  const leaves = [];
+
+  for (const category of categories) {
+    for (const group of category.groups ?? []) {
+      for (const child of group.children ?? []) {
+        leaves.push({
+          id: child.id,
+          name: child.name,
+          rootId: category.id,
+          rootName: category.name,
+          groupName: group.name,
+        });
+      }
+    }
+  }
+  return leaves;
 }
 
-function buildProducts() {
+function productCountForLeaf(leafId) {
+  return LEAF_PRODUCT_COUNTS[leafId] ?? DEFAULT_LEAF_COUNT;
+}
+
+function buildTitle(leaf, index) {
+  if (leaf.id === 'c1-g1-l1') {
+    const adj = tshirtAdjectives[index % tshirtAdjectives.length];
+    const style = tshirtStyles[Math.floor(index / tshirtAdjectives.length) % tshirtStyles.length];
+    return `${adj} ${style} T-Shirt ${index + 1}`;
+  }
+  return `${leaf.name} Item ${index + 1}`;
+}
+
+function buildDescription(leaf, title) {
+  if (leaf.id === 'c1-g1-l1') {
+    return `${title} — breathable cotton blend, everyday fit for ${leaf.groupName}.`;
+  }
+  return `${title} — curated pick for ${leaf.rootName} › ${leaf.groupName} › ${leaf.name}.`;
+}
+
+function buildProducts(leaves) {
   const items = [];
-  for (const category of categories) {
-    const rows = templates[category.id];
-    rows.forEach(([title, description, price, originalPrice, discountLabel], index) => {
-      const id = productId(category.id, index);
-      const rating = 4.3 + (index * 0.15);
-      const soldCount = 3000 + index * 1700 + category.id.charCodeAt(1) * 100;
+  for (const leaf of leaves) {
+    const count = productCountForLeaf(leaf.id);
+    for (let index = 0; index < count; index++) {
+      const id = `${leaf.id}-p${index + 1}`;
+      const title = buildTitle(leaf, index);
+      const basePrice = 799 + (index % 12) * 100 + leaf.id.length * 17;
+      const originalPrice = basePrice + 400 + (index % 5) * 120;
+      const discountPct = Math.min(60, Math.round((1 - basePrice / originalPrice) * 100));
+      const rating = 4.1 + (index % 9) * 0.1;
+      const soldCount = 800 + index * 137 + leaf.id.charCodeAt(leaf.id.length - 1) * 11;
+
       items.push({
         id,
-        categoryId: category.id,
+        categoryId: leaf.id,
         title,
         imageUrl: `https://picsum.photos/seed/${id}/400/500`,
-        price,
+        price: basePrice,
         originalPrice,
-        discountLabel,
+        discountLabel: discountPct > 0 ? `-${discountPct}%` : '',
         rating: Math.min(5, Number(rating.toFixed(1))),
         soldCount,
-        description,
+        description: buildDescription(leaf, title),
       });
-    });
+    }
   }
   return items;
 }
@@ -160,8 +173,10 @@ function buildReviewsCatalog(listItems) {
   return byProduct;
 }
 
-const listItems = buildProducts();
+const leaves = await loadLeaves();
+const listItems = buildProducts(leaves);
 const catalogItems = buildCatalog(listItems);
+const tshirtCount = listItems.filter((item) => item.categoryId === 'c1-g1-l1').length;
 
 const productsJson = {
   code: 0,
@@ -169,7 +184,7 @@ const productsJson = {
   data: {
     items: listItems.map(({ description, ...rest }) => rest),
     page: 1,
-    pageSize: 50,
+    pageSize: listItems.length,
     total: listItems.length,
     hasMore: false,
   },
@@ -198,7 +213,7 @@ await fs.writeFile(
   `${JSON.stringify(reviewsJson, null, 2)}\n`,
 );
 
-const searchItems = listItems.slice(0, 8).map(({ description, ...rest }) => rest);
+const searchItems = listItems.slice(0, 12).map(({ description, ...rest }) => rest);
 const searchJson = {
   code: 0,
   message: 'ok',
@@ -213,6 +228,6 @@ const searchJson = {
 await fs.writeFile(path.join(outDir, 'search.json'), `${JSON.stringify(searchJson, null, 2)}\n`);
 
 console.log(
-  `Generated ${listItems.length} products (${categories.length} categories) → ${outDir}`,
+  `Generated ${listItems.length} products (${leaves.length} leaf categories, T-Shirts=${tshirtCount}) → ${outDir}`,
 );
 console.log('Run: npm run sync-mock');

@@ -4,9 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
 import '../../../core/auth/hos_auth_guard.dart';
+import '../../../core/cache/hos_cache_cleanup_service.dart';
 import '../../../core/l10n/hos_locale_provider.dart';
+import '../../../core/logging/hos_log_manager.dart';
+import '../../../core/logging/hos_log_report_service.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/permissions/hos_permission_service.dart';
+import '../../../core/widgets/hos_dialog.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/theme/hos_theme_mode_provider.dart';
@@ -15,8 +19,58 @@ import '../../../l10n/app_localizations.dart';
 import 'hos_settings_group.dart';
 import 'hos_settings_picker_sheet.dart';
 
-class SHOSettingsPage extends ConsumerWidget {
+class SHOSettingsPage extends ConsumerStatefulWidget {
   const SHOSettingsPage({super.key});
+
+  @override
+  ConsumerState<SHOSettingsPage> createState() => _SHOSettingsPageState();
+}
+
+class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage> {
+  int _logBytes = 0;
+  int _cacheBytes = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _reloadSizes();
+  }
+
+  Future<void> _reloadSizes() async {
+    final logBytes = await ref.read(logReportServiceProvider).cachedByteSize();
+    final cacheBytes = await ref.read(cacheCleanupServiceProvider).totalBytes();
+    if (mounted) {
+      setState(() {
+        _logBytes = logBytes;
+        _cacheBytes = cacheBytes;
+      });
+    }
+  }
+
+  Future<void> _reportLogs(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    if (_logBytes == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.settingsReportLogsEmpty)),
+      );
+      return;
+    }
+    final ok = await SHOAppDialog.confirm(
+      context,
+      title: l10n.settingsReportLogsConfirmTitle,
+      message: l10n.settingsReportLogsConfirmMessage,
+      confirmLabel: l10n.dialogConfirm,
+      cancelLabel: l10n.dialogCancel,
+    );
+    if (!ok || !mounted) return;
+    final shared = await ref.read(logReportServiceProvider).reportLogs();
+    if (!mounted) return;
+    if (shared) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.settingsReportLogsSuccess)),
+      );
+    }
+  }
 
   String _themeLabel(AppLocalizations l10n, ThemeMode mode) {
     return switch (mode) {
@@ -72,7 +126,7 @@ class SHOSettingsPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
@@ -119,6 +173,27 @@ class SHOSettingsPage extends ConsumerWidget {
                 leading: const Icon(Icons.camera_alt_outlined, size: 20),
                 trailing: const SizedBox.shrink(),
                 onTap: () => ref.read(permissionServiceProvider).requestCamera(),
+              ),
+            ],
+          ),
+          const SizedBox(height: SHOAppSpacing.lg),
+          SHOSettingsGroup(
+            title: l10n.settingsGroupDiagnostics,
+            children: [
+              SHOSettingsTile(
+                title: l10n.settingsReportLogs,
+                subtitle: '${l10n.settingsReportLogsHint} · ${SHOAppLogManager.formatSize(_logBytes)}',
+                leading: const Icon(Icons.upload_file_outlined, size: 20),
+                onTap: () => _reportLogs(context),
+              ),
+              SHOSettingsTile(
+                title: l10n.settingsClearCache,
+                subtitle: '${l10n.settingsClearCacheHint} · ${SHOAppLogManager.formatSize(_cacheBytes)}',
+                leading: const Icon(Icons.cleaning_services_outlined, size: 20),
+                onTap: () async {
+                  await context.push(SHOAppRoutes.settingsCache);
+                  await _reloadSizes();
+                },
               ),
             ],
           ),

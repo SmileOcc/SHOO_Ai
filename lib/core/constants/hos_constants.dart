@@ -24,6 +24,8 @@ abstract final class SHOAppConstants {
   static const int searchHistoryMax = 10;
   static const int listPageSize = 10;
   static const String selectedAddressIdKey = 'selected_address_id';
+  static const String debugEnvOverrideKey = 'debug_env_override';
+  static const String debugShowEnvBadgeKey = 'debug_show_env_badge';
 
   static const List<String> defaultSkuSizes = ['S', 'M', 'L', 'XL'];
 }

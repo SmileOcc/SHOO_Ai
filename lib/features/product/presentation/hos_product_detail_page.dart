@@ -27,7 +27,11 @@ import '../../home/domain/hos_banner.dart';
 import '../../review/presentation/hos_review_controller.dart';
 import '../../review/presentation/hos_review_tile.dart';
 import '../domain/hos_product_detail.dart';
+import '../../profile/presentation/hos_profile_controller.dart';
 import 'hos_product_controller.dart';
+import 'hos_product_footprint_recorder.dart';
+import 'hos_product_view_reporter.dart';
+import '../../profile/domain/hos_profile_activity_product.dart';
 
 class SHOProductDetailPage extends ConsumerWidget {
   const SHOProductDetailPage({super.key, required this.productId});
@@ -50,7 +54,10 @@ class SHOProductDetailPage extends ConsumerWidget {
       }
     }
 
-    return detailAsync.whenWidget(
+    return Stack(
+      children: [
+        SHOProductViewReporter(productId: productId),
+        detailAsync.whenWidget(
       loading: _SHOProductDetailSkeleton(heroHeight: heroHeight),
       error: (error, _) => _SHOProductDetailError(
         message: error.toString(),
@@ -69,7 +76,10 @@ class SHOProductDetailPage extends ConsumerWidget {
             )
             .toList();
 
-        return AnnotatedRegion<SystemUiOverlayStyle>(
+        return Stack(
+          children: [
+            SHOProductFootprintRecorder(detail: detail),
+            AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -212,8 +222,12 @@ class SHOProductDetailPage extends ConsumerWidget {
               },
             ),
           ),
+        ),
+          ],
         );
       },
+    ),
+      ],
     );
   }
 }
@@ -266,6 +280,30 @@ class _SHOProductDetailTopBarState extends ConsumerState<_SHOProductDetailTopBar
                   onPressed: widget.onBack,
                 ),
                 const Spacer(),
+                SHOCircleOverlayButton(
+                  icon: ref
+                          .watch(profileActivityProvider)
+                          .favorites
+                          .contains(widget.product.id)
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  tooltip: l10n.profileFavorites,
+                  onPressed: () async {
+                    final added = await ref
+                        .read(profileActivityProvider.notifier)
+                        .toggleFavorite(
+                          widget.product.id,
+                          cache: widget.product.toActivityCache(),
+                        );
+                    if (!context.mounted) return;
+                    SHOAppToast.success(
+                      added
+                          ? l10n.profileFavoriteAdded
+                          : l10n.profileFavoriteRemoved,
+                    );
+                  },
+                ),
+                const SizedBox(width: SHOAppSpacing.sm),
                 SHOCircleOverlayButton(
                   icon: Icons.ios_share_rounded,
                   tooltip: l10n.sharePanelTitle,

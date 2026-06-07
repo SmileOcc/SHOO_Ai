@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/analytics/hos_analytics.dart';
 import '../../../core/pricing/hos_price_calculator.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
@@ -29,8 +30,30 @@ class SHOCheckoutPage extends ConsumerStatefulWidget {
 
 class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
   bool _submitting = false;
+  bool _checkoutTracked = false;
   SHOAddress? _pickedAddress;
   String? _pickedCouponId;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reportCheckoutStart());
+  }
+
+  Future<void> _reportCheckoutStart() async {
+    if (_checkoutTracked) return;
+    final cart = ref.read(cartProvider);
+    final items = cart.selectedItems;
+    if (items.isEmpty) return;
+    _checkoutTracked = true;
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.checkoutStart,
+      {
+        'item_count': items.length,
+        'amount': cart.selectedTotalCents / 100.0,
+      },
+    );
+  }
 
   Future<void> _pickAddress() async {
     final result = await context.push<SHOAddress>(SHOAppRoutes.addressesSelect);

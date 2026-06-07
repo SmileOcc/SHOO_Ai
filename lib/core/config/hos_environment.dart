@@ -20,6 +20,14 @@ enum SHOAppEnvironment {
         SHOAppEnvironment.prod => 'prod',
       };
 
+  /// 角标展示文案（开发 / 本地 / 预发 / 正式）。
+  String get badgeLabel => switch (this) {
+        SHOAppEnvironment.dev => '开发',
+        SHOAppEnvironment.local => '本地',
+        SHOAppEnvironment.staging => '预发',
+        SHOAppEnvironment.prod => '正式',
+      };
+
   bool get isProd => this == SHOAppEnvironment.prod;
 
   /// 连接本地 HTTP Mock Server，不走 Dio 内置拦截器。

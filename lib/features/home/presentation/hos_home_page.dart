@@ -94,9 +94,9 @@ class _SHOHomePageState extends ConsumerState<SHOHomePage> {
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: SHOAppSpacing.gridGap,
-                    crossAxisSpacing: SHOAppSpacing.gridGap,
-                    childAspectRatio: 0.52,
+                    mainAxisSpacing: SHOAppSpacing.lg,
+                    crossAxisSpacing: SHOAppSpacing.lg,
+                    childAspectRatio: SHOProductCard.gridChildAspectRatio,
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {

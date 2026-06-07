@@ -16,6 +16,7 @@ _$SHOProductImpl _$$SHOProductImplFromJson(Map<String, dynamic> json) =>
       discountLabel: json['discountLabel'] as String? ?? '',
       rating: (json['rating'] as num).toDouble(),
       soldCount: (json['soldCount'] as num?)?.toInt() ?? 0,
+      categoryId: json['categoryId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$SHOProductImplToJson(_$SHOProductImpl instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$$SHOProductImplToJson(_$SHOProductImpl instance) =>
       'discountLabel': instance.discountLabel,
       'rating': instance.rating,
       'soldCount': instance.soldCount,
+      'categoryId': instance.categoryId,
     };

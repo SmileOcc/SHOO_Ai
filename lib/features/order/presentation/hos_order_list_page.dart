@@ -12,6 +12,7 @@ import '../../../core/widgets/hos_network_image.dart';
 import '../../../core/widgets/hos_paged_scroll_view.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/hos_order.dart';
+import 'hos_order_list_tabs.dart';
 import 'hos_order_status_label.dart';
 import 'hos_orders_paged_controller.dart';
 
@@ -24,8 +25,78 @@ class SHOOrderListPage extends ConsumerStatefulWidget {
   ConsumerState<SHOOrderListPage> createState() => _SHOOrderListPageState();
 }
 
-class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage> {
+class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  static const _tabs = SHOOrderListTab.values;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = SHOOrderListTab.fromStatusQuery(widget.statusFilter);
+    _tabController = TabController(
+      length: _tabs.length,
+      vsync: this,
+      initialIndex: _tabs.indexOf(initial),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.ordersTitle),
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
+          dividerHeight: 0,
+          labelColor: Theme.of(context).colorScheme.onSurface,
+          unselectedLabelColor: context.shoTheme.textSecondary,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          unselectedLabelStyle:
+              const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+          indicator: const UnderlineTabIndicator(
+            borderSide: BorderSide(color: SHOAppColors.accent, width: 3),
+          ),
+          tabs: _tabs.map((tab) => Tab(text: tab.label(l10n))).toList(),
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabs
+            .map((tab) => _SHOOrderListTabView(tab: tab))
+            .toList(),
+      ),
+    );
+  }
+}
+
+class _SHOOrderListTabView extends ConsumerStatefulWidget {
+  const _SHOOrderListTabView({required this.tab});
+
+  final SHOOrderListTab tab;
+
+  @override
+  ConsumerState<_SHOOrderListTabView> createState() =>
+      _SHOOrderListTabViewState();
+}
+
+class _SHOOrderListTabViewState extends ConsumerState<_SHOOrderListTabView>
+    with AutomaticKeepAliveClientMixin {
   final _scrollController = ScrollController();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -35,77 +106,47 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = AppLocalizations.of(context);
     final ordersAsync = ref.watch(ordersPagedProvider);
-    final filter = _parseStatusFilter(widget.statusFilter);
-    final title = _titleForFilter(l10n, filter);
+    final isAllTab = widget.tab == SHOOrderListTab.all;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: ordersAsync.when(
-        loading: () => const SHOAppLoadingState(
-          state: SHOLoadingState.loading,
-          loadingWidget: SHOAppListSkeleton(itemCount: 5, itemHeight: 120),
-        ),
-        error: (error, _) => SHOAppLoadingState(
-          state: SHOLoadingState.error,
-          message: error.toString(),
-          onRetry: () => ref.invalidate(ordersPagedProvider),
-        ),
-        data: (paged) {
-          final filtered = _filterOrders(paged.items, filter);
-          if (filtered.isEmpty) {
-            return SHOAppLoadingState(
-              state: SHOLoadingState.empty,
-              message: l10n.ordersEmpty,
-              emptyIcon: Icons.receipt_long_outlined,
-            );
-          }
-
-          return SHOPagedScrollView(
-            controller: _scrollController,
-            itemCount: filtered.length,
-            onRefresh: () => ref.read(ordersPagedProvider.notifier).refresh(),
-            onLoadMore: filter == null
-                ? () => ref.read(ordersPagedProvider.notifier).loadMore()
-                : null,
-            isLoadingMore: paged.isLoadingMore,
-            hasMore: filter == null && paged.hasMore,
-            separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
-            itemBuilder: (context, index) =>
-                _SHOOrderCard(order: filtered[index]),
-          );
-        },
+    return ordersAsync.when(
+      loading: () => const SHOAppLoadingState(
+        state: SHOLoadingState.loading,
+        loadingWidget: SHOAppListSkeleton(itemCount: 5, itemHeight: 120),
       ),
+      error: (error, _) => SHOAppLoadingState(
+        state: SHOLoadingState.error,
+        message: error.toString(),
+        onRetry: () => ref.invalidate(ordersPagedProvider),
+      ),
+      data: (paged) {
+        final filtered = filterOrdersByTab(paged.items, widget.tab);
+        if (filtered.isEmpty) {
+          return SHOAppLoadingState(
+            state: SHOLoadingState.empty,
+            message: l10n.ordersEmpty,
+            emptyIcon: Icons.receipt_long_outlined,
+          );
+        }
+
+        return SHOPagedScrollView(
+          controller: _scrollController,
+          itemCount: filtered.length,
+          onRefresh: () => ref.read(ordersPagedProvider.notifier).refresh(),
+          onLoadMore: isAllTab
+              ? () => ref.read(ordersPagedProvider.notifier).loadMore()
+              : null,
+          isLoadingMore: paged.isLoadingMore,
+          hasMore: isAllTab && paged.hasMore,
+          separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
+          itemBuilder: (context, index) =>
+              _SHOOrderCard(order: filtered[index]),
+        );
+      },
     );
   }
-}
-
-SHOOrderStatus? _parseStatusFilter(String? raw) {
-  if (raw == null || raw.isEmpty) return null;
-  return switch (raw) {
-    'pending_payment' => SHOOrderStatus.pendingPayment,
-    'shipped' => SHOOrderStatus.shipped,
-    'delivered' => SHOOrderStatus.delivered,
-    _ => null,
-  };
-}
-
-List<SHOOrderSummary> _filterOrders(
-  List<SHOOrderSummary> orders,
-  SHOOrderStatus? status,
-) {
-  if (status == null) return orders;
-  return orders.where((o) => o.status == status).toList();
-}
-
-String _titleForFilter(AppLocalizations l10n, SHOOrderStatus? status) {
-  return switch (status) {
-    SHOOrderStatus.pendingPayment => l10n.ordersPendingPayment,
-    SHOOrderStatus.shipped => l10n.ordersShipped,
-    SHOOrderStatus.delivered => l10n.ordersReviews,
-    _ => l10n.ordersTitle,
-  };
 }
 
 class _SHOOrderCard extends StatelessWidget {

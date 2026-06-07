@@ -14,6 +14,7 @@ class SHOProduct with _$SHOProduct {
     @Default('') String discountLabel,
     required double rating,
     @Default(0) int soldCount,
+    @Default('') String categoryId,
   }) = _SHOProduct;
 
   factory SHOProduct.fromJson(Map<String, dynamic> json) =>

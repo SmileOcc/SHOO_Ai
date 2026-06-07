@@ -1,28 +1,55 @@
+import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file/file.dart' hide FileSystem;
 import 'package:file/local.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+
+import '../logging/hos_logger.dart';
 
 const _cacheKey = 'shoo_image_cache';
 
-/// 统一图片磁盘缓存：文件与 SQLite 均落在 Application Support，避免 tmp 被系统清理后
-/// 出现 `attempt to write a readonly database` (SQLITE_READONLY_DBMOVED / 1032)。
+/// 统一图片磁盘缓存：SQLite 与文件均落在 Application Support，避免 tmp 被清理后出现
+/// `attempt to write a readonly database` (SQLITE_READONLY / 1032)。
 class SHOImageCacheManager extends CacheManager with ImageCacheManager {
-  SHOImageCacheManager._()
-      : super(
-          Config(
-            _cacheKey,
-            stalePeriod: const Duration(days: 14),
-            maxNrOfCacheObjects: 300,
-            repo: CacheObjectProvider(databaseName: _cacheKey),
-            fileSystem: SHOPersistentImageFileSystem(_cacheKey),
-          ),
-        );
+  SHOImageCacheManager._(Config config) : super(config);
 
-  static final SHOImageCacheManager instance = SHOImageCacheManager._();
+  static SHOImageCacheManager? _instance;
+  static bool _recovering = false;
+  static DateTime? _lastRecoveryLog;
+
+  static SHOImageCacheManager get instance {
+    _instance ??= _createDefault();
+    return _instance!;
+  }
+
+  static SHOImageCacheManager _createDefault() {
+    return SHOImageCacheManager._(
+      Config(
+        _cacheKey,
+        stalePeriod: const Duration(days: 14),
+        maxNrOfCacheObjects: 300,
+        repo: CacheObjectProvider(databaseName: _cacheKey),
+        fileSystem: SHOPersistentImageFileSystem(_cacheKey),
+      ),
+    );
+  }
+
+  static Future<Config> _createExplicitConfig() async {
+    final supportDir = await getApplicationSupportDirectory();
+    final dbPath = p.join(supportDir.path, '$_cacheKey.db');
+    return Config(
+      _cacheKey,
+      stalePeriod: const Duration(days: 14),
+      maxNrOfCacheObjects: 300,
+      repo: CacheObjectProvider(path: dbPath),
+      fileSystem: SHOPersistentImageFileSystem(_cacheKey),
+    );
+  }
 
   static bool isReadonlyDbError(Object error) {
     final msg = error.toString().toLowerCase();
@@ -33,31 +60,82 @@ class SHOImageCacheManager extends CacheManager with ImageCacheManager {
   static Future<void> ensureReady() async {
     try {
       await instance.config.repo.open();
-    } catch (e) {
-      if (isReadonlyDbError(e)) {
-        await _reset();
+    } catch (error) {
+      if (isReadonlyDbError(error)) {
+        await _hardReset(logError: error);
       } else {
         rethrow;
       }
     }
   }
 
-  static Future<void> recoverFromReadonlyError() => _reset();
+  /// 运行时遇到只读库错误时调用：跳过 SQLite 写操作，直接删库并重建实例。
+  static Future<void> recoverFromReadonlyError({Object? error}) async {
+    if (_recovering) return;
+    if (error != null) {
+      _logRecoveryOnce(error);
+    }
+    await _hardReset();
+  }
 
-  static Future<void> _reset() async {
+  static void _logRecoveryOnce(Object error) {
+    final now = DateTime.now();
+    if (_lastRecoveryLog != null &&
+        now.difference(_lastRecoveryLog!) < const Duration(seconds: 10)) {
+      return;
+    }
+    _lastRecoveryLog = now;
+    SHOAppLogger.warn('Image cache DB readonly, resetting cache: $error');
+  }
+
+  static Future<void> _hardReset({Object? logError}) async {
+    if (_recovering) return;
+    _recovering = true;
+    if (logError != null) {
+      _logRecoveryOnce(logError);
+    }
+
     try {
-      await instance.emptyCache();
-      await instance.dispose();
+      final old = _instance;
+      if (old != null) {
+        try {
+          await old.config.repo.close();
+        } catch (_) {}
+      }
+
+      await _deleteAllCacheArtifacts();
+
+      try {
+        _instance = SHOImageCacheManager._(await _createExplicitConfig());
+      } catch (_) {
+        _instance = _createDefault();
+      }
+
+      await _instance!.config.repo.open();
+      CachedNetworkImageProvider.defaultCacheManager = _instance!;
+    } catch (error, stack) {
+      SHOAppLogger.error('Image cache hard reset failed', error, stack);
+      _instance ??= _createDefault();
+    } finally {
+      _recovering = false;
+    }
+  }
+
+  static Future<void> _deleteAllCacheArtifacts() async {
+    try {
+      final supportDir = await getApplicationSupportDirectory();
+      final dbPath = p.join(supportDir.path, '$_cacheKey.db');
+      await _deleteDbArtifacts(dbPath);
+
+      final cacheRoot = io.Directory(p.join(supportDir.path, _cacheKey));
+      if (await cacheRoot.exists()) {
+        await cacheRoot.delete(recursive: true);
+      }
     } catch (_) {}
 
     try {
-      final supportDir = await getApplicationSupportDirectory();
-      final cacheDir = io.Directory(p.join(supportDir.path, _cacheKey));
-      if (await cacheDir.exists()) {
-        await cacheDir.delete(recursive: true);
-      }
-
-      await _deleteDbArtifacts(p.join(supportDir.path, '$_cacheKey.db'));
+      final legacyDir = await getDatabasesPath();
+      await _deleteDbArtifacts(p.join(legacyDir, '$_cacheKey.db'));
     } catch (_) {}
   }
 
@@ -70,7 +148,9 @@ class SHOImageCacheManager extends CacheManager with ImageCacheManager {
     ]) {
       final file = io.File(path);
       if (await file.exists()) {
-        await file.delete();
+        try {
+          await file.delete();
+        } catch (_) {}
       }
     }
   }

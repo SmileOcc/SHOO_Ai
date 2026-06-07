@@ -3,12 +3,30 @@ abstract final class SHOAppRoutes {
   static const onboarding = '/onboarding';
   static const home = '/';
   static const category = '/category';
+  static const categoryProducts = '/category/products';
+
+  static String categoryProductsFiltered({
+    required String leafId,
+    required String title,
+  }) {
+    final query = <String, String>{
+      'leafId': leafId,
+      'title': title,
+    };
+    final encoded = query.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return '$categoryProducts?$encoded';
+  }
   static const cart = '/cart';
   static const profile = '/profile';
+  static const profileFootprints = '/profile/footprints';
+  static const profileFavorites = '/profile/favorites';
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';
   static const settingsAbout = '/settings/about';
+  static const settingsCache = '/settings/cache';
   static const messages = '/messages';
   static const search = '/search';
   static const checkout = '/checkout';
@@ -34,6 +52,8 @@ abstract final class SHOAppRoutes {
   static const debugActivity = '/debug/activity';
   static const debugNative = '/debug/native';
   static const debugBrand = '/debug/brand';
+  static const debugAnalytics = '/debug/analytics';
+  static const debugNetworkLog = '/debug/network-log';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

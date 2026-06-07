@@ -5,21 +5,63 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
-import '../../../core/auth/hos_auth_guard.dart';
-import '../../../core/share/hos_share_panel.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../features/auth/presentation/hos_session_provider.dart'
     show SHOSessionState, sessionProvider;
 import '../../../l10n/app_localizations.dart';
+import 'hos_profile_controller.dart';
+import 'hos_profile_discovery_section.dart';
+import 'hos_profile_order_hub.dart';
 
-class SHOProfilePage extends ConsumerWidget {
+class SHOProfilePage extends ConsumerStatefulWidget {
   const SHOProfilePage({super.key});
 
   static const _headerExpandedHeight = 240.0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHOProfilePage> createState() => _SHOProfilePageState();
+}
+
+class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_handleTabChanged);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabChanged);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabChanged() {
+    if (_tabController.indexIsChanging) return;
+    final next = SHOProfileFeedTab.values[_tabController.index];
+    if (ref.read(profileFeedTabProvider) != next) {
+      ref.read(profileFeedTabProvider.notifier).state = next;
+    }
+  }
+
+  void _syncTabFromProvider(SHOProfileFeedTab tab) {
+    final index = SHOProfileFeedTab.values.indexOf(tab);
+    if (_tabController.index != index) {
+      _tabController.animateTo(index);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<SHOProfileFeedTab>(profileFeedTabProvider, (_, next) {
+      _syncTabFromProvider(next);
+    });
+
     final l10n = AppLocalizations.of(context);
     final session = ref.watch(sessionProvider);
     final theme = context.shoTheme;
@@ -32,8 +74,8 @@ class SHOProfilePage extends ConsumerWidget {
         ? (session.user?.email ?? session.user?.phone ?? '')
         : l10n.profileSignInHint;
 
-    return CustomScrollView(
-      slivers: [
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverPersistentHeader(
           pinned: true,
           delegate: _SHOProfileHeaderDelegate(
@@ -50,93 +92,83 @@ class SHOProfilePage extends ConsumerWidget {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+          padding: const EdgeInsets.fromLTRB(
+            SHOAppSpacing.pagePadding,
+            SHOAppSpacing.pagePadding,
+            SHOAppSpacing.pagePadding,
+            0,
+          ),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              _SHOOrderShortcuts(
-                title: l10n.profileOrders,
-                items: [
-                  _SHOOrderShortcutItem(
-                    icon: Icons.receipt_long_outlined,
-                    label: l10n.ordersAllShort,
-                    onTap: () {
-                      if (!SHOAuthGuard.requireAuth(context, ref)) {
-                        return;
-                      }
-                      context.push(SHOAppRoutes.orders);
-                    },
-                  ),
-                  _SHOOrderShortcutItem(
-                    icon: Icons.payment_outlined,
-                    label: l10n.ordersPendingPayment,
-                    onTap: () {
-                      final route = SHOAppRoutes.ordersFiltered('pending_payment');
-                      if (!SHOAuthGuard.requireAuth(context, ref)) {
-                        return;
-                      }
-                      context.push(route);
-                    },
-                  ),
-                  _SHOOrderShortcutItem(
-                    icon: Icons.local_shipping_outlined,
-                    label: l10n.ordersShipped,
-                    onTap: () {
-                      final route = SHOAppRoutes.ordersFiltered('shipped');
-                      if (!SHOAuthGuard.requireAuth(context, ref)) {
-                        return;
-                      }
-                      context.push(route);
-                    },
-                  ),
-                  _SHOOrderShortcutItem(
-                    icon: Icons.rate_review_outlined,
-                    label: l10n.ordersReviews,
-                    onTap: () {
-                      final route = SHOAppRoutes.ordersFiltered('delivered');
-                      if (!SHOAuthGuard.requireAuth(context, ref)) {
-                        return;
-                      }
-                      context.push(route);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: SHOAppSpacing.xl),
-              _SHOMenuSection(
-                title: l10n.profileServices,
-                items: [
-                  l10n.profileShareDemo,
-                  l10n.profileCoupons,
-                  l10n.profileAfterSales,
-                ],
-                onItemTap: (item) {
-                  if (item == l10n.profileCoupons) {
-                    if (!SHOAuthGuard.requireAuth(context, ref)) {
-                      return;
-                    }
-                    context.push(SHOAppRoutes.coupons);
-                  } else if (item == l10n.profileAfterSales) {
-                    if (!SHOAuthGuard.requireAuth(context, ref)) {
-                      return;
-                    }
-                    context.push(SHOAppRoutes.afterSales);
-                  } else if (item == l10n.profileShareDemo) {
-                    SHOSharePanel.show(
-                      context,
-                      ref,
-                      title: l10n.appName,
-                      link: 'https://shoo.app',
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: SHOAppSpacing.xxxl),
+              const SHOProfileOrderHub(),
+              const SizedBox(height: SHOAppSpacing.lg),
+              const SHOProfileServiceHub(),
+              const SizedBox(height: SHOAppSpacing.lg),
+              const SHOProfileCouponStrip(),
+              const SizedBox(height: SHOAppSpacing.lg),
             ]),
           ),
         ),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _SHOProfileTabBarDelegate(
+            tabController: _tabController,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        ),
       ],
+      body: TabBarView(
+        controller: _tabController,
+        children: SHOProfileFeedTab.values
+            .map(
+              (tab) => CustomScrollView(
+                key: PageStorageKey<String>('profile_feed_${tab.name}'),
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(
+                      SHOAppSpacing.pagePadding,
+                      SHOAppSpacing.lg,
+                      SHOAppSpacing.pagePadding,
+                      SHOAppSpacing.xxxl,
+                    ),
+                    sliver: buildProfileFeedSliver(ref, context, tab),
+                  ),
+                ],
+              ),
+            )
+            .toList(),
+      ),
     );
   }
+}
+
+class _SHOProfileTabBarDelegate extends SliverPersistentHeaderDelegate {
+  _SHOProfileTabBarDelegate({
+    required this.tabController,
+    required this.backgroundColor,
+  });
+
+  final TabController tabController;
+  final Color backgroundColor;
+
+  @override
+  double get minExtent => 44;
+
+  @override
+  double get maxExtent => 44;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ColoredBox(
+      color: backgroundColor,
+      child: SHOProfileFeedTabBar(controller: tabController),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _SHOProfileTabBarDelegate oldDelegate) =>
+      oldDelegate.tabController != tabController ||
+      oldDelegate.backgroundColor != backgroundColor;
 }
 
 class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -336,142 +368,6 @@ class _SHOProfileAvatar extends StatelessWidget {
       child: session.user?.avatarUrl == null
           ? Icon(Icons.person, color: Colors.white, size: radius)
           : null,
-    );
-  }
-}
-
-class _SHOOrderShortcutItem {
-  const _SHOOrderShortcutItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-}
-
-class _SHOOrderShortcuts extends StatelessWidget {
-  const _SHOOrderShortcuts({
-    required this.title,
-    required this.items,
-  });
-
-  final String title;
-  final List<_SHOOrderShortcutItem> items;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.shoTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.shoSurface,
-            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            border: Border.all(color: theme.border),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.lg),
-            child: Row(
-              children: items
-                  .map(
-                    (item) => Expanded(
-                      child: InkWell(
-                        onTap: item.onTap,
-                        borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(item.icon, size: 24),
-                            const SizedBox(height: SHOAppSpacing.xs),
-                            Text(
-                              item.label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SHOMenuSection extends StatelessWidget {
-  const _SHOMenuSection({
-    required this.title,
-    required this.items,
-    this.onItemTap,
-  });
-
-  final String title;
-  final List<String> items;
-  final void Function(String item)? onItemTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.shoTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.shoSurface,
-            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            border: Border.all(color: theme.border),
-          ),
-          child: Column(
-            children: [
-              for (var i = 0; i < items.length; i++) ...[
-                if (i > 0) Divider(height: 1, color: theme.divider, indent: 16),
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
-                  dense: true,
-                  title: Text(
-                    items[i],
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 13),
-                  ),
-                  trailing: Icon(
-                    Icons.chevron_right,
-                    size: 18,
-                    color: theme.textMuted,
-                  ),
-                  onTap: onItemTap != null ? () => onItemTap!(items[i]) : null,
-                ),
-              ],
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

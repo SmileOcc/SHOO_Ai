@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/analytics/hos_analytics.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
@@ -62,6 +63,22 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
     FocusScope.of(context).unfocus();
     await ref.read(searchHistoryProvider.notifier).add(keyword);
     ref.invalidate(searchPagedProvider(keyword));
+    await _trackSearch(keyword);
+  }
+
+  Future<void> _trackSearch(String keyword) async {
+    var resultCount = 0;
+    try {
+      final paged = await ref.read(searchPagedProvider(keyword).future);
+      resultCount = paged.items.length;
+    } catch (_) {}
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.search,
+      {
+        'keyword': keyword,
+        'result_count': resultCount,
+      },
+    );
   }
 
   @override
@@ -133,9 +150,9 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
                   hasMore: paged.hasMore,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: SHOAppSpacing.gridGap,
-                    crossAxisSpacing: SHOAppSpacing.gridGap,
-                    childAspectRatio: 0.52,
+                    mainAxisSpacing: SHOAppSpacing.lg,
+                    crossAxisSpacing: SHOAppSpacing.lg,
+                    childAspectRatio: SHOProductCard.gridChildAspectRatio,
                   ),
                   itemBuilder: (context, index) {
                     final product = paged.items[index];

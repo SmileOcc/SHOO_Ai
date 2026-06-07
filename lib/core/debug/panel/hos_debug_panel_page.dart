@@ -6,7 +6,7 @@ import '../../../app/router/hos_routes.dart';
 import '../../config/hos_config.dart';
 import '../../config/hos_environment.dart';
 import '../../constants/hos_constants.dart';
-import '../../storage/hos_local_storage.dart';
+import '../core/hos_runtime_env_provider.dart';
 import '../../theme/hos_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -19,6 +19,7 @@ class SHODebugPanelPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final config = ref.watch(effectiveConfigProvider);
     final override = ref.watch(runtimeEnvOverrideProvider);
+    final showEnvBadge = ref.watch(showEnvBadgeProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.debugPanelTitle)),
@@ -28,17 +29,19 @@ class SHODebugPanelPage extends ConsumerWidget {
           Text(l10n.debugPanelHint, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: SHOAppSpacing.xl),
           Text(l10n.debugEnvSection, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: SHOAppSpacing.xs),
+          Text(l10n.debugEnvRestarting, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: SHOAppSpacing.md),
           ...SHOAppEnvironment.values.map((env) {
             final selected = (override ?? config.environment) == env;
             return RadioListTile<SHOAppEnvironment>(
-              title: Text(env.label),
+              title: Text('${env.label} (${env.badgeLabel})'),
               subtitle: Text(SHOAppConfig.defaultApiBaseUrl(env)),
               value: env,
               groupValue: override ?? config.environment,
               onChanged: (v) {
                 if (v != null) {
-                  ref.read(runtimeEnvOverrideProvider.notifier).state = v;
+                  ref.read(runtimeEnvOverrideProvider.notifier).setOverride(v);
                 }
               },
               selected: selected,
@@ -47,7 +50,14 @@ class SHODebugPanelPage extends ConsumerWidget {
           ListTile(
             title: Text(l10n.debugResetEnv),
             trailing: const Icon(Icons.restore),
-            onTap: () => ref.read(runtimeEnvOverrideProvider.notifier).state = null,
+            onTap: () => ref.read(runtimeEnvOverrideProvider.notifier).resetOverride(),
+          ),
+          SwitchListTile(
+            title: Text(l10n.debugShowEnvBadge),
+            subtitle: Text(l10n.debugShowEnvBadgeHint),
+            value: showEnvBadge,
+            onChanged: (v) =>
+                ref.read(showEnvBadgeProvider.notifier).setEnabled(v),
           ),
           const Divider(height: SHOAppSpacing.xxxl),
           Text(l10n.debugToolsSection, style: Theme.of(context).textTheme.titleMedium),
@@ -65,6 +75,20 @@ class SHODebugPanelPage extends ConsumerWidget {
             subtitle: Text(l10n.debugActivityEntryHint),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(SHOAppRoutes.debugActivity),
+          ),
+          ListTile(
+            leading: const Icon(Icons.article_outlined),
+            title: Text(l10n.debugNetworkLogEntry),
+            subtitle: Text(l10n.debugNetworkLogEntryHint),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugNetworkLog),
+          ),
+          ListTile(
+            leading: const Icon(Icons.analytics_outlined),
+            title: Text(l10n.debugAnalyticsEntry),
+            subtitle: Text(l10n.debugAnalyticsEntryHint),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugAnalytics),
           ),
           ListTile(
             leading: const Icon(Icons.palette_outlined),
@@ -86,18 +110,6 @@ class SHODebugPanelPage extends ConsumerWidget {
           _SHOInfoTile(label: 'Mock API', value: '${config.useMockApi}'),
           _SHOInfoTile(label: 'Mock Delay', value: '${config.mockNetworkDelay.inMilliseconds}ms'),
           _SHOInfoTile(label: 'Debug Panel', value: '${config.isDebugPanelEnabled}'),
-          const SizedBox(height: SHOAppSpacing.xl),
-          FilledButton(
-            onPressed: () async {
-              await ref.read(localStorageProvider).clear();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.debugCacheCleared)),
-                );
-              }
-            },
-            child: Text(l10n.debugClearCache),
-          ),
         ],
       ),
     );

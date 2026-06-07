@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/hos_constants.dart';
+import '../debug/core/hos_runtime_env_provider.dart';
 import 'hos_environment.dart';
 
 /// 全局运行时配置，启动时通过 [SHOAppConfig.init] 初始化。
@@ -103,8 +104,5 @@ final effectiveConfigProvider = Provider<SHOAppConfig>((ref) {
     enableNetworkLogging: !override.isProd,
   );
 });
-
-/// Debug 面板环境覆盖（Release 包不读取、不写入）。
-final runtimeEnvOverrideProvider = StateProvider<SHOAppEnvironment?>((ref) => null);
 
 final appConfigProvider = Provider<SHOAppConfig>((ref) => ref.watch(effectiveConfigProvider));

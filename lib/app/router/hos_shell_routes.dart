@@ -6,6 +6,7 @@ import '../../features/home/presentation/hos_home_page.dart';
 import '../../features/message/presentation/hos_message_page.dart';
 import '../../features/profile/presentation/hos_profile_page.dart';
 import '../../features/profile/presentation/hos_about_page.dart';
+import '../../features/profile/presentation/hos_settings_cache_page.dart';
 import '../../features/profile/presentation/hos_settings_page.dart';
 import '../shell/hos_main_shell.dart';
 import 'hos_router_keys.dart';
@@ -20,6 +21,10 @@ List<RouteBase> shoShellRoutes() => [
           GoRoute(
             path: 'about',
             builder: (context, state) => const SHOAboutPage(),
+          ),
+          GoRoute(
+            path: 'cache',
+            builder: (context, state) => const SHOSettingsCachePage(),
           ),
         ],
       ),

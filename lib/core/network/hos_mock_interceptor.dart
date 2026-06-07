@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../config/hos_config.dart';
 import '../logging/hos_logger.dart';
-import 'hos_mock_pagination.dart';
+import 'hos_mock_dynamic.dart';
 import 'hos_mock_route_registry.dart';
 
 /// 拦截 Dio 请求并返回本地 JSON Mock 数据。
@@ -40,17 +40,45 @@ class SHOMockInterceptor extends Interceptor {
 
     try {
       final raw = await rootBundle.loadString(entry.asset);
-      var data = jsonDecode(raw) as Map<String, dynamic>;
+      final envelope = jsonDecode(raw) as Map<String, dynamic>;
 
-      final page = mockQueryInt(options.queryParameters, 'page', 0);
-      if (page > 0) {
-        final pageSize = mockQueryInt(options.queryParameters, 'pageSize', 10);
-        data = paginateMockEnvelope(data, page: page, pageSize: pageSize);
+      Map<String, dynamic>? catalogEnvelope;
+      Map<String, dynamic>? reviewsCatalogEnvelope;
+      if (entry.path == '/products/{id}') {
+        catalogEnvelope = envelope;
+      } else if (entry.path == '/products/{id}/reviews') {
+        reviewsCatalogEnvelope = envelope;
       }
 
+      final data = applyMockDynamic(
+        envelope,
+        routePath: entry.path,
+        requestPath: path,
+        query: options.queryParameters,
+        catalogEnvelope: catalogEnvelope,
+        reviewsCatalogEnvelope: reviewsCatalogEnvelope,
+      );
+
+      final statusCode = (data['code'] as int?) == 404 ? 404 : 200;
+
       SHOAppLogger.debug('Mock hit', '${options.method} $path → ${entry.asset}');
+      if (statusCode == 404) {
+        handler.reject(
+          DioException(
+            requestOptions: options,
+            response: Response(
+              requestOptions: options,
+              statusCode: statusCode,
+              data: data,
+            ),
+            type: DioExceptionType.badResponse,
+          ),
+        );
+        return;
+      }
+
       handler.resolve(
-        Response(requestOptions: options, statusCode: 200, data: data),
+        Response(requestOptions: options, statusCode: statusCode, data: data),
       );
     } catch (error, stack) {
       SHOAppLogger.error('Mock asset load failed', error, stack);

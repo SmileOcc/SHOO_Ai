@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/analytics/hos_analytics.dart';
+import '../../../core/errors/hos_exception.dart';
 import '../../../core/logging/hos_logger.dart';
 import '../data/hos_auth_repository.dart';
 import '../domain/hos_auth_user.dart';
@@ -68,6 +70,12 @@ class SHOSessionNotifier extends StateNotifier<SHOSessionState> {
         isRestoring: false,
       );
       SHOAppLogger.info('Session restored for ${session.user.nickname}');
+    } on SHONetworkException catch (error) {
+      SHOAppLogger.warn(
+        'Session restore skipped — API unreachable (${error.message}). '
+        'If using local env, run: cd server && npm run dev',
+      );
+      state = const SHOSessionState(isRestoring: false);
     } catch (error, stack) {
       SHOAppLogger.error('Session restore failed', error, stack);
       await _repository.logout();
@@ -84,6 +92,13 @@ class SHOSessionNotifier extends StateNotifier<SHOSessionState> {
     _syncToken(session.token);
     state = SHOSessionState(token: session.token, user: session.user);
     SHOAppLogger.info('User logged in: ${session.user.nickname}');
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.loginSuccess,
+      {
+        'user_id': session.user.id,
+        'method': 'phone_password',
+      },
+    );
   }
 
   Future<void> login(SHOLoginRequest request) async {
@@ -92,9 +107,16 @@ class SHOSessionNotifier extends StateNotifier<SHOSessionState> {
   }
 
   Future<void> logout() async {
+    final userId = state.user?.id;
     await _repository.logout();
     _syncToken(null);
     state = const SHOSessionState();
     SHOAppLogger.info('User logged out');
+    if (userId != null) {
+      await SHOAnalyticsManager.instance.trackEvent(
+        SHOAnalyticsRegistry.logout,
+        {'user_id': userId},
+      );
+    }
   }
 }

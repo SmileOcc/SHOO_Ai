@@ -15,6 +15,7 @@ class SHOActivityPopupDialog extends StatelessWidget {
   final SHOActivityPopup activity;
 
   static const int _maxScrollLines = 5;
+  static const double _popupRadius = 12;
 
   static Future<void> show(BuildContext context, {required SHOActivityPopup activity}) {
     return showDialog<void>(
@@ -37,58 +38,79 @@ class SHOActivityPopupDialog extends StatelessWidget {
     final style = Theme.of(context).textTheme.bodyMedium;
     final lineHeight = (style?.fontSize ?? 14) * (style?.height ?? 1.4);
     final maxDescHeight = lineHeight * _maxScrollLines;
+    final maxDialogHeight = MediaQuery.sizeOf(context).height * 0.82;
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AspectRatio(
-            aspectRatio: 3 / 4,
-            child: InkWell(
-              onTap: activity.link.trim().isNotEmpty ? () => _onCta(context) : null,
-              child: _buildImage(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.xl),
-            child: Column(
-              children: [
-                Text(
-                  activity.title,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                if (activity.description.isNotEmpty) ...[
-                  const SizedBox(height: SHOAppSpacing.md),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: maxDescHeight),
-                    child: SingleChildScrollView(
-                      child: Text(
-                        activity.description,
-                        style: style,
-                      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: SHOAppSpacing.xxxl,
+        vertical: SHOAppSpacing.xl,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(_popupRadius),
+        child: Material(
+          color: Theme.of(context).dialogTheme.backgroundColor ??
+              Theme.of(context).colorScheme.surface,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: maxDialogHeight),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: InkWell(
+                      onTap: activity.link.trim().isNotEmpty
+                          ? () => _onCta(context)
+                          : null,
+                      child: _buildImage(),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(SHOAppSpacing.xl),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          activity.title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        if (activity.description.isNotEmpty) ...[
+                          const SizedBox(height: SHOAppSpacing.md),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: maxDescHeight),
+                            child: SingleChildScrollView(
+                              child: Text(
+                                activity.description,
+                                style: style,
+                              ),
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: SHOAppSpacing.lg),
+                        SHOAppButton(
+                          label: activity.buttonText,
+                          isExpanded: true,
+                          variant: SHOAppButtonVariant.accent,
+                          onPressed: () => _onCta(context),
+                        ),
+                        const SizedBox(height: SHOAppSpacing.sm),
+                        SHOAppButton(
+                          label: l10n.dialogClose,
+                          isExpanded: true,
+                          variant: SHOAppButtonVariant.ghost,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-                const SizedBox(height: SHOAppSpacing.lg),
-                SHOAppButton(
-                  label: activity.buttonText,
-                  isExpanded: true,
-                  variant: SHOAppButtonVariant.accent,
-                  onPressed: () => _onCta(context),
-                ),
-                const SizedBox(height: SHOAppSpacing.sm),
-                SHOAppButton(
-                  label: l10n.dialogClose,
-                  isExpanded: true,
-                  variant: SHOAppButtonVariant.ghost,
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -96,8 +118,12 @@ class SHOActivityPopupDialog extends StatelessWidget {
   Widget _buildImage() {
     final local = activity.cachedImagePath;
     if (local != null && File(local).existsSync()) {
-      return Image.file(File(local), fit: BoxFit.cover);
+      return Image.file(File(local), fit: BoxFit.cover, width: double.infinity);
     }
-    return SHOAppNetworkImage(url: activity.imageUrl, fit: BoxFit.cover);
+    return SHOAppNetworkImage(
+      url: activity.imageUrl,
+      fit: BoxFit.cover,
+      width: double.infinity,
+    );
   }
 }

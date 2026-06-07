@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/analytics/hos_analytics.dart';
 import '../../product/domain/hos_product_detail.dart';
 import '../data/hos_cart_storage.dart';
 import '../domain/hos_cart.dart';
@@ -56,6 +57,14 @@ class SHOCartNotifier extends StateNotifier<SHOCartSnapshot> {
     }
     state = SHOCartSnapshot(items: items);
     await _persist();
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.addToCart,
+      {
+        'product_id': product.id,
+        'sku_id': lineId,
+        'quantity': quantity,
+      },
+    );
   }
 
   Future<void> updateQuantity(String lineId, int quantity) async {

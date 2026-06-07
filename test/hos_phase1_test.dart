@@ -38,8 +38,35 @@ void main() {
         ],
       );
       expect(snapshot.itemCount, 3);
+      expect(snapshot.availableItemCount, 3);
       expect(snapshot.selectedCount, 2);
       expect(snapshot.selectedTotalCents, 2000);
+    });
+
+    test('availableItemCount excludes unavailable lines', () {
+      const snapshot = SHOCartSnapshot(
+        items: [
+          SHOCartItem(
+            id: '1',
+            productId: 'p1',
+            title: 'Top',
+            imageUrl: 'url',
+            price: 1000,
+            quantity: 2,
+          ),
+          SHOCartItem(
+            id: '2',
+            productId: 'p2',
+            title: 'Sold out',
+            imageUrl: 'url',
+            price: 500,
+            quantity: 3,
+            unavailable: true,
+          ),
+        ],
+      );
+      expect(snapshot.itemCount, 5);
+      expect(snapshot.availableItemCount, 2);
     });
   });
 

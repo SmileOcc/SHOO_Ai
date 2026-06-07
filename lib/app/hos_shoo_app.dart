@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../core/analytics/hos_app_lifecycle_binder.dart';
 import '../core/deeplink/hos_deeplink_listener.dart';
 import '../core/feedback/hos_toast.dart';
 import '../core/l10n/hos_locale_provider.dart';
@@ -21,7 +22,8 @@ class SHOApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
 
-    return MaterialApp.router(
+    return SHOAppLifecycleBinder(
+      child: MaterialApp.router(
       scaffoldMessengerKey: scaffoldMessengerKey,
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       debugShowCheckedModeBanner: false,
@@ -40,6 +42,7 @@ class SHOApp extends ConsumerWidget {
       builder: (context, child) {
         return SHOAppShell(child: child ?? const SizedBox.shrink());
       },
+      ),
     );
   }
 }

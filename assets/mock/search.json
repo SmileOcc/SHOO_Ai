@@ -4,69 +4,141 @@
   "data": {
     "items": [
       {
-        "id": "p1",
-        "title": "Ribbed Knit Crop Top",
-        "imageUrl": "https://picsum.photos/seed/p1/400/500",
-        "price": 1299,
-        "originalPrice": 2599,
-        "discountLabel": "-50%",
-        "rating": 4.8,
-        "soldCount": 12840
+        "id": "c1-g1-l1-p1",
+        "categoryId": "c1-g1-l1",
+        "title": "Classic Crew Neck T-Shirt 1",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p1/400/500",
+        "price": 935,
+        "originalPrice": 1335,
+        "discountLabel": "-30%",
+        "rating": 4.1,
+        "soldCount": 1339
       },
       {
-        "id": "p2",
-        "title": "High Waist Wide Leg Pants",
-        "imageUrl": "https://picsum.photos/seed/p2/400/500",
-        "price": 1899,
-        "originalPrice": 3299,
-        "discountLabel": "-42%",
-        "rating": 4.6,
-        "soldCount": 8920
+        "id": "c1-g1-l1-p2",
+        "categoryId": "c1-g1-l1",
+        "title": "Soft Crew Neck T-Shirt 2",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p2/400/500",
+        "price": 1035,
+        "originalPrice": 1555,
+        "discountLabel": "-33%",
+        "rating": 4.2,
+        "soldCount": 1476
       },
       {
-        "id": "p3",
-        "title": "Oversized Blazer Jacket",
-        "imageUrl": "https://picsum.photos/seed/p3/400/500",
-        "price": 2499,
-        "originalPrice": 4999,
-        "discountLabel": "-50%",
-        "rating": 4.9,
-        "soldCount": 5621
+        "id": "c1-g1-l1-p3",
+        "categoryId": "c1-g1-l1",
+        "title": "Slim Crew Neck T-Shirt 3",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p3/400/500",
+        "price": 1135,
+        "originalPrice": 1775,
+        "discountLabel": "-36%",
+        "rating": 4.3,
+        "soldCount": 1613
       },
       {
-        "id": "p4",
-        "title": "Floral Midi Dress",
-        "imageUrl": "https://picsum.photos/seed/p4/400/500",
-        "price": 1599,
-        "originalPrice": 2799,
-        "discountLabel": "-43%",
-        "rating": 4.7,
-        "soldCount": 21033
+        "id": "c1-g1-l1-p4",
+        "categoryId": "c1-g1-l1",
+        "title": "Oversized Crew Neck T-Shirt 4",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p4/400/500",
+        "price": 1235,
+        "originalPrice": 1995,
+        "discountLabel": "-38%",
+        "rating": 4.4,
+        "soldCount": 1750
       },
       {
-        "id": "p5",
-        "title": "Chunky Platform Sandals",
-        "imageUrl": "https://picsum.photos/seed/p5/400/500",
-        "price": 999,
-        "originalPrice": 1999,
-        "discountLabel": "-50%",
+        "id": "c1-g1-l1-p5",
+        "categoryId": "c1-g1-l1",
+        "title": "Vintage Crew Neck T-Shirt 5",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p5/400/500",
+        "price": 1335,
+        "originalPrice": 2215,
+        "discountLabel": "-40%",
         "rating": 4.5,
-        "soldCount": 15440
+        "soldCount": 1887
       },
       {
-        "id": "p6",
-        "title": "Satin Slip Skirt",
-        "imageUrl": "https://picsum.photos/seed/p6/400/500",
-        "price": 1199,
-        "originalPrice": 2199,
-        "discountLabel": "-45%",
+        "id": "c1-g1-l1-p6",
+        "categoryId": "c1-g1-l1",
+        "title": "Essential Crew Neck T-Shirt 6",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p6/400/500",
+        "price": 1435,
+        "originalPrice": 1835,
+        "discountLabel": "-22%",
+        "rating": 4.6,
+        "soldCount": 2024
+      },
+      {
+        "id": "c1-g1-l1-p7",
+        "categoryId": "c1-g1-l1",
+        "title": "Relaxed Crew Neck T-Shirt 7",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p7/400/500",
+        "price": 1535,
+        "originalPrice": 2055,
+        "discountLabel": "-25%",
+        "rating": 4.7,
+        "soldCount": 2161
+      },
+      {
+        "id": "c1-g1-l1-p8",
+        "categoryId": "c1-g1-l1",
+        "title": "Premium Crew Neck T-Shirt 8",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p8/400/500",
+        "price": 1635,
+        "originalPrice": 2275,
+        "discountLabel": "-28%",
         "rating": 4.8,
-        "soldCount": 9876
+        "soldCount": 2298
+      },
+      {
+        "id": "c1-g1-l1-p9",
+        "categoryId": "c1-g1-l1",
+        "title": "Lightweight Crew Neck T-Shirt 9",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p9/400/500",
+        "price": 1735,
+        "originalPrice": 2495,
+        "discountLabel": "-30%",
+        "rating": 4.9,
+        "soldCount": 2435
+      },
+      {
+        "id": "c1-g1-l1-p10",
+        "categoryId": "c1-g1-l1",
+        "title": "Organic Crew Neck T-Shirt 10",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p10/400/500",
+        "price": 1835,
+        "originalPrice": 2715,
+        "discountLabel": "-32%",
+        "rating": 4.1,
+        "soldCount": 2572
+      },
+      {
+        "id": "c1-g1-l1-p11",
+        "categoryId": "c1-g1-l1",
+        "title": "Classic V-Neck T-Shirt 11",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p11/400/500",
+        "price": 1935,
+        "originalPrice": 2335,
+        "discountLabel": "-17%",
+        "rating": 4.2,
+        "soldCount": 2709
+      },
+      {
+        "id": "c1-g1-l1-p12",
+        "categoryId": "c1-g1-l1",
+        "title": "Soft V-Neck T-Shirt 12",
+        "imageUrl": "https://picsum.photos/seed/c1-g1-l1-p12/400/500",
+        "price": 2035,
+        "originalPrice": 2555,
+        "discountLabel": "-20%",
+        "rating": 4.3,
+        "soldCount": 2846
       }
     ],
     "page": 1,
     "pageSize": 20,
-    "total": 6,
-    "hasMore": true
+    "total": 12,
+    "hasMore": false
   }
 }

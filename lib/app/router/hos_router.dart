@@ -9,6 +9,8 @@ import '../../features/checkout/router.dart';
 import '../../features/coupon/router.dart';
 import '../../features/order/router.dart';
 import '../../features/product/router.dart';
+import '../../features/category/router.dart';
+import '../../features/profile/router.dart';
 import '../../features/search/router.dart';
 import '../../features/splash/router.dart';
 import 'hos_not_found_page.dart';
@@ -30,6 +32,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoSplashRoutes(),
       ...shoAuthRoutes(rootKey: rootNavigatorKey),
       ...shoSearchRoutes(rootKey: rootNavigatorKey),
+      ...shoCategoryRoutes(rootKey: rootNavigatorKey),
+      ...shoProfileRoutes(rootKey: rootNavigatorKey),
       ...shoCheckoutRoutes(rootKey: rootNavigatorKey),
       ...shoCouponRoutes(rootKey: rootNavigatorKey),
       ...shoAfterSaleRoutes(rootKey: rootNavigatorKey),

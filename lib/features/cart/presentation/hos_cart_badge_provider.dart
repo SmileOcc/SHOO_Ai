@@ -5,5 +5,5 @@ import 'hos_cart_controller.dart';
 
 final cartBadgeCountProvider = Provider<int>((ref) {
   if (!ref.watch(sessionProvider).isAuthenticated) return 0;
-  return ref.watch(cartProvider).itemCount;
+  return ref.watch(cartProvider).availableItemCount;
 });

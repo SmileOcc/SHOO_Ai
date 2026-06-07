@@ -3,15 +3,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/hos_config.dart';
+import '../debug/modules/network_log/hos_debug_network_log_config_provider.dart';
 import '../errors/hos_exception.dart';
 import '../errors/hos_error_mapper.dart';
 import '../logging/hos_logger.dart';
+import '../logging/hos_remote_log_base_url.dart';
+import '../logging/hos_remote_log_client.dart';
 import '../../features/auth/presentation/hos_auth_token_provider.dart';
 import 'hos_auth_interceptor.dart';
 import 'hos_mock_interceptor.dart';
+import 'hos_network_log_interceptor.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);
+  SHORemoteLogBaseUrl.setEffectiveConfig(config);
+  SHORemoteLogClient.reset();
 
   final dio = Dio(
     BaseOptions(
@@ -31,7 +37,11 @@ final dioProvider = Provider<Dio>((ref) {
     SHOAuthInterceptor(() => ref.read(authTokenProvider)),
   );
 
-  if (kDebugMode && config.enableNetworkLogging) {
+  if (config.isDebugPanelEnabled) {
+    dio.interceptors.add(
+      SHONetworkLogInterceptor(() => ref.read(debugNetworkLogConfigProvider)),
+    );
+  } else if (kDebugMode && config.enableNetworkLogging) {
     dio.interceptors.add(
       LogInterceptor(requestBody: true, responseBody: true),
     );

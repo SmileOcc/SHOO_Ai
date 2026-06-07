@@ -18,6 +18,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabCategory => 'Category';
 
   @override
+  String get categorySortAll => 'All';
+
+  @override
+  String get categorySortHot => 'Hot';
+
+  @override
+  String get categorySortNewest => 'New';
+
+  @override
   String get tabBag => 'Bag';
 
   @override
@@ -174,6 +183,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You are offline. Some features may be unavailable.';
 
   @override
+  String get localServerBanner =>
+      'Local mock server is not running. Start it: cd server && npm run dev';
+
+  @override
   String get splashTagline => 'Fashion for everyone';
 
   @override
@@ -251,6 +264,123 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debugResetEnv => 'Reset to build default';
+
+  @override
+  String get debugEnvRestarting => 'Switching environment, restarting app…';
+
+  @override
+  String get debugShowEnvBadge => 'Show environment badge';
+
+  @override
+  String get debugShowEnvBadgeHint =>
+      'Display current env at top-right (9pt red text)';
+
+  @override
+  String envBadgeLabel(String env) {
+    return 'Env: $env';
+  }
+
+  @override
+  String get dialogCancel => 'Cancel';
+
+  @override
+  String get dialogConfirm => 'Confirm';
+
+  @override
+  String get settingsGroupDiagnostics => 'Diagnostics & data';
+
+  @override
+  String get settingsReportLogs => 'Report logs';
+
+  @override
+  String get settingsReportLogsHint => 'Export cached logs via system share';
+
+  @override
+  String get settingsReportLogsEmpty => 'No logs to report';
+
+  @override
+  String get settingsReportLogsConfirmTitle => 'Report logs';
+
+  @override
+  String get settingsReportLogsConfirmMessage =>
+      'Export local log file via share sheet. Continue?';
+
+  @override
+  String get settingsReportLogsSuccess => 'Share sheet opened';
+
+  @override
+  String get settingsClearCache => 'Clear cache';
+
+  @override
+  String get settingsClearCacheHint => 'View and clear cache by category';
+
+  @override
+  String get settingsCacheTitle => 'Clear cache';
+
+  @override
+  String get settingsCacheTotal => 'Total cache size';
+
+  @override
+  String get settingsCacheLogs => 'App logs';
+
+  @override
+  String get settingsCacheLogsHint => 'Locally cached runtime logs';
+
+  @override
+  String get settingsCacheImages => 'Image cache';
+
+  @override
+  String get settingsCacheImagesHint => 'Network image disk cache';
+
+  @override
+  String get settingsCacheSearch => 'Search history';
+
+  @override
+  String get settingsCacheSearchHint => 'Recent search keywords';
+
+  @override
+  String get settingsCacheCart => 'Cart snapshot';
+
+  @override
+  String get settingsCacheCartHint => 'Local cart data';
+
+  @override
+  String get settingsCacheActivity => 'Activity prefetch';
+
+  @override
+  String get settingsCacheActivityHint =>
+      'Marketing activity config and images';
+
+  @override
+  String get settingsCachePreferences => 'Other preferences';
+
+  @override
+  String get settingsCachePreferencesHint =>
+      'Local prefs except theme and language';
+
+  @override
+  String get settingsCacheClearTitle => 'Clear cache';
+
+  @override
+  String settingsCacheClearMessage(String name) {
+    return 'Clear \"$name\"?';
+  }
+
+  @override
+  String get settingsCacheClearConfirm => 'Clear';
+
+  @override
+  String get settingsCacheClearAll => 'Clear all cache';
+
+  @override
+  String get settingsCacheClearAllTitle => 'Clear all cache';
+
+  @override
+  String get settingsCacheClearAllMessage =>
+      'This will clear all local cache categories. Cannot be undone.';
+
+  @override
+  String get settingsCacheCleared => 'Cache cleared';
 
   @override
   String get debugClearCache => 'Clear local cache';
@@ -358,6 +488,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dialogClose => 'Close';
+
+  @override
+  String get debugNetworkLogEntry => 'Network log debug';
+
+  @override
+  String get debugNetworkLogEntryHint =>
+      'Configure request/response logging and API filters';
+
+  @override
+  String get debugNetworkLogTitle => 'Network log debug';
+
+  @override
+  String get debugNetworkLogHint =>
+      'Changes apply immediately. Logs go to console and local log cache (DEBUG level).';
+
+  @override
+  String get debugNetworkLogEnabled => 'Enable network logging';
+
+  @override
+  String get debugNetworkLogEnabledHint => 'Turn off to suppress all API logs';
+
+  @override
+  String get debugNetworkLogRequest => 'Log request params';
+
+  @override
+  String get debugNetworkLogRequestHint => 'Includes query string and body';
+
+  @override
+  String get debugNetworkLogResponse => 'Log response body';
+
+  @override
+  String get debugNetworkLogResponseHint => 'Includes response data payload';
+
+  @override
+  String get debugNetworkLogMockRemote => 'Mock remote reporting';
+
+  @override
+  String get debugNetworkLogMockRemoteHint =>
+      'When on, analytics and network logs are simulated locally only';
+
+  @override
+  String get debugNetworkLogRemoteHint =>
+      'When Mock is off, logs go to local server (127.0.0.1:3847). In-app Mock API auto-targets local server. Android emulator: API_BASE_URL=http://10.0.2.2:3847/api/v1';
+
+  @override
+  String get debugNetworkLogFilterEnabled => 'Filter by API path';
+
+  @override
+  String get debugNetworkLogFilterEnabledHint =>
+      'Only log APIs whose path contains listed keywords';
+
+  @override
+  String get debugNetworkLogFilterPaths => 'API path keywords';
+
+  @override
+  String get debugNetworkLogFilterPathsHint =>
+      'One per line or comma-separated, e.g. /products, /banners';
+
+  @override
+  String get debugAnalyticsEntry => 'Business analytics';
+
+  @override
+  String get debugAnalyticsEntryHint =>
+      'View event keys, fields, and preview reporting backends';
+
+  @override
+  String get debugAnalyticsTabEvents => 'Events';
+
+  @override
+  String get debugAnalyticsTabBackends => 'Backends';
+
+  @override
+  String get debugAnalyticsTabHistory => 'History';
+
+  @override
+  String get debugAnalyticsEventKey => 'Event key';
+
+  @override
+  String get debugAnalyticsFields => 'Fields';
+
+  @override
+  String get debugAnalyticsFire => 'Fire';
+
+  @override
+  String debugAnalyticsFired(String key) {
+    return 'Fired: $key';
+  }
+
+  @override
+  String get debugAnalyticsBackendsHint =>
+      'Registered backends; extend via registerBackend()';
+
+  @override
+  String get debugAnalyticsBackendOn => 'On';
+
+  @override
+  String get debugAnalyticsBackendOff => 'Off';
+
+  @override
+  String get debugAnalyticsMockRemoteQueue => 'Mock remote queue';
+
+  @override
+  String get debugAnalyticsHistoryEmpty => 'No analytics records yet';
+
+  @override
+  String get debugAnalyticsClearHistory => 'Clear history';
+
+  @override
+  String get debugAnalyticsBackendsUsed => 'Backends';
 
   @override
   String get debugToolsSection => 'Debug Tools';
@@ -672,6 +911,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ordersReviews => 'Reviews';
+
+  @override
+  String get ordersToUse => 'To Use';
+
+  @override
+  String get ordersAfterSalesShort => 'Returns';
+
+  @override
+  String get profileFootprints => 'History';
+
+  @override
+  String get profileFavorites => 'Saved';
+
+  @override
+  String get profileFollowing => 'Following';
+
+  @override
+  String get profileDiscover => 'Discover';
+
+  @override
+  String get profileDiscoverBadge => 'New';
+
+  @override
+  String get profileFootprintsHint => 'Browsing history coming soon';
+
+  @override
+  String get profileFootprintsEmpty => 'No browsing history yet';
+
+  @override
+  String get profileActivityDelete => 'Delete';
+
+  @override
+  String get profileActivitySelectAll => 'Select all';
+
+  @override
+  String profileActivitySelected(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String profileActivityDeleteSelected(int count) {
+    return 'Delete ($count)';
+  }
+
+  @override
+  String profileActivityDeleted(int count) {
+    return 'Deleted $count items';
+  }
+
+  @override
+  String get profileFollowingHint => 'Following list coming soon';
+
+  @override
+  String get profileCouponCenter => 'Coupons';
+
+  @override
+  String get profileCouponMore => 'More';
+
+  @override
+  String get profileCouponClaim => 'Claim';
+
+  @override
+  String get profileTabGuessYouLike => 'For You';
+
+  @override
+  String get profileTabMyFavorites => 'Saved';
+
+  @override
+  String get profileTabMyReviews => 'My Reviews';
+
+  @override
+  String get profileServiceCoupons => 'Coupons';
+
+  @override
+  String get profileServiceAfterSale => 'After-sale';
+
+  @override
+  String get profileServiceShare => 'Share';
+
+  @override
+  String get profileServiceMessages => 'Messages';
+
+  @override
+  String get profileServiceSearch => 'Search';
+
+  @override
+  String get profileFavoritesEmpty => 'No saved items yet';
+
+  @override
+  String get profileFavoriteAdded => 'Added to saved items';
+
+  @override
+  String get profileFavoriteRemoved => 'Removed from saved items';
+
+  @override
+  String get profileReviewsHint =>
+      'Review your delivered orders and share feedback';
 
   @override
   String get ordersEmpty => 'No orders in this category';

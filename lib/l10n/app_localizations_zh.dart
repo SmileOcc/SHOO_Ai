@@ -18,6 +18,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tabCategory => '分类';
 
   @override
+  String get categorySortAll => '全部';
+
+  @override
+  String get categorySortHot => '热门';
+
+  @override
+  String get categorySortNewest => '最新';
+
+  @override
   String get tabBag => '购物袋';
 
   @override
@@ -172,6 +181,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get offlineBanner => '当前无网络，部分功能可能不可用';
 
   @override
+  String get localServerBanner =>
+      '本地 Mock Server 未启动，请在终端执行：cd server && npm run dev';
+
+  @override
   String get splashTagline => '时尚，触手可及';
 
   @override
@@ -248,6 +261,118 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get debugResetEnv => '恢复构建默认环境';
+
+  @override
+  String get debugEnvRestarting => '正在切换环境并重启应用…';
+
+  @override
+  String get debugShowEnvBadge => '显示环境角标';
+
+  @override
+  String get debugShowEnvBadgeHint => '在应用窗口右上角显示当前环境（9号红字）';
+
+  @override
+  String envBadgeLabel(String env) {
+    return '环境：$env';
+  }
+
+  @override
+  String get dialogCancel => '取消';
+
+  @override
+  String get dialogConfirm => '确认';
+
+  @override
+  String get settingsGroupDiagnostics => '诊断与数据';
+
+  @override
+  String get settingsReportLogs => '上报日志';
+
+  @override
+  String get settingsReportLogsHint => '将本地缓存的日志通过系统分享导出';
+
+  @override
+  String get settingsReportLogsEmpty => '暂无可上报的日志';
+
+  @override
+  String get settingsReportLogsConfirmTitle => '上报日志';
+
+  @override
+  String get settingsReportLogsConfirmMessage => '将通过系统分享导出本地日志文件，是否继续？';
+
+  @override
+  String get settingsReportLogsSuccess => '已打开分享面板';
+
+  @override
+  String get settingsClearCache => '清除缓存';
+
+  @override
+  String get settingsClearCacheHint => '按类别查看并清理本地缓存';
+
+  @override
+  String get settingsCacheTitle => '清除缓存';
+
+  @override
+  String get settingsCacheTotal => '缓存总大小';
+
+  @override
+  String get settingsCacheLogs => '应用日志';
+
+  @override
+  String get settingsCacheLogsHint => '本地缓存的运行日志';
+
+  @override
+  String get settingsCacheImages => '图片缓存';
+
+  @override
+  String get settingsCacheImagesHint => '网络图片磁盘缓存';
+
+  @override
+  String get settingsCacheSearch => '搜索历史';
+
+  @override
+  String get settingsCacheSearchHint => '最近搜索关键词';
+
+  @override
+  String get settingsCacheCart => '购物车快照';
+
+  @override
+  String get settingsCacheCartHint => '本地购物车数据';
+
+  @override
+  String get settingsCacheActivity => '活动预拉取';
+
+  @override
+  String get settingsCacheActivityHint => '营销活动配置与图片';
+
+  @override
+  String get settingsCachePreferences => '其他偏好';
+
+  @override
+  String get settingsCachePreferencesHint => '除主题与语言外的本地偏好';
+
+  @override
+  String get settingsCacheClearTitle => '清除缓存';
+
+  @override
+  String settingsCacheClearMessage(String name) {
+    return '确定清除「$name」？';
+  }
+
+  @override
+  String get settingsCacheClearConfirm => '清除';
+
+  @override
+  String get settingsCacheClearAll => '清除全部缓存';
+
+  @override
+  String get settingsCacheClearAllTitle => '清除全部缓存';
+
+  @override
+  String get settingsCacheClearAllMessage => '将清除所有类别的本地缓存，此操作不可撤销。';
+
+  @override
+  String get settingsCacheCleared => '缓存已清除';
 
   @override
   String get debugClearCache => '清除本地缓存';
@@ -354,6 +479,109 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dialogClose => '关闭';
+
+  @override
+  String get debugNetworkLogEntry => '日志调试';
+
+  @override
+  String get debugNetworkLogEntryHint => '配置请求/响应参数打印与接口筛选';
+
+  @override
+  String get debugNetworkLogTitle => '网络日志调试';
+
+  @override
+  String get debugNetworkLogHint => '配置后即时生效，日志输出到控制台并写入本地日志缓存（DEBUG 级别）。';
+
+  @override
+  String get debugNetworkLogEnabled => '启用网络日志';
+
+  @override
+  String get debugNetworkLogEnabledHint => '关闭后不再打印任何接口日志';
+
+  @override
+  String get debugNetworkLogRequest => '打印请求参数';
+
+  @override
+  String get debugNetworkLogRequestHint => '包含 query 与 body';
+
+  @override
+  String get debugNetworkLogResponse => '打印返回参数';
+
+  @override
+  String get debugNetworkLogResponseHint => '包含响应 data 内容';
+
+  @override
+  String get debugNetworkLogMockRemote => 'Mock 远程上报';
+
+  @override
+  String get debugNetworkLogMockRemoteHint => '开启后业务埋点与网络日志仅本地模拟，不请求 server';
+
+  @override
+  String get debugNetworkLogRemoteHint =>
+      '关闭 Mock 时上报至本地 server（127.0.0.1:3847）；业务走内置 Mock 时自动改打本地 server。Android 模拟器请在启动参数设置 API_BASE_URL=http://10.0.2.2:3847/api/v1';
+
+  @override
+  String get debugNetworkLogFilterEnabled => '仅打印指定接口';
+
+  @override
+  String get debugNetworkLogFilterEnabledHint => '开启后只打印路径包含下列关键词的接口';
+
+  @override
+  String get debugNetworkLogFilterPaths => '接口路径关键词';
+
+  @override
+  String get debugNetworkLogFilterPathsHint =>
+      '每行一个或逗号分隔，如：/products, /banners';
+
+  @override
+  String get debugAnalyticsEntry => '业务上报';
+
+  @override
+  String get debugAnalyticsEntryHint => '查看上报 key、字段定义，预览各上报通道';
+
+  @override
+  String get debugAnalyticsTabEvents => '事件';
+
+  @override
+  String get debugAnalyticsTabBackends => '通道';
+
+  @override
+  String get debugAnalyticsTabHistory => '历史';
+
+  @override
+  String get debugAnalyticsEventKey => '上报 key';
+
+  @override
+  String get debugAnalyticsFields => '上报字段';
+
+  @override
+  String get debugAnalyticsFire => '试发';
+
+  @override
+  String debugAnalyticsFired(String key) {
+    return '已试发：$key';
+  }
+
+  @override
+  String get debugAnalyticsBackendsHint => '已注册上报通道，可通过 registerBackend 扩展';
+
+  @override
+  String get debugAnalyticsBackendOn => '启用';
+
+  @override
+  String get debugAnalyticsBackendOff => '关闭';
+
+  @override
+  String get debugAnalyticsMockRemoteQueue => 'Mock 远程队列';
+
+  @override
+  String get debugAnalyticsHistoryEmpty => '暂无上报记录';
+
+  @override
+  String get debugAnalyticsClearHistory => '清空历史';
+
+  @override
+  String get debugAnalyticsBackendsUsed => '通道';
 
   @override
   String get debugToolsSection => '调试工具';
@@ -655,6 +883,102 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ordersReviews => '待评价';
+
+  @override
+  String get ordersToUse => '待使用';
+
+  @override
+  String get ordersAfterSalesShort => '退换/售后';
+
+  @override
+  String get profileFootprints => '足迹';
+
+  @override
+  String get profileFavorites => '收藏';
+
+  @override
+  String get profileFollowing => '关注';
+
+  @override
+  String get profileDiscover => '种草';
+
+  @override
+  String get profileDiscoverBadge => '发现';
+
+  @override
+  String get profileFootprintsHint => '足迹功能即将上线';
+
+  @override
+  String get profileFootprintsEmpty => '还没有浏览记录';
+
+  @override
+  String get profileActivityDelete => '删除';
+
+  @override
+  String get profileActivitySelectAll => '全选';
+
+  @override
+  String profileActivitySelected(int count) {
+    return '已选 $count 件';
+  }
+
+  @override
+  String profileActivityDeleteSelected(int count) {
+    return '删除 ($count)';
+  }
+
+  @override
+  String profileActivityDeleted(int count) {
+    return '已删除 $count 件';
+  }
+
+  @override
+  String get profileFollowingHint => '关注功能即将上线';
+
+  @override
+  String get profileCouponCenter => '领券中心';
+
+  @override
+  String get profileCouponMore => '更多';
+
+  @override
+  String get profileCouponClaim => '去领取';
+
+  @override
+  String get profileTabGuessYouLike => '猜你喜欢';
+
+  @override
+  String get profileTabMyFavorites => '我的收藏';
+
+  @override
+  String get profileTabMyReviews => '我的评价';
+
+  @override
+  String get profileServiceCoupons => '领券';
+
+  @override
+  String get profileServiceAfterSale => '售后';
+
+  @override
+  String get profileServiceShare => '分享';
+
+  @override
+  String get profileServiceMessages => '消息';
+
+  @override
+  String get profileServiceSearch => '搜索';
+
+  @override
+  String get profileFavoritesEmpty => '还没有收藏商品';
+
+  @override
+  String get profileFavoriteAdded => '已加入收藏';
+
+  @override
+  String get profileFavoriteRemoved => '已取消收藏';
+
+  @override
+  String get profileReviewsHint => '查看待评价订单，分享你的购物体验';
 
   @override
   String get ordersEmpty => '该分类下暂无订单';
