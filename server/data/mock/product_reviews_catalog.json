@@ -1,0 +1,1256 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "byProduct": {
+      "c1-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c1-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Ribbed Knit Crop Top)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c1-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Ribbed"
+          },
+          {
+            "id": "c1-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Ribbed Knit Crop Top)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Ribbed"
+          },
+          {
+            "id": "c1-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Ribbed Knit Crop Top)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Ribbed"
+          }
+        ],
+        "hasMore": false
+      },
+      "c1-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c1-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Floral Midi Dress)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c1-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Floral"
+          },
+          {
+            "id": "c1-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Floral Midi Dress)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Floral"
+          },
+          {
+            "id": "c1-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Floral Midi Dress)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Floral"
+          }
+        ],
+        "hasMore": false
+      },
+      "c1-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c1-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Satin Slip Skirt)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c1-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Satin"
+          },
+          {
+            "id": "c1-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Satin Slip Skirt)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Satin"
+          },
+          {
+            "id": "c1-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Satin Slip Skirt)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Satin"
+          }
+        ],
+        "hasMore": false
+      },
+      "c1-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c1-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Oversized Blazer Jacket)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c1-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Oversized"
+          },
+          {
+            "id": "c1-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Oversized Blazer Jacket)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Oversized"
+          },
+          {
+            "id": "c1-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c1-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Oversized Blazer Jacket)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Oversized"
+          }
+        ],
+        "hasMore": false
+      },
+      "c2-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c2-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Classic Cotton Tee)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c2-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Classic"
+          },
+          {
+            "id": "c2-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Classic Cotton Tee)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Classic"
+          },
+          {
+            "id": "c2-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Classic Cotton Tee)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Classic"
+          }
+        ],
+        "hasMore": false
+      },
+      "c2-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c2-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Slim Fit Chinos)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c2-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Slim"
+          },
+          {
+            "id": "c2-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Slim Fit Chinos)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Slim"
+          },
+          {
+            "id": "c2-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Slim Fit Chinos)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Slim"
+          }
+        ],
+        "hasMore": false
+      },
+      "c2-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c2-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Bomber Jacket)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c2-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Bomber"
+          },
+          {
+            "id": "c2-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Bomber Jacket)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Bomber"
+          },
+          {
+            "id": "c2-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Bomber Jacket)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Bomber"
+          }
+        ],
+        "hasMore": false
+      },
+      "c2-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c2-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Oxford Button Shirt)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c2-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Oxford"
+          },
+          {
+            "id": "c2-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Oxford Button Shirt)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Oxford"
+          },
+          {
+            "id": "c2-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c2-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Oxford Button Shirt)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Oxford"
+          }
+        ],
+        "hasMore": false
+      },
+      "c3-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c3-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Cartoon Print Hoodie)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c3-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Cartoon"
+          },
+          {
+            "id": "c3-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Cartoon Print Hoodie)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Cartoon"
+          },
+          {
+            "id": "c3-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Cartoon Print Hoodie)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Cartoon"
+          }
+        ],
+        "hasMore": false
+      },
+      "c3-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c3-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Denim Overalls)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c3-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Denim"
+          },
+          {
+            "id": "c3-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Denim Overalls)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Denim"
+          },
+          {
+            "id": "c3-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Denim Overalls)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Denim"
+          }
+        ],
+        "hasMore": false
+      },
+      "c3-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c3-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Striped Cotton Tee)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c3-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Striped"
+          },
+          {
+            "id": "c3-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Striped Cotton Tee)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Striped"
+          },
+          {
+            "id": "c3-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Striped Cotton Tee)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Striped"
+          }
+        ],
+        "hasMore": false
+      },
+      "c3-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c3-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Lightweight Puffer Vest)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c3-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Lightweight"
+          },
+          {
+            "id": "c3-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Lightweight Puffer Vest)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Lightweight"
+          },
+          {
+            "id": "c3-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c3-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Lightweight Puffer Vest)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Lightweight"
+          }
+        ],
+        "hasMore": false
+      },
+      "c4-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c4-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Chunky Platform Sandals)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c4-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Chunky"
+          },
+          {
+            "id": "c4-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Chunky Platform Sandals)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Chunky"
+          },
+          {
+            "id": "c4-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Chunky Platform Sandals)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Chunky"
+          }
+        ],
+        "hasMore": false
+      },
+      "c4-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c4-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Mesh Running Sneakers)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c4-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Mesh"
+          },
+          {
+            "id": "c4-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Mesh Running Sneakers)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Mesh"
+          },
+          {
+            "id": "c4-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Mesh Running Sneakers)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Mesh"
+          }
+        ],
+        "hasMore": false
+      },
+      "c4-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c4-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Ankle Chelsea Boots)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c4-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Ankle"
+          },
+          {
+            "id": "c4-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Ankle Chelsea Boots)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Ankle"
+          },
+          {
+            "id": "c4-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Ankle Chelsea Boots)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Ankle"
+          }
+        ],
+        "hasMore": false
+      },
+      "c4-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c4-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Leather Loafers)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c4-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Leather"
+          },
+          {
+            "id": "c4-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Leather Loafers)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Leather"
+          },
+          {
+            "id": "c4-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c4-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Leather Loafers)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Leather"
+          }
+        ],
+        "hasMore": false
+      },
+      "c5-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c5-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Mini Crossbody Bag)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c5-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Mini"
+          },
+          {
+            "id": "c5-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Mini Crossbody Bag)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Mini"
+          },
+          {
+            "id": "c5-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Mini Crossbody Bag)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Mini"
+          }
+        ],
+        "hasMore": false
+      },
+      "c5-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c5-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Canvas Tote Bag)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c5-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Canvas"
+          },
+          {
+            "id": "c5-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Canvas Tote Bag)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Canvas"
+          },
+          {
+            "id": "c5-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Canvas Tote Bag)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Canvas"
+          }
+        ],
+        "hasMore": false
+      },
+      "c5-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c5-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (City Mini Backpack)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c5-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · City"
+          },
+          {
+            "id": "c5-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (City Mini Backpack)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · City"
+          },
+          {
+            "id": "c5-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (City Mini Backpack)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · City"
+          }
+        ],
+        "hasMore": false
+      },
+      "c5-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c5-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Evening Clutch)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c5-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Evening"
+          },
+          {
+            "id": "c5-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Evening Clutch)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Evening"
+          },
+          {
+            "id": "c5-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c5-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Evening Clutch)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Evening"
+          }
+        ],
+        "hasMore": false
+      },
+      "c6-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c6-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Velvet Lip Tint Set)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c6-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Velvet"
+          },
+          {
+            "id": "c6-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Velvet Lip Tint Set)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Velvet"
+          },
+          {
+            "id": "c6-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Velvet Lip Tint Set)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Velvet"
+          }
+        ],
+        "hasMore": false
+      },
+      "c6-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c6-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Hydrating Face Serum)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c6-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Hydrating"
+          },
+          {
+            "id": "c6-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Hydrating Face Serum)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Hydrating"
+          },
+          {
+            "id": "c6-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Hydrating Face Serum)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Hydrating"
+          }
+        ],
+        "hasMore": false
+      },
+      "c6-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c6-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Eyeshadow Palette)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c6-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Eyeshadow"
+          },
+          {
+            "id": "c6-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Eyeshadow Palette)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Eyeshadow"
+          },
+          {
+            "id": "c6-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Eyeshadow Palette)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Eyeshadow"
+          }
+        ],
+        "hasMore": false
+      },
+      "c6-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c6-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Floral Body Mist)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c6-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Floral"
+          },
+          {
+            "id": "c6-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Floral Body Mist)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Floral"
+          },
+          {
+            "id": "c6-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c6-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Floral Body Mist)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Floral"
+          }
+        ],
+        "hasMore": false
+      },
+      "c7-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c7-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Woven Throw Pillow)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c7-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Woven"
+          },
+          {
+            "id": "c7-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Woven Throw Pillow)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Woven"
+          },
+          {
+            "id": "c7-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Woven Throw Pillow)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Woven"
+          }
+        ],
+        "hasMore": false
+      },
+      "c7-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c7-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Matte Ceramic Vase)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c7-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Matte"
+          },
+          {
+            "id": "c7-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Matte Ceramic Vase)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Matte"
+          },
+          {
+            "id": "c7-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Matte Ceramic Vase)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Matte"
+          }
+        ],
+        "hasMore": false
+      },
+      "c7-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c7-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (USB Bedside Lamp)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c7-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · USB"
+          },
+          {
+            "id": "c7-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (USB Bedside Lamp)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · USB"
+          },
+          {
+            "id": "c7-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (USB Bedside Lamp)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · USB"
+          }
+        ],
+        "hasMore": false
+      },
+      "c7-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c7-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Rattan Storage Basket)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c7-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Rattan"
+          },
+          {
+            "id": "c7-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Rattan Storage Basket)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Rattan"
+          },
+          {
+            "id": "c7-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c7-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Rattan Storage Basket)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Rattan"
+          }
+        ],
+        "hasMore": false
+      },
+      "c8-p1": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c8-p1-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p1u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Clearance Basic Tee)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c8-p1rv/200/200"
+            ],
+            "variantLabel": "Size M · Clearance"
+          },
+          {
+            "id": "c8-p1-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Clearance Basic Tee)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Clearance"
+          },
+          {
+            "id": "c8-p1-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p1u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Clearance Basic Tee)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Clearance"
+          }
+        ],
+        "hasMore": false
+      },
+      "c8-p2": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c8-p2-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p2u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Outlet Wrap Dress)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c8-p2rv/200/200"
+            ],
+            "variantLabel": "Size M · Outlet"
+          },
+          {
+            "id": "c8-p2-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Outlet Wrap Dress)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Outlet"
+          },
+          {
+            "id": "c8-p2-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p2u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Outlet Wrap Dress)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Outlet"
+          }
+        ],
+        "hasMore": false
+      },
+      "c8-p3": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c8-p3-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p3u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Flash Deal Midi Skirt)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c8-p3rv/200/200"
+            ],
+            "variantLabel": "Size M · Flash"
+          },
+          {
+            "id": "c8-p3-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Flash Deal Midi Skirt)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Flash"
+          },
+          {
+            "id": "c8-p3-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p3u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Flash Deal Midi Skirt)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Flash"
+          }
+        ],
+        "hasMore": false
+      },
+      "c8-p4": {
+        "averageRating": 4.5,
+        "totalCount": 3,
+        "items": [
+          {
+            "id": "c8-p4-r1",
+            "userName": "Emma L.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p4u0/80/80",
+            "rating": 5,
+            "content": "Exactly as pictured. Great quality for the price. (Final Sale Puffer)",
+            "createdAt": "2026-05-28",
+            "imageUrls": [
+              "https://picsum.photos/seed/c8-p4rv/200/200"
+            ],
+            "variantLabel": "Size M · Final"
+          },
+          {
+            "id": "c8-p4-r2",
+            "userName": "Sophie K.",
+            "userAvatarUrl": "",
+            "rating": 4.5,
+            "content": "Fast delivery and true to size. Would buy again. (Final Sale Puffer)",
+            "createdAt": "2026-05-25",
+            "imageUrls": [],
+            "variantLabel": "Size S · Final"
+          },
+          {
+            "id": "c8-p4-r3",
+            "userName": "Mia R.",
+            "userAvatarUrl": "https://picsum.photos/seed/c8-p4u2/80/80",
+            "rating": 4,
+            "content": "Nice material, comfortable for daily wear. (Final Sale Puffer)",
+            "createdAt": "2026-05-22",
+            "imageUrls": [],
+            "variantLabel": "Size L · Final"
+          }
+        ],
+        "hasMore": false
+      }
+    }
+  }
+}

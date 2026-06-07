@@ -1,0 +1,35 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "orderId": "o1",
+    "carrier": "SHOO Express",
+    "trackingNumber": "SX20260528001234",
+    "events": [
+      {
+        "time": "2026-06-02 16:20",
+        "status": "Out for delivery",
+        "description": "Package is out for delivery in your area.",
+        "isActive": true
+      },
+      {
+        "time": "2026-06-01 08:45",
+        "status": "In transit",
+        "description": "Package arrived at local distribution center.",
+        "isActive": false
+      },
+      {
+        "time": "2026-05-30 22:10",
+        "status": "Shipped",
+        "description": "Package has left the warehouse.",
+        "isActive": false
+      },
+      {
+        "time": "2026-05-28 15:00",
+        "status": "Order confirmed",
+        "description": "Seller has confirmed your order.",
+        "isActive": false
+      }
+    ]
+  }
+}

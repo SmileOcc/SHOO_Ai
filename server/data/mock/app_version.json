@@ -1,0 +1,10 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "latestVersion": "0.1.0",
+    "minVersion": "0.0.5",
+    "updateUrl": "https://shoo.app/download",
+    "releaseNotes": "• New checkout flow\n• Performance improvements\n• Bug fixes"
+  }
+}

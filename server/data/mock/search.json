@@ -1,0 +1,100 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "c1-p1",
+        "categoryId": "c1",
+        "title": "Ribbed Knit Crop Top",
+        "imageUrl": "https://picsum.photos/seed/c1-p1/400/500",
+        "price": 1299,
+        "originalPrice": 2599,
+        "discountLabel": "-50%",
+        "rating": 4.3,
+        "soldCount": 7900
+      },
+      {
+        "id": "c1-p2",
+        "categoryId": "c1",
+        "title": "Floral Midi Dress",
+        "imageUrl": "https://picsum.photos/seed/c1-p2/400/500",
+        "price": 1599,
+        "originalPrice": 2799,
+        "discountLabel": "-43%",
+        "rating": 4.5,
+        "soldCount": 9600
+      },
+      {
+        "id": "c1-p3",
+        "categoryId": "c1",
+        "title": "Satin Slip Skirt",
+        "imageUrl": "https://picsum.photos/seed/c1-p3/400/500",
+        "price": 1199,
+        "originalPrice": 2199,
+        "discountLabel": "-45%",
+        "rating": 4.6,
+        "soldCount": 11300
+      },
+      {
+        "id": "c1-p4",
+        "categoryId": "c1",
+        "title": "Oversized Blazer Jacket",
+        "imageUrl": "https://picsum.photos/seed/c1-p4/400/500",
+        "price": 2499,
+        "originalPrice": 4999,
+        "discountLabel": "-50%",
+        "rating": 4.8,
+        "soldCount": 13000
+      },
+      {
+        "id": "c2-p1",
+        "categoryId": "c2",
+        "title": "Classic Cotton Tee",
+        "imageUrl": "https://picsum.photos/seed/c2-p1/400/500",
+        "price": 899,
+        "originalPrice": 1499,
+        "discountLabel": "-40%",
+        "rating": 4.3,
+        "soldCount": 8000
+      },
+      {
+        "id": "c2-p2",
+        "categoryId": "c2",
+        "title": "Slim Fit Chinos",
+        "imageUrl": "https://picsum.photos/seed/c2-p2/400/500",
+        "price": 1699,
+        "originalPrice": 2899,
+        "discountLabel": "-41%",
+        "rating": 4.5,
+        "soldCount": 9700
+      },
+      {
+        "id": "c2-p3",
+        "categoryId": "c2",
+        "title": "Bomber Jacket",
+        "imageUrl": "https://picsum.photos/seed/c2-p3/400/500",
+        "price": 2199,
+        "originalPrice": 3999,
+        "discountLabel": "-45%",
+        "rating": 4.6,
+        "soldCount": 11400
+      },
+      {
+        "id": "c2-p4",
+        "categoryId": "c2",
+        "title": "Oxford Button Shirt",
+        "imageUrl": "https://picsum.photos/seed/c2-p4/400/500",
+        "price": 1399,
+        "originalPrice": 2299,
+        "discountLabel": "-39%",
+        "rating": 4.8,
+        "soldCount": 13100
+      }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "total": 8,
+    "hasMore": false
+  }
+}

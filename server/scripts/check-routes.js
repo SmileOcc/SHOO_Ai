@@ -10,8 +10,8 @@ const base = process.env.API_BASE ?? 'http://127.0.0.1:3847';
 const prefix = '/api/v1';
 
 const samples = {
-  '/products/{id}': '/products/p1',
-  '/products/{id}/reviews': '/products/p1/reviews',
+  '/products/{id}': '/products/c1-p1',
+  '/products/{id}/reviews': '/products/c1-p1/reviews',
   '/orders/{id}': '/orders/o1',
   '/orders/{id}/logistics': '/orders/o1/logistics',
 };

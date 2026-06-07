@@ -2,6 +2,13 @@ import cors from 'cors';
 import express from 'express';
 import { config } from './config.js';
 import { loadMockJson, clearMockCache } from './loadMock.js';
+import {
+  getLogFiles,
+  persistAnalytics,
+  persistApiRequest,
+  persistNetworkLog,
+} from './logPersistence.js';
+import { resolveMockResponse } from './mockResolver.js';
 import { matchRoute, routes } from './routeRegistry.js';
 
 const app = express();
@@ -10,9 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  const started = Date.now();
+  req._apiStartedAt = Date.now();
   res.on('finish', () => {
-    const ms = Date.now() - started;
+    const ms = Date.now() - req._apiStartedAt;
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} → ${ms}ms`);
   });
   next();
@@ -45,17 +52,69 @@ apiRouter.post('/__admin/reload', async (_req, res) => {
   res.json({ code: 0, message: 'ok', data: { reloaded: true } });
 });
 
+async function handleLogRoutes(req, res, relativePath) {
+  if (req.method !== 'POST') return false;
+
+  if (relativePath === '/analytics/events') {
+    console.log('[SHOO][ANALYTICS]', JSON.stringify(req.body, null, 2));
+    try {
+      await persistAnalytics(req.body ?? {});
+    } catch (error) {
+      console.error('[SHOO][LOG-PERSIST] analytics failed:', error);
+    }
+    res.json({ code: 0, message: 'ok', data: { accepted: true } });
+    return true;
+  }
+
+  if (relativePath === '/debug/network-logs') {
+    const kind = req.body?.kind ?? 'log';
+    const message = req.body?.message ?? JSON.stringify(req.body);
+    console.log(`[SHOO][NETWORK-LOG][${kind}]`, message);
+    try {
+      await persistNetworkLog(req.body ?? {});
+    } catch (error) {
+      console.error('[SHOO][LOG-PERSIST] network log failed:', error);
+    }
+    res.json({ code: 0, message: 'ok', data: { accepted: true } });
+    return true;
+  }
+
+  return false;
+}
+
+async function recordApiExchange(req, res, relativePath, payload) {
+  try {
+    await persistApiRequest({
+      method: req.method,
+      path: relativePath,
+      query: req.query,
+      requestBody: req.body ?? null,
+      status: res.statusCode,
+      durationMs: Date.now() - (req._apiStartedAt ?? Date.now()),
+      responseBody: payload,
+      mockFile: res.locals.mockFile ?? null,
+    });
+  } catch (error) {
+    console.error('[SHOO][LOG-PERSIST] api request failed:', error);
+  }
+}
+
 async function handleApiRequest(req, res) {
-  // Mounted at apiPrefix — req.path is relative (e.g. /banners)
   const relativePath = req.path === '' ? '/' : req.path;
+
+  if (await handleLogRoutes(req, res, relativePath)) return;
+
   const route = matchRoute(req.method, relativePath);
 
   if (!route) {
-    res.status(404).json({
+    const payload = {
       code: 404,
       message: `Route not found: ${req.method} ${config.apiPrefix}${relativePath}`,
       data: null,
-    });
+    };
+    res.status(404);
+    await recordApiExchange(req, res, relativePath, payload);
+    res.json(payload);
     return;
   }
 
@@ -64,15 +123,28 @@ async function handleApiRequest(req, res) {
   }
 
   try {
-    const body = await loadMockJson(route.file);
-    res.status(200).json(body);
+    const envelope = await loadMockJson(route.file);
+    const { status, body } = await resolveMockResponse({
+      route,
+      requestPath: relativePath,
+      query: req.query,
+      envelope,
+      loadMockJson,
+    });
+    res.locals.mockFile = route.file;
+    res.status(status);
+    await recordApiExchange(req, res, relativePath, body);
+    res.json(body);
   } catch (error) {
     console.error(`Failed to load mock file ${route.file}:`, error);
-    res.status(500).json({
+    const payload = {
       code: 500,
       message: `Mock file error: ${route.file}`,
       data: null,
-    });
+    };
+    res.status(500);
+    await recordApiExchange(req, res, relativePath, payload);
+    res.json(payload);
   }
 }
 
@@ -92,6 +164,11 @@ app.listen(config.port, config.host, () => {
   console.log(`  Data dir: ${config.mockDataDir}`);
   console.log(`  Delay:    ${config.mockDelayMs}ms`);
   console.log(`  Routes:   ${routes.length}`);
+  const logFiles = getLogFiles();
+  console.log(`  Logs:     ${logFiles.dir}/`);
+  console.log(`            - ${logFiles.analytics}`);
+  console.log(`            - ${logFiles.network}`);
+  console.log(`            - ${logFiles.api} (incl. responseBody)`);
   console.log('');
   console.log('  Flutter (iOS Simulator / macOS):');
   console.log('    flutter run --dart-define=ENV=local --dart-define=USE_MOCK_API=false');

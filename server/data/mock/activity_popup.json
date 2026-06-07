@@ -1,0 +1,14 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "id": "act_summer_2026",
+    "title": "SUMMER SALE — Up to 50% OFF",
+    "description": "Limited time summer sale.\nUp to 50% off.\nFree shipping over $49.\nNew styles added daily.\nShop before it's gone.",
+    "imageUrl": "https://picsum.photos/seed/summer_sale/600/800",
+    "delaySeconds": 2,
+    "maxDailyShows": 3,
+    "link": "/flash-sale",
+    "buttonText": "Shop Now"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "o1",
+        "orderNo": "SH20260528001",
+        "status": "shipped",
+        "totalCents": 3198,
+        "createdAt": "2026-05-28 14:32",
+        "items": [
+          {
+            "productId": "p1",
+            "title": "Ribbed Knit Crop Top",
+            "imageUrl": "https://picsum.photos/seed/p1/400/500",
+            "price": 1299,
+            "quantity": 1,
+            "variantLabel": "Size M · Black"
+          },
+          {
+            "productId": "p2",
+            "title": "High Waist Wide Leg Pants",
+            "imageUrl": "https://picsum.photos/seed/p2/400/500",
+            "price": 1899,
+            "quantity": 1,
+            "variantLabel": "Size M · Navy"
+          }
+        ]
+      },
+      {
+        "id": "o2",
+        "orderNo": "SH20260515002",
+        "status": "delivered",
+        "totalCents": 2499,
+        "createdAt": "2026-05-15 09:10",
+        "items": [
+          {
+            "productId": "p3",
+            "title": "Oversized Blazer Jacket",
+            "imageUrl": "https://picsum.photos/seed/p3/400/500",
+            "price": 2499,
+            "quantity": 1,
+            "variantLabel": "Size L · Grey"
+          }
+        ]
+      },
+      {
+        "id": "o3",
+        "orderNo": "SH20260510003",
+        "status": "pending_payment",
+        "totalCents": 1599,
+        "createdAt": "2026-05-10 18:45",
+        "items": [
+          {
+            "productId": "p4",
+            "title": "Floral Midi Dress",
+            "imageUrl": "https://picsum.photos/seed/p4/400/500",
+            "price": 1599,
+            "quantity": 1,
+            "variantLabel": "Size S · Floral"
+          }
+        ]
+      }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "total": 3,
+    "hasMore": true
+  }
+}
