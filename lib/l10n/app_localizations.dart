@@ -1238,6 +1238,12 @@ abstract class AppLocalizations {
   /// **'Product'**
   String get productDetailTitle;
 
+  /// No description provided for @productDetailLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading product details...'**
+  String get productDetailLoading;
+
   /// No description provided for @productDescriptionTitle.
   ///
   /// In en, this message translates to:

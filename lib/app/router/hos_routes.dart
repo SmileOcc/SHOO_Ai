@@ -33,6 +33,7 @@ abstract final class SHOAppRoutes {
   static const debugUpdate = '/debug/update';
   static const debugActivity = '/debug/activity';
   static const debugNative = '/debug/native';
+  static const debugBrand = '/debug/brand';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

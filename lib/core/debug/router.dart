@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router/hos_routes.dart';
+import 'modules/brand/hos_debug_brand_page.dart';
 import 'modules/activity/hos_debug_activity_config_page.dart';
 import 'modules/native/hos_debug_native_example_page.dart';
 import 'modules/native/hos_debug_native_examples.dart';
@@ -22,6 +23,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) => 
           GoRoute(
             path: 'activity',
             builder: (context, state) => const SHODebugActivityConfigPage(),
+          ),
+          GoRoute(
+            path: 'brand',
+            builder: (context, state) => const SHODebugBrandPage(),
           ),
           GoRoute(
             path: 'native',

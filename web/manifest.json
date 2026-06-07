@@ -1,11 +1,11 @@
 {
-    "name": "shoo",
-    "short_name": "shoo",
+    "name": "SHOO",
+    "short_name": "SHOO",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#222222",
+    "theme_color": "#FF4657",
+    "description": "SHOO — Fashion e-commerce app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

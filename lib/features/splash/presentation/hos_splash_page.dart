@@ -7,6 +7,7 @@ import '../../../core/constants/hos_constants.dart';
 import '../../../core/storage/hos_local_storage.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/widgets/hos_app_loading.dart';
 import '../../../l10n/app_localizations.dart';
 
 const _onboardingSeenKey = 'onboarding_seen';
@@ -50,14 +51,10 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              l10n.appName,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 42,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 4,
-              ),
+            const SHOAppLoading(
+              size: 96,
+              showAppName: true,
+              appNameColor: Colors.white,
             ),
             const SizedBox(height: SHOAppSpacing.lg),
             Text(
@@ -65,8 +62,6 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
               style: const TextStyle(color: Colors.white70, fontSize: 13),
             ),
             const SizedBox(height: SHOAppSpacing.xxxl),
-            const CircularProgressIndicator(color: SHOAppColors.accent, strokeWidth: 2),
-            const SizedBox(height: SHOAppSpacing.md),
             Text(
               '${SHOAppConstants.appVersion}',
               style: const TextStyle(color: Colors.white38, fontSize: 10),

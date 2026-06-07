@@ -219,6 +219,7 @@
   "cartItemPriceUpdated": "价格已更新",
   "paymentPollingStatus": "正在确认支付状态...",
   "productDetailTitle": "商品详情",
+  "productDetailLoading": "正在加载商品，请稍候...",
   "productDescriptionTitle": "商品描述",
   "productAddToBag": "加入购物袋",
   "productBuyNow": "立即购买",

@@ -12,6 +12,7 @@ import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/utils/hos_async_value_ui.dart';
+import '../../../core/widgets/hos_app_loading.dart';
 import '../../../core/widgets/hos_banner_carousel.dart';
 import '../../../core/widgets/hos_button.dart';
 import '../../../core/widgets/hos_circle_overlay_button.dart';
@@ -41,14 +42,20 @@ class SHOProductDetailPage extends ConsumerWidget {
     final topInset = MediaQuery.paddingOf(context).top;
     final heroHeight = 360.0 + topInset;
 
+    void handleBack() {
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go(SHOAppRoutes.home);
+      }
+    }
+
     return detailAsync.whenWidget(
-      loading: const _SHOProductDetailSkeleton(),
-      error: (error, _) => Scaffold(
-        appBar: AppBar(title: Text(l10n.productDetailTitle)),
-        body: SHOAppErrorView(
-          message: error.toString(),
-          onRetry: () => ref.invalidate(productDetailProvider(productId)),
-        ),
+      loading: _SHOProductDetailSkeleton(heroHeight: heroHeight),
+      error: (error, _) => _SHOProductDetailError(
+        message: error.toString(),
+        onBack: handleBack,
+        onRetry: () => ref.invalidate(productDetailProvider(productId)),
       ),
       data: (detail) {
         final banners = detail.images
@@ -177,13 +184,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                   right: 0,
                   child: _SHOProductDetailTopBar(
                     product: detail,
-                    onBack: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        context.go(SHOAppRoutes.home);
-                      }
-                    },
+                    onBack: handleBack,
                   ),
                 ),
               ],
@@ -422,21 +423,153 @@ class _SHOProductDetailFooter extends StatelessWidget {
 }
 
 class _SHOProductDetailSkeleton extends StatelessWidget {
-  const _SHOProductDetailSkeleton();
+  const _SHOProductDetailSkeleton({required this.heroHeight});
+
+  final double heroHeight;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-      children: const [
-        SHOSkeletonBox(height: 360),
-        SizedBox(height: SHOAppSpacing.lg),
-        SHOSkeletonBox(height: 24, width: 200),
-        SizedBox(height: SHOAppSpacing.md),
-        SHOSkeletonBox(height: 16, width: 120),
-        SizedBox(height: SHOAppSpacing.xl),
-        SHOSkeletonBox(height: 80),
-      ],
+    final theme = context.shoTheme;
+    const actionSize = 36.0;
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Stack(
+        children: [
+          ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: heroHeight,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    const SHOSkeletonBox(),
+                    Center(
+                      child: SHOAppLoading(size: 80),
+                    ),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(SHOAppSpacing.pagePadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SHOSkeletonBox(height: 18, width: 72),
+                    SizedBox(height: SHOAppSpacing.sm),
+                    SHOSkeletonBox(height: 22, width: double.infinity),
+                    SizedBox(height: SHOAppSpacing.md),
+                    SHOSkeletonBox(height: 20, width: 140),
+                    SizedBox(height: SHOAppSpacing.sm),
+                    SHOSkeletonBox(height: 14, width: 100),
+                    SizedBox(height: SHOAppSpacing.xl),
+                    SHOSkeletonBox(height: 16, width: 80),
+                    SizedBox(height: SHOAppSpacing.sm),
+                    SHOSkeletonBox(height: 14, width: double.infinity),
+                    SizedBox(height: SHOAppSpacing.xs),
+                    SHOSkeletonBox(height: 14, width: double.infinity),
+                    SizedBox(height: SHOAppSpacing.xs),
+                    SHOSkeletonBox(height: 14, width: 220),
+                    SizedBox(height: SHOAppSpacing.xl),
+                    SHOSkeletonBox(height: 16, width: 64),
+                    SizedBox(height: SHOAppSpacing.md),
+                    SHOSkeletonBox(height: 88),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 88),
+            ],
+          ),
+          const SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SHOAppSpacing.pagePadding,
+                vertical: SHOAppSpacing.sm,
+              ),
+              child: Row(
+                children: [
+                  SHOSkeletonBox(
+                    width: actionSize,
+                    height: actionSize,
+                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                  ),
+                  Spacer(),
+                  SHOSkeletonBox(
+                    width: actionSize,
+                    height: actionSize,
+                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                  ),
+                  SizedBox(width: SHOAppSpacing.sm),
+                  SHOSkeletonBox(
+                    width: actionSize,
+                    height: actionSize,
+                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.shoSurface,
+          border: Border(top: BorderSide(color: theme.border)),
+        ),
+        child: const SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SHOAppSpacing.pagePadding,
+              vertical: SHOAppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                SHOSkeletonBox(width: 40, height: 40),
+                SizedBox(width: SHOAppSpacing.xs),
+                SHOSkeletonBox(width: 40, height: 40),
+                SizedBox(width: SHOAppSpacing.sm),
+                Expanded(child: SHOSkeletonBox(height: 36)),
+                SizedBox(width: SHOAppSpacing.sm),
+                Expanded(child: SHOSkeletonBox(height: 36)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SHOProductDetailError extends StatelessWidget {
+  const _SHOProductDetailError({
+    required this.message,
+    required this.onBack,
+    required this.onRetry,
+  });
+
+  final String message;
+  final VoidCallback onBack;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          onPressed: onBack,
+        ),
+        title: Text(l10n.productDetailTitle),
+      ),
+      body: SHOAppErrorView(
+        message: message,
+        onRetry: onRetry,
+      ),
     );
   }
 }

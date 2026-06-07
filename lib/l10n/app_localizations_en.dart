@@ -622,6 +622,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productDetailTitle => 'Product';
 
   @override
+  String get productDetailLoading => 'Loading product details...';
+
+  @override
   String get productDescriptionTitle => 'Description';
 
   @override

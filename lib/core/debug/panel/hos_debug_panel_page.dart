@@ -67,6 +67,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugActivity),
           ),
           ListTile(
+            leading: const Icon(Icons.palette_outlined),
+            title: const Text('SHOO Brand / Icon'),
+            subtitle: const Text('Preview and select app icon style'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugBrand),
+          ),
+          ListTile(
             leading: const Icon(Icons.developer_board_outlined),
             title: Text(l10n.debugNativeEntry),
             subtitle: Text(l10n.debugNativeEntryHint),

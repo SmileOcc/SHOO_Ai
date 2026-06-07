@@ -606,6 +606,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get productDetailTitle => '商品详情';
 
   @override
+  String get productDetailLoading => '正在加载商品，请稍候...';
+
+  @override
   String get productDescriptionTitle => '商品描述';
 
   @override

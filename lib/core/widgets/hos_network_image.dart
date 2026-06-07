@@ -1,77 +1,53 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../storage/hos_image_cache_manager.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_theme_extension.dart';
-import 'hos_skeleton_box.dart';
+import 'hos_image_view.dart';
 
+/// 网络图片快捷组件，底层使用 [SHOAppImage]。
 class SHOAppNetworkImage extends StatelessWidget {
   const SHOAppNetworkImage({
     super.key,
     required this.url,
     this.fit = BoxFit.cover,
     this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth = 0,
+    this.placeholder,
+    this.placeholderAsset,
     this.memCacheWidth,
+    this.width,
+    this.height,
+    this.showLoadingSkeleton = true,
   });
 
   final String url;
   final BoxFit fit;
   final BorderRadius? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double borderWidth;
+  final Widget? placeholder;
+  final String? placeholderAsset;
   final int? memCacheWidth;
+  final double? width;
+  final double? height;
+  final bool showLoadingSkeleton;
 
   @override
   Widget build(BuildContext context) {
-    final muted = context.shoTheme.surfaceMuted;
-
-    final image = CachedNetworkImage(
-      imageUrl: url,
-      cacheManager: SHOImageCacheManager.instance,
+    return SHOAppImage(
+      url: url,
       fit: fit,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      placeholder: placeholder,
+      placeholderAsset: placeholderAsset,
       memCacheWidth: memCacheWidth,
-      fadeInDuration: const Duration(milliseconds: 280),
-      fadeOutDuration: const Duration(milliseconds: 120),
-      progressIndicatorBuilder: (context, url, progress) => Stack(
-        fit: StackFit.expand,
-        alignment: Alignment.center,
-        children: [
-          const SHOSkeletonBox(),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    muted.withValues(alpha: 0.3),
-                    muted.withValues(alpha: 0.6),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          if (progress.progress != null)
-            SizedBox(
-              width: 22,
-              height: 22,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                value: progress.progress,
-              ),
-            ),
-        ],
-      ),
-      errorWidget: (_, __, ___) => ColoredBox(
-        color: muted,
-        child: Center(
-          child: Icon(Icons.image_not_supported_outlined, color: SHOAppColors.textMuted, size: 24),
-        ),
-      ),
+      width: width,
+      height: height,
+      showLoadingSkeleton: showLoadingSkeleton,
     );
-
-    if (borderRadius != null) {
-      return ClipRRect(borderRadius: borderRadius!, child: image);
-    }
-    return image;
   }
 }

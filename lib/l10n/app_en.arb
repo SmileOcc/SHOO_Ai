@@ -240,6 +240,7 @@
   "cartItemPriceUpdated": "Price updated",
   "paymentPollingStatus": "Confirming payment status...",
   "productDetailTitle": "Product",
+  "productDetailLoading": "Loading product details...",
   "productDescriptionTitle": "Description",
   "productAddToBag": "Add to Bag",
   "productBuyNow": "Buy Now",
