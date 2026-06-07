@@ -39,6 +39,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cartEmptyAction => '去逛逛';
 
   @override
+  String get cartLoginTitle => '请先登录';
+
+  @override
+  String get cartLoginSubtitle => '登录后即可查看和管理购物车商品';
+
+  @override
+  String get cartLoginAction => '去登录';
+
+  @override
   String get profileSignIn => '登录 / 注册';
 
   @override

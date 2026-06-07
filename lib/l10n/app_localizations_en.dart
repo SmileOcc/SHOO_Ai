@@ -39,6 +39,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cartEmptyAction => 'Start Shopping';
 
   @override
+  String get cartLoginTitle => 'Sign in required';
+
+  @override
+  String get cartLoginSubtitle =>
+      'Sign in to view and manage items in your bag';
+
+  @override
+  String get cartLoginAction => 'Sign In';
+
+  @override
   String get profileSignIn => 'Sign in / Register';
 
   @override

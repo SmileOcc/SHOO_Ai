@@ -81,25 +81,33 @@ class SHOMainShell extends ConsumerWidget {
                     ),
             ),
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: current,
-        onTap: (index) {
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
-        items: List.generate(_tabs.length, (index) {
-          final tab = _tabs[index];
-          final selected = index == current;
-          return BottomNavigationBarItem(
-            icon: SHOTabBadgeIcon(
-              icon: selected ? tab.activeIcon : tab.icon,
-              badge: badges[index],
-            ),
-            label: _tabLabel(l10n, index),
-          );
-        }),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashFactory: NoSplash.splashFactory,
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          currentIndex: current,
+          enableFeedback: false,
+          onTap: (index) {
+            navigationShell.goBranch(
+              index,
+              initialLocation: index == navigationShell.currentIndex,
+            );
+          },
+          items: List.generate(_tabs.length, (index) {
+            final tab = _tabs[index];
+            final selected = index == current;
+            return BottomNavigationBarItem(
+              icon: SHOTabBadgeIcon(
+                icon: selected ? tab.activeIcon : tab.icon,
+                badge: badges[index],
+              ),
+              label: _tabLabel(l10n, index),
+            );
+          }),
+        ),
       ),
     );
   }

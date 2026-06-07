@@ -76,11 +76,19 @@ class SHOSessionNotifier extends StateNotifier<SHOSessionState> {
     }
   }
 
-  Future<void> login(SHOLoginRequest request) async {
-    final session = await _repository.login(request);
+  Future<SHOAuthSession> loginRequest(SHOLoginRequest request) {
+    return _repository.login(request);
+  }
+
+  Future<void> commitLogin(SHOAuthSession session) async {
     _syncToken(session.token);
     state = SHOSessionState(token: session.token, user: session.user);
     SHOAppLogger.info('User logged in: ${session.user.nickname}');
+  }
+
+  Future<void> login(SHOLoginRequest request) async {
+    final session = await loginRequest(request);
+    await commitLogin(session);
   }
 
   Future<void> logout() async {

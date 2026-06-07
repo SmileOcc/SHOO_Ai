@@ -63,9 +63,9 @@ class _SHOHomePageState extends ConsumerState<SHOHomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: SHOAppSpacing.sm),
+                    const SizedBox(height: SHOAppSpacing.xs),
                     SHOBannerCarousel(banners: feed.banners),
-                    const SizedBox(height: SHOAppSpacing.lg),
+                    const SizedBox(height: SHOAppSpacing.sm),
                     categoriesAsync.when(
                       data: (categories) => SHOQuickEntryGrid(items: categories),
                       loading: () => const Padding(

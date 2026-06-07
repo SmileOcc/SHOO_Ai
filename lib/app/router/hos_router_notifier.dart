@@ -37,9 +37,8 @@ class SHORouterNotifier extends ChangeNotifier {
       return '${SHOAppRoutes.login}?redirect=$redirectUri';
     }
 
-    if (session.isAuthenticated && loggingIn) {
-      return SHOAppRoutes.profile;
-    }
+    // 登录/注册成功后的跳转由页面自行处理（pop 或 go），避免与会话更新竞态冲突。
+    if (session.isAuthenticated && loggingIn) return null;
 
     return null;
   }

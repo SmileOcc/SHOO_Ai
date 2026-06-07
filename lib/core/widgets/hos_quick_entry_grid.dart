@@ -23,9 +23,9 @@ class SHOQuickEntryGrid extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          mainAxisSpacing: SHOAppSpacing.md,
-          crossAxisSpacing: SHOAppSpacing.sm,
-          childAspectRatio: 0.85,
+          mainAxisSpacing: SHOAppSpacing.xs,
+          crossAxisSpacing: SHOAppSpacing.xs,
+          childAspectRatio: 1.05,
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
@@ -36,8 +36,8 @@ class SHOQuickEntryGrid extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 40,
+                  height: 40,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: context.shoTheme.surfaceMuted,

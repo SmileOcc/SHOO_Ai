@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/auth/hos_auth_guard.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/share/hos_share_panel.dart';
 import '../../../core/share/hos_share_service.dart';
@@ -76,6 +77,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                         edgeToEdge: true,
                         showTitleOverlay: false,
                         showIndicators: banners.length > 1,
+                        autoPlay: false,
                       ),
                     ),
                     SliverPadding(
@@ -175,7 +177,13 @@ class SHOProductDetailPage extends ConsumerWidget {
                   right: 0,
                   child: _SHOProductDetailTopBar(
                     product: detail,
-                    onBack: () => context.pop(),
+                    onBack: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go(SHOAppRoutes.home);
+                      }
+                    },
                   ),
                 ),
               ],
@@ -184,13 +192,23 @@ class SHOProductDetailPage extends ConsumerWidget {
               cartCount: ref.watch(cartBadgeCountProvider),
               onCustomerService: () =>
                   SHOAppToast.info(l10n.productCustomerServiceHint),
-              onCart: () => context.push(SHOAppRoutes.cart),
-              onAddToBag: () => SHOSkuSheet.show(context, detail),
-              onBuyNow: () => SHOSkuSheet.show(
-                context,
-                detail,
-                intent: SHOSkuSheetIntent.buyNow,
-              ),
+              onCart: () {
+                if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                context.go(SHOAppRoutes.cart);
+              },
+              onAddToBag: () {
+                if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                SHOSkuSheet.show(context, detail, ref: ref);
+              },
+              onBuyNow: () {
+                if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                SHOSkuSheet.show(
+                  context,
+                  detail,
+                  ref: ref,
+                  intent: SHOSkuSheetIntent.buyNow,
+                );
+              },
             ),
           ),
         );

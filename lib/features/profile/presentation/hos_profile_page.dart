@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/auth/hos_auth_guard.dart';
 import '../../../core/share/hos_share_panel.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
@@ -58,24 +59,45 @@ class SHOProfilePage extends ConsumerWidget {
                   _SHOOrderShortcutItem(
                     icon: Icons.receipt_long_outlined,
                     label: l10n.ordersAllShort,
-                    onTap: () => context.push(SHOAppRoutes.orders),
+                    onTap: () {
+                      if (!SHOAuthGuard.requireAuth(context, ref)) {
+                        return;
+                      }
+                      context.push(SHOAppRoutes.orders);
+                    },
                   ),
                   _SHOOrderShortcutItem(
                     icon: Icons.payment_outlined,
                     label: l10n.ordersPendingPayment,
-                    onTap: () =>
-                        context.push(SHOAppRoutes.ordersFiltered('pending_payment')),
+                    onTap: () {
+                      final route = SHOAppRoutes.ordersFiltered('pending_payment');
+                      if (!SHOAuthGuard.requireAuth(context, ref)) {
+                        return;
+                      }
+                      context.push(route);
+                    },
                   ),
                   _SHOOrderShortcutItem(
                     icon: Icons.local_shipping_outlined,
                     label: l10n.ordersShipped,
-                    onTap: () => context.push(SHOAppRoutes.ordersFiltered('shipped')),
+                    onTap: () {
+                      final route = SHOAppRoutes.ordersFiltered('shipped');
+                      if (!SHOAuthGuard.requireAuth(context, ref)) {
+                        return;
+                      }
+                      context.push(route);
+                    },
                   ),
                   _SHOOrderShortcutItem(
                     icon: Icons.rate_review_outlined,
                     label: l10n.ordersReviews,
-                    onTap: () =>
-                        context.push(SHOAppRoutes.ordersFiltered('delivered')),
+                    onTap: () {
+                      final route = SHOAppRoutes.ordersFiltered('delivered');
+                      if (!SHOAuthGuard.requireAuth(context, ref)) {
+                        return;
+                      }
+                      context.push(route);
+                    },
                   ),
                 ],
               ),
@@ -89,8 +111,14 @@ class SHOProfilePage extends ConsumerWidget {
                 ],
                 onItemTap: (item) {
                   if (item == l10n.profileCoupons) {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) {
+                      return;
+                    }
                     context.push(SHOAppRoutes.coupons);
                   } else if (item == l10n.profileAfterSales) {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) {
+                      return;
+                    }
                     context.push(SHOAppRoutes.afterSales);
                   } else if (item == l10n.profileShareDemo) {
                     SHOSharePanel.show(

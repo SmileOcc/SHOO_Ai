@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
+import '../theme/hos_theme_extension.dart';
 import '../theme/hos_typography.dart';
 
 /// 按钮变体：覆盖填充 / 描边 / 文字 / 幽灵 / 促销强调 5 种样式。
@@ -102,14 +103,20 @@ class SHOAppButton extends StatelessWidget {
       size == SHOAppButtonSize.sm ? SHOAppSpacing.tagRadius : SHOAppSpacing.buttonRadius,
     );
 
+    final scheme = Theme.of(context).colorScheme;
     final accentColor = variant == SHOAppButtonVariant.accent
         ? SHOAppColors.accent
         : SHOAppColors.primary;
 
     final contentColor = switch (variant) {
       SHOAppButtonVariant.primary || SHOAppButtonVariant.accent => SHOAppColors.textOnAccent,
+      SHOAppButtonVariant.outline => scheme.onSurface,
       _ => accentColor,
     };
+
+    final outlineBorderColor = disabled
+        ? context.shoTheme.border
+        : scheme.onSurface.withValues(alpha: 0.85);
 
     final buttonContent = Row(
       mainAxisSize: MainAxisSize.min,
@@ -152,7 +159,7 @@ class SHOAppButton extends StatelessWidget {
           height: _height,
           decoration: BoxDecoration(
             border: Border.all(
-              color: disabled ? SHOAppColors.border : accentColor,
+              color: outlineBorderColor,
               width: 1,
             ),
             borderRadius: borderRadius,

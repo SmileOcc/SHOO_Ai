@@ -44,14 +44,23 @@ class _SHORegisterPageState extends ConsumerState<SHORegisterPage> {
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(sessionProvider.notifier).login(
+      final session = await ref.read(sessionProvider.notifier).loginRequest(
             SHOLoginRequest(
               phone: _phoneController.text.trim(),
               password: _passwordController.text,
             ),
           );
       if (!mounted) return;
-      context.go(SHOAppRoutes.home);
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go(SHOAppRoutes.home);
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ref.read(sessionProvider.notifier).commitLogin(session);
+        }
+      });
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -62,7 +71,19 @@ class _SHORegisterPageState extends ConsumerState<SHORegisterPage> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.registerTitle)),
+      appBar: AppBar(
+        title: Text(l10n.registerTitle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(SHOAppRoutes.home);
+            }
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
         child: Form(

@@ -184,6 +184,12 @@ abstract final class SHOAppTheme {
         selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return SHOAppColors.accent;
+          return const Color(0xFF888888);
+        }),
+      ),
       extensions: const [SHOAppThemeColors.dark],
     );
   }

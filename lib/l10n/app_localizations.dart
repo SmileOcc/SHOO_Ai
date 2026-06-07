@@ -158,6 +158,24 @@ abstract class AppLocalizations {
   /// **'Start Shopping'**
   String get cartEmptyAction;
 
+  /// No description provided for @cartLoginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in required'**
+  String get cartLoginTitle;
+
+  /// No description provided for @cartLoginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to view and manage items in your bag'**
+  String get cartLoginSubtitle;
+
+  /// No description provided for @cartLoginAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get cartLoginAction;
+
   /// No description provided for @profileSignIn.
   ///
   /// In en, this message translates to:

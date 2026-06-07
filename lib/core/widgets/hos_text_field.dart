@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
 import '../theme/hos_theme_extension.dart';
-import '../theme/hos_typography.dart';
-
 /// 统一输入框组件。
 ///
 /// 参考文章第三步：统一边框、错误提示、字数统计、前缀/后缀图标。
@@ -102,6 +100,8 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
   Widget build(BuildContext context) {
     final borderRadius = BorderRadius.circular(SHOAppSpacing.buttonRadius);
     final theme = context.shoTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: SHOAppTypography.textTheme.labelLarge,
+            style: textTheme.labelLarge,
           ),
           const SizedBox(height: SHOAppSpacing.xs),
         ],
@@ -125,10 +125,13 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
           onFieldSubmitted: widget.onSubmitted,
           validator: widget.validator,
           inputFormatters: widget.inputFormatters,
-          style: SHOAppTypography.textTheme.bodyLarge,
+          style: textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
+          cursorColor: colorScheme.onSurface,
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: SHOAppTypography.textTheme.bodyMedium,
+            hintStyle: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.45),
+            ),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.suffixIcon,
             errorText: _hasError ? widget.error : null,
@@ -149,7 +152,7 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: const BorderSide(color: SHOAppColors.primary, width: 1.5),
+              borderSide: BorderSide(color: colorScheme.onSurface, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: borderRadius,

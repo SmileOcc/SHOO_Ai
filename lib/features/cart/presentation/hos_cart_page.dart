@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/auth/hos_auth_guard.dart';
 import '../../../core/feedback/hos_toast.dart';
+import '../../../features/auth/presentation/hos_session_provider.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/theme/hos_spacing.dart';
@@ -34,6 +36,8 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
   }
 
   Future<void> _reconcileCart() async {
+    if (!ref.read(sessionProvider).isAuthenticated) return;
+
     final cart = ref.read(cartProvider);
     if (cart.items.isEmpty || _reconciling) return;
 
@@ -72,8 +76,21 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final session = ref.watch(sessionProvider);
     final cart = ref.watch(cartProvider);
     final hasUnavailable = cart.items.any((item) => item.unavailable);
+
+    if (!session.isAuthenticated) {
+      return SHOEmptyState(
+        title: l10n.cartLoginTitle,
+        subtitle: l10n.cartLoginSubtitle,
+        icon: Icons.person_outline_rounded,
+        actionLabel: l10n.cartLoginAction,
+        onAction: () => context.push(
+          SHOAuthGuard.loginPath(redirectTo: SHOAppRoutes.cart),
+        ),
+      );
+    }
 
     if (cart.items.isEmpty) {
       return SHOEmptyState(
@@ -145,7 +162,12 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
           cart: cart,
           onSelectAll: (v) => ref.read(cartProvider.notifier).selectAll(v),
           onCheckout: cart.selectedCount > 0 && !hasUnavailable
-              ? () => context.push(SHOAppRoutes.checkout)
+              ? () {
+                  if (!SHOAuthGuard.requireAuth(context, ref)) {
+                    return;
+                  }
+                  context.push(SHOAppRoutes.checkout);
+                }
               : null,
         ),
       ],

@@ -28,10 +28,46 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
   String? _error;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _exitIfAlreadyLoggedIn());
+  }
+
+  @override
   void dispose() {
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleBack() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+    context.go(SHOAppRoutes.home);
+  }
+
+  void _exitIfAlreadyLoggedIn() {
+    if (_isLoading || !mounted) return;
+    final session = ref.read(sessionProvider);
+    if (session.isAuthenticated && !session.isRestoring) {
+      _navigateAfterAuth();
+    }
+  }
+
+  void _navigateAfterAuth() {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+
+    final redirect = widget.redirectTo;
+    if (redirect != null && redirect.isNotEmpty) {
+      context.go(redirect);
+    } else {
+      context.go(SHOAppRoutes.home);
+    }
   }
 
   Future<void> _submit() async {
@@ -43,19 +79,20 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
     });
 
     try {
-      await ref.read(sessionProvider.notifier).login(
+      final session = await ref.read(sessionProvider.notifier).loginRequest(
             SHOLoginRequest(
               phone: _phoneController.text.trim(),
               password: _passwordController.text,
             ),
           );
       if (!mounted) return;
-      final redirect = widget.redirectTo;
-      if (redirect != null && redirect.isNotEmpty) {
-        context.go(redirect);
-      } else {
-        context.go('/');
-      }
+      _navigateAfterAuth();
+      // 等 pop/go 完成后再提交会话，避免路由守卫在仍停留在登录页时触发跳转。
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ref.read(sessionProvider.notifier).commitLogin(session);
+        }
+      });
     } catch (error) {
       setState(() => _error = error.toString());
     } finally {
@@ -68,7 +105,13 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.loginTitle)),
+      appBar: AppBar(
+        title: Text(l10n.loginTitle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: _handleBack,
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
         child: Form(

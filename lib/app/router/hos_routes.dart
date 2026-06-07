@@ -44,12 +44,22 @@ abstract final class SHOAppRoutes {
   ];
 
   static const protectedRoutes = <String>[
-    settings,
     messages,
     checkout,
+    coupons,
+    afterSales,
+    addresses,
+    orders,
+  ];
+
+  static const protectedPrefixes = <String>[
+    '/orders/',
+    '/payment/',
+    '/after-sales/',
   ];
 
   static bool requiresAuth(String location) {
-    return protectedRoutes.contains(location);
+    if (protectedRoutes.contains(location)) return true;
+    return protectedPrefixes.any(location.startsWith);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/auth/hos_auth_guard.dart';
 import '../../../core/constants/hos_constants.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
@@ -31,7 +32,12 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
     BuildContext context,
     SHOProductDetail product, {
     SHOSkuSheetIntent intent = SHOSkuSheetIntent.addToCart,
+    required WidgetRef ref,
   }) {
+    if (!SHOAuthGuard.requireAuth(context, ref)) {
+      return Future.value();
+    }
+
     return SHOAppDialog.showBottomSheet(
       context,
       child: SHOSkuSheet(product: product, intent: intent),
