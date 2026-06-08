@@ -11,6 +11,7 @@ import '../../../core/widgets/hos_product_card.dart';
 import '../../../core/widgets/hos_skeleton_box.dart';
 import '../../../l10n/app_localizations.dart';
 import 'hos_category_controller.dart';
+import 'hos_category_product_filter.dart';
 import 'hos_category_sort.dart';
 
 class SHOCategoryProductsPage extends ConsumerWidget {
@@ -27,6 +28,7 @@ class SHOCategoryProductsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final sort = ref.watch(categorySortProvider);
+    final filter = ref.watch(categoryProductFilterProvider);
     final productsAsync = ref.watch(categoryProductsProvider(leafCategoryId));
 
     return Scaffold(
@@ -39,51 +41,62 @@ class SHOCategoryProductsPage extends ConsumerWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SHOCategorySortBar(),
+          const SHOCategorySortBar(trailing: SHOCategoryFilterButton()),
           Expanded(
-            child: productsAsync.whenWidget(
-              loading: GridView.builder(
-                padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: SHOAppSpacing.lg,
-                  crossAxisSpacing: SHOAppSpacing.lg,
-                  childAspectRatio: SHOProductCard.gridChildAspectRatio,
-                ),
-                itemCount: 4,
-                itemBuilder: (_, __) => const SHOSkeletonBox(height: 220),
-              ),
-              error: (error, _) => SHOAppErrorView(
-                message: error.toString(),
-                onRetry: () =>
-                    ref.invalidate(categoryProductsProvider(leafCategoryId)),
-              ),
-              data: (products) {
-                final sorted = sortCategoryProducts(products, sort);
-
-                if (sorted.isEmpty) {
-                  return SHOEmptyState(title: l10n.noData);
-                }
-
-                return GridView.builder(
-                  padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: SHOAppSpacing.lg,
-                    crossAxisSpacing: SHOAppSpacing.lg,
-                    childAspectRatio: SHOProductCard.gridChildAspectRatio,
+            child: Stack(
+              children: [
+                productsAsync.whenWidget(
+                  loading: GridView.builder(
+                    padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: SHOAppSpacing.lg,
+                      crossAxisSpacing: SHOAppSpacing.lg,
+                      childAspectRatio: SHOProductCard.gridChildAspectRatio,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (_, __) => const SHOSkeletonBox(height: 220),
                   ),
-                  itemCount: sorted.length,
-                  itemBuilder: (context, index) {
-                    final product = sorted[index];
-                    return SHOProductCard(
-                      product: product,
-                      onTap: () =>
-                          context.push(SHOAppRoutes.product(product.id)),
+                  error: (error, _) => SHOAppErrorView(
+                    message: error.toString(),
+                    onRetry: () =>
+                        ref.invalidate(categoryProductsProvider(leafCategoryId)),
+                  ),
+                  data: (products) {
+                    final filtered = applyCategoryProductFilters(
+                      products,
+                      sort: sort,
+                      filter: filter,
+                    );
+
+                    if (filtered.isEmpty) {
+                      return SHOEmptyState(title: l10n.noData);
+                    }
+
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: SHOAppSpacing.lg,
+                        crossAxisSpacing: SHOAppSpacing.lg,
+                        childAspectRatio: SHOProductCard.gridChildAspectRatio,
+                      ),
+                      itemCount: filtered.length,
+                      itemBuilder: (context, index) {
+                        final product = filtered[index];
+                        return SHOProductCard(
+                          product: product,
+                          onTap: () =>
+                              context.push(SHOAppRoutes.product(product.id)),
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+                const SHOCategoryProductFilterOverlay(),
+              ],
             ),
           ),
         ],

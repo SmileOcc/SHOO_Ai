@@ -27,6 +27,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categorySortNewest => 'New';
 
   @override
+  String get categoryFilter => 'Filter';
+
+  @override
+  String get categoryFilterPriceRange => 'Price range';
+
+  @override
+  String get categoryFilterMinPrice => 'Min';
+
+  @override
+  String get categoryFilterMaxPrice => 'Max';
+
+  @override
+  String get categoryFilterPriceInvalid =>
+      'Max price must be greater than min price';
+
+  @override
+  String get categoryFilterSort => 'Sort';
+
+  @override
+  String get categoryFilterSortDefault => 'Default';
+
+  @override
+  String get categoryFilterSortPriceHigh => 'Price: high to low';
+
+  @override
+  String get categoryFilterSortPriceLow => 'Price: low to high';
+
+  @override
   String get tabBag => 'Bag';
 
   @override

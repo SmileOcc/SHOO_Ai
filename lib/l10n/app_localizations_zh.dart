@@ -27,6 +27,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categorySortNewest => '最新';
 
   @override
+  String get categoryFilter => '筛选';
+
+  @override
+  String get categoryFilterPriceRange => '价格区间';
+
+  @override
+  String get categoryFilterMinPrice => '最低价';
+
+  @override
+  String get categoryFilterMaxPrice => '最高价';
+
+  @override
+  String get categoryFilterPriceInvalid => '最高价必须大于最低价';
+
+  @override
+  String get categoryFilterSort => '排序';
+
+  @override
+  String get categoryFilterSortDefault => '默认排序';
+
+  @override
+  String get categoryFilterSortPriceHigh => '价格从高到低';
+
+  @override
+  String get categoryFilterSortPriceLow => '价格从低到高';
+
+  @override
   String get tabBag => '购物袋';
 
   @override

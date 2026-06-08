@@ -134,6 +134,60 @@ abstract class AppLocalizations {
   /// **'New'**
   String get categorySortNewest;
 
+  /// No description provided for @categoryFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get categoryFilter;
+
+  /// No description provided for @categoryFilterPriceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Price range'**
+  String get categoryFilterPriceRange;
+
+  /// No description provided for @categoryFilterMinPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get categoryFilterMinPrice;
+
+  /// No description provided for @categoryFilterMaxPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get categoryFilterMaxPrice;
+
+  /// No description provided for @categoryFilterPriceInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Max price must be greater than min price'**
+  String get categoryFilterPriceInvalid;
+
+  /// No description provided for @categoryFilterSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get categoryFilterSort;
+
+  /// No description provided for @categoryFilterSortDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get categoryFilterSortDefault;
+
+  /// No description provided for @categoryFilterSortPriceHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: high to low'**
+  String get categoryFilterSortPriceHigh;
+
+  /// No description provided for @categoryFilterSortPriceLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: low to high'**
+  String get categoryFilterSortPriceLow;
+
   /// No description provided for @tabBag.
   ///
   /// In en, this message translates to:

@@ -15,6 +15,47 @@ final selectedCategoryIndexProvider = StateProvider<int>((ref) => 0);
 final categorySortProvider =
     StateProvider<SHOCategorySort>((ref) => SHOCategorySort.all);
 
+enum SHOCategoryPriceSort {
+  defaultSort,
+  highToLow,
+  lowToHigh,
+}
+
+class SHOCategoryProductFilter {
+  const SHOCategoryProductFilter({
+    this.minPrice,
+    this.maxPrice,
+    this.priceSort = SHOCategoryPriceSort.defaultSort,
+  });
+
+  final int? minPrice;
+  final int? maxPrice;
+  final SHOCategoryPriceSort priceSort;
+
+  bool get hasActiveFilter =>
+      minPrice != null ||
+      maxPrice != null ||
+      priceSort != SHOCategoryPriceSort.defaultSort;
+
+  SHOCategoryProductFilter copyWith({
+    int? Function()? minPrice,
+    int? Function()? maxPrice,
+    SHOCategoryPriceSort? priceSort,
+  }) {
+    return SHOCategoryProductFilter(
+      minPrice: minPrice != null ? minPrice() : this.minPrice,
+      maxPrice: maxPrice != null ? maxPrice() : this.maxPrice,
+      priceSort: priceSort ?? this.priceSort,
+    );
+  }
+}
+
+final categoryProductFilterProvider = StateProvider<SHOCategoryProductFilter>(
+  (ref) => const SHOCategoryProductFilter(),
+);
+
+final categoryProductFilterPanelOpenProvider = StateProvider<bool>((ref) => false);
+
 final categoryAppBarTitleProvider = Provider<String>((ref) {
   final categoriesAsync = ref.watch(categoriesProvider);
   final index = ref.watch(selectedCategoryIndexProvider);

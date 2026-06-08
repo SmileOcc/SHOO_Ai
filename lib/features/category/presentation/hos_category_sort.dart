@@ -58,7 +58,9 @@ List<SHOProduct> sortCategoryProducts(
 }
 
 class SHOCategorySortBar extends ConsumerWidget {
-  const SHOCategorySortBar({super.key});
+  const SHOCategorySortBar({super.key, this.trailing});
+
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,11 +82,18 @@ class SHOCategorySortBar extends ConsumerWidget {
               _SortChip(
                 label: sort.label(l10n),
                 selected: selected == sort,
-                onTap: () =>
-                    ref.read(categorySortProvider.notifier).state = sort,
+                onTap: () {
+                  ref.read(categorySortProvider.notifier).state = sort;
+                  ref.read(categoryProductFilterPanelOpenProvider.notifier).state =
+                      false;
+                },
               ),
               if (sort != SHOCategorySort.values.last)
                 const SizedBox(width: SHOAppSpacing.sm),
+            ],
+            if (trailing != null) ...[
+              const Spacer(),
+              trailing!,
             ],
           ],
         ),
