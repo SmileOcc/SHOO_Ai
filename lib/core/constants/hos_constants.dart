@@ -24,6 +24,7 @@ abstract final class SHOAppConstants {
   static const int searchHistoryMax = 10;
   static const int listPageSize = 10;
   static const String selectedAddressIdKey = 'selected_address_id';
+  static const String addressesStorageKey = 'addresses_v1';
   static const String debugEnvOverrideKey = 'debug_env_override';
   static const String debugShowEnvBadgeKey = 'debug_show_env_badge';
 

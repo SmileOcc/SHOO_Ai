@@ -1179,6 +1179,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addressSelectTitle => 'Select Address';
 
   @override
+  String get addressEmpty => 'No addresses yet';
+
+  @override
+  String get addressDefaultTag => 'Default';
+
+  @override
+  String get addressAddNew => 'Add Address';
+
+  @override
+  String get addressDelete => 'Delete';
+
+  @override
+  String get addressDeleteConfirmTitle => 'Delete address';
+
+  @override
+  String get addressDeleteConfirmMessage =>
+      'Are you sure you want to delete this address?';
+
+  @override
+  String get addressFormAddTitle => 'Add Address';
+
+  @override
+  String get addressFormEditTitle => 'Edit Address';
+
+  @override
+  String get addressNameLabel => 'Recipient';
+
+  @override
+  String get addressPhoneLabel => 'Phone';
+
+  @override
+  String get addressLine1Label => 'Street address';
+
+  @override
+  String get addressLine2Label => 'Apt / floor (optional)';
+
+  @override
+  String get addressCityLabel => 'City';
+
+  @override
+  String get addressRegionLabel => 'State / region';
+
+  @override
+  String get addressPostalCodeLabel => 'Postal code (optional)';
+
+  @override
+  String get addressSetDefault => 'Set as default';
+
+  @override
+  String get addressSaved => 'Address saved';
+
+  @override
   String get profileAddresses => 'Addresses';
 
   @override

@@ -30,6 +30,7 @@ abstract final class SHOMockRouteRegistry {
     const SHOMockRouteEntry(method: 'GET', path: '/cart', asset: 'assets/mock/cart.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/messages', asset: 'assets/mock/messages.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/marketing/activity-popup', asset: 'assets/mock/activity_popup.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/marketing/cart-marquee', asset: 'assets/mock/cart_marquee.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/app/version', asset: 'assets/mock/app_version.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/search/hot', asset: 'assets/mock/search_hot.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/search', asset: 'assets/mock/search.json'),

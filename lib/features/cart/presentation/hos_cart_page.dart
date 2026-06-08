@@ -18,6 +18,7 @@ import '../../../l10n/app_localizations.dart';
 import '../data/hos_cart_reconcile_service.dart';
 import '../domain/hos_cart.dart';
 import 'hos_cart_controller.dart';
+import 'hos_cart_marquee_banner.dart';
 
 class SHOCartPage extends ConsumerStatefulWidget {
   const SHOCartPage({super.key});
@@ -81,29 +82,46 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
     final hasUnavailable = cart.items.any((item) => item.unavailable);
 
     if (!session.isAuthenticated) {
-      return SHOEmptyState(
-        title: l10n.cartLoginTitle,
-        subtitle: l10n.cartLoginSubtitle,
-        icon: Icons.person_outline_rounded,
-        actionLabel: l10n.cartLoginAction,
-        onAction: () => context.push(
-          SHOAuthGuard.loginPath(redirectTo: SHOAppRoutes.cart),
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SHOCartMarqueeBanner(),
+          Expanded(
+            child: SHOEmptyState(
+              title: l10n.cartLoginTitle,
+              subtitle: l10n.cartLoginSubtitle,
+              icon: Icons.person_outline_rounded,
+              actionLabel: l10n.cartLoginAction,
+              onAction: () => context.push(
+                SHOAuthGuard.loginPath(redirectTo: SHOAppRoutes.cart),
+              ),
+            ),
+          ),
+        ],
       );
     }
 
     if (cart.items.isEmpty) {
-      return SHOEmptyState(
-        title: l10n.cartEmptyTitle,
-        subtitle: l10n.cartEmptySubtitle,
-        icon: Icons.shopping_bag_outlined,
-        actionLabel: l10n.cartEmptyAction,
-        onAction: () => context.go(SHOAppRoutes.home),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SHOCartMarqueeBanner(),
+          Expanded(
+            child: SHOEmptyState(
+              title: l10n.cartEmptyTitle,
+              subtitle: l10n.cartEmptySubtitle,
+              icon: Icons.shopping_bag_outlined,
+              actionLabel: l10n.cartEmptyAction,
+              onAction: () => context.go(SHOAppRoutes.home),
+            ),
+          ),
+        ],
       );
     }
 
     return Column(
       children: [
+        const SHOCartMarqueeBanner(),
         if (hasUnavailable)
           MaterialBanner(
             content: Text(l10n.cartUnavailableBanner),

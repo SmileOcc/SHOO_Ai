@@ -2282,6 +2282,108 @@ abstract class AppLocalizations {
   /// **'Select Address'**
   String get addressSelectTitle;
 
+  /// No description provided for @addressEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No addresses yet'**
+  String get addressEmpty;
+
+  /// No description provided for @addressDefaultTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get addressDefaultTag;
+
+  /// No description provided for @addressAddNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Address'**
+  String get addressAddNew;
+
+  /// No description provided for @addressDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get addressDelete;
+
+  /// No description provided for @addressDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete address'**
+  String get addressDeleteConfirmTitle;
+
+  /// No description provided for @addressDeleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this address?'**
+  String get addressDeleteConfirmMessage;
+
+  /// No description provided for @addressFormAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Address'**
+  String get addressFormAddTitle;
+
+  /// No description provided for @addressFormEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Address'**
+  String get addressFormEditTitle;
+
+  /// No description provided for @addressNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get addressNameLabel;
+
+  /// No description provided for @addressPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get addressPhoneLabel;
+
+  /// No description provided for @addressLine1Label.
+  ///
+  /// In en, this message translates to:
+  /// **'Street address'**
+  String get addressLine1Label;
+
+  /// No description provided for @addressLine2Label.
+  ///
+  /// In en, this message translates to:
+  /// **'Apt / floor (optional)'**
+  String get addressLine2Label;
+
+  /// No description provided for @addressCityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get addressCityLabel;
+
+  /// No description provided for @addressRegionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'State / region'**
+  String get addressRegionLabel;
+
+  /// No description provided for @addressPostalCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Postal code (optional)'**
+  String get addressPostalCodeLabel;
+
+  /// No description provided for @addressSetDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default'**
+  String get addressSetDefault;
+
+  /// No description provided for @addressSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Address saved'**
+  String get addressSaved;
+
   /// No description provided for @profileAddresses.
   ///
   /// In en, this message translates to:

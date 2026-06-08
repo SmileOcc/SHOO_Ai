@@ -12,6 +12,7 @@ export const routes = [
   { method: 'GET', path: '/cart', file: 'cart.json' },
   { method: 'GET', path: '/messages', file: 'messages.json' },
   { method: 'GET', path: '/marketing/activity-popup', file: 'activity_popup.json' },
+  { method: 'GET', path: '/marketing/cart-marquee', file: 'cart_marquee.json' },
   { method: 'GET', path: '/app/version', file: 'app_version.json' },
   { method: 'GET', path: '/search/hot', file: 'search_hot.json' },
   { method: 'GET', path: '/search', file: 'search.json' },

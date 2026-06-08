@@ -1147,6 +1147,57 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addressSelectTitle => '选择地址';
 
   @override
+  String get addressEmpty => '暂无收货地址';
+
+  @override
+  String get addressDefaultTag => '默认';
+
+  @override
+  String get addressAddNew => '新增地址';
+
+  @override
+  String get addressDelete => '删除';
+
+  @override
+  String get addressDeleteConfirmTitle => '删除地址';
+
+  @override
+  String get addressDeleteConfirmMessage => '确定要删除该收货地址吗？';
+
+  @override
+  String get addressFormAddTitle => '新增地址';
+
+  @override
+  String get addressFormEditTitle => '编辑地址';
+
+  @override
+  String get addressNameLabel => '收货人';
+
+  @override
+  String get addressPhoneLabel => '手机号';
+
+  @override
+  String get addressLine1Label => '详细地址';
+
+  @override
+  String get addressLine2Label => '门牌号 / 楼层（选填）';
+
+  @override
+  String get addressCityLabel => '城市';
+
+  @override
+  String get addressRegionLabel => '省 / 州';
+
+  @override
+  String get addressPostalCodeLabel => '邮编（选填）';
+
+  @override
+  String get addressSetDefault => '设为默认地址';
+
+  @override
+  String get addressSaved => '地址已保存';
+
+  @override
   String get profileAddresses => '收货地址';
 
   @override

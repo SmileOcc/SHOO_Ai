@@ -8,6 +8,22 @@ final addressesProvider = FutureProvider<List<SHOAddress>>((ref) async {
   return repo.getAddresses();
 });
 
+Future<void> refreshAddresses(WidgetRef ref) async {
+  ref.invalidate(addressesProvider);
+  await ref.read(addressesProvider.future);
+}
+
+Future<void> saveAddress(WidgetRef ref, SHOAddress address) async {
+  await ref.read(addressRepositoryProvider).upsertAddress(address);
+  await refreshAddresses(ref);
+}
+
+Future<void> deleteAddress(WidgetRef ref, String id) async {
+  await ref.read(addressRepositoryProvider).deleteAddress(id);
+  await refreshAddresses(ref);
+  await ref.read(selectedAddressIdProvider.notifier).restore();
+}
+
 final selectedAddressIdProvider =
     StateNotifierProvider<SHOSelectedAddressNotifier, String?>((ref) {
   final notifier = SHOSelectedAddressNotifier(ref.watch(addressRepositoryProvider));

@@ -35,6 +35,9 @@ abstract final class SHOAppRoutes {
   static const afterSales = '/after-sales';
   static const addresses = '/addresses';
   static const addressesSelect = '/addresses?select=1';
+  static const addressForm = '/addresses/form';
+
+  static String addressEdit(String id) => '/addresses/form?id=$id';
   static const orders = '/orders';
 
   static String ordersFiltered(String status) => '/orders?status=$status';
