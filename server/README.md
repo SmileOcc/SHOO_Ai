@@ -34,6 +34,35 @@ curl http://127.0.0.1:3847/api/v1/banners
 curl -X POST http://127.0.0.1:3847/api/v1/auth/login -H 'Content-Type: application/json' -d '{}'
 ```
 
+## 本地文件下载（断点续传）
+
+把任意文件放进 `server/data/download/`，按**文件名**拼接 URL 即可下载，无需维护 ID 或改 JSON。
+
+```bash
+# 可选：生成一批样例文件
+npm run generate-documents
+```
+
+| 接口 | 说明 |
+|------|------|
+| `GET /api/v1/documents` | 扫描 `download/` 目录，返回文件列表 |
+| `GET /api/v1/download/{fileName}` | 按文件名下载，支持 `Range` 断点续传 |
+
+示例（iOS 模拟器 / macOS）：
+
+```text
+http://127.0.0.1:3847/api/v1/download/activity-guide.pdf
+http://127.0.0.1:3847/api/v1/download/promo.mp4
+http://127.0.0.1:3847/api/v1/download/my-custom.apk
+```
+
+查看目录：`curl http://127.0.0.1:3847/api/v1/documents`
+
+Android 模拟器将主机改为 `10.0.2.2`。往 `download/` 放入新文件后：
+
+- **本地 Server 模式**：重新请求 `/documents` 或 `POST /api/v1/__admin/reload` 即可
+- **Flutter 内置 Mock 模式**：运行 `npm run sync-download-catalog` 同步 `assets/mock/documents.json`
+
 ## Flutter 连接本地 Server
 
 **iOS 模拟器 / macOS / 真机（同局域网需改 IP）：**
@@ -58,6 +87,7 @@ flutter run \
 | `PORT` | `3847` | 监听端口（云平台通常注入此变量） |
 | `MOCK_DELAY_MS` | `300` | 模拟网络延迟 |
 | `MOCK_DATA_DIR` | `../assets/mock` | JSON 数据目录 |
+| `DOWNLOAD_DIR` | `server/data/download` | 可下载文件目录 |
 | `API_PREFIX` | `/api/v1` | API 路径前缀 |
 | `HOST` | `0.0.0.0` | 绑定地址 |
 

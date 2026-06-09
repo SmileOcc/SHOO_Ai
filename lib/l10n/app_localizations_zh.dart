@@ -981,6 +981,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileTabMyReviews => '我的评价';
 
   @override
+  String get profileServiceNovelReading => '小说阅读';
+
+  @override
+  String get profileServiceToolbox => '百宝箱';
+
+  @override
   String get profileServiceCoupons => '领券';
 
   @override
@@ -1196,6 +1202,207 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get addressSaved => '地址已保存';
+
+  @override
+  String get toolboxTitle => '百宝箱';
+
+  @override
+  String get toolboxGroupTools => '常用工具';
+
+  @override
+  String get toolboxFileDownload => '文件下载';
+
+  @override
+  String get toolboxComingSoon => '敬请期待';
+
+  @override
+  String get downloadListTitle => '下载列表';
+
+  @override
+  String get downloadTabAll => '全部';
+
+  @override
+  String get downloadTabDownloading => '下载中';
+
+  @override
+  String get downloadTabPaused => '已暂停';
+
+  @override
+  String get downloadTabCompleted => '已完成';
+
+  @override
+  String get downloadAddTask => '新增任务';
+
+  @override
+  String get downloadEmpty => '暂无下载任务';
+
+  @override
+  String get downloadTaskDialogTitle => '新增下载任务';
+
+  @override
+  String get downloadUrlLabel => '下载地址';
+
+  @override
+  String get downloadFileNameLabel => '文件名称';
+
+  @override
+  String get downloadFileNameHint => '可选，不填则从链接自动识别';
+
+  @override
+  String get downloadPriorityLabel => '优先下载';
+
+  @override
+  String get downloadConfirmStart => '确认下载';
+
+  @override
+  String get downloadStatusDownloading => '下载中';
+
+  @override
+  String get downloadStatusPaused => '已暂停';
+
+  @override
+  String get downloadStatusCompleted => '已完成';
+
+  @override
+  String get downloadActionDelete => '删除';
+
+  @override
+  String get downloadActionPause => '暂停';
+
+  @override
+  String get downloadActionStart => '开始';
+
+  @override
+  String get downloadDeleteConfirmTitle => '删除下载任务';
+
+  @override
+  String get downloadDeleteConfirmMessage => '确定要删除该下载任务吗？本地已下载内容也会一并删除。';
+
+  @override
+  String get downloadTypeDoc => '文档';
+
+  @override
+  String get downloadTypePdf => 'PDF';
+
+  @override
+  String get downloadTypeExcel => '表格';
+
+  @override
+  String get downloadTypeZip => '压缩包';
+
+  @override
+  String get downloadTypeVideo => '视频';
+
+  @override
+  String get downloadTypeOther => '文件';
+
+  @override
+  String get downloadActionCopyUrl => '复制 URL';
+
+  @override
+  String get downloadUrlCopied => '下载地址已复制';
+
+  @override
+  String get downloadPreviewUnsupported => '该类型文件不支持查看';
+
+  @override
+  String get downloadPreviewNotCompleted => '文件未下载完成，请完成下载后可查看';
+
+  @override
+  String get downloadPreviewFailed => '无法打开该文件，请稍后重试';
+
+  @override
+  String get downloadPreviewOk => '知道了';
+
+  @override
+  String get txtReaderLoadingFile => '正在读取文件…';
+
+  @override
+  String get txtReaderParsingChapters => '正在解析章节…';
+
+  @override
+  String get txtReaderPaginating => '正在排版页面…';
+
+  @override
+  String get txtReaderChapters => '目录';
+
+  @override
+  String get txtReaderFontSize => '字体大小';
+
+  @override
+  String txtReaderPageProgress(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String txtReaderChapterPageProgress(int current, int total) {
+    return '第 $current / $total 页';
+  }
+
+  @override
+  String get txtReaderLoadFailed => '文件加载失败，请稍后重试';
+
+  @override
+  String get txtReaderFontColor => '字体颜色';
+
+  @override
+  String get txtReaderDarkMode => '暗黑模式';
+
+  @override
+  String get txtReaderAddBookshelf => '加入书架';
+
+  @override
+  String get txtReaderAddedBookshelf => '已加入书架';
+
+  @override
+  String get txtReaderPrevChapter => '上一章';
+
+  @override
+  String get txtReaderNextChapter => '下一章';
+
+  @override
+  String get txtReaderNight => '夜间';
+
+  @override
+  String get txtReaderSettingsLabel => '设置';
+
+  @override
+  String get txtReaderShare => '分享';
+
+  @override
+  String get txtReaderBackground => '背景';
+
+  @override
+  String get bookshelfTitle => '我的书架';
+
+  @override
+  String get bookshelfEmpty => '书架还是空的，在阅读器里加入书架后会显示在这里';
+
+  @override
+  String get bookshelfUnread => '尚未开始阅读';
+
+  @override
+  String bookshelfReadingProgress(int chapter) {
+    return '已读至第 $chapter 章';
+  }
+
+  @override
+  String get bookshelfNotCompleted => '文件尚未下载完成';
+
+  @override
+  String get bookshelfFileMissing => '本地文件已删除';
+
+  @override
+  String get bookshelfUnknownTitle => '未知小说';
+
+  @override
+  String get bookshelfRemoveAction => '移出书架';
+
+  @override
+  String get bookshelfRemoveConfirmTitle => '移出书架';
+
+  @override
+  String get bookshelfRemoveConfirmMessage => '确定要将这本小说从书架移除吗？阅读进度会保留。';
 
   @override
   String get profileAddresses => '收货地址';

@@ -1,6 +1,6 @@
 abstract final class SHOAppRoutes {
-  static const splash = '/splash';
-  static const onboarding = '/onboarding';
+  static const splash = '/splash';  //闪图
+  static const onboarding = '/onboarding';  //引导页
   static const home = '/';
   static const category = '/category';
   static const categoryProducts = '/category/products';
@@ -22,6 +22,9 @@ abstract final class SHOAppRoutes {
   static const profile = '/profile';
   static const profileFootprints = '/profile/footprints';
   static const profileFavorites = '/profile/favorites';
+  static const profileBookshelf = '/profile/bookshelf';
+  static const toolbox = '/toolbox';
+  static const toolboxDownloads = '/toolbox/downloads';
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';

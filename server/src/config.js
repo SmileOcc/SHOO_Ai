@@ -11,5 +11,8 @@ export const config = {
   mockDataDir:
     process.env.MOCK_DATA_DIR ??
     path.resolve(__dirname, '../data/mock'),
+  downloadDir:
+    process.env.DOWNLOAD_DIR ??
+    path.resolve(__dirname, '../data/download'),
   host: process.env.HOST ?? '0.0.0.0',
 };

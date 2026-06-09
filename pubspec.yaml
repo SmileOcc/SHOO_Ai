@@ -30,6 +30,8 @@ dependencies:
   app_links: ^6.4.0
   package_info_plus: ^8.3.0
   url_launcher: ^6.3.1
+  video_player: ^2.9.3
+  pdfx: ^2.9.2
 
 dev_dependencies:
   flutter_test:

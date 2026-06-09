@@ -1958,6 +1958,18 @@ abstract class AppLocalizations {
   /// **'My Reviews'**
   String get profileTabMyReviews;
 
+  /// No description provided for @profileServiceNovelReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Novels'**
+  String get profileServiceNovelReading;
+
+  /// No description provided for @profileServiceToolbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Toolbox'**
+  String get profileServiceToolbox;
+
   /// No description provided for @profileServiceCoupons.
   ///
   /// In en, this message translates to:
@@ -2383,6 +2395,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Address saved'**
   String get addressSaved;
+
+  /// No description provided for @toolboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toolbox'**
+  String get toolboxTitle;
+
+  /// No description provided for @toolboxGroupTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get toolboxGroupTools;
+
+  /// No description provided for @toolboxFileDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get toolboxFileDownload;
+
+  /// No description provided for @toolboxComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get toolboxComingSoon;
+
+  /// No description provided for @downloadListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get downloadListTitle;
+
+  /// No description provided for @downloadTabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get downloadTabAll;
+
+  /// No description provided for @downloadTabDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get downloadTabDownloading;
+
+  /// No description provided for @downloadTabPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get downloadTabPaused;
+
+  /// No description provided for @downloadTabCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get downloadTabCompleted;
+
+  /// No description provided for @downloadAddTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add task'**
+  String get downloadAddTask;
+
+  /// No description provided for @downloadEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No download tasks'**
+  String get downloadEmpty;
+
+  /// No description provided for @downloadTaskDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New download'**
+  String get downloadTaskDialogTitle;
+
+  /// No description provided for @downloadUrlLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Download URL'**
+  String get downloadUrlLabel;
+
+  /// No description provided for @downloadFileNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File name'**
+  String get downloadFileNameLabel;
+
+  /// No description provided for @downloadFileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional — inferred from URL if empty'**
+  String get downloadFileNameHint;
+
+  /// No description provided for @downloadPriorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority download'**
+  String get downloadPriorityLabel;
+
+  /// No description provided for @downloadConfirmStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start download'**
+  String get downloadConfirmStart;
+
+  /// No description provided for @downloadStatusDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get downloadStatusDownloading;
+
+  /// No description provided for @downloadStatusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get downloadStatusPaused;
+
+  /// No description provided for @downloadStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get downloadStatusCompleted;
+
+  /// No description provided for @downloadActionDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get downloadActionDelete;
+
+  /// No description provided for @downloadActionPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get downloadActionPause;
+
+  /// No description provided for @downloadActionStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get downloadActionStart;
+
+  /// No description provided for @downloadDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete download'**
+  String get downloadDeleteConfirmTitle;
+
+  /// No description provided for @downloadDeleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this task and remove any downloaded file?'**
+  String get downloadDeleteConfirmMessage;
+
+  /// No description provided for @downloadTypeDoc.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get downloadTypeDoc;
+
+  /// No description provided for @downloadTypePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF'**
+  String get downloadTypePdf;
+
+  /// No description provided for @downloadTypeExcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Spreadsheet'**
+  String get downloadTypeExcel;
+
+  /// No description provided for @downloadTypeZip.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get downloadTypeZip;
+
+  /// No description provided for @downloadTypeVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Video'**
+  String get downloadTypeVideo;
+
+  /// No description provided for @downloadTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get downloadTypeOther;
+
+  /// No description provided for @downloadActionCopyUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy URL'**
+  String get downloadActionCopyUrl;
+
+  /// No description provided for @downloadUrlCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Download URL copied'**
+  String get downloadUrlCopied;
+
+  /// No description provided for @downloadPreviewUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This file type cannot be previewed'**
+  String get downloadPreviewUnsupported;
+
+  /// No description provided for @downloadPreviewNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Download not finished. Complete the download to preview'**
+  String get downloadPreviewNotCompleted;
+
+  /// No description provided for @downloadPreviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open this file. Please try again later'**
+  String get downloadPreviewFailed;
+
+  /// No description provided for @downloadPreviewOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get downloadPreviewOk;
+
+  /// No description provided for @txtReaderLoadingFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading file…'**
+  String get txtReaderLoadingFile;
+
+  /// No description provided for @txtReaderParsingChapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsing chapters…'**
+  String get txtReaderParsingChapters;
+
+  /// No description provided for @txtReaderPaginating.
+  ///
+  /// In en, this message translates to:
+  /// **'Formatting pages…'**
+  String get txtReaderPaginating;
+
+  /// No description provided for @txtReaderChapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters'**
+  String get txtReaderChapters;
+
+  /// No description provided for @txtReaderFontSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Font size'**
+  String get txtReaderFontSize;
+
+  /// No description provided for @txtReaderPageProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {total}'**
+  String txtReaderPageProgress(int current, int total);
+
+  /// No description provided for @txtReaderChapterPageProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} / {total}'**
+  String txtReaderChapterPageProgress(int current, int total);
+
+  /// No description provided for @txtReaderLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load file. Please try again'**
+  String get txtReaderLoadFailed;
+
+  /// No description provided for @txtReaderFontColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Font color'**
+  String get txtReaderFontColor;
+
+  /// No description provided for @txtReaderDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode'**
+  String get txtReaderDarkMode;
+
+  /// No description provided for @txtReaderAddBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to shelf'**
+  String get txtReaderAddBookshelf;
+
+  /// No description provided for @txtReaderAddedBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'On shelf'**
+  String get txtReaderAddedBookshelf;
+
+  /// No description provided for @txtReaderPrevChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get txtReaderPrevChapter;
+
+  /// No description provided for @txtReaderNextChapter.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get txtReaderNextChapter;
+
+  /// No description provided for @txtReaderNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get txtReaderNight;
+
+  /// No description provided for @txtReaderSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get txtReaderSettingsLabel;
+
+  /// No description provided for @txtReaderShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get txtReaderShare;
+
+  /// No description provided for @txtReaderBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get txtReaderBackground;
+
+  /// No description provided for @bookshelfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookshelf'**
+  String get bookshelfTitle;
+
+  /// No description provided for @bookshelfEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shelf is empty. Add novels from the reader to see them here.'**
+  String get bookshelfEmpty;
+
+  /// No description provided for @bookshelfUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Not started yet'**
+  String get bookshelfUnread;
+
+  /// No description provided for @bookshelfReadingProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapter {chapter}'**
+  String bookshelfReadingProgress(int chapter);
+
+  /// No description provided for @bookshelfNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Download not completed'**
+  String get bookshelfNotCompleted;
+
+  /// No description provided for @bookshelfFileMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Local file removed'**
+  String get bookshelfFileMissing;
+
+  /// No description provided for @bookshelfUnknownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown novel'**
+  String get bookshelfUnknownTitle;
+
+  /// No description provided for @bookshelfRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get bookshelfRemoveAction;
+
+  /// No description provided for @bookshelfRemoveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from shelf'**
+  String get bookshelfRemoveConfirmTitle;
+
+  /// No description provided for @bookshelfRemoveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this novel from your shelf? Reading progress will be kept.'**
+  String get bookshelfRemoveConfirmMessage;
 
   /// No description provided for @profileAddresses.
   ///

@@ -1,6 +1,11 @@
 import cors from 'cors';
 import express from 'express';
 import { config } from './config.js';
+import {
+  clearDownloadCatalogCache,
+  handleDownloadCatalog,
+  handleFileDownload,
+} from './documentDownload.js';
 import { loadMockJson, clearMockCache } from './loadMock.js';
 import {
   getLogFiles,
@@ -49,8 +54,24 @@ const apiRouter = express.Router();
 
 apiRouter.post('/__admin/reload', async (_req, res) => {
   clearMockCache();
+  clearDownloadCatalogCache();
   res.json({ code: 0, message: 'ok', data: { reloaded: true } });
 });
+
+async function handleDownloadRoutes(req, res, relativePath) {
+  if (req.method !== 'GET') return false;
+
+  if (relativePath === '/documents') {
+    await handleDownloadCatalog(req, res);
+    return true;
+  }
+
+  const match = /^\/download\/([^/]+)$/.exec(relativePath);
+  if (!match) return false;
+
+  await handleFileDownload(req, res, match[1]);
+  return true;
+}
 
 async function handleLogRoutes(req, res, relativePath) {
   if (req.method !== 'POST') return false;
@@ -103,6 +124,7 @@ async function handleApiRequest(req, res) {
   const relativePath = req.path === '' ? '/' : req.path;
 
   if (await handleLogRoutes(req, res, relativePath)) return;
+  if (await handleDownloadRoutes(req, res, relativePath)) return;
 
   const route = matchRoute(req.method, relativePath);
 
@@ -162,6 +184,9 @@ app.listen(config.port, config.host, () => {
   console.log(`  Local:    http://127.0.0.1:${config.port}${config.apiPrefix}`);
   console.log(`  Health:   http://127.0.0.1:${config.port}/health`);
   console.log(`  Data dir: ${config.mockDataDir}`);
+  console.log(`  Download dir: ${config.downloadDir}`);
+  console.log(`  File download: http://127.0.0.1:${config.port}${config.apiPrefix}/download/{{fileName}}`);
+  console.log(`  File catalog:  http://127.0.0.1:${config.port}${config.apiPrefix}/documents`);
   console.log(`  Delay:    ${config.mockDelayMs}ms`);
   console.log(`  Routes:   ${routes.length}`);
   const logFiles = getLogFiles();

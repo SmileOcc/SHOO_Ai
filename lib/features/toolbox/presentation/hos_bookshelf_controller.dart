@@ -1,0 +1,58 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/hos_bookshelf_storage.dart';
+import '../domain/hos_bookshelf_entry.dart';
+import '../domain/hos_download_task.dart';
+import 'hos_download_controller.dart';
+
+final bookshelfEntriesProvider =
+    StateNotifierProvider<SHOBookshelfNotifier, List<SHOBookshelfEntry>>(
+  (ref) => SHOBookshelfNotifier(ref.watch(bookshelfStorageProvider)),
+);
+
+class SHOBookshelfListItem {
+  const SHOBookshelfListItem({
+    required this.entry,
+    required this.task,
+  });
+
+  final SHOBookshelfEntry entry;
+  final SHODownloadTask? task;
+}
+
+final bookshelfListItemsProvider = Provider<List<SHOBookshelfListItem>>((ref) {
+  final entries = ref.watch(bookshelfEntriesProvider);
+  final downloads = ref.watch(downloadTasksProvider);
+  final byId = {for (final task in downloads) task.id: task};
+  return [
+    for (final entry in entries)
+      SHOBookshelfListItem(entry: entry, task: byId[entry.taskId]),
+  ];
+});
+
+class SHOBookshelfNotifier extends StateNotifier<List<SHOBookshelfEntry>> {
+  SHOBookshelfNotifier(this._storage) : super(_storage.read());
+
+  final SHOBookshelfStorage _storage;
+
+  bool contains(String taskId) {
+    return state.any((entry) => entry.taskId == taskId);
+  }
+
+  Future<void> add(String taskId) async {
+    if (contains(taskId)) return;
+    state = [
+      SHOBookshelfEntry(taskId: taskId, addedAt: DateTime.now()),
+      ...state,
+    ];
+    await _storage.write(state);
+  }
+
+  Future<void> remove(String taskId) async {
+    state = [
+      for (final entry in state)
+        if (entry.taskId != taskId) entry,
+    ];
+    await _storage.write(state);
+  }
+}

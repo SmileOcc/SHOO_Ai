@@ -30,6 +30,18 @@ class SHOProfileServiceHub extends ConsumerWidget {
 
     final items = [
       _ServiceItem(
+        icon: Icons.menu_book_outlined,
+        label: l10n.profileServiceNovelReading,
+        color: const Color(0xFF8B6914),
+        onTap: () => context.push(SHOAppRoutes.profileBookshelf),
+      ),
+      _ServiceItem(
+        icon: Icons.apps_outlined,
+        label: l10n.profileServiceToolbox,
+        color: const Color(0xFFE25C5C),
+        onTap: () => context.push(SHOAppRoutes.toolbox),
+      ),
+      _ServiceItem(
         icon: Icons.confirmation_number_outlined,
         label: l10n.profileServiceCoupons,
         color: SHOAppColors.accent,

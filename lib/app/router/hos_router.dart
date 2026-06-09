@@ -12,6 +12,7 @@ import '../../features/product/router.dart';
 import '../../features/category/router.dart';
 import '../../features/profile/router.dart';
 import '../../features/search/router.dart';
+import '../../features/toolbox/router.dart';
 import '../../features/splash/router.dart';
 import 'hos_not_found_page.dart';
 import 'hos_router_keys.dart';
@@ -40,6 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoAddressRoutes(rootKey: rootNavigatorKey),
       ...shoOrderRoutes(rootKey: rootNavigatorKey),
       ...shoProductRoutes(rootKey: rootNavigatorKey),
+      ...shoToolboxRoutes(rootKey: rootNavigatorKey),
       ...shoDebugRoutes(rootKey: rootNavigatorKey),
       ...shoShellRoutes(),
     ],

@@ -33,6 +33,8 @@ List<RouteBase> shoShellRoutes() => [
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const SHOMessagePage(),
       ),
+      // StatefulShellRoute 是专门为包含底部 导航栏 或侧边导航栏的应用设计的，
+      //它能够保持多个 Tab 页面的状态，同时支持在 Tab 之间切换时保持各页面的滚动位置和表单数据。
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return SHOMainShell(navigationShell: navigationShell);

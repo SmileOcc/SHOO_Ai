@@ -1010,6 +1010,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileTabMyReviews => 'My Reviews';
 
   @override
+  String get profileServiceNovelReading => 'Novels';
+
+  @override
+  String get profileServiceToolbox => 'Toolbox';
+
+  @override
   String get profileServiceCoupons => 'Coupons';
 
   @override
@@ -1229,6 +1235,212 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addressSaved => 'Address saved';
+
+  @override
+  String get toolboxTitle => 'Toolbox';
+
+  @override
+  String get toolboxGroupTools => 'Tools';
+
+  @override
+  String get toolboxFileDownload => 'Downloads';
+
+  @override
+  String get toolboxComingSoon => 'Coming soon';
+
+  @override
+  String get downloadListTitle => 'Downloads';
+
+  @override
+  String get downloadTabAll => 'All';
+
+  @override
+  String get downloadTabDownloading => 'Downloading';
+
+  @override
+  String get downloadTabPaused => 'Paused';
+
+  @override
+  String get downloadTabCompleted => 'Completed';
+
+  @override
+  String get downloadAddTask => 'Add task';
+
+  @override
+  String get downloadEmpty => 'No download tasks';
+
+  @override
+  String get downloadTaskDialogTitle => 'New download';
+
+  @override
+  String get downloadUrlLabel => 'Download URL';
+
+  @override
+  String get downloadFileNameLabel => 'File name';
+
+  @override
+  String get downloadFileNameHint => 'Optional — inferred from URL if empty';
+
+  @override
+  String get downloadPriorityLabel => 'Priority download';
+
+  @override
+  String get downloadConfirmStart => 'Start download';
+
+  @override
+  String get downloadStatusDownloading => 'Downloading';
+
+  @override
+  String get downloadStatusPaused => 'Paused';
+
+  @override
+  String get downloadStatusCompleted => 'Completed';
+
+  @override
+  String get downloadActionDelete => 'Delete';
+
+  @override
+  String get downloadActionPause => 'Pause';
+
+  @override
+  String get downloadActionStart => 'Resume';
+
+  @override
+  String get downloadDeleteConfirmTitle => 'Delete download';
+
+  @override
+  String get downloadDeleteConfirmMessage =>
+      'Delete this task and remove any downloaded file?';
+
+  @override
+  String get downloadTypeDoc => 'Document';
+
+  @override
+  String get downloadTypePdf => 'PDF';
+
+  @override
+  String get downloadTypeExcel => 'Spreadsheet';
+
+  @override
+  String get downloadTypeZip => 'Archive';
+
+  @override
+  String get downloadTypeVideo => 'Video';
+
+  @override
+  String get downloadTypeOther => 'File';
+
+  @override
+  String get downloadActionCopyUrl => 'Copy URL';
+
+  @override
+  String get downloadUrlCopied => 'Download URL copied';
+
+  @override
+  String get downloadPreviewUnsupported => 'This file type cannot be previewed';
+
+  @override
+  String get downloadPreviewNotCompleted =>
+      'Download not finished. Complete the download to preview';
+
+  @override
+  String get downloadPreviewFailed =>
+      'Unable to open this file. Please try again later';
+
+  @override
+  String get downloadPreviewOk => 'OK';
+
+  @override
+  String get txtReaderLoadingFile => 'Reading file…';
+
+  @override
+  String get txtReaderParsingChapters => 'Parsing chapters…';
+
+  @override
+  String get txtReaderPaginating => 'Formatting pages…';
+
+  @override
+  String get txtReaderChapters => 'Chapters';
+
+  @override
+  String get txtReaderFontSize => 'Font size';
+
+  @override
+  String txtReaderPageProgress(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String txtReaderChapterPageProgress(int current, int total) {
+    return 'Page $current / $total';
+  }
+
+  @override
+  String get txtReaderLoadFailed => 'Failed to load file. Please try again';
+
+  @override
+  String get txtReaderFontColor => 'Font color';
+
+  @override
+  String get txtReaderDarkMode => 'Dark mode';
+
+  @override
+  String get txtReaderAddBookshelf => 'Add to shelf';
+
+  @override
+  String get txtReaderAddedBookshelf => 'On shelf';
+
+  @override
+  String get txtReaderPrevChapter => 'Previous';
+
+  @override
+  String get txtReaderNextChapter => 'Next';
+
+  @override
+  String get txtReaderNight => 'Night';
+
+  @override
+  String get txtReaderSettingsLabel => 'Settings';
+
+  @override
+  String get txtReaderShare => 'Share';
+
+  @override
+  String get txtReaderBackground => 'Background';
+
+  @override
+  String get bookshelfTitle => 'My Bookshelf';
+
+  @override
+  String get bookshelfEmpty =>
+      'Your shelf is empty. Add novels from the reader to see them here.';
+
+  @override
+  String get bookshelfUnread => 'Not started yet';
+
+  @override
+  String bookshelfReadingProgress(int chapter) {
+    return 'Chapter $chapter';
+  }
+
+  @override
+  String get bookshelfNotCompleted => 'Download not completed';
+
+  @override
+  String get bookshelfFileMissing => 'Local file removed';
+
+  @override
+  String get bookshelfUnknownTitle => 'Unknown novel';
+
+  @override
+  String get bookshelfRemoveAction => 'Remove';
+
+  @override
+  String get bookshelfRemoveConfirmTitle => 'Remove from shelf';
+
+  @override
+  String get bookshelfRemoveConfirmMessage =>
+      'Remove this novel from your shelf? Reading progress will be kept.';
 
   @override
   String get profileAddresses => 'Addresses';
