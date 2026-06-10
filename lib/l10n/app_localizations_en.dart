@@ -1240,7 +1240,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxTitle => 'Toolbox';
 
   @override
+  String get toolboxGroupReading => 'Reading';
+
+  @override
   String get toolboxGroupTools => 'Tools';
+
+  @override
+  String get toolboxBookshelf => 'My Bookshelf';
 
   @override
   String get toolboxFileDownload => 'Downloads';
@@ -1379,6 +1385,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get txtReaderLoadFailed => 'Failed to load file. Please try again';
 
   @override
+  String get txtReaderRetry => 'Retry';
+
+  @override
+  String get txtReaderRemoveBookshelf => 'Remove from shelf';
+
+  @override
+  String get txtReaderRemovedBookshelf => 'Removed from shelf';
+
+  @override
+  String get txtReaderTaskMissing =>
+      'Download task not found. It may have been deleted';
+
+  @override
   String get txtReaderFontColor => 'Font color';
 
   @override
@@ -1441,6 +1460,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bookshelfRemoveConfirmMessage =>
       'Remove this novel from your shelf? Reading progress will be kept.';
+
+  @override
+  String get bookshelfCleanupOrphansTitle => 'Clean up invalid entries';
+
+  @override
+  String bookshelfCleanupOrphansMessage(int count) {
+    return '$count novels no longer have a matching download task';
+  }
+
+  @override
+  String get bookshelfCleanupOrphansAction => 'Clean all';
 
   @override
   String get profileAddresses => 'Addresses';

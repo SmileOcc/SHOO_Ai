@@ -55,4 +55,15 @@ class SHOBookshelfNotifier extends StateNotifier<List<SHOBookshelfEntry>> {
     ];
     await _storage.write(state);
   }
+
+  Future<int> removeOrphans(Set<String> validTaskIds) async {
+    final before = state.length;
+    state = [
+      for (final entry in state)
+        if (validTaskIds.contains(entry.taskId)) entry,
+    ];
+    if (state.length == before) return 0;
+    await _storage.write(state);
+    return before - state.length;
+  }
 }

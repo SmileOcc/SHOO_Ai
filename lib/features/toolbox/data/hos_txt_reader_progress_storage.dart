@@ -29,4 +29,8 @@ class SHOTxtReaderProgressStorage {
   Future<void> write(String taskId, SHOTxtReaderProgress progress) async {
     await _prefs.setString(_key(taskId), jsonEncode(progress.toJson()));
   }
+
+  Future<void> remove(String taskId) async {
+    await _prefs.remove(_key(taskId));
+  }
 }

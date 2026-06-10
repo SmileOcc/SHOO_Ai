@@ -468,7 +468,9 @@
   "addressSetDefault": "Set as default",
   "addressSaved": "Address saved",
   "toolboxTitle": "Toolbox",
+  "toolboxGroupReading": "Reading",
   "toolboxGroupTools": "Tools",
+  "toolboxBookshelf": "My Bookshelf",
   "toolboxFileDownload": "Downloads",
   "toolboxComingSoon": "Coming soon",
   "downloadListTitle": "Downloads",
@@ -524,6 +526,10 @@
     }
   },
   "txtReaderLoadFailed": "Failed to load file. Please try again",
+  "txtReaderRetry": "Retry",
+  "txtReaderRemoveBookshelf": "Remove from shelf",
+  "txtReaderRemovedBookshelf": "Removed from shelf",
+  "txtReaderTaskMissing": "Download task not found. It may have been deleted",
   "txtReaderFontColor": "Font color",
   "txtReaderDarkMode": "Dark mode",
   "txtReaderAddBookshelf": "Add to shelf",
@@ -551,6 +557,14 @@
   "bookshelfRemoveAction": "Remove",
   "bookshelfRemoveConfirmTitle": "Remove from shelf",
   "bookshelfRemoveConfirmMessage": "Remove this novel from your shelf? Reading progress will be kept.",
+  "bookshelfCleanupOrphansTitle": "Clean up invalid entries",
+  "bookshelfCleanupOrphansMessage": "{count} novels no longer have a matching download task",
+  "@bookshelfCleanupOrphansMessage": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "bookshelfCleanupOrphansAction": "Clean all",
   "profileAddresses": "Addresses",
   "profileCoupons": "Coupons",
   "profileAfterSales": "After-Sales",

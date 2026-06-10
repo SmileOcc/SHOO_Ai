@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/storage/hos_local_storage.dart';
 import '../domain/hos_bookshelf_entry.dart';
 
-const _storageKey = 'novel_bookshelf_v1';
+import 'hos_reading_storage_keys.dart';
+
+const _storageKey = SHOReadingStorageKeys.bookshelf;
 
 final bookshelfStorageProvider = Provider<SHOBookshelfStorage>((ref) {
   return SHOBookshelfStorage(ref.watch(sharedPreferencesProvider));
@@ -29,5 +31,15 @@ class SHOBookshelfStorage {
   Future<void> write(List<SHOBookshelfEntry> entries) async {
     final encoded = jsonEncode(entries.map((e) => e.toJson()).toList());
     await _prefs.setString(_storageKey, encoded);
+  }
+
+  Future<void> removeByTaskId(String taskId) async {
+    final entries = read();
+    final filtered = [
+      for (final entry in entries)
+        if (entry.taskId != taskId) entry,
+    ];
+    if (filtered.length == entries.length) return;
+    await write(filtered);
   }
 }

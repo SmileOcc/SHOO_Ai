@@ -2402,11 +2402,23 @@ abstract class AppLocalizations {
   /// **'Toolbox'**
   String get toolboxTitle;
 
+  /// No description provided for @toolboxGroupReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get toolboxGroupReading;
+
   /// No description provided for @toolboxGroupTools.
   ///
   /// In en, this message translates to:
   /// **'Tools'**
   String get toolboxGroupTools;
+
+  /// No description provided for @toolboxBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookshelf'**
+  String get toolboxBookshelf;
 
   /// No description provided for @toolboxFileDownload.
   ///
@@ -2666,6 +2678,30 @@ abstract class AppLocalizations {
   /// **'Failed to load file. Please try again'**
   String get txtReaderLoadFailed;
 
+  /// No description provided for @txtReaderRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get txtReaderRetry;
+
+  /// No description provided for @txtReaderRemoveBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from shelf'**
+  String get txtReaderRemoveBookshelf;
+
+  /// No description provided for @txtReaderRemovedBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from shelf'**
+  String get txtReaderRemovedBookshelf;
+
+  /// No description provided for @txtReaderTaskMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Download task not found. It may have been deleted'**
+  String get txtReaderTaskMissing;
+
   /// No description provided for @txtReaderFontColor.
   ///
   /// In en, this message translates to:
@@ -2785,6 +2821,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove this novel from your shelf? Reading progress will be kept.'**
   String get bookshelfRemoveConfirmMessage;
+
+  /// No description provided for @bookshelfCleanupOrphansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean up invalid entries'**
+  String get bookshelfCleanupOrphansTitle;
+
+  /// No description provided for @bookshelfCleanupOrphansMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} novels no longer have a matching download task'**
+  String bookshelfCleanupOrphansMessage(int count);
+
+  /// No description provided for @bookshelfCleanupOrphansAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean all'**
+  String get bookshelfCleanupOrphansAction;
 
   /// No description provided for @profileAddresses.
   ///

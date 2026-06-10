@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
 import '../../../core/auth/hos_auth_guard.dart';
-import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/widgets/hos_profile_badge.dart';
@@ -197,7 +196,11 @@ class _StatChip extends StatelessWidget {
             ),
             if (count > 0) ...[
               const SizedBox(width: 4),
-              SHOProfileBadge(text: count > 99 ? '99+' : '$count', compact: true),
+              SHOProfileBadge(
+                text: count > 99 ? '99+' : '$count',
+                compact: true,
+                muted: true,
+              ),
             ],
           ],
         ),
@@ -238,22 +241,7 @@ class _DiscoverChip extends StatelessWidget {
             ),
             if (badge != null) ...[
               const SizedBox(width: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: SHOAppColors.accent,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  badge!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    height: 1.1,
-                  ),
-                ),
-              ),
+              SHOProfileMutedChipBadge(text: badge!),
             ],
           ],
         ),

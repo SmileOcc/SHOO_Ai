@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/toolbox/data/hos_reading_storage_keys.dart';
 import '../constants/hos_constants.dart';
 import '../errors/hos_exception.dart';
 
@@ -33,6 +34,12 @@ class SHOLocalStorage {
     final locale = getLocaleCode();
     final envOverride = _prefs.getString(SHOAppConstants.debugEnvOverrideKey);
     final showEnvBadge = _prefs.getBool(SHOAppConstants.debugShowEnvBadgeKey);
+    final preserved = <String, Object>{};
+    for (final key in _prefs.getKeys()) {
+      if (!SHOReadingStorageKeys.preserveOnPreferencesClear(key)) continue;
+      final value = _prefs.get(key);
+      if (value != null) preserved[key] = value;
+    }
     await _prefs.clear();
     if (theme != null) await setThemeMode(theme);
     if (locale != null) await setLocaleCode(locale);
@@ -41,6 +48,20 @@ class SHOLocalStorage {
     }
     if (showEnvBadge != null) {
       await _prefs.setBool(SHOAppConstants.debugShowEnvBadgeKey, showEnvBadge);
+    }
+    for (final entry in preserved.entries) {
+      final value = entry.value;
+      if (value is String) {
+        await _prefs.setString(entry.key, value);
+      } else if (value is bool) {
+        await _prefs.setBool(entry.key, value);
+      } else if (value is int) {
+        await _prefs.setInt(entry.key, value);
+      } else if (value is double) {
+        await _prefs.setDouble(entry.key, value);
+      } else if (value is List<String>) {
+        await _prefs.setStringList(entry.key, value);
+      }
     }
   }
 

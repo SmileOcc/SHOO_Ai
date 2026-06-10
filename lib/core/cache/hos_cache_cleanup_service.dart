@@ -11,6 +11,7 @@ import '../storage/hos_image_cache_manager.dart';
 import '../storage/hos_local_storage.dart';
 import '../../features/cart/data/hos_cart_storage.dart';
 import '../../features/search/data/hos_search_history_storage.dart';
+import '../../features/toolbox/data/hos_reading_storage_keys.dart';
 
 enum SHOCacheCategory {
   logs,
@@ -188,6 +189,7 @@ class SHOCacheCleanupService {
     var total = 0;
     for (final key in _storage.keys) {
       if (preserved.contains(key)) continue;
+      if (SHOReadingStorageKeys.preserveOnPreferencesClear(key)) continue;
       if (key.startsWith(activityPrefetchConfigPrefix) ||
           key.startsWith(activityPrefetchImagePrefix)) {
         continue;

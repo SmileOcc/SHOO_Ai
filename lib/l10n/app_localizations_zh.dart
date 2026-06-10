@@ -1207,7 +1207,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxTitle => '百宝箱';
 
   @override
+  String get toolboxGroupReading => '阅读';
+
+  @override
   String get toolboxGroupTools => '常用工具';
+
+  @override
+  String get toolboxBookshelf => '我的书架';
 
   @override
   String get toolboxFileDownload => '文件下载';
@@ -1343,6 +1349,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get txtReaderLoadFailed => '文件加载失败，请稍后重试';
 
   @override
+  String get txtReaderRetry => '重试';
+
+  @override
+  String get txtReaderRemoveBookshelf => '移出书架';
+
+  @override
+  String get txtReaderRemovedBookshelf => '已从书架移除';
+
+  @override
+  String get txtReaderTaskMissing => '找不到该下载任务，可能已被删除';
+
+  @override
   String get txtReaderFontColor => '字体颜色';
 
   @override
@@ -1403,6 +1421,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get bookshelfRemoveConfirmMessage => '确定要将这本小说从书架移除吗？阅读进度会保留。';
+
+  @override
+  String get bookshelfCleanupOrphansTitle => '清理无效条目';
+
+  @override
+  String bookshelfCleanupOrphansMessage(int count) {
+    return '有 $count 本小说对应的下载任务已不存在';
+  }
+
+  @override
+  String get bookshelfCleanupOrphansAction => '全部清理';
 
   @override
   String get profileAddresses => '收货地址';

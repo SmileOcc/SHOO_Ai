@@ -10,11 +10,18 @@ import '../../../core/widgets/hos_profile_section_card.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/hos_txt_reader_progress_storage.dart';
 import '../domain/hos_download_task.dart';
+import '../domain/hos_txt_novel_models.dart';
 import 'hos_bookshelf_controller.dart';
+import 'hos_download_controller.dart';
 import 'hos_download_preview_helper.dart';
 
 class SHOBookshelfListPage extends ConsumerWidget {
   const SHOBookshelfListPage({super.key});
+
+  bool _hasMeaningfulProgress(SHOTxtReaderProgress? progress) {
+    if (progress == null) return false;
+    return progress.chapterIndex > 0 || progress.pageIndexInChapter > 0;
+  }
 
   String _displayTitle(String fileName) {
     final lower = fileName.toLowerCase();
@@ -46,6 +53,7 @@ class SHOBookshelfListPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final items = ref.watch(bookshelfListItemsProvider);
     final progressStorage = ref.watch(txtReaderProgressStorageProvider);
+    final orphanCount = items.where((item) => item.task == null).length;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,21 +66,46 @@ class SHOBookshelfListPage extends ConsumerWidget {
           ? SHOEmptyState(title: l10n.bookshelfEmpty)
           : ListView.separated(
               padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-              itemCount: items.length,
+              itemCount: items.length + (orphanCount > 0 ? 1 : 0),
               separatorBuilder: (_, __) =>
                   const SizedBox(height: SHOAppSpacing.lg),
               itemBuilder: (context, index) {
-                final item = items[index];
+                if (orphanCount > 0 && index == 0) {
+                  return SHOProfileSectionCard(
+                    child: ListTile(
+                      leading: const Icon(Icons.cleaning_services_outlined),
+                      title: Text(l10n.bookshelfCleanupOrphansTitle),
+                      subtitle: Text(
+                        l10n.bookshelfCleanupOrphansMessage(orphanCount),
+                      ),
+                      trailing: TextButton(
+                        onPressed: () async {
+                          final validIds = {
+                            for (final task in ref.read(downloadTasksProvider))
+                              task.id,
+                          };
+                          await ref
+                              .read(bookshelfEntriesProvider.notifier)
+                              .removeOrphans(validIds);
+                        },
+                        child: Text(l10n.bookshelfCleanupOrphansAction),
+                      ),
+                    ),
+                  );
+                }
+
+                final itemIndex = orphanCount > 0 ? index - 1 : index;
+                final item = items[itemIndex];
                 final task = item.task;
                 final progress = progressStorage.read(item.entry.taskId);
                 final subtitle = task == null
                     ? l10n.bookshelfFileMissing
                     : task.status != SHODownloadStatus.completed
                         ? l10n.bookshelfNotCompleted
-                        : progress == null
+                        : !_hasMeaningfulProgress(progress)
                             ? l10n.bookshelfUnread
                             : l10n.bookshelfReadingProgress(
-                                progress.chapterIndex + 1,
+                                progress!.chapterIndex + 1,
                               );
 
                 return Dismissible(

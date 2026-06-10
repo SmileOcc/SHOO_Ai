@@ -25,6 +25,10 @@ abstract final class SHOAppRoutes {
   static const profileBookshelf = '/profile/bookshelf';
   static const toolbox = '/toolbox';
   static const toolboxDownloads = '/toolbox/downloads';
+  static const toolboxReader = '/toolbox/reader';
+
+  static String toolboxReaderFor(String taskId) =>
+      '$toolboxReader?taskId=${Uri.encodeComponent(taskId)}';
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';

@@ -16,6 +16,17 @@ class SHOToolboxPage extends StatelessWidget {
 
     final groups = [
       _ToolboxGroup(
+        title: l10n.toolboxGroupReading,
+        items: [
+          _ToolboxMenuItem(
+            icon: Icons.menu_book_outlined,
+            color: const Color(0xFFB8860B),
+            label: l10n.toolboxBookshelf,
+            onTap: () => context.push(SHOAppRoutes.profileBookshelf),
+          ),
+        ],
+      ),
+      _ToolboxGroup(
         title: l10n.toolboxGroupTools,
         items: [
           _ToolboxMenuItem(

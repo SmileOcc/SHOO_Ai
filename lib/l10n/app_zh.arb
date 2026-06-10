@@ -437,7 +437,9 @@
   "addressSetDefault": "设为默认地址",
   "addressSaved": "地址已保存",
   "toolboxTitle": "百宝箱",
+  "toolboxGroupReading": "阅读",
   "toolboxGroupTools": "常用工具",
+  "toolboxBookshelf": "我的书架",
   "toolboxFileDownload": "文件下载",
   "toolboxComingSoon": "敬请期待",
   "downloadListTitle": "下载列表",
@@ -493,6 +495,10 @@
     }
   },
   "txtReaderLoadFailed": "文件加载失败，请稍后重试",
+  "txtReaderRetry": "重试",
+  "txtReaderRemoveBookshelf": "移出书架",
+  "txtReaderRemovedBookshelf": "已从书架移除",
+  "txtReaderTaskMissing": "找不到该下载任务，可能已被删除",
   "txtReaderFontColor": "字体颜色",
   "txtReaderDarkMode": "暗黑模式",
   "txtReaderAddBookshelf": "加入书架",
@@ -520,6 +526,14 @@
   "bookshelfRemoveAction": "移出书架",
   "bookshelfRemoveConfirmTitle": "移出书架",
   "bookshelfRemoveConfirmMessage": "确定要将这本小说从书架移除吗？阅读进度会保留。",
+  "bookshelfCleanupOrphansTitle": "清理无效条目",
+  "bookshelfCleanupOrphansMessage": "有 {count} 本小说对应的下载任务已不存在",
+  "@bookshelfCleanupOrphansMessage": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "bookshelfCleanupOrphansAction": "全部清理",
   "profileAddresses": "收货地址",
   "profileCoupons": "优惠券",
   "profileAfterSales": "售后服务",

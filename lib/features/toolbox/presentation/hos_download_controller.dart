@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/hos_bookshelf_storage.dart';
 import '../data/hos_download_engine.dart';
 import '../data/hos_download_paths.dart';
 import '../data/hos_download_storage.dart';
+import '../data/hos_txt_reader_progress_storage.dart';
 import '../domain/hos_download_task.dart';
 
 final downloadTasksProvider =
@@ -13,6 +15,8 @@ final downloadTasksProvider =
   (ref) {
     final notifier = SHODownloadTasksNotifier(
       ref.watch(downloadStorageProvider),
+      ref.watch(bookshelfStorageProvider),
+      ref.watch(txtReaderProgressStorageProvider),
     );
     ref.onDispose(notifier.dispose);
     return notifier;
@@ -20,11 +24,17 @@ final downloadTasksProvider =
 );
 
 class SHODownloadTasksNotifier extends StateNotifier<List<SHODownloadTask>> {
-  SHODownloadTasksNotifier(this._storage) : super(const []) {
+  SHODownloadTasksNotifier(
+    this._storage,
+    this._bookshelfStorage,
+    this._progressStorage,
+  ) : super(const []) {
     unawaited(_bootstrap());
   }
 
   final SHODownloadStorage _storage;
+  final SHOBookshelfStorage _bookshelfStorage;
+  final SHOTxtReaderProgressStorage _progressStorage;
   SHODownloadEngine? _engine;
   var _ready = false;
 
@@ -142,6 +152,8 @@ class SHODownloadTasksNotifier extends StateNotifier<List<SHODownloadTask>> {
     final task = taskById(id);
     state = state.where((item) => item.id != id).toList();
     await _persist();
+    await _bookshelfStorage.removeByTaskId(id);
+    await _progressStorage.remove(id);
     if (task != null) {
       final path = await SHODownloadPaths.resolveExistingFilePath(task);
       if (path != null) {
