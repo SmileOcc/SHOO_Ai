@@ -14,7 +14,8 @@ import '../data/hos_txt_reader_progress_storage.dart';
 import 'hos_bookshelf_controller.dart';
 import '../domain/hos_download_task.dart';
 import '../domain/hos_txt_novel_models.dart';
-import '../domain/hos_txt_novel_parser.dart';
+import '../data/hos_txt_chapter_index_cache.dart';
+import 'hos_txt_reader_pagination.dart';
 import 'hos_txt_reader_session.dart';
 import 'hos_txt_reader_theme.dart';
 
@@ -48,16 +49,20 @@ class SHOTxtReaderPage extends ConsumerStatefulWidget {
 }
 
 class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const _fontSizes = [14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0];
-  static const _readerPadding = EdgeInsets.fromLTRB(20, 16, 20, 24);
+  static const _readerPadding = EdgeInsets.fromLTRB(20, 12, 20, 4);
   static const _settingsRadius = 16.0;
   static const _catalogWidthFactor = 0.72;
+  static const _catalogScrimMaxOpacity = 0.54;
+  static const _chromeBottomSlideHeight = 148.0;
+  static const _chromeAnimDuration = Duration(milliseconds: 260);
 
   final _pageController = PageController();
 
   late final SHOTxtReaderProgressStorage _progressStorage;
   late final AnimationController _catalogController;
+  late final AnimationController _chromeController;
 
   SHOTxtReaderSession? _session;
   SHOTxtReaderLoadPhase _phase = SHOTxtReaderLoadPhase.indexing;
@@ -68,6 +73,12 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   var _catalogVisible = false;
   var _showChrome = false;
   var _inBookshelf = false;
+  var _chapterMaskVisible = false;
+  var _chapterMaskOpacity = 1.0;
+  var _chapterMaskSpinner = false;
+  var _chapterJumping = false;
+  Timer? _chapterMaskSpinnerTimer;
+  BoxConstraints? _latestContentConstraints;
   SHOTxtReaderTheme _readerTheme = SHOTxtReaderTheme.sepia();
   File? _file;
 
@@ -79,7 +90,11 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         ref.read(bookshelfEntriesProvider.notifier).contains(widget.task.id);
     _catalogController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 260),
+      duration: _chromeAnimDuration,
+    );
+    _chromeController = AnimationController(
+      vsync: this,
+      duration: _chromeAnimDuration,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrap());
   }
@@ -87,7 +102,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   @override
   void dispose() {
     _saveProgressSync();
+    _chapterMaskSpinnerTimer?.cancel();
     _catalogController.dispose();
+    _chromeController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -125,13 +142,12 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   }
 
   double get _chromeTopHeight => 52;
-  double get _chromeBottomHeight => 132;
 
   double _contentAreaTop(BuildContext context) =>
       MediaQuery.paddingOf(context).top + _chromeTopHeight;
 
   double _contentAreaBottom(BuildContext context) =>
-      MediaQuery.paddingOf(context).bottom + _chromeBottomHeight;
+      MediaQuery.paddingOf(context).bottom;
 
   Widget _wrapContentArea(BuildContext context, Widget child) {
     return Positioned(
@@ -144,20 +160,85 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   }
 
   void _setShowChrome(bool value) {
-    if (_showChrome == value) return;
-    setState(() => _showChrome = value);
+    if (value) {
+      if (_showChrome && _chromeController.status == AnimationStatus.completed) {
+        return;
+      }
+      final opening = !_showChrome;
+      if (opening) setState(() => _showChrome = true);
+      if (opening) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _chromeController.forward();
+        });
+      } else if (_chromeController.status == AnimationStatus.reverse) {
+        _chromeController.forward();
+      }
+      return;
+    }
+
+    if (!_showChrome) return;
+    _chromeController.reverse().then((_) {
+      if (mounted) setState(() => _showChrome = false);
+    });
   }
 
-  (double width, double height) _pageLayoutSize(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final width = size.width - _readerPadding.horizontal;
-    final chromeV = _chromeTopHeight + _chromeBottomHeight;
-    final height = size.height -
-        chromeV -
-        MediaQuery.paddingOf(context).top -
-        MediaQuery.paddingOf(context).bottom -
-        _readerPadding.vertical;
-    return (width, height);
+  String _novelDisplayName() {
+    final name = widget.task.fileName;
+    final lower = name.toLowerCase();
+    if (lower.endsWith('.txt')) return name.substring(0, name.length - 4);
+    return name;
+  }
+
+  String _navBarTitle(SHONovelPage? page) {
+    if (page == null || page.pageIndexInChapter == 0) {
+      return _novelDisplayName();
+    }
+    return page.chapterTitle;
+  }
+
+  TextStyle _navBarTitleStyle() {
+    return TextStyle(
+      color: _readerTheme.text,
+      fontSize: 13,
+    );
+  }
+
+  (double width, double height) _contentTextBounds(
+    BuildContext context, {
+    BoxConstraints? constraints,
+  }) {
+    final resolved = constraints ?? _latestContentConstraints;
+    final widthBase =
+        resolved?.maxWidth ?? MediaQuery.sizeOf(context).width;
+    final heightBase = resolved?.maxHeight ??
+        (MediaQuery.sizeOf(context).height -
+            _contentAreaTop(context) -
+            _contentAreaBottom(context));
+    return (
+      widthBase - _readerPadding.horizontal,
+      heightBase - _readerPadding.vertical,
+    );
+  }
+
+  double _paginationHeightBonus(TextStyle style) {
+    final fontSize = style.fontSize ?? 16;
+    final height = style.height ?? 1.75;
+    return fontSize * height * 2;
+  }
+
+  SHOTxtReaderPagination _pagination(
+    BuildContext context, {
+    BoxConstraints? constraints,
+  }) {
+    final bounds = _contentTextBounds(context, constraints: constraints);
+    final textStyle = _textStyle();
+    return SHOTxtReaderPagination(
+      pageWidth: bounds.$1,
+      pageHeight: bounds.$2 + _paginationHeightBonus(textStyle),
+      textStyle: textStyle,
+      titleStyle: _titleStyle(),
+      textScaler: MediaQuery.textScalerOf(context),
+    );
   }
 
   Future<void> _persistProgress() async {
@@ -189,7 +270,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     });
 
     try {
-      final metas = await scanChapterMetas(_file!, (value) {
+      final metas = await scanChapterMetasWithCache(_file!, (value) {
         if (!mounted) return;
         setState(() {
           _progress = value * 0.85;
@@ -204,17 +285,21 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
       });
 
       final session = SHOTxtReaderSession(file: _file!, chapterMetas: metas);
-      final layout = _pageLayoutSize(context);
+      final pagination = _pagination(context);
       final chapterIndex =
           (saved?.chapterIndex ?? 0).clamp(0, metas.length - 1);
       final pageInChapter = saved?.pageIndexInChapter ?? 0;
+      final restoreReadingPosition = saved != null &&
+          (saved.chapterIndex > 0 || saved.pageIndexInChapter > 0);
+
+      if (restoreReadingPosition) {
+        await _beginChapterTransitionMask();
+      }
 
       await session.openAtChapter(
         chapterIndex: chapterIndex,
         pageIndexInChapter: pageInChapter,
-        textStyle: _textStyle(),
-        pageWidth: layout.$1,
-        pageHeight: layout.$2,
+        pagination: pagination,
       );
 
       if (!mounted) return;
@@ -224,9 +309,13 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         _progress = 1;
       });
 
+      if (!mounted) return;
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageController.hasClients) {
-          _pageController.jumpToPage(session.currentFlatIndex);
+        if (!mounted || !_pageController.hasClients) return;
+        _pageController.jumpToPage(session.currentFlatIndex);
+        if (restoreReadingPosition) {
+          unawaited(_endChapterTransitionMask());
         }
       });
 
@@ -240,21 +329,13 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   Future<void> _prefetchAdjacentChapters() async {
     final session = _session;
     if (session == null || !mounted) return;
-    final layout = _pageLayoutSize(context);
+    final pagination = _pagination(context);
     final anchor = session.currentFlatIndex;
 
-    await session.tryPrependPreviousChapter(
-      textStyle: _textStyle(),
-      pageWidth: layout.$1,
-      pageHeight: layout.$2,
-    );
+    await session.tryPrependPreviousChapter(pagination: pagination);
     final target = session.currentFlatIndex;
 
-    await session.tryAppendNextChapter(
-      textStyle: _textStyle(),
-      pageWidth: layout.$1,
-      pageHeight: layout.$2,
-    );
+    await session.tryAppendNextChapter(pagination: pagination);
 
     if (!mounted) return;
     setState(() {});
@@ -276,6 +357,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     final session = _session;
     if (session == null) return;
     setState(() => session.currentFlatIndex = index);
+    _setShowChrome(false);
     unawaited(_handlePageChangedAsync(index));
   }
 
@@ -283,7 +365,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     final session = _session;
     if (session == null || !mounted) return;
 
-    final layout = _pageLayoutSize(context);
+    final pagination = _pagination(context);
     await _persistProgress();
     if (!mounted) return;
 
@@ -296,19 +378,13 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     final isFirstInChapter = page.pageIndexInChapter == 0;
 
     if (isLastInChapter) {
-      final added = await session.tryAppendNextChapter(
-        textStyle: _textStyle(),
-        pageWidth: layout.$1,
-        pageHeight: layout.$2,
-      );
+      final added = await session.tryAppendNextChapter(pagination: pagination);
       if (added != null && mounted) setState(() {});
     }
 
     if (isFirstInChapter && page.chapterIndex > 0) {
       final prepended = await session.tryPrependPreviousChapter(
-        textStyle: _textStyle(),
-        pageWidth: layout.$1,
-        pageHeight: layout.$2,
+        pagination: pagination,
       );
       if (prepended != null && prepended > 0 && mounted) {
         setState(() {});
@@ -324,12 +400,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     if (fontSize != null) _fontSize = fontSize;
     setState(() => _repaginating = true);
 
-    final layout = _pageLayoutSize(context);
-    await session.repaginateAllLoaded(
-      textStyle: _textStyle(),
-      pageWidth: layout.$1,
-      pageHeight: layout.$2,
-    );
+    final pagination = _pagination(context);
+    await session.repaginateAllLoaded(pagination: pagination);
 
     if (!mounted) return;
     setState(() => _repaginating = false);
@@ -346,25 +418,72 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     await _repaginate();
   }
 
+  bool _chapterNeedsLoad(SHOTxtReaderSession session, int chapterIndex) {
+    return !session.flatPages.any((page) => page.chapterIndex == chapterIndex);
+  }
+
+  Future<void> _beginChapterTransitionMask() async {
+    _chapterMaskSpinnerTimer?.cancel();
+    setState(() {
+      _chapterMaskVisible = true;
+      _chapterMaskOpacity = 1.0;
+      _chapterMaskSpinner = false;
+      _chapterJumping = true;
+    });
+    _chapterMaskSpinnerTimer = Timer(const Duration(milliseconds: 320), () {
+      if (!mounted || !_chapterJumping || !_chapterMaskVisible) return;
+      setState(() => _chapterMaskSpinner = true);
+    });
+    await Future<void>.delayed(Duration.zero);
+  }
+
+  Future<void> _endChapterTransitionMask() async {
+    _chapterJumping = false;
+    _chapterMaskSpinnerTimer?.cancel();
+    if (!_chapterMaskVisible || !mounted) return;
+    setState(() => _chapterMaskOpacity = 0.0);
+    await Future<void>.delayed(const Duration(milliseconds: 260));
+    if (!mounted) return;
+    setState(() {
+      _chapterMaskVisible = false;
+      _chapterMaskSpinner = false;
+      _chapterMaskOpacity = 1.0;
+    });
+  }
+
   Future<void> _jumpToChapter(int chapterIndex, {bool closeCatalog = true}) async {
     final session = _session;
     if (session == null) return;
 
-    if (closeCatalog) _closeCatalog();
-    final layout = _pageLayoutSize(context);
+    final needsLoad = _chapterNeedsLoad(session, chapterIndex);
+    final pagination = _pagination(context);
+
+    if (needsLoad) {
+      await _beginChapterTransitionMask();
+    }
+
+    if (closeCatalog) {
+      await _closeCatalogAnimated();
+    }
+
+    if (!mounted) return;
+
     await session.jumpToChapter(
       chapterIndex: chapterIndex,
-      textStyle: _textStyle(),
-      pageWidth: layout.$1,
-      pageHeight: layout.$2,
+      pagination: pagination,
     );
 
     if (!mounted) return;
     setState(() {});
-    await _persistProgress();
     if (_pageController.hasClients) {
       _pageController.jumpToPage(session.currentFlatIndex);
     }
+
+    if (needsLoad) {
+      await _endChapterTransitionMask();
+    }
+
+    await _persistProgress();
     unawaited(_prefetchAdjacentChapters());
   }
 
@@ -378,9 +497,14 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   }
 
   void _closeCatalog() {
-    _catalogController.reverse().then((_) {
-      if (mounted) setState(() => _catalogVisible = false);
-    });
+    unawaited(_closeCatalogAnimated());
+  }
+
+  Future<void> _closeCatalogAnimated() async {
+    if (!_catalogVisible) return;
+    await _catalogController.reverse();
+    if (!mounted) return;
+    setState(() => _catalogVisible = false);
   }
 
   void _openSettings() {
@@ -413,11 +537,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     if (session == null || !mounted) return;
     if (session.currentChapterIndex <= 0) return;
 
-    final layout = _pageLayoutSize(context);
+    final pagination = _pagination(context);
     final prepended = await session.tryPrependPreviousChapter(
-      textStyle: _textStyle(),
-      pageWidth: layout.$1,
-      pageHeight: layout.$2,
+      pagination: pagination,
     );
     if (prepended == null || prepended <= 0 || !mounted) return;
 
@@ -466,13 +588,25 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
 
     final width = MediaQuery.sizeOf(context).width;
     final x = details.localPosition.dx;
+    final isLeft = x < width * 0.33;
+    final isRight = x > width * 0.67;
 
-    if (x < width * 0.33) {
+    if (_showChrome) {
+      _setShowChrome(false);
+      if (isLeft) {
+        _goPrevPage();
+      } else if (isRight) {
+        _goNextPage();
+      }
+      return;
+    }
+
+    if (isLeft) {
       _goPrevPage();
-    } else if (x > width * 0.67) {
+    } else if (isRight) {
       _goNextPage();
     } else {
-      _setShowChrome(!_showChrome);
+      _setShowChrome(true);
     }
   }
 
@@ -560,27 +694,32 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     return session.currentChapterIndex / (session.chapterMetas.length - 1);
   }
 
+  static const _pageTextHeightBehavior = TextHeightBehavior(
+    applyHeightToFirstAscent: true,
+    applyHeightToLastDescent: false,
+  );
+
   Widget _buildPageText(SHONovelPage page) {
     if (page.pageIndexInChapter == 0) {
-      var body = page.text;
-      if (body.startsWith(page.chapterTitle)) {
-        body = body.substring(page.chapterTitle.length).trimLeft();
-        if (body.startsWith('\n')) body = body.replaceFirst('\n', '').trimLeft();
-      }
       return RichText(
+        textHeightBehavior: _pageTextHeightBehavior,
         text: TextSpan(
           style: _textStyle(),
           children: [
             TextSpan(text: '${page.chapterTitle}\n\n', style: _titleStyle()),
-            TextSpan(text: body, style: _textStyle()),
+            TextSpan(text: page.text, style: _textStyle()),
           ],
         ),
       );
     }
-    return Text(page.text, style: _textStyle());
+    return Text(
+      page.text,
+      style: _textStyle(),
+      textHeightBehavior: _pageTextHeightBehavior,
+    );
   }
 
-  Widget _buildPersistentNavBar() {
+  Widget _buildPersistentNavBar(SHONovelPage? currentPage) {
     return Positioned(
       top: 0,
       left: 0,
@@ -596,22 +735,25 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
               child: Row(
                 children: [
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(
+                      minWidth: 34,
+                      minHeight: 34,
+                    ),
                     icon: Icon(
                       Icons.arrow_back_ios_new,
+                      size: 16,
                       color: _readerTheme.text,
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Expanded(
                     child: Text(
-                      widget.task.fileName,
+                      _navBarTitle(currentPage),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: _readerTheme.text,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: _navBarTitleStyle(),
                     ),
                   ),
                 ],
@@ -630,50 +772,56 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
       top: 0,
       left: 0,
       right: 0,
-      child: Material(
-        color: _readerTheme.background,
-        child: SafeArea(
-          bottom: false,
-          child: SizedBox(
-            height: _chromeTopHeight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.sm),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios_new, color: _readerTheme.text),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Expanded(
-                    child: Text(
-                      widget.task.fileName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: _readerTheme.text.withValues(alpha: 0.55),
-                        fontSize: 13,
+      child: AnimatedBuilder(
+        animation: _chromeController,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(
+              0,
+              -_chromeTopHeight * (1 - _chromeController.value),
+            ),
+            child: child,
+          );
+        },
+        child: Material(
+          color: _readerTheme.background,
+          child: SafeArea(
+            bottom: false,
+            child: SizedBox(
+              height: _chromeTopHeight,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: SHOAppSpacing.sm),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: _readerTheme.text,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: _inBookshelf ? null : _toggleBookshelf,
+                      child: Text(
+                        _inBookshelf
+                            ? l10n.txtReaderAddedBookshelf
+                            : l10n.txtReaderAddBookshelf,
+                        style: TextStyle(
+                          color: _inBookshelf
+                              ? _readerTheme.text.withValues(alpha: 0.45)
+                              : _readerTheme.text,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: _inBookshelf ? null : _toggleBookshelf,
-                    child: Text(
-                      _inBookshelf
-                          ? l10n.txtReaderAddedBookshelf
-                          : l10n.txtReaderAddBookshelf,
-                      style: TextStyle(
-                        color: _inBookshelf
-                            ? _readerTheme.text.withValues(alpha: 0.45)
-                            : _readerTheme.text,
-                        fontSize: 13,
-                      ),
+                    IconButton(
+                      icon: Icon(Icons.more_horiz, color: _readerTheme.text),
+                      onPressed: _showMoreMenu,
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.more_horiz, color: _readerTheme.text),
-                    onPressed: _showMoreMenu,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -698,13 +846,24 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
       left: 0,
       right: 0,
       bottom: 0,
-      child: Material(
-        color: _readerTheme.background,
-        child: SafeArea(
-          top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+      child: AnimatedBuilder(
+        animation: _chromeController,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(
+              0,
+              _chromeBottomSlideHeight * (1 - _chromeController.value),
+            ),
+            child: child,
+          );
+        },
+        child: Material(
+          color: _readerTheme.background,
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   SHOAppSpacing.lg,
@@ -806,7 +965,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
                   ],
                 ),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -832,6 +992,33 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
             const SizedBox(height: 2),
             Text(label, style: TextStyle(fontSize: 11, color: color)),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChapterTransitionMask() {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: AnimatedOpacity(
+          opacity: _chapterMaskOpacity,
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOut,
+          child: ColoredBox(
+            color: _readerTheme.background,
+            child: _chapterMaskSpinner
+                ? Center(
+                    child: SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: _readerTheme.text.withValues(alpha: 0.35),
+                      ),
+                    ),
+                  )
+                : null,
+          ),
         ),
       ),
     );
@@ -924,21 +1111,24 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         child: AnimatedBuilder(
           animation: _catalogController,
           builder: (context, _) {
-            final offset = drawerWidth * _catalogController.value;
+            final progress = _catalogController.value;
+            final scrimOpacity = _catalogScrimMaxOpacity * progress;
             return Stack(
               children: [
-                Positioned(
-                  left: offset,
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: GestureDetector(
-                    onTap: _closeCatalog,
-                    child: Container(color: Colors.black54),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    ignoring: progress <= 0,
+                    child: GestureDetector(
+                      onTap: _closeCatalog,
+                      behavior: HitTestBehavior.opaque,
+                      child: ColoredBox(
+                        color: Colors.black.withValues(alpha: scrimOpacity),
+                      ),
+                    ),
                   ),
                 ),
                 Transform.translate(
-                  offset: Offset(-drawerWidth * (1 - _catalogController.value), 0),
+                  offset: Offset(-drawerWidth * (1 - progress), 0),
                   child: drawer,
                 ),
               ],
@@ -1155,35 +1345,40 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   }
 
   Widget _buildReaderBody(List<SHONovelPage> pages) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        PageView.builder(
-          controller: _pageController,
-          scrollDirection: Axis.horizontal,
-          pageSnapping: true,
-          allowImplicitScrolling: true,
-          itemCount: pages.length,
-          onPageChanged: _handlePageChanged,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: _readerPadding,
-              child: _buildPageText(pages[index]),
-            );
-          },
-        ),
-        Positioned.fill(
-          child: GestureDetector(
-            onTapUp: _handleReaderTapUp,
-            behavior: HitTestBehavior.translucent,
-          ),
-        ),
-        if (_repaginating)
-          ColoredBox(
-            color: _readerTheme.background.withValues(alpha: 0.7),
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _latestContentConstraints = constraints;
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            PageView.builder(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              pageSnapping: true,
+              allowImplicitScrolling: true,
+              itemCount: pages.length,
+              onPageChanged: _handlePageChanged,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: _readerPadding,
+                  child: _buildPageText(pages[index]),
+                );
+              },
+            ),
+            Positioned.fill(
+              child: GestureDetector(
+                onTapUp: _handleReaderTapUp,
+                behavior: HitTestBehavior.translucent,
+              ),
+            ),
+            if (_repaginating)
+              ColoredBox(
+                color: _readerTheme.background.withValues(alpha: 0.7),
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -1223,11 +1418,12 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
                 ],
               ),
             ),
-            _buildPersistentNavBar(),
+            _buildPersistentNavBar(currentPage),
             if (ready && currentPage != null && session != null) ...[
               _buildTopChrome(l10n),
               _buildBottomChrome(l10n, session, pages, currentPage),
             ],
+            if (_chapterMaskVisible) _buildChapterTransitionMask(),
             _buildCatalogOverlay(l10n),
             _buildSettingsOverlay(l10n),
           ],

@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 import '../domain/hos_txt_novel_models.dart';
 import '../domain/hos_txt_novel_parser.dart';
+import 'hos_txt_reader_pagination.dart';
 
 class SHOTxtReaderSession {
   SHOTxtReaderSession({
@@ -28,11 +27,23 @@ class SHOTxtReaderSession {
 
   int get currentChapterIndex => currentPage?.chapterIndex ?? 0;
 
+  double _firstPageBodyHeight(
+    String chapterTitle,
+    SHOTxtReaderPagination pagination,
+  ) {
+    final titleHeight = measureTextBlockHeight(
+      text: '$chapterTitle\n\n',
+      style: pagination.titleStyle,
+      maxWidth: pagination.pageWidth,
+      textScaler: pagination.textScaler,
+    );
+    return (pagination.pageHeight - titleHeight)
+        .clamp(0, pagination.pageHeight);
+  }
+
   Future<List<SHONovelPage>> loadChapter({
     required int chapterIndex,
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
     bool append = false,
     bool prepend = false,
     int? jumpToPageInChapter,
@@ -50,14 +61,15 @@ class SHOTxtReaderSession {
 
     final meta = chapterMetas[chapterIndex];
     final content = await readChapterContent(file, meta);
-    final contentWithTitle = content.isEmpty
-        ? meta.title
-        : '${meta.title}\n\n$content';
     final pageTexts = paginateChapterContent(
-      content: contentWithTitle,
-      width: pageWidth,
-      height: pageHeight,
-      style: textStyle,
+      content: content.isEmpty ? '' : content,
+      width: pagination.pageWidth,
+      height: pagination.pageHeight,
+      style: pagination.textStyle,
+      textScaler: pagination.textScaler,
+      firstPageMaxHeight: content.isEmpty
+          ? pagination.pageHeight
+          : _firstPageBodyHeight(meta.title, pagination),
     );
 
     final globalStart = prepend
@@ -117,23 +129,17 @@ class SHOTxtReaderSession {
   Future<void> openAtChapter({
     required int chapterIndex,
     required int pageIndexInChapter,
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
   }) async {
     await loadChapter(
       chapterIndex: chapterIndex,
-      textStyle: textStyle,
-      pageWidth: pageWidth,
-      pageHeight: pageHeight,
+      pagination: pagination,
       jumpToPageInChapter: pageIndexInChapter,
     );
   }
 
   Future<int?> tryAppendNextChapter({
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
   }) async {
     final chapter = currentChapterIndex;
     if (chapter >= chapterMetas.length - 1) return null;
@@ -144,18 +150,14 @@ class SHOTxtReaderSession {
     final before = flatPages.length;
     await loadChapter(
       chapterIndex: chapter + 1,
-      textStyle: textStyle,
-      pageWidth: pageWidth,
-      pageHeight: pageHeight,
+      pagination: pagination,
       append: true,
     );
     return before;
   }
 
   Future<int?> tryPrependPreviousChapter({
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
   }) async {
     final chapter = currentChapterIndex;
     if (chapter <= 0) return null;
@@ -165,9 +167,7 @@ class SHOTxtReaderSession {
 
     final added = await loadChapter(
       chapterIndex: chapter - 1,
-      textStyle: textStyle,
-      pageWidth: pageWidth,
-      pageHeight: pageHeight,
+      pagination: pagination,
       prepend: true,
     );
     return added.length;
@@ -175,9 +175,7 @@ class SHOTxtReaderSession {
 
   Future<void> jumpToChapter({
     required int chapterIndex,
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
     int pageIndexInChapter = 0,
   }) async {
     for (var i = 0; i < flatPages.length; i++) {
@@ -192,9 +190,7 @@ class SHOTxtReaderSession {
     await openAtChapter(
       chapterIndex: chapterIndex,
       pageIndexInChapter: pageIndexInChapter,
-      textStyle: textStyle,
-      pageWidth: pageWidth,
-      pageHeight: pageHeight,
+      pagination: pagination,
     );
   }
 
@@ -216,9 +212,7 @@ class SHOTxtReaderSession {
   }
 
   Future<void> repaginateAllLoaded({
-    required TextStyle textStyle,
-    required double pageWidth,
-    required double pageHeight,
+    required SHOTxtReaderPagination pagination,
   }) async {
     final chapter = currentChapterIndex;
     final pageInChapter = currentPage?.pageIndexInChapter ?? 0;
@@ -229,18 +223,14 @@ class SHOTxtReaderSession {
     for (final index in loaded) {
       await loadChapter(
         chapterIndex: index,
-        textStyle: textStyle,
-        pageWidth: pageWidth,
-        pageHeight: pageHeight,
+        pagination: pagination,
         append: flatPages.isNotEmpty,
       );
     }
 
     await jumpToChapter(
       chapterIndex: chapter,
-      textStyle: textStyle,
-      pageWidth: pageWidth,
-      pageHeight: pageHeight,
+      pagination: pagination,
       pageIndexInChapter: pageInChapter,
     );
   }

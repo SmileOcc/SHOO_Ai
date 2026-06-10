@@ -10,6 +10,22 @@ class SHONovelChapterMeta {
   final String title;
   final int startByte;
   final int endByte;
+
+  Map<String, dynamic> toJson() => {
+        'index': index,
+        'title': title,
+        'startByte': startByte,
+        'endByte': endByte,
+      };
+
+  factory SHONovelChapterMeta.fromJson(Map<String, dynamic> json) {
+    return SHONovelChapterMeta(
+      index: json['index'] as int,
+      title: json['title'] as String,
+      startByte: json['startByte'] as int,
+      endByte: json['endByte'] as int,
+    );
+  }
 }
 
 class SHONovelChapter {

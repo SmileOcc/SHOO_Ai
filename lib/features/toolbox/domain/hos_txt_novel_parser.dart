@@ -171,31 +171,99 @@ Future<String> readChapterContent(
   }
 }
 
+const _paginationHeightTolerance = 0.5;
+
+const _readerTextHeightBehavior = TextHeightBehavior(
+  applyHeightToFirstAscent: true,
+  applyHeightToLastDescent: false,
+);
+
+TextPainter layoutTextPainter({
+  required String text,
+  required TextStyle style,
+  required double maxWidth,
+  TextScaler textScaler = TextScaler.noScaling,
+}) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.ltr,
+    textScaler: textScaler,
+    strutStyle: StrutStyle(
+      fontSize: style.fontSize,
+      height: style.height,
+      leadingDistribution: TextLeadingDistribution.proportional,
+    ),
+    textHeightBehavior: _readerTextHeightBehavior,
+  );
+  painter.layout(maxWidth: maxWidth);
+  return painter;
+}
+
+double measureTextBlockHeight({
+  required String text,
+  required TextStyle style,
+  required double maxWidth,
+  TextScaler textScaler = TextScaler.noScaling,
+}) {
+  return layoutTextPainter(
+    text: text,
+    style: style,
+    maxWidth: maxWidth,
+    textScaler: textScaler,
+  ).height;
+}
+
+bool _textFitsHeight({
+  required String text,
+  required TextStyle style,
+  required double maxWidth,
+  required double maxHeight,
+  TextScaler textScaler = TextScaler.noScaling,
+}) {
+  if (text.isEmpty) return true;
+  final height = measureTextBlockHeight(
+    text: text,
+    style: style,
+    maxWidth: maxWidth,
+    textScaler: textScaler,
+  );
+  return height <= maxHeight + _paginationHeightTolerance;
+}
+
 List<String> paginateChapterContent({
   required String content,
   required double width,
   required double height,
   required TextStyle style,
+  TextScaler textScaler = TextScaler.noScaling,
+  double? firstPageMaxHeight,
 }) {
   final normalized = content.replaceAll('\r\n', '\n');
-  if (normalized.trim().isEmpty) return const [''];
+  if (normalized.isEmpty) return const [''];
 
   final pages = <String>[];
   var offset = 0;
+  var pageIndex = 0;
 
   while (offset < normalized.length) {
+    final maxHeight = pageIndex == 0 && firstPageMaxHeight != null
+        ? firstPageMaxHeight
+        : height;
+
     var low = offset + 1;
     var high = normalized.length;
-    var best = offset + 1;
+    var best = offset;
 
     while (low <= high) {
       final mid = (low + high) ~/ 2;
-      final painter = TextPainter(
-        text: TextSpan(text: normalized.substring(offset, mid), style: style),
-        textDirection: TextDirection.ltr,
-      );
-      painter.layout(maxWidth: width);
-      if (painter.height <= height) {
+      final candidate = normalized.substring(offset, mid);
+      if (_textFitsHeight(
+        text: candidate,
+        style: style,
+        maxWidth: width,
+        maxHeight: maxHeight,
+        textScaler: textScaler,
+      )) {
         best = mid;
         low = mid + 1;
       } else {
@@ -204,27 +272,44 @@ List<String> paginateChapterContent({
     }
 
     var end = best;
+    if (end <= offset) {
+      end = offset + 1;
+    }
+
     if (end < normalized.length) {
       final slice = normalized.substring(offset, end);
-      final lastBreak = slice.lastIndexOf('\n');
-      if (lastBreak > slice.length * 0.5) {
-        end = offset + lastBreak + 1;
+      final paragraphBreak = slice.lastIndexOf('\n\n');
+      if (paragraphBreak > 0) {
+        final candidate = offset + paragraphBreak + 2;
+        if (_textFitsHeight(
+          text: normalized.substring(offset, candidate),
+          style: style,
+          maxWidth: width,
+          maxHeight: maxHeight,
+          textScaler: textScaler,
+        )) {
+          end = candidate;
+        }
+      } else {
+        final lineBreak = slice.lastIndexOf('\n');
+        if (lineBreak > 0) {
+          final candidate = offset + lineBreak + 1;
+          if (_textFitsHeight(
+            text: normalized.substring(offset, candidate),
+            style: style,
+            maxWidth: width,
+            maxHeight: maxHeight,
+            textScaler: textScaler,
+          )) {
+            end = candidate;
+          }
+        }
       }
     }
 
-    final pageText = normalized.substring(offset, end).trim();
-    if (pageText.isNotEmpty) pages.add(pageText);
-
+    pages.add(normalized.substring(offset, end));
     offset = end;
-    while (offset < normalized.length &&
-        (normalized[offset] == '\n' || normalized[offset] == ' ')) {
-      offset++;
-    }
-
-    if (end == offset && offset < normalized.length) {
-      pages.add(normalized[offset]);
-      offset++;
-    }
+    pageIndex++;
   }
 
   return pages.isEmpty ? const [''] : pages;
