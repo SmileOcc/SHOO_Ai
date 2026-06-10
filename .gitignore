@@ -39,8 +39,8 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Node mock API server
-server/node_modules/
+# Local mock API server (keep locally, do not push)
+server/
 
 # Android Studio will place build artifacts here
 /android/app/debug
