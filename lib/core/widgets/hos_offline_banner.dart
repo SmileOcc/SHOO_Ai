@@ -8,6 +8,7 @@ import '../network/hos_connectivity_service.dart';
 import '../network/hos_local_server_health.dart';
 import '../theme/hos_colors.dart';
 import '../theme/hos_spacing.dart';
+import '../../features/toolbox/presentation/music/hos_music_mini_player.dart';
 import '../../l10n/app_localizations.dart';
 
 const _offlineBannerSwipeUpVelocity = 120.0;
@@ -93,6 +94,7 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
                 ),
               ),
             ),
+          const SHOMusicMiniPlayer(),
         ],
       ),
     );

@@ -1255,6 +1255,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxVideoPlayback => 'Videos';
 
   @override
+  String get toolboxMusicPlayback => 'Music';
+
+  @override
   String get toolboxFileDownload => 'Downloads';
 
   @override
@@ -1337,7 +1340,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadTypeZip => 'Archive';
 
   @override
+  String get downloadTypeMusicZip => 'Music pack';
+
+  @override
   String get downloadTypeVideo => 'Video';
+
+  @override
+  String get downloadTypeAudio => 'Audio';
 
   @override
   String get downloadTypeOther => 'File';
@@ -1595,6 +1604,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get videoPlayerDownloadStarted => 'Added to download queue';
+
+  @override
+  String get musicLibraryTitle => 'Music';
+
+  @override
+  String get musicLibraryEmpty => 'No music yet';
+
+  @override
+  String get musicLibraryLocalBadge => 'Local';
+
+  @override
+  String get musicLibraryOnlineBadge => 'Online';
+
+  @override
+  String get musicLibrarySortRecent => 'Recent';
+
+  @override
+  String get musicLibrarySortLiked => 'Liked';
+
+  @override
+  String get musicLibraryLikedBadge => 'Liked';
+
+  @override
+  String get musicPackAddToLibraryTitle => 'Add to music library';
+
+  @override
+  String get musicPackAddToLibraryMessage =>
+      'Add this music pack to your music library?';
+
+  @override
+  String get musicPackAddToLibraryConfirm => 'Add';
+
+  @override
+  String get musicPackImporting => 'Extracting music, please wait…';
+
+  @override
+  String get musicLibraryNowPlayingBadge => 'Playing';
+
+  @override
+  String musicLibraryPlayCount(String count) {
+    return '$count plays';
+  }
+
+  @override
+  String musicLibraryLastPlayedDate(String time) {
+    return 'Played $time';
+  }
+
+  @override
+  String get musicLibraryRemoveAction => 'Remove';
+
+  @override
+  String get musicLibraryRemoveConfirmTitle => 'Delete local cache';
+
+  @override
+  String get musicLibraryRemoveConfirmMessage =>
+      'Remove cached song files? The downloaded zip in the download list will not be affected.';
+
+  @override
+  String musicLibraryLastPlayed(String time) {
+    return 'Last played $time';
+  }
+
+  @override
+  String get musicPlayerNowPlaying => 'Now Playing';
+
+  @override
+  String get musicPlayerShowLyrics => 'Lyrics';
+
+  @override
+  String get musicPlayerShowCover => 'Cover';
+
+  @override
+  String get musicPlayerNoLyrics => 'No lyrics';
+
+  @override
+  String get musicPlayerTrackMissing => 'Track not found';
+
+  @override
+  String get musicPlayerDownloadSong => 'Download song';
+
+  @override
+  String get musicPlayerAlreadyDownloaded => 'Already downloaded';
+
+  @override
+  String get musicPlayerDownloadSuccess => 'Song cached locally';
+
+  @override
+  String get musicPlayerDownloadFailed =>
+      'Cannot download yet. Please download the music resource zip first.';
 
   @override
   String get profileAddresses => 'Addresses';

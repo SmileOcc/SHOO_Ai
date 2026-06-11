@@ -5,6 +5,7 @@ import '../../app/router/hos_routes.dart';
 import 'presentation/hos_download_list_page.dart';
 import 'presentation/hos_toolbox_page.dart';
 import 'presentation/hos_txt_reader_route_page.dart';
+import 'presentation/hos_music_player_route_page.dart';
 import 'presentation/hos_video_player_route_page.dart';
 
 List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =>
@@ -36,6 +37,22 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
               return SHOVideoPlayerRoutePage(
                 entryId: entryId,
                 taskId: taskId,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'music',
+            parentNavigatorKey: rootKey,
+            builder: (context, state) {
+              final trackId = state.uri.queryParameters['trackId'] ?? '';
+              final index =
+                  int.tryParse(state.uri.queryParameters['index'] ?? '') ?? 0;
+              final fromDownloadPack =
+                  state.uri.queryParameters['fromDownloadPack'] == '1';
+              return SHOMusicPlayerRoutePage(
+                trackId: trackId,
+                startIndex: index,
+                fromDownloadPack: fromDownloadPack,
               );
             },
           ),

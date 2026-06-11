@@ -152,7 +152,7 @@ class _SHODownloadTabView extends ConsumerWidget {
           onPause: () => notifier.pauseTask(task.id),
           onResume: () => notifier.resumeTask(task.id),
           onDelete: () => notifier.deleteTask(task.id),
-          onOpen: () => handleDownloadTaskTap(context, task),
+          onOpen: () => handleDownloadTaskTap(context, ref, task),
         );
       },
     );

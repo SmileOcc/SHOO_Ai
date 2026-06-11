@@ -2432,6 +2432,12 @@ abstract class AppLocalizations {
   /// **'Videos'**
   String get toolboxVideoPlayback;
 
+  /// No description provided for @toolboxMusicPlayback.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get toolboxMusicPlayback;
+
   /// No description provided for @toolboxFileDownload.
   ///
   /// In en, this message translates to:
@@ -2594,11 +2600,23 @@ abstract class AppLocalizations {
   /// **'Archive'**
   String get downloadTypeZip;
 
+  /// No description provided for @downloadTypeMusicZip.
+  ///
+  /// In en, this message translates to:
+  /// **'Music pack'**
+  String get downloadTypeMusicZip;
+
   /// No description provided for @downloadTypeVideo.
   ///
   /// In en, this message translates to:
   /// **'Video'**
   String get downloadTypeVideo;
+
+  /// No description provided for @downloadTypeAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get downloadTypeAudio;
 
   /// No description provided for @downloadTypeOther.
   ///
@@ -3059,6 +3077,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added to download queue'**
   String get videoPlayerDownloadStarted;
+
+  /// No description provided for @musicLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get musicLibraryTitle;
+
+  /// No description provided for @musicLibraryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No music yet'**
+  String get musicLibraryEmpty;
+
+  /// No description provided for @musicLibraryLocalBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Local'**
+  String get musicLibraryLocalBadge;
+
+  /// No description provided for @musicLibraryOnlineBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get musicLibraryOnlineBadge;
+
+  /// No description provided for @musicLibrarySortRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get musicLibrarySortRecent;
+
+  /// No description provided for @musicLibrarySortLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked'**
+  String get musicLibrarySortLiked;
+
+  /// No description provided for @musicLibraryLikedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked'**
+  String get musicLibraryLikedBadge;
+
+  /// No description provided for @musicPackAddToLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to music library'**
+  String get musicPackAddToLibraryTitle;
+
+  /// No description provided for @musicPackAddToLibraryMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add this music pack to your music library?'**
+  String get musicPackAddToLibraryMessage;
+
+  /// No description provided for @musicPackAddToLibraryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get musicPackAddToLibraryConfirm;
+
+  /// No description provided for @musicPackImporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting music, please wait…'**
+  String get musicPackImporting;
+
+  /// No description provided for @musicLibraryNowPlayingBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get musicLibraryNowPlayingBadge;
+
+  /// No description provided for @musicLibraryPlayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} plays'**
+  String musicLibraryPlayCount(String count);
+
+  /// No description provided for @musicLibraryLastPlayedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Played {time}'**
+  String musicLibraryLastPlayedDate(String time);
+
+  /// No description provided for @musicLibraryRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get musicLibraryRemoveAction;
+
+  /// No description provided for @musicLibraryRemoveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete local cache'**
+  String get musicLibraryRemoveConfirmTitle;
+
+  /// No description provided for @musicLibraryRemoveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove cached song files? The downloaded zip in the download list will not be affected.'**
+  String get musicLibraryRemoveConfirmMessage;
+
+  /// No description provided for @musicLibraryLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played {time}'**
+  String musicLibraryLastPlayed(String time);
+
+  /// No description provided for @musicPlayerNowPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Now Playing'**
+  String get musicPlayerNowPlaying;
+
+  /// No description provided for @musicPlayerShowLyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get musicPlayerShowLyrics;
+
+  /// No description provided for @musicPlayerShowCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get musicPlayerShowCover;
+
+  /// No description provided for @musicPlayerNoLyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'No lyrics'**
+  String get musicPlayerNoLyrics;
+
+  /// No description provided for @musicPlayerTrackMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Track not found'**
+  String get musicPlayerTrackMissing;
+
+  /// No description provided for @musicPlayerDownloadSong.
+  ///
+  /// In en, this message translates to:
+  /// **'Download song'**
+  String get musicPlayerDownloadSong;
+
+  /// No description provided for @musicPlayerAlreadyDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already downloaded'**
+  String get musicPlayerAlreadyDownloaded;
+
+  /// No description provided for @musicPlayerDownloadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Song cached locally'**
+  String get musicPlayerDownloadSuccess;
+
+  /// No description provided for @musicPlayerDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot download yet. Please download the music resource zip first.'**
+  String get musicPlayerDownloadFailed;
 
   /// No description provided for @profileAddresses.
   ///

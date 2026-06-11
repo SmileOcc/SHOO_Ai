@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/toolbox/presentation/music/hos_music_nav_observer.dart';
+import '../../features/toolbox/presentation/music/hos_music_route_state.dart';
+
 import '../../core/debug/router.dart';
 import '../../features/address/router.dart';
 import '../../features/after_sale/router.dart';
@@ -23,11 +26,15 @@ import 'hos_shell_routes.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = ref.watch(routerNotifierProvider);
 
-  return GoRouter(
+  late final GoRouter router;
+  void syncMusicRoute() => syncMusicPlayerRouteState(ref, router);
+
+  router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: SHOAppRoutes.splash,
     refreshListenable: notifier,
     redirect: notifier.redirect,
+    observers: [SHOMusicNavigatorObserver(syncMusicRoute)],
     errorBuilder: (context, state) => SHONotFoundPage(location: state.uri.toString()),
     routes: [
       ...shoSplashRoutes(),
@@ -46,4 +53,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoShellRoutes(),
     ],
   );
+  router.routerDelegate.addListener(syncMusicRoute);
+  ref.onDispose(() => router.routerDelegate.removeListener(syncMusicRoute));
+  Future.microtask(syncMusicRoute);
+  return router;
 });

@@ -442,6 +442,7 @@
   "toolboxGroupTools": "常用工具",
   "toolboxBookshelf": "我的书架",
   "toolboxVideoPlayback": "视频播放",
+  "toolboxMusicPlayback": "音乐播放",
   "toolboxFileDownload": "文件下载",
   "toolboxComingSoon": "敬请期待",
   "downloadListTitle": "下载列表",
@@ -469,7 +470,9 @@
   "downloadTypePdf": "PDF",
   "downloadTypeExcel": "表格",
   "downloadTypeZip": "压缩包",
+  "downloadTypeMusicZip": "压缩包-音乐",
   "downloadTypeVideo": "视频",
+  "downloadTypeAudio": "音频",
   "downloadTypeOther": "文件",
   "downloadActionCopyUrl": "复制 URL",
   "downloadUrlCopied": "下载地址已复制",
@@ -592,6 +595,48 @@
   "videoPlayerDownload": "下载视频",
   "videoPlayerDownloadUnsupported": "暂不支持下载，下次再来",
   "videoPlayerDownloadStarted": "已加入下载队列",
+  "musicLibraryTitle": "音乐播放",
+  "musicLibraryEmpty": "暂无音乐",
+  "musicLibraryLocalBadge": "本地",
+  "musicLibraryOnlineBadge": "在线",
+  "musicLibrarySortRecent": "最近",
+  "musicLibrarySortLiked": "喜欢",
+  "musicLibraryLikedBadge": "已喜欢",
+  "musicPackAddToLibraryTitle": "添加到音乐播放列表",
+  "musicPackAddToLibraryMessage": "是否将此音乐压缩包添加到音乐播放列表？",
+  "musicPackAddToLibraryConfirm": "添加",
+  "musicPackImporting": "正在解压音乐，请稍候…",
+  "musicLibraryNowPlayingBadge": "播放中",
+  "musicLibraryPlayCount": "播放 {count} 次",
+  "@musicLibraryPlayCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "musicLibraryLastPlayedDate": "播放于 {time}",
+  "@musicLibraryLastPlayedDate": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "musicLibraryRemoveAction": "删除",
+  "musicLibraryRemoveConfirmTitle": "删除本地缓存",
+  "musicLibraryRemoveConfirmMessage": "确定要从音乐列表移除此歌曲吗？本地缓存会一并删除，下载列表中的压缩包不受影响。",
+  "musicLibraryLastPlayed": "上次播放 {time}",
+  "@musicLibraryLastPlayed": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "musicPlayerNowPlaying": "正在播放",
+  "musicPlayerShowLyrics": "歌词",
+  "musicPlayerShowCover": "封面",
+  "musicPlayerNoLyrics": "暂无歌词",
+  "musicPlayerTrackMissing": "找不到该音乐",
+  "musicPlayerDownloadSong": "下载歌曲",
+  "musicPlayerAlreadyDownloaded": "已下载",
+  "musicPlayerDownloadSuccess": "歌曲已缓存到本地",
+  "musicPlayerDownloadFailed": "暂无法下载，请先下载音乐资源压缩包",
   "profileAddresses": "收货地址",
   "profileCoupons": "优惠券",
   "profileAfterSales": "售后服务",

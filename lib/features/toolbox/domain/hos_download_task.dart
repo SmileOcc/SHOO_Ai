@@ -10,6 +10,7 @@ enum SHODownloadFileType {
   excel,
   zip,
   video,
+  audio,
   other,
 }
 
@@ -112,6 +113,7 @@ SHODownloadFileType detectDownloadFileType(String fileName) {
     'xls' || 'xlsx' || 'csv' => SHODownloadFileType.excel,
     'zip' || 'rar' || '7z' => SHODownloadFileType.zip,
     'mp4' || 'mov' || 'avi' || 'mkv' || 'webm' => SHODownloadFileType.video,
+    'mp3' || 'm4a' || 'flac' || 'wav' || 'aac' || 'ogg' => SHODownloadFileType.audio,
     _ => SHODownloadFileType.other,
   };
 }

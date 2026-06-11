@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/router/hos_routes.dart';
 import '../toolbox/presentation/hos_bookshelf_list_page.dart';
+import '../toolbox/presentation/hos_music_library_page.dart';
 import '../toolbox/presentation/hos_video_library_page.dart';
 import 'presentation/hos_profile_activity_list_page.dart';
 import 'presentation/hos_profile_controller.dart';
@@ -32,5 +33,14 @@ List<RouteBase> shoProfileRoutes({required GlobalKey<NavigatorState> rootKey}) =
         path: SHOAppRoutes.profileVideoLibrary,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SHOVideoLibraryPage(),
+      ),
+      GoRoute(
+        path: SHOAppRoutes.profileMusicLibrary,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) {
+          final fromDownload =
+              state.uri.queryParameters['fromDownload'] == '1';
+          return SHOMusicLibraryPage(fromDownload: fromDownload);
+        },
       ),
     ];

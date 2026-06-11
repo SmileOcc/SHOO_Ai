@@ -473,6 +473,7 @@
   "toolboxGroupTools": "Tools",
   "toolboxBookshelf": "My Bookshelf",
   "toolboxVideoPlayback": "Videos",
+  "toolboxMusicPlayback": "Music",
   "toolboxFileDownload": "Downloads",
   "toolboxComingSoon": "Coming soon",
   "downloadListTitle": "Downloads",
@@ -500,7 +501,9 @@
   "downloadTypePdf": "PDF",
   "downloadTypeExcel": "Spreadsheet",
   "downloadTypeZip": "Archive",
+  "downloadTypeMusicZip": "Music pack",
   "downloadTypeVideo": "Video",
+  "downloadTypeAudio": "Audio",
   "downloadTypeOther": "File",
   "downloadActionCopyUrl": "Copy URL",
   "downloadUrlCopied": "Download URL copied",
@@ -623,6 +626,48 @@
   "videoPlayerDownload": "Download video",
   "videoPlayerDownloadUnsupported": "Download not supported yet. Try again later",
   "videoPlayerDownloadStarted": "Added to download queue",
+  "musicLibraryTitle": "Music",
+  "musicLibraryEmpty": "No music yet",
+  "musicLibraryLocalBadge": "Local",
+  "musicLibraryOnlineBadge": "Online",
+  "musicLibrarySortRecent": "Recent",
+  "musicLibrarySortLiked": "Liked",
+  "musicLibraryLikedBadge": "Liked",
+  "musicPackAddToLibraryTitle": "Add to music library",
+  "musicPackAddToLibraryMessage": "Add this music pack to your music library?",
+  "musicPackAddToLibraryConfirm": "Add",
+  "musicPackImporting": "Extracting music, please wait…",
+  "musicLibraryNowPlayingBadge": "Playing",
+  "musicLibraryPlayCount": "{count} plays",
+  "@musicLibraryPlayCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "musicLibraryLastPlayedDate": "Played {time}",
+  "@musicLibraryLastPlayedDate": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "musicLibraryRemoveAction": "Remove",
+  "musicLibraryRemoveConfirmTitle": "Delete local cache",
+  "musicLibraryRemoveConfirmMessage": "Remove cached song files? The downloaded zip in the download list will not be affected.",
+  "musicLibraryLastPlayed": "Last played {time}",
+  "@musicLibraryLastPlayed": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "musicPlayerNowPlaying": "Now Playing",
+  "musicPlayerShowLyrics": "Lyrics",
+  "musicPlayerShowCover": "Cover",
+  "musicPlayerNoLyrics": "No lyrics",
+  "musicPlayerTrackMissing": "Track not found",
+  "musicPlayerDownloadSong": "Download song",
+  "musicPlayerAlreadyDownloaded": "Already downloaded",
+  "musicPlayerDownloadSuccess": "Song cached locally",
+  "musicPlayerDownloadFailed": "Cannot download yet. Please download the music resource zip first.",
   "profileAddresses": "Addresses",
   "profileCoupons": "Coupons",
   "profileAfterSales": "After-Sales",

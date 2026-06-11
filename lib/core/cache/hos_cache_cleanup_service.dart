@@ -12,6 +12,7 @@ import '../storage/hos_local_storage.dart';
 import '../../features/cart/data/hos_cart_storage.dart';
 import '../../features/search/data/hos_search_history_storage.dart';
 import '../../features/toolbox/data/hos_reading_storage_keys.dart';
+import '../../features/toolbox/data/hos_music_storage_keys.dart';
 import '../../features/toolbox/data/hos_video_storage_keys.dart';
 
 enum SHOCacheCategory {
@@ -192,6 +193,7 @@ class SHOCacheCleanupService {
       if (preserved.contains(key)) continue;
       if (SHOReadingStorageKeys.preserveOnPreferencesClear(key)) continue;
       if (SHOVideoStorageKeys.preserveOnPreferencesClear(key)) continue;
+      if (SHOMusicStorageKeys.preserveOnPreferencesClear(key)) continue;
       if (key.startsWith(activityPrefetchConfigPrefix) ||
           key.startsWith(activityPrefetchImagePrefix)) {
         continue;

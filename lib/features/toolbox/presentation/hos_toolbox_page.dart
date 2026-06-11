@@ -30,6 +30,12 @@ class SHOToolboxPage extends StatelessWidget {
             label: l10n.toolboxVideoPlayback,
             onTap: () => context.push(SHOAppRoutes.profileVideoLibrary),
           ),
+          _ToolboxMenuItem(
+            icon: Icons.music_note_outlined,
+            color: const Color(0xFFE57373),
+            label: l10n.toolboxMusicPlayback,
+            onTap: () => context.push(SHOAppRoutes.profileMusicLibrary),
+          ),
         ],
       ),
       _ToolboxGroup(

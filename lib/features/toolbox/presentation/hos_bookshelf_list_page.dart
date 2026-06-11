@@ -184,7 +184,7 @@ class SHOBookshelfListPage extends ConsumerWidget {
                       ),
                       onTap: task == null
                           ? null
-                          : () => handleDownloadTaskTap(context, task),
+                          : () => handleDownloadTaskTap(context, ref, task),
                     ),
                   ),
                 );

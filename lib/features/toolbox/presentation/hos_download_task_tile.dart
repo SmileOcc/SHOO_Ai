@@ -126,7 +126,7 @@ class SHODownloadTaskTile extends StatelessWidget {
                           BorderRadius.circular(SHOAppSpacing.cardRadius),
                     ),
                     child: Icon(
-                      downloadFileTypeIcon(task.fileType),
+                      downloadFileTypeIcon(task),
                       size: 22,
                       color: SHOAppColors.accent,
                     ),
@@ -154,7 +154,7 @@ class SHODownloadTaskTile extends StatelessWidget {
                                 ?.copyWith(color: theme.textSecondary),
                             children: [
                               TextSpan(
-                                text: downloadFileTypeLabel(l10n, task.fileType),
+                                text: downloadTaskTypeLabel(l10n, task),
                               ),
                               const TextSpan(text: ' · '),
                               TextSpan(

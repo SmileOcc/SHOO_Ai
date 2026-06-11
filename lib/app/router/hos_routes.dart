@@ -24,6 +24,7 @@ abstract final class SHOAppRoutes {
   static const profileFavorites = '/profile/favorites';
   static const profileBookshelf = '/profile/bookshelf';
   static const profileVideoLibrary = '/profile/videos';
+  static const profileMusicLibrary = '/profile/music';
   static const toolbox = '/toolbox';
   static const toolboxDownloads = '/toolbox/downloads';
   static const toolboxReader = '/toolbox/reader';
@@ -31,6 +32,26 @@ abstract final class SHOAppRoutes {
   static String toolboxReaderFor(String taskId) =>
       '$toolboxReader?taskId=${Uri.encodeComponent(taskId)}';
   static const toolboxVideo = '/toolbox/video';
+  static const toolboxMusicPlayer = '/toolbox/music';
+
+  static String toolboxMusicPlayerFor(
+    String trackId, {
+    int index = 0,
+    bool fromDownloadPack = false,
+  }) {
+    final query = <String, String>{
+      'trackId': trackId,
+      'index': index.toString(),
+      if (fromDownloadPack) 'fromDownloadPack': '1',
+    };
+    final encoded = query.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return '$toolboxMusicPlayer?$encoded';
+  }
+
+  static String profileMusicLibraryFromDownload() =>
+      '$profileMusicLibrary?fromDownload=1';
 
   static String toolboxVideoFor(String taskId) =>
       '$toolboxVideo?taskId=${Uri.encodeComponent(taskId)}';

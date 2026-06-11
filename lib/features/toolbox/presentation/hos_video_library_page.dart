@@ -231,7 +231,7 @@ class SHOVideoLibraryPage extends ConsumerWidget {
                             child: Icon(
                               entry.isNetwork
                                   ? Icons.cloud_outlined
-                                  : downloadFileTypeIcon(
+                                  : downloadFileTypeIconFor(
                                       item.task?.fileType ??
                                           SHODownloadFileType.video,
                                     ),

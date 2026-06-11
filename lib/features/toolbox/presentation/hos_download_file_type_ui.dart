@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../data/hos_music_pack_service.dart';
 import '../domain/hos_download_task.dart';
 import 'hos_download_controller.dart';
 
-IconData downloadFileTypeIcon(SHODownloadFileType type) {
+IconData downloadFileTypeIconFor(SHODownloadFileType type) {
   return switch (type) {
     SHODownloadFileType.doc => Icons.description_outlined,
     SHODownloadFileType.pdf => Icons.picture_as_pdf_outlined,
     SHODownloadFileType.excel => Icons.table_chart_outlined,
     SHODownloadFileType.zip => Icons.folder_zip_outlined,
     SHODownloadFileType.video => Icons.videocam_outlined,
+    SHODownloadFileType.audio => Icons.music_note_outlined,
     SHODownloadFileType.other => Icons.insert_drive_file_outlined,
   };
+}
+
+IconData downloadFileTypeIcon(SHODownloadTask task) {
+  if (const SHOMusicPackService().isMusicPackZip(task)) {
+    return Icons.library_music_outlined;
+  }
+  return downloadFileTypeIconFor(task.fileType);
+}
+
+String downloadTaskTypeLabel(AppLocalizations l10n, SHODownloadTask task) {
+  if (const SHOMusicPackService().isMusicPackZip(task)) {
+    return l10n.downloadTypeMusicZip;
+  }
+  return downloadFileTypeLabel(l10n, task.fileType);
 }
 
 String downloadFileTypeLabel(AppLocalizations l10n, SHODownloadFileType type) {
@@ -22,6 +38,7 @@ String downloadFileTypeLabel(AppLocalizations l10n, SHODownloadFileType type) {
     SHODownloadFileType.excel => l10n.downloadTypeExcel,
     SHODownloadFileType.zip => l10n.downloadTypeZip,
     SHODownloadFileType.video => l10n.downloadTypeVideo,
+    SHODownloadFileType.audio => l10n.downloadTypeAudio,
     SHODownloadFileType.other => l10n.downloadTypeOther,
   };
 }

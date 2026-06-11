@@ -1222,6 +1222,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxVideoPlayback => '视频播放';
 
   @override
+  String get toolboxMusicPlayback => '音乐播放';
+
+  @override
   String get toolboxFileDownload => '文件下载';
 
   @override
@@ -1303,7 +1306,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadTypeZip => '压缩包';
 
   @override
+  String get downloadTypeMusicZip => '压缩包-音乐';
+
+  @override
   String get downloadTypeVideo => '视频';
+
+  @override
+  String get downloadTypeAudio => '音频';
 
   @override
   String get downloadTypeOther => '文件';
@@ -1552,6 +1561,94 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get videoPlayerDownloadStarted => '已加入下载队列';
+
+  @override
+  String get musicLibraryTitle => '音乐播放';
+
+  @override
+  String get musicLibraryEmpty => '暂无音乐';
+
+  @override
+  String get musicLibraryLocalBadge => '本地';
+
+  @override
+  String get musicLibraryOnlineBadge => '在线';
+
+  @override
+  String get musicLibrarySortRecent => '最近';
+
+  @override
+  String get musicLibrarySortLiked => '喜欢';
+
+  @override
+  String get musicLibraryLikedBadge => '已喜欢';
+
+  @override
+  String get musicPackAddToLibraryTitle => '添加到音乐播放列表';
+
+  @override
+  String get musicPackAddToLibraryMessage => '是否将此音乐压缩包添加到音乐播放列表？';
+
+  @override
+  String get musicPackAddToLibraryConfirm => '添加';
+
+  @override
+  String get musicPackImporting => '正在解压音乐，请稍候…';
+
+  @override
+  String get musicLibraryNowPlayingBadge => '播放中';
+
+  @override
+  String musicLibraryPlayCount(String count) {
+    return '播放 $count 次';
+  }
+
+  @override
+  String musicLibraryLastPlayedDate(String time) {
+    return '播放于 $time';
+  }
+
+  @override
+  String get musicLibraryRemoveAction => '删除';
+
+  @override
+  String get musicLibraryRemoveConfirmTitle => '删除本地缓存';
+
+  @override
+  String get musicLibraryRemoveConfirmMessage =>
+      '确定要从音乐列表移除此歌曲吗？本地缓存会一并删除，下载列表中的压缩包不受影响。';
+
+  @override
+  String musicLibraryLastPlayed(String time) {
+    return '上次播放 $time';
+  }
+
+  @override
+  String get musicPlayerNowPlaying => '正在播放';
+
+  @override
+  String get musicPlayerShowLyrics => '歌词';
+
+  @override
+  String get musicPlayerShowCover => '封面';
+
+  @override
+  String get musicPlayerNoLyrics => '暂无歌词';
+
+  @override
+  String get musicPlayerTrackMissing => '找不到该音乐';
+
+  @override
+  String get musicPlayerDownloadSong => '下载歌曲';
+
+  @override
+  String get musicPlayerAlreadyDownloaded => '已下载';
+
+  @override
+  String get musicPlayerDownloadSuccess => '歌曲已缓存到本地';
+
+  @override
+  String get musicPlayerDownloadFailed => '暂无法下载，请先下载音乐资源压缩包';
 
   @override
   String get profileAddresses => '收货地址';

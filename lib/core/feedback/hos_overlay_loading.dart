@@ -28,6 +28,8 @@ final overlayLoadingProvider =
   return SHOOverlayLoadingController();
 });
 
+final overlayLoadingMessageProvider = StateProvider<String?>((ref) => null);
+
 /// 叠在页面之上的全局 Loading。
 class SHOGlobalLoadingOverlay extends ConsumerWidget {
   const SHOGlobalLoadingOverlay({super.key, required this.child});
@@ -37,6 +39,7 @@ class SHOGlobalLoadingOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = ref.watch(overlayLoadingProvider);
+    final message = ref.watch(overlayLoadingMessageProvider);
     final visible = count > 0;
 
     return Stack(
@@ -47,8 +50,8 @@ class SHOGlobalLoadingOverlay extends ConsumerWidget {
             child: AbsorbPointer(
               child: ColoredBox(
                 color: Colors.black.withValues(alpha: 0.25),
-                child: const Center(
-                  child: _LoadingCard(),
+                child: Center(
+                  child: _LoadingCard(message: message),
                 ),
               ),
             ),
@@ -59,7 +62,9 @@ class SHOGlobalLoadingOverlay extends ConsumerWidget {
 }
 
 class _LoadingCard extends StatelessWidget {
-  const _LoadingCard();
+  const _LoadingCard({this.message});
+
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +80,7 @@ class _LoadingCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              MaterialLocalizations.of(context).dialogLabel,
+              message ?? MaterialLocalizations.of(context).dialogLabel,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

@@ -32,6 +32,9 @@ dependencies:
   url_launcher: ^6.3.1
   video_player: ^2.9.3
   pdfx: ^2.9.2
+  just_audio: ^0.10.5
+  archive: ^4.0.9
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
