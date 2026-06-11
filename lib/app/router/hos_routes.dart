@@ -23,12 +23,31 @@ abstract final class SHOAppRoutes {
   static const profileFootprints = '/profile/footprints';
   static const profileFavorites = '/profile/favorites';
   static const profileBookshelf = '/profile/bookshelf';
+  static const profileVideoLibrary = '/profile/videos';
   static const toolbox = '/toolbox';
   static const toolboxDownloads = '/toolbox/downloads';
   static const toolboxReader = '/toolbox/reader';
 
   static String toolboxReaderFor(String taskId) =>
       '$toolboxReader?taskId=${Uri.encodeComponent(taskId)}';
+  static const toolboxVideo = '/toolbox/video';
+
+  static String toolboxVideoFor(String taskId) =>
+      '$toolboxVideo?taskId=${Uri.encodeComponent(taskId)}';
+
+  static String toolboxVideoForEntry(
+    String entryId, {
+    String? taskId,
+  }) {
+    final query = <String, String>{
+      'entryId': entryId,
+      if (taskId != null && taskId.isNotEmpty) 'taskId': taskId,
+    };
+    final encoded = query.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return '$toolboxVideo?$encoded';
+  }
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';

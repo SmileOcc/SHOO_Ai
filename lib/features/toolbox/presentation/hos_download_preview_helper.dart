@@ -6,6 +6,7 @@ import '../domain/hos_download_task.dart';
 import '../domain/hos_txt_novel_parser.dart';
 import 'hos_download_preview_page.dart';
 import 'hos_txt_reader_page.dart';
+import 'hos_video_player_page.dart';
 
 Future<void> handleDownloadTaskTap(
   BuildContext context,
@@ -35,6 +36,12 @@ Future<void> handleDownloadTaskTap(
   if (isTxtNovelFile(task.fileName)) {
     if (!context.mounted) return;
     await SHOTxtReaderPage.open(context: context, task: task);
+    return;
+  }
+
+  if (task.fileType == SHODownloadFileType.video) {
+    if (!context.mounted) return;
+    await SHOVideoPlayerPage.openWithTask(context: context, taskId: task.id);
     return;
   }
 

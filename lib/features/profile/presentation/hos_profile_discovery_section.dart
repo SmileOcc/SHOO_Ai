@@ -36,6 +36,12 @@ class SHOProfileServiceHub extends ConsumerWidget {
         onTap: () => context.push(SHOAppRoutes.profileBookshelf),
       ),
       _ServiceItem(
+        icon: Icons.play_circle_outline,
+        label: l10n.profileServiceVideoPlayback,
+        color: const Color(0xFF5C6BC0),
+        onTap: () => context.push(SHOAppRoutes.profileVideoLibrary),
+      ),
+      _ServiceItem(
         icon: Icons.apps_outlined,
         label: l10n.profileServiceToolbox,
         color: const Color(0xFFE25C5C),

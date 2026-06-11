@@ -984,6 +984,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profileServiceNovelReading => '小说阅读';
 
   @override
+  String get profileServiceVideoPlayback => '视频播放';
+
+  @override
   String get profileServiceToolbox => '百宝箱';
 
   @override
@@ -1216,6 +1219,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxBookshelf => '我的书架';
 
   @override
+  String get toolboxVideoPlayback => '视频播放';
+
+  @override
   String get toolboxFileDownload => '文件下载';
 
   @override
@@ -1432,6 +1438,120 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get bookshelfCleanupOrphansAction => '全部清理';
+
+  @override
+  String get videoLibraryTitle => '视频播放';
+
+  @override
+  String get videoLibraryEmpty => '暂无视频，可下载本地视频或点击右上角在线播放';
+
+  @override
+  String get videoLibraryGoDownloads => '去下载';
+
+  @override
+  String get videoLibraryOnlinePlay => '在线播放';
+
+  @override
+  String get videoLibraryOnlinePlayTitle => '在线播放';
+
+  @override
+  String get videoLibraryOnlinePlayHint => '输入视频网址（http/https）';
+
+  @override
+  String get videoLibraryOnlinePlayButton => '播放';
+
+  @override
+  String get videoLibraryInvalidUrl => '请输入有效的视频网址';
+
+  @override
+  String get videoLibraryOnlineBadge => '在线';
+
+  @override
+  String get videoLibraryOnlineReady => '在线播放';
+
+  @override
+  String get videoLibraryCachedComplete => '已缓存完';
+
+  @override
+  String videoLibraryCacheSize(String size) {
+    return '缓存 $size';
+  }
+
+  @override
+  String videoLibraryCacheProgress(
+    String downloaded,
+    String total,
+    String percent,
+  ) {
+    return '缓存 $downloaded / $total · $percent%';
+  }
+
+  @override
+  String videoLibraryLastPlayed(String time) {
+    return '上次播放 $time';
+  }
+
+  @override
+  String get videoLibraryRemoveAction => '移除';
+
+  @override
+  String get videoLibraryRemoveConfirmTitle => '移除视频';
+
+  @override
+  String get videoLibraryRemoveConfirmMessage => '确定要从列表移除此视频吗？播放进度会保留。';
+
+  @override
+  String get videoLibraryReady => '可播放';
+
+  @override
+  String get videoLibraryNotCompleted => '视频尚未下载完成';
+
+  @override
+  String get videoLibraryFileMissing => '本地视频文件已删除';
+
+  @override
+  String videoPlayerComments(int count) {
+    return '评论 $count';
+  }
+
+  @override
+  String get videoPlayerCommentEmpty => '还没有评论，快来抢沙发吧';
+
+  @override
+  String get videoPlayerCommentHint => '发条友善的评论…';
+
+  @override
+  String get videoPlayerSendComment => '发送';
+
+  @override
+  String get videoPlayerCommentAuthorMe => '我';
+
+  @override
+  String get videoPlayerFullscreen => '全屏';
+
+  @override
+  String get videoPlayerExitFullscreen => '退出全屏';
+
+  @override
+  String get videoPlayerVolume => '音量';
+
+  @override
+  String get videoPlayerDanmakuOn => '显示弹幕';
+
+  @override
+  String get videoPlayerDanmakuOff => '隐藏弹幕';
+
+  @override
+  String get videoPlayerShare => '分享';
+
+  @override
+  String get videoPlayerDownload => '下载视频';
+
+  @override
+  String get videoPlayerDownloadUnsupported => '暂不支持下载，下次再来';
+
+  @override
+  String get videoPlayerDownloadStarted => '已加入下载队列';
 
   @override
   String get profileAddresses => '收货地址';

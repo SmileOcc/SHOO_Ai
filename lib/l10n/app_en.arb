@@ -385,6 +385,7 @@
   "profileTabMyFavorites": "Saved",
   "profileTabMyReviews": "My Reviews",
   "profileServiceNovelReading": "Novels",
+  "profileServiceVideoPlayback": "Videos",
   "profileServiceToolbox": "Toolbox",
   "profileServiceCoupons": "Coupons",
   "profileServiceAfterSale": "After-sale",
@@ -471,6 +472,7 @@
   "toolboxGroupReading": "Reading",
   "toolboxGroupTools": "Tools",
   "toolboxBookshelf": "My Bookshelf",
+  "toolboxVideoPlayback": "Videos",
   "toolboxFileDownload": "Downloads",
   "toolboxComingSoon": "Coming soon",
   "downloadListTitle": "Downloads",
@@ -565,6 +567,62 @@
     }
   },
   "bookshelfCleanupOrphansAction": "Clean all",
+  "videoLibraryTitle": "Videos",
+  "videoLibraryEmpty": "No videos yet. Download locally or tap Online Play in the top right",
+  "videoLibraryGoDownloads": "Go to Downloads",
+  "videoLibraryOnlinePlay": "Online play",
+  "videoLibraryOnlinePlayTitle": "Online play",
+  "videoLibraryOnlinePlayHint": "Enter video URL (http/https)",
+  "videoLibraryOnlinePlayButton": "Play",
+  "videoLibraryInvalidUrl": "Enter a valid video URL",
+  "videoLibraryOnlineBadge": "Online",
+  "videoLibraryOnlineReady": "Streaming",
+  "videoLibraryCachedComplete": "Cached",
+  "videoLibraryCacheSize": "Cached {size}",
+  "@videoLibraryCacheSize": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "videoLibraryCacheProgress": "Cached {downloaded} / {total} · {percent}%",
+  "@videoLibraryCacheProgress": {
+    "placeholders": {
+      "downloaded": { "type": "String" },
+      "total": { "type": "String" },
+      "percent": { "type": "String" }
+    }
+  },
+  "videoLibraryLastPlayed": "Last played {time}",
+  "@videoLibraryLastPlayed": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "videoLibraryRemoveAction": "Remove",
+  "videoLibraryRemoveConfirmTitle": "Remove video",
+  "videoLibraryRemoveConfirmMessage": "Remove this video from the list? Playback progress will be kept.",
+  "videoLibraryReady": "Ready to play",
+  "videoLibraryNotCompleted": "Video download not finished",
+  "videoLibraryFileMissing": "Local video file removed",
+  "videoPlayerComments": "Comments {count}",
+  "@videoPlayerComments": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "videoPlayerCommentEmpty": "No comments yet. Be the first to comment",
+  "videoPlayerCommentHint": "Write a friendly comment…",
+  "videoPlayerSendComment": "Send",
+  "videoPlayerCommentAuthorMe": "Me",
+  "videoPlayerFullscreen": "Fullscreen",
+  "videoPlayerExitFullscreen": "Exit fullscreen",
+  "videoPlayerVolume": "Volume",
+  "videoPlayerDanmakuOn": "Show danmaku",
+  "videoPlayerDanmakuOff": "Hide danmaku",
+  "videoPlayerShare": "Share",
+  "videoPlayerDownload": "Download video",
+  "videoPlayerDownloadUnsupported": "Download not supported yet. Try again later",
+  "videoPlayerDownloadStarted": "Added to download queue",
   "profileAddresses": "Addresses",
   "profileCoupons": "Coupons",
   "profileAfterSales": "After-Sales",

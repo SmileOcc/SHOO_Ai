@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/toolbox/data/hos_reading_storage_keys.dart';
+import '../../features/toolbox/data/hos_video_storage_keys.dart';
 import '../constants/hos_constants.dart';
 import '../errors/hos_exception.dart';
 
@@ -36,7 +37,10 @@ class SHOLocalStorage {
     final showEnvBadge = _prefs.getBool(SHOAppConstants.debugShowEnvBadgeKey);
     final preserved = <String, Object>{};
     for (final key in _prefs.getKeys()) {
-      if (!SHOReadingStorageKeys.preserveOnPreferencesClear(key)) continue;
+      if (!SHOReadingStorageKeys.preserveOnPreferencesClear(key) &&
+          !SHOVideoStorageKeys.preserveOnPreferencesClear(key)) {
+        continue;
+      }
       final value = _prefs.get(key);
       if (value != null) preserved[key] = value;
     }

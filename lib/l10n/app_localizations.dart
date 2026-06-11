@@ -1964,6 +1964,12 @@ abstract class AppLocalizations {
   /// **'Novels'**
   String get profileServiceNovelReading;
 
+  /// No description provided for @profileServiceVideoPlayback.
+  ///
+  /// In en, this message translates to:
+  /// **'Videos'**
+  String get profileServiceVideoPlayback;
+
   /// No description provided for @profileServiceToolbox.
   ///
   /// In en, this message translates to:
@@ -2420,6 +2426,12 @@ abstract class AppLocalizations {
   /// **'My Bookshelf'**
   String get toolboxBookshelf;
 
+  /// No description provided for @toolboxVideoPlayback.
+  ///
+  /// In en, this message translates to:
+  /// **'Videos'**
+  String get toolboxVideoPlayback;
+
   /// No description provided for @toolboxFileDownload.
   ///
   /// In en, this message translates to:
@@ -2839,6 +2851,214 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clean all'**
   String get bookshelfCleanupOrphansAction;
+
+  /// No description provided for @videoLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Videos'**
+  String get videoLibraryTitle;
+
+  /// No description provided for @videoLibraryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No videos yet. Download locally or tap Online Play in the top right'**
+  String get videoLibraryEmpty;
+
+  /// No description provided for @videoLibraryGoDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Downloads'**
+  String get videoLibraryGoDownloads;
+
+  /// No description provided for @videoLibraryOnlinePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Online play'**
+  String get videoLibraryOnlinePlay;
+
+  /// No description provided for @videoLibraryOnlinePlayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Online play'**
+  String get videoLibraryOnlinePlayTitle;
+
+  /// No description provided for @videoLibraryOnlinePlayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter video URL (http/https)'**
+  String get videoLibraryOnlinePlayHint;
+
+  /// No description provided for @videoLibraryOnlinePlayButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get videoLibraryOnlinePlayButton;
+
+  /// No description provided for @videoLibraryInvalidUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid video URL'**
+  String get videoLibraryInvalidUrl;
+
+  /// No description provided for @videoLibraryOnlineBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get videoLibraryOnlineBadge;
+
+  /// No description provided for @videoLibraryOnlineReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaming'**
+  String get videoLibraryOnlineReady;
+
+  /// No description provided for @videoLibraryCachedComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached'**
+  String get videoLibraryCachedComplete;
+
+  /// No description provided for @videoLibraryCacheSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached {size}'**
+  String videoLibraryCacheSize(String size);
+
+  /// No description provided for @videoLibraryCacheProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Cached {downloaded} / {total} · {percent}%'**
+  String videoLibraryCacheProgress(
+    String downloaded,
+    String total,
+    String percent,
+  );
+
+  /// No description provided for @videoLibraryLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played {time}'**
+  String videoLibraryLastPlayed(String time);
+
+  /// No description provided for @videoLibraryRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get videoLibraryRemoveAction;
+
+  /// No description provided for @videoLibraryRemoveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove video'**
+  String get videoLibraryRemoveConfirmTitle;
+
+  /// No description provided for @videoLibraryRemoveConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this video from the list? Playback progress will be kept.'**
+  String get videoLibraryRemoveConfirmMessage;
+
+  /// No description provided for @videoLibraryReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to play'**
+  String get videoLibraryReady;
+
+  /// No description provided for @videoLibraryNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Video download not finished'**
+  String get videoLibraryNotCompleted;
+
+  /// No description provided for @videoLibraryFileMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Local video file removed'**
+  String get videoLibraryFileMissing;
+
+  /// No description provided for @videoPlayerComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments {count}'**
+  String videoPlayerComments(int count);
+
+  /// No description provided for @videoPlayerCommentEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet. Be the first to comment'**
+  String get videoPlayerCommentEmpty;
+
+  /// No description provided for @videoPlayerCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a friendly comment…'**
+  String get videoPlayerCommentHint;
+
+  /// No description provided for @videoPlayerSendComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get videoPlayerSendComment;
+
+  /// No description provided for @videoPlayerCommentAuthorMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get videoPlayerCommentAuthorMe;
+
+  /// No description provided for @videoPlayerFullscreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Fullscreen'**
+  String get videoPlayerFullscreen;
+
+  /// No description provided for @videoPlayerExitFullscreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit fullscreen'**
+  String get videoPlayerExitFullscreen;
+
+  /// No description provided for @videoPlayerVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get videoPlayerVolume;
+
+  /// No description provided for @videoPlayerDanmakuOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Show danmaku'**
+  String get videoPlayerDanmakuOn;
+
+  /// No description provided for @videoPlayerDanmakuOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide danmaku'**
+  String get videoPlayerDanmakuOff;
+
+  /// No description provided for @videoPlayerShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get videoPlayerShare;
+
+  /// No description provided for @videoPlayerDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download video'**
+  String get videoPlayerDownload;
+
+  /// No description provided for @videoPlayerDownloadUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Download not supported yet. Try again later'**
+  String get videoPlayerDownloadUnsupported;
+
+  /// No description provided for @videoPlayerDownloadStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to download queue'**
+  String get videoPlayerDownloadStarted;
 
   /// No description provided for @profileAddresses.
   ///

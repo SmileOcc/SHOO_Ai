@@ -24,6 +24,12 @@ class SHOToolboxPage extends StatelessWidget {
             label: l10n.toolboxBookshelf,
             onTap: () => context.push(SHOAppRoutes.profileBookshelf),
           ),
+          _ToolboxMenuItem(
+            icon: Icons.play_circle_outline,
+            color: const Color(0xFF5C6BC0),
+            label: l10n.toolboxVideoPlayback,
+            onTap: () => context.push(SHOAppRoutes.profileVideoLibrary),
+          ),
         ],
       ),
       _ToolboxGroup(

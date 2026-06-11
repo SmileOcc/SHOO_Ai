@@ -1013,6 +1013,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileServiceNovelReading => 'Novels';
 
   @override
+  String get profileServiceVideoPlayback => 'Videos';
+
+  @override
   String get profileServiceToolbox => 'Toolbox';
 
   @override
@@ -1249,6 +1252,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxBookshelf => 'My Bookshelf';
 
   @override
+  String get toolboxVideoPlayback => 'Videos';
+
+  @override
   String get toolboxFileDownload => 'Downloads';
 
   @override
@@ -1471,6 +1477,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookshelfCleanupOrphansAction => 'Clean all';
+
+  @override
+  String get videoLibraryTitle => 'Videos';
+
+  @override
+  String get videoLibraryEmpty =>
+      'No videos yet. Download locally or tap Online Play in the top right';
+
+  @override
+  String get videoLibraryGoDownloads => 'Go to Downloads';
+
+  @override
+  String get videoLibraryOnlinePlay => 'Online play';
+
+  @override
+  String get videoLibraryOnlinePlayTitle => 'Online play';
+
+  @override
+  String get videoLibraryOnlinePlayHint => 'Enter video URL (http/https)';
+
+  @override
+  String get videoLibraryOnlinePlayButton => 'Play';
+
+  @override
+  String get videoLibraryInvalidUrl => 'Enter a valid video URL';
+
+  @override
+  String get videoLibraryOnlineBadge => 'Online';
+
+  @override
+  String get videoLibraryOnlineReady => 'Streaming';
+
+  @override
+  String get videoLibraryCachedComplete => 'Cached';
+
+  @override
+  String videoLibraryCacheSize(String size) {
+    return 'Cached $size';
+  }
+
+  @override
+  String videoLibraryCacheProgress(
+    String downloaded,
+    String total,
+    String percent,
+  ) {
+    return 'Cached $downloaded / $total · $percent%';
+  }
+
+  @override
+  String videoLibraryLastPlayed(String time) {
+    return 'Last played $time';
+  }
+
+  @override
+  String get videoLibraryRemoveAction => 'Remove';
+
+  @override
+  String get videoLibraryRemoveConfirmTitle => 'Remove video';
+
+  @override
+  String get videoLibraryRemoveConfirmMessage =>
+      'Remove this video from the list? Playback progress will be kept.';
+
+  @override
+  String get videoLibraryReady => 'Ready to play';
+
+  @override
+  String get videoLibraryNotCompleted => 'Video download not finished';
+
+  @override
+  String get videoLibraryFileMissing => 'Local video file removed';
+
+  @override
+  String videoPlayerComments(int count) {
+    return 'Comments $count';
+  }
+
+  @override
+  String get videoPlayerCommentEmpty =>
+      'No comments yet. Be the first to comment';
+
+  @override
+  String get videoPlayerCommentHint => 'Write a friendly comment…';
+
+  @override
+  String get videoPlayerSendComment => 'Send';
+
+  @override
+  String get videoPlayerCommentAuthorMe => 'Me';
+
+  @override
+  String get videoPlayerFullscreen => 'Fullscreen';
+
+  @override
+  String get videoPlayerExitFullscreen => 'Exit fullscreen';
+
+  @override
+  String get videoPlayerVolume => 'Volume';
+
+  @override
+  String get videoPlayerDanmakuOn => 'Show danmaku';
+
+  @override
+  String get videoPlayerDanmakuOff => 'Hide danmaku';
+
+  @override
+  String get videoPlayerShare => 'Share';
+
+  @override
+  String get videoPlayerDownload => 'Download video';
+
+  @override
+  String get videoPlayerDownloadUnsupported =>
+      'Download not supported yet. Try again later';
+
+  @override
+  String get videoPlayerDownloadStarted => 'Added to download queue';
 
   @override
   String get profileAddresses => 'Addresses';

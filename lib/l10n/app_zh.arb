@@ -364,6 +364,7 @@
   "profileTabMyFavorites": "我的收藏",
   "profileTabMyReviews": "我的评价",
   "profileServiceNovelReading": "小说阅读",
+  "profileServiceVideoPlayback": "视频播放",
   "profileServiceToolbox": "百宝箱",
   "profileServiceCoupons": "领券",
   "profileServiceAfterSale": "售后",
@@ -440,6 +441,7 @@
   "toolboxGroupReading": "阅读",
   "toolboxGroupTools": "常用工具",
   "toolboxBookshelf": "我的书架",
+  "toolboxVideoPlayback": "视频播放",
   "toolboxFileDownload": "文件下载",
   "toolboxComingSoon": "敬请期待",
   "downloadListTitle": "下载列表",
@@ -534,6 +536,62 @@
     }
   },
   "bookshelfCleanupOrphansAction": "全部清理",
+  "videoLibraryTitle": "视频播放",
+  "videoLibraryEmpty": "暂无视频，可下载本地视频或点击右上角在线播放",
+  "videoLibraryGoDownloads": "去下载",
+  "videoLibraryOnlinePlay": "在线播放",
+  "videoLibraryOnlinePlayTitle": "在线播放",
+  "videoLibraryOnlinePlayHint": "输入视频网址（http/https）",
+  "videoLibraryOnlinePlayButton": "播放",
+  "videoLibraryInvalidUrl": "请输入有效的视频网址",
+  "videoLibraryOnlineBadge": "在线",
+  "videoLibraryOnlineReady": "在线播放",
+  "videoLibraryCachedComplete": "已缓存完",
+  "videoLibraryCacheSize": "缓存 {size}",
+  "@videoLibraryCacheSize": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "videoLibraryCacheProgress": "缓存 {downloaded} / {total} · {percent}%",
+  "@videoLibraryCacheProgress": {
+    "placeholders": {
+      "downloaded": { "type": "String" },
+      "total": { "type": "String" },
+      "percent": { "type": "String" }
+    }
+  },
+  "videoLibraryLastPlayed": "上次播放 {time}",
+  "@videoLibraryLastPlayed": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "videoLibraryRemoveAction": "移除",
+  "videoLibraryRemoveConfirmTitle": "移除视频",
+  "videoLibraryRemoveConfirmMessage": "确定要从列表移除此视频吗？播放进度会保留。",
+  "videoLibraryReady": "可播放",
+  "videoLibraryNotCompleted": "视频尚未下载完成",
+  "videoLibraryFileMissing": "本地视频文件已删除",
+  "videoPlayerComments": "评论 {count}",
+  "@videoPlayerComments": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "videoPlayerCommentEmpty": "还没有评论，快来抢沙发吧",
+  "videoPlayerCommentHint": "发条友善的评论…",
+  "videoPlayerSendComment": "发送",
+  "videoPlayerCommentAuthorMe": "我",
+  "videoPlayerFullscreen": "全屏",
+  "videoPlayerExitFullscreen": "退出全屏",
+  "videoPlayerVolume": "音量",
+  "videoPlayerDanmakuOn": "显示弹幕",
+  "videoPlayerDanmakuOff": "隐藏弹幕",
+  "videoPlayerShare": "分享",
+  "videoPlayerDownload": "下载视频",
+  "videoPlayerDownloadUnsupported": "暂不支持下载，下次再来",
+  "videoPlayerDownloadStarted": "已加入下载队列",
   "profileAddresses": "收货地址",
   "profileCoupons": "优惠券",
   "profileAfterSales": "售后服务",
