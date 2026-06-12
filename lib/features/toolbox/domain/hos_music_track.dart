@@ -56,6 +56,7 @@ class SHOMusicTrack {
   static const localIdPrefix = 'music_local_';
   static const cachedIdPrefix = 'music_cached_';
   static const packIdPrefix = 'music_pack_';
+  static const bundleIdPrefix = 'music_bundle_';
 
   static String localTrackId(String taskId) => '$localIdPrefix$taskId';
 
@@ -63,6 +64,9 @@ class SHOMusicTrack {
 
   static String packTrackId(String packTaskId, String songKey) =>
       '$packIdPrefix${packTaskId}_$songKey';
+
+  static String bundleTrackId(String bundleKey, String songKey) =>
+      '$bundleIdPrefix${bundleKey}_$songKey';
 
   static String? taskIdFromTrackId(String trackId) {
     if (!trackId.startsWith(localIdPrefix)) return null;

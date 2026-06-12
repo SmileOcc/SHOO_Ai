@@ -10,23 +10,35 @@ import 'hos_music_route_state.dart';
 
 export 'hos_music_route_state.dart';
 
-Future<void> openMusicPlayerPage(
+Future<bool> openMusicPlayerPage(
   WidgetRef ref, {
   required String trackId,
   int index = 0,
+  bool fromDownloadPack = false,
 }) async {
-  if (ref.read(musicOpenPlayerGuardProvider)) return;
+  if (ref.read(musicOpenPlayerGuardProvider)) return false;
 
   final router = ref.read(routerProvider);
-  if (ref.read(musicOnPlayerPageProvider)) return;
+  syncMusicPlayerRouteStateForWidget(ref, router);
+
+  if (isRouterOnMusicPlayerPage(router)) {
+    return false;
+  }
 
   ref.read(musicOpenPlayerGuardProvider.notifier).state = true;
   try {
-    await router.push(
-      SHOAppRoutes.toolboxMusicPlayerFor(trackId, index: index),
+    router.push(
+      SHOAppRoutes.toolboxMusicPlayerFor(
+        trackId,
+        index: index,
+        fromDownloadPack: fromDownloadPack,
+      ),
     );
+    return true;
   } finally {
-    ref.read(musicOpenPlayerGuardProvider.notifier).state = false;
+    Future.microtask(() {
+      ref.read(musicOpenPlayerGuardProvider.notifier).state = false;
+    });
   }
 }
 

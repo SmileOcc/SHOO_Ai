@@ -1336,6 +1336,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadPreviewOk => '知道了';
 
   @override
+  String get downloadBadgeExtracted => '已解压';
+
+  @override
+  String get downloadBadgeInMusicLibrary => '已在音乐';
+
+  @override
+  String get downloadBadgeInBookshelf => '已在书库';
+
+  @override
+  String get downloadActionAddBookshelf => '添加到书库';
+
+  @override
+  String get downloadActionAddMusicLibrary => '添加到音乐列表';
+
+  @override
+  String get downloadAddedToMusicLibrary => '已添加到音乐列表';
+
+  @override
+  String get musicInvalidTitle => '无效音乐';
+
+  @override
+  String get musicInvalidMessage => '本地未找到该音乐的解压文件，无法播放';
+
+  @override
   String get txtReaderLoadingFile => '正在读取文件…';
 
   @override
@@ -1649,6 +1673,35 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get musicPlayerDownloadFailed => '暂无法下载，请先下载音乐资源压缩包';
+
+  @override
+  String get musicPlayerPlaylistTitle => '歌曲目录';
+
+  @override
+  String get musicPlayerLikedPlaylistTitle => '我喜欢的歌曲';
+
+  @override
+  String musicPlayerPlaylistCount(String count) {
+    return '共 $count 首';
+  }
+
+  @override
+  String get musicPlayerPlaylistEmpty => '暂无歌曲';
+
+  @override
+  String get musicPlayerLikedPlaylistEmpty => '还没有喜欢的歌曲，去音乐列表点 ♥ 收藏吧';
+
+  @override
+  String get musicPlayerNoValidTracks => '没有可播放的音乐，已暂停播放';
+
+  @override
+  String get musicPlayerMoreTitle => '更多';
+
+  @override
+  String get musicPlayerShare => '分享';
+
+  @override
+  String get musicLibraryBuiltinBadge => '内置';
 
   @override
   String get profileAddresses => '收货地址';

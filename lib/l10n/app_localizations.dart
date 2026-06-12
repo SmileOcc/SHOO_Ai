@@ -2660,6 +2660,54 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get downloadPreviewOk;
 
+  /// No description provided for @downloadBadgeExtracted.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracted'**
+  String get downloadBadgeExtracted;
+
+  /// No description provided for @downloadBadgeInMusicLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'In music'**
+  String get downloadBadgeInMusicLibrary;
+
+  /// No description provided for @downloadBadgeInBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'In bookshelf'**
+  String get downloadBadgeInBookshelf;
+
+  /// No description provided for @downloadActionAddBookshelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to bookshelf'**
+  String get downloadActionAddBookshelf;
+
+  /// No description provided for @downloadActionAddMusicLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to music list'**
+  String get downloadActionAddMusicLibrary;
+
+  /// No description provided for @downloadAddedToMusicLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to music list'**
+  String get downloadAddedToMusicLibrary;
+
+  /// No description provided for @musicInvalidTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid music'**
+  String get musicInvalidTitle;
+
+  /// No description provided for @musicInvalidMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Local extracted files were not found. Playback is unavailable.'**
+  String get musicInvalidMessage;
+
   /// No description provided for @txtReaderLoadingFile.
   ///
   /// In en, this message translates to:
@@ -3239,6 +3287,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot download yet. Please download the music resource zip first.'**
   String get musicPlayerDownloadFailed;
+
+  /// No description provided for @musicPlayerPlaylistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist'**
+  String get musicPlayerPlaylistTitle;
+
+  /// No description provided for @musicPlayerLikedPlaylistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked Songs'**
+  String get musicPlayerLikedPlaylistTitle;
+
+  /// No description provided for @musicPlayerPlaylistCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} songs'**
+  String musicPlayerPlaylistCount(String count);
+
+  /// No description provided for @musicPlayerPlaylistEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No songs in playlist'**
+  String get musicPlayerPlaylistEmpty;
+
+  /// No description provided for @musicPlayerLikedPlaylistEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No liked songs yet. Tap ♥ in the music library.'**
+  String get musicPlayerLikedPlaylistEmpty;
+
+  /// No description provided for @musicPlayerNoValidTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'No playable tracks found. Playback paused.'**
+  String get musicPlayerNoValidTracks;
+
+  /// No description provided for @musicPlayerMoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get musicPlayerMoreTitle;
+
+  /// No description provided for @musicPlayerShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get musicPlayerShare;
+
+  /// No description provided for @musicLibraryBuiltinBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in'**
+  String get musicLibraryBuiltinBadge;
 
   /// No description provided for @profileAddresses.
   ///

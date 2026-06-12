@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../app/router/hos_routes.dart';
 import '../../../core/dialogs/hos_confirm_card_dialog.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/widgets/hos_empty_state.dart';
+import '../../../core/widgets/hos_slide_action_tile.dart';
 import '../../../core/widgets/hos_profile_section_card.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/hos_music_stats_storage.dart';
+import '../domain/hos_music_track.dart';
 import 'music/hos_music_library_controller.dart';
+import 'music/hos_music_mini_player_controller.dart';
 import 'music/hos_music_player_controller.dart';
 
 class SHOMusicLibraryPage extends ConsumerWidget {
@@ -35,6 +36,14 @@ class SHOMusicLibraryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    ref.listen<SHOMusicPlayerState>(musicPlayerProvider, (previous, next) {
+      if (previous?.errorMessage == next.errorMessage) return;
+      if (next.errorMessage == SHOMusicPlayerMessages.noValidTracks) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.musicPlayerNoValidTracks)),
+        );
+      }
+    });
     final sort = ref.watch(musicLibrarySortProvider);
     final listAsync = ref.watch(musicLibraryListProvider);
     final playerState = ref.watch(musicPlayerProvider);
@@ -162,10 +171,16 @@ class SHOMusicLibraryPage extends ConsumerWidget {
                             ],
                             const SizedBox(width: SHOAppSpacing.xs),
                             _SourceBadge(
-                              label: item.isOnline
-                                  ? l10n.musicLibraryOnlineBadge
-                                  : l10n.musicLibraryLocalBadge,
-                              isOnline: item.isOnline,
+                              label: track.id
+                                      .startsWith(SHOMusicTrack.bundleIdPrefix)
+                                  ? l10n.musicLibraryBuiltinBadge
+                                  : item.isOnline
+                                      ? l10n.musicLibraryOnlineBadge
+                                      : l10n.musicLibraryLocalBadge,
+                              isOnline: item.isOnline &&
+                                  !track.id.startsWith(
+                                    SHOMusicTrack.bundleIdPrefix,
+                                  ),
                             ),
                           ],
                         ),
@@ -235,28 +250,35 @@ class SHOMusicLibraryPage extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        onTap: () {
-                          context.push(
-                            SHOAppRoutes.toolboxMusicPlayerFor(
-                              track.id,
-                              index: index,
-                            ),
+                        onTap: () async {
+                          final playable =
+                              await isMusicTrackPlayable(track);
+                          if (!playable) {
+                            if (!context.mounted) return;
+                            await SHOConfirmCardDialog.show(
+                              context,
+                              title: l10n.musicInvalidTitle,
+                              message: l10n.musicInvalidMessage,
+                              confirmLabel: l10n.downloadPreviewOk,
+                            );
+                            return;
+                          }
+
+                          await openMusicPlayerPage(
+                            ref,
+                            trackId: track.id,
+                            index: index,
                           );
                         },
                       ),
                     );
 
-                    return Dismissible(
+                    return SHOSlideActionTile(
                       key: ValueKey('music_${track.id}'),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: SHOAppSpacing.lg),
-                        decoration: BoxDecoration(
-                          color: SHOAppColors.error.withValues(alpha: 0.85),
-                          borderRadius:
-                              BorderRadius.circular(SHOAppSpacing.cardRadius),
-                        ),
+                      actionWidth: 88,
+                      action: Container(
+                        alignment: Alignment.center,
+                        color: SHOAppColors.error.withValues(alpha: 0.92),
                         child: Text(
                           l10n.musicLibraryRemoveAction,
                           style: const TextStyle(
@@ -266,7 +288,7 @@ class SHOMusicLibraryPage extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      confirmDismiss: (_) async {
+                      onAction: () async {
                         final ok = await SHOConfirmCardDialog.show(
                           context,
                           title: l10n.musicLibraryRemoveConfirmTitle,
@@ -274,13 +296,11 @@ class SHOMusicLibraryPage extends ConsumerWidget {
                           confirmLabel: l10n.musicLibraryRemoveAction,
                           isDestructive: true,
                         );
-                        if (ok) {
-                          await removeTrackFromLibrary(ref, item: item);
-                          await ref
-                              .read(musicPlayerProvider.notifier)
-                              .removeTrackFromPlaylist(track.id);
-                        }
-                        return ok;
+                        if (!ok || !context.mounted) return;
+                        await removeTrackFromLibrary(ref, item: item);
+                        await ref
+                            .read(musicPlayerProvider.notifier)
+                            .removeTrackFromPlaylist(track.id);
                       },
                       child: tile,
                     );

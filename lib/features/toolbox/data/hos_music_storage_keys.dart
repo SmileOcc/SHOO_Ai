@@ -7,6 +7,7 @@ abstract final class SHOMusicStorageKeys {
   static const dismissedTrackIds = 'music_dismissed_tracks_v1';
   static const miniPlayerOffsetDx = 'music_mini_player_offset_dx_v1';
   static const miniPlayerOffsetDy = 'music_mini_player_offset_dy_v1';
+  static const playerVolume = 'music_player_volume_v1';
 
   static bool preserveOnPreferencesClear(String key) {
     return key == dismissedLocalTasks ||

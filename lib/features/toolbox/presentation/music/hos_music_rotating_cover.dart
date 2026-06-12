@@ -33,17 +33,23 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
       vsync: this,
       duration: const Duration(seconds: 18),
     );
-    if (widget.isPlaying) {
+    if (widget.isPlaying && _hasCoverImage) {
       _controller.repeat();
     }
+  }
+
+  bool get _hasCoverImage {
+    final coverPath = widget.coverPath;
+    if (coverPath != null && File(coverPath).existsSync()) return true;
+    return widget.coverUrl != null && widget.coverUrl!.trim().isNotEmpty;
   }
 
   @override
   void didUpdateWidget(covariant SHOMusicRotatingCover oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isPlaying && !_controller.isAnimating) {
+    if (widget.isPlaying && _hasCoverImage && !_controller.isAnimating) {
       _controller.repeat();
-    } else if (!widget.isPlaying && _controller.isAnimating) {
+    } else if ((!widget.isPlaying || !_hasCoverImage) && _controller.isAnimating) {
       _controller.stop();
     }
   }
@@ -56,50 +62,18 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
 
   @override
   Widget build(BuildContext context) {
-    final color = Color(widget.coverColor);
+    if (!_hasCoverImage) {
+      return _buildFlatFallback(Color(widget.coverColor));
+    }
 
+    final cover = _buildCoverImage();
     return RotationTransition(
       turns: _controller,
-      child: Container(
-        width: widget.size,
-        height: widget.size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [
-              color.withValues(alpha: 0.95),
-              color.withValues(alpha: 0.55),
-              const Color(0xFF1A1A1A),
-            ],
-            stops: const [0.35, 0.72, 1],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: 28,
-              offset: const Offset(0, 12),
-            ),
-          ],
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            _buildCoverImage(color),
-            Container(
-              width: widget.size * 0.18,
-              height: widget.size * 0.18,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFF111111),
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: cover,
     );
   }
 
-  Widget _buildCoverImage(Color color) {
+  Widget _buildCoverImage() {
     final coverPath = widget.coverPath;
     if (coverPath != null && File(coverPath).existsSync()) {
       return ClipOval(
@@ -108,31 +82,38 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
           width: widget.size,
           height: widget.size,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _buildFallback(color),
+          errorBuilder: (_, __, ___) =>
+              _buildFlatFallback(Color(widget.coverColor)),
         ),
       );
     }
 
-    if (widget.coverUrl != null) {
-      return ClipOval(
-        child: Image.network(
-          widget.coverUrl!,
-          width: widget.size,
-          height: widget.size,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _buildFallback(color),
-        ),
-      );
-    }
-
-    return _buildFallback(color);
+    return ClipOval(
+      child: Image.network(
+        widget.coverUrl!,
+        width: widget.size,
+        height: widget.size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) =>
+            _buildFlatFallback(Color(widget.coverColor)),
+      ),
+    );
   }
 
-  Widget _buildFallback(Color color) {
-    return Icon(
-      Icons.music_note_rounded,
-      size: widget.size * 0.28,
-      color: Colors.white.withValues(alpha: 0.92),
+  Widget _buildFlatFallback(Color color) {
+    return Container(
+      width: widget.size,
+      height: widget.size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.music_note_rounded,
+        size: widget.size * 0.28,
+        color: Colors.white.withValues(alpha: 0.9),
+      ),
     );
   }
 }

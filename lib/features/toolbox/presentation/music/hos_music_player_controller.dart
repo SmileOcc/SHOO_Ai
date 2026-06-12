@@ -21,6 +21,16 @@ enum SHOMusicPlayMode {
   loopOne,
 }
 
+enum SHOMusicPlaylistScope {
+  library,
+  likedDirectory,
+}
+
+/// UI maps this key to localized [musicPlayerNoValidTracks].
+abstract final class SHOMusicPlayerMessages {
+  static const noValidTracks = '__music_no_valid_tracks__';
+}
+
 class SHOMusicPlayerState {
   const SHOMusicPlayerState({
     this.playlist = const [],
@@ -30,6 +40,7 @@ class SHOMusicPlayerState {
     this.position = Duration.zero,
     this.duration = Duration.zero,
     this.playMode = SHOMusicPlayMode.sequence,
+    this.playlistScope = SHOMusicPlaylistScope.library,
     this.errorMessage,
   });
 
@@ -40,6 +51,7 @@ class SHOMusicPlayerState {
   final Duration position;
   final Duration duration;
   final SHOMusicPlayMode playMode;
+  final SHOMusicPlaylistScope playlistScope;
   final String? errorMessage;
 
   SHOMusicTrack? get currentTrack {
@@ -65,6 +77,7 @@ class SHOMusicPlayerState {
     Duration? position,
     Duration? duration,
     SHOMusicPlayMode? playMode,
+    SHOMusicPlaylistScope? playlistScope,
     String? Function()? errorMessage,
   }) {
     return SHOMusicPlayerState(
@@ -75,6 +88,7 @@ class SHOMusicPlayerState {
       position: position ?? this.position,
       duration: duration ?? this.duration,
       playMode: playMode ?? this.playMode,
+      playlistScope: playlistScope ?? this.playlistScope,
       errorMessage:
           errorMessage != null ? errorMessage() : this.errorMessage,
     );
@@ -115,6 +129,9 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
   Timer? _progressSaveTimer;
   var _loadToken = 0;
   var _statsRecordedForTrackId = '';
+  var _handlingCompletion = false;
+
+  static const _resumeTail = Duration(seconds: 5);
 
   void _bindPlayerStreams() {
     _positionSub = _player.positionStream.listen((position) {
@@ -150,13 +167,16 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     List<SHOMusicTrack> playlist, {
     required int startIndex,
     bool autoPlay = true,
+    SHOMusicPlaylistScope scope = SHOMusicPlaylistScope.library,
   }) async {
     if (playlist.isEmpty) return;
-    final index = startIndex.clamp(0, playlist.length - 1);
+
+    var index = startIndex.clamp(0, playlist.length - 1);
     final target = playlist[index];
     final sameLoaded = state.currentTrack?.id == target.id &&
         state.currentIndex == index &&
         state.playlist.length == playlist.length &&
+        state.playlistScope == scope &&
         _player.audioSource != null &&
         !state.isLoading;
 
@@ -164,6 +184,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       state = state.copyWith(
         playlist: playlist,
         currentIndex: index,
+        playlistScope: scope,
         errorMessage: () => null,
       );
       _ref.read(musicMiniPlayerDismissedProvider.notifier).show();
@@ -173,9 +194,19 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       return;
     }
 
+    if (!await _isTrackPlayable(target)) {
+      final fallback = await _findNextValidFrom(index, wrap: true);
+      if (fallback == null) {
+        await _pauseWithNoValidTracks(keepPlaylist: playlist);
+        return;
+      }
+      index = fallback;
+    }
+
     state = state.copyWith(
       playlist: playlist,
       currentIndex: index,
+      playlistScope: scope,
       errorMessage: () => null,
     );
     _ref.read(musicMiniPlayerDismissedProvider.notifier).show();
@@ -202,7 +233,12 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     if (state.currentTrack?.id == trackId) {
       nextIndex = nextIndex.clamp(0, playlist.length - 1);
       state = state.copyWith(playlist: playlist, currentIndex: nextIndex);
-      await _loadTrackAt(nextIndex, autoPlay: true);
+      final valid = await _findNextValidFrom(nextIndex, wrap: true);
+      if (valid == null) {
+        await _pauseWithNoValidTracks(keepPlaylist: playlist);
+        return;
+      }
+      await _loadTrackAt(valid, autoPlay: true);
       return;
     }
 
@@ -210,7 +246,8 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
         .take(state.currentIndex)
         .where((track) => track.id == trackId)
         .length;
-    nextIndex = (state.currentIndex - removedBefore).clamp(0, playlist.length - 1);
+    nextIndex =
+        (state.currentIndex - removedBefore).clamp(0, playlist.length - 1);
     state = state.copyWith(playlist: playlist, currentIndex: nextIndex);
   }
 
@@ -220,8 +257,9 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     int? index,
   }) async {
     final list = playlist ?? [track];
-    final startIndex = index ??
-        list.indexWhere((item) => item.id == track.id).clamp(0, list.length - 1);
+    final rawIndex = index ?? list.indexWhere((item) => item.id == track.id);
+    final startIndex =
+        rawIndex >= 0 ? rawIndex.clamp(0, list.length - 1) : 0;
     await setPlaylist(list, startIndex: startIndex);
   }
 
@@ -247,6 +285,8 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
   }
 
   Future<void> togglePlayPause() async {
+    if (state.currentTrack == null) return;
+
     if (state.isPlaying || _player.playing) {
       await _player.pause();
       state = state.copyWith(isPlaying: false);
@@ -270,18 +310,32 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
 
   Future<void> playPrevious() async {
     if (state.playlist.isEmpty) return;
-    final nextIndex = state.currentIndex <= 0
-        ? state.playlist.length - 1
-        : state.currentIndex - 1;
-    state = state.copyWith(currentIndex: nextIndex);
-    await _loadTrackAt(nextIndex, autoPlay: true);
+    final previous = await _findNextValidBefore(
+      state.currentIndex,
+      wrap: state.playMode == SHOMusicPlayMode.loopAll,
+    );
+    if (previous == null) {
+      await _pauseWithNoValidTracks();
+      return;
+    }
+    await _advanceToIndex(previous);
   }
 
   Future<void> playNext() async {
     if (state.playlist.isEmpty) return;
-    final nextIndex = (state.currentIndex + 1) % state.playlist.length;
-    state = state.copyWith(currentIndex: nextIndex);
-    await _loadTrackAt(nextIndex, autoPlay: true);
+    final next = await _findNextValidAfter(
+      state.currentIndex,
+      wrap: state.playMode == SHOMusicPlayMode.loopAll,
+    );
+    if (next == null) {
+      if (state.playMode == SHOMusicPlayMode.sequence) {
+        await _pausePlaybackEnded();
+      } else {
+        await _pauseWithNoValidTracks();
+      }
+      return;
+    }
+    await _advanceToIndex(next);
   }
 
   void cyclePlayMode() {
@@ -296,7 +350,28 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     );
   }
 
-  Future<void> _loadTrackAt(int index, {required bool autoPlay}) async {
+  Future<void> _advanceToIndex(int index) async {
+    state = state.copyWith(currentIndex: index, errorMessage: () => null);
+    await _loadTrackAt(index, autoPlay: true);
+  }
+
+  Future<void> _loadTrackAt(
+    int index, {
+    required bool autoPlay,
+    Set<int>? tried,
+  }) async {
+    if (state.playlist.isEmpty || index < 0 || index >= state.playlist.length) {
+      await _pauseWithNoValidTracks();
+      return;
+    }
+
+    tried ??= <int>{};
+    if (tried.contains(index) || tried.length >= state.playlist.length) {
+      await _pauseWithNoValidTracks();
+      return;
+    }
+    tried.add(index);
+
     final token = ++_loadToken;
     var track = state.playlist[index];
     _statsRecordedForTrackId = '';
@@ -312,6 +387,16 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       track = await _resolveTrackResources(track);
       if (token != _loadToken) return;
 
+      if (!await _isTrackPlayable(track)) {
+        final next = await _findNextValidAfter(index, wrap: true);
+        if (next != null && !tried.contains(next)) {
+          await _loadTrackAt(next, autoPlay: autoPlay, tried: tried);
+        } else {
+          await _pauseWithNoValidTracks();
+        }
+        return;
+      }
+
       final playlist = [...state.playlist];
       playlist[index] = track;
       state = state.copyWith(playlist: playlist);
@@ -322,10 +407,8 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       await _player.setAudioSource(source);
       if (token != _loadToken) return;
 
-      final resume = _playbackStorage.readPosition(track.id);
-      if (resume != null && resume > Duration.zero) {
-        await _player.seek(resume);
-      }
+      await _applyResumePosition(track.id, token);
+      if (token != _loadToken) return;
 
       if (autoPlay) {
         await _player.play();
@@ -333,13 +416,122 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
 
       if (token != _loadToken) return;
       state = state.copyWith(isLoading: false);
-    } catch (e) {
+    } catch (_) {
       if (token != _loadToken) return;
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: () => e.toString(),
-      );
+      final next = await _findNextValidAfter(index, wrap: true);
+      if (next != null && !tried.contains(next)) {
+        await _loadTrackAt(next, autoPlay: autoPlay, tried: tried);
+        return;
+      }
+      await _pauseWithNoValidTracks();
     }
+  }
+
+  Future<void> _applyResumePosition(String trackId, int token) async {
+    final resume = _playbackStorage.readPosition(trackId);
+    if (resume == null || resume <= Duration.zero) return;
+
+    var duration = _player.duration ?? Duration.zero;
+    if (duration <= Duration.zero) {
+      await Future<void>.delayed(const Duration(milliseconds: 120));
+      if (token != _loadToken) return;
+      duration = _player.duration ?? Duration.zero;
+    }
+
+    if (duration > Duration.zero && resume >= duration - _resumeTail) {
+      await _playbackStorage.writePosition(trackId, Duration.zero);
+      await _player.seek(Duration.zero);
+      return;
+    }
+
+    if (resume > Duration.zero) {
+      await _player.seek(resume);
+    }
+  }
+
+  Future<bool> _isTrackPlayable(SHOMusicTrack track) async {
+    if (track.title.trim().isEmpty) return false;
+
+    try {
+      final resolved = await _resolveTrackResources(track);
+      if (_hasPlayableSource(resolved)) return true;
+
+      if (resolved.source == SHOMusicSource.cached ||
+          resolved.source == SHOMusicSource.local ||
+          resolved.isCachedLocally) {
+        final path = await resolveMusicLocalPath(resolved);
+        return path != null && File(path).existsSync() && File(path).lengthSync() > 0;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool _hasPlayableSource(SHOMusicTrack track) {
+    switch (track.source) {
+      case SHOMusicSource.network:
+        final url = track.audioUrl;
+        if (url == null || url.trim().isEmpty) return false;
+        final uri = Uri.tryParse(url);
+        return uri != null && uri.hasScheme;
+      case SHOMusicSource.asset:
+        return track.assetPath != null && track.assetPath!.trim().isNotEmpty;
+      case SHOMusicSource.local:
+      case SHOMusicSource.cached:
+        final path = track.localPath;
+        if (path == null || path.trim().isEmpty) return false;
+        final file = File(path);
+        return file.existsSync() && file.lengthSync() > 0;
+    }
+  }
+
+  Future<int?> _findNextValidAfter(int fromIndex, {required bool wrap}) async {
+    final playlist = state.playlist;
+    final n = playlist.length;
+    if (n == 0) return null;
+
+    for (var i = fromIndex + 1; i < n; i++) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    if (!wrap) return null;
+
+    for (var i = 0; i <= fromIndex; i++) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    return null;
+  }
+
+  Future<int?> _findNextValidFrom(int start, {required bool wrap}) async {
+    final playlist = state.playlist;
+    final n = playlist.length;
+    if (n == 0) return null;
+
+    for (var i = start; i < n; i++) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    if (!wrap) return null;
+
+    for (var i = 0; i < start; i++) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    return null;
+  }
+
+  Future<int?> _findNextValidBefore(int fromIndex, {required bool wrap}) async {
+    final playlist = state.playlist;
+    final n = playlist.length;
+    if (n == 0) return null;
+
+    for (var i = fromIndex - 1; i >= 0; i--) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    if (!wrap) return null;
+
+    for (var i = n - 1; i >= fromIndex; i--) {
+      if (await _isTrackPlayable(playlist[i])) return i;
+    }
+    return null;
   }
 
   Future<SHOMusicTrack> _resolveTrackResources(SHOMusicTrack track) async {
@@ -424,27 +616,103 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     await _statsStorage.recordPlay(track.id);
   }
 
+  bool _isNearPlaybackEnd() {
+    final duration = state.duration;
+    if (duration <= Duration.zero) return true;
+    return state.position >= duration - const Duration(milliseconds: 800);
+  }
+
+  int? _nextPlaylistIndex({required bool wrap}) {
+    final n = state.playlist.length;
+    if (n == 0) return null;
+    final current = state.currentIndex;
+    if (current + 1 < n) return current + 1;
+    if (wrap) return 0;
+    return null;
+  }
+
   Future<void> _onTrackCompleted() async {
-    switch (state.playMode) {
-      case SHOMusicPlayMode.loopOne:
-        await _player.seek(Duration.zero);
-        await _player.play();
-      case SHOMusicPlayMode.loopAll:
-        await playNext();
-      case SHOMusicPlayMode.sequence:
-        if (state.currentIndex < state.playlist.length - 1) {
-          await playNext();
-        } else {
-          await stop();
-          _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
-        }
+    if (_handlingCompletion || state.playlist.isEmpty) return;
+    if (!_isNearPlaybackEnd()) return;
+
+    _handlingCompletion = true;
+    try {
+      final completedTrack = state.currentTrack;
+      if (completedTrack != null) {
+        await _playbackStorage.writePosition(completedTrack.id, Duration.zero);
+      }
+
+      _loadToken++;
+
+      switch (state.playMode) {
+        case SHOMusicPlayMode.loopOne:
+          if (state.currentTrack != null &&
+              await _isTrackPlayable(state.currentTrack!)) {
+            await _player.seek(Duration.zero);
+            await _player.play();
+          } else {
+            await _pauseWithNoValidTracks();
+          }
+        case SHOMusicPlayMode.loopAll:
+          final next = _nextPlaylistIndex(wrap: true);
+          if (next == null) {
+            await _pauseWithNoValidTracks();
+          } else {
+            await _advanceToIndex(next);
+          }
+        case SHOMusicPlayMode.sequence:
+          final next = _nextPlaylistIndex(wrap: false);
+          if (next == null) {
+            await _pausePlaybackEnded();
+          } else {
+            await _advanceToIndex(next);
+          }
+      }
+    } finally {
+      _handlingCompletion = false;
     }
+  }
+
+  Future<void> _pausePlaybackEnded() async {
+    _loadToken++;
+    await _player.stop();
+    state = state.copyWith(
+      isPlaying: false,
+      isLoading: false,
+      position: Duration.zero,
+      duration: Duration.zero,
+      errorMessage: () => null,
+    );
+    _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
+  }
+
+  Future<void> _pauseWithNoValidTracks({
+    List<SHOMusicTrack>? keepPlaylist,
+  }) async {
+    _loadToken++;
+    await _player.stop();
+    final playlist = keepPlaylist ?? state.playlist;
+    state = SHOMusicPlayerState(
+      playlist: playlist,
+      currentIndex: playlist.isEmpty
+          ? 0
+          : state.currentIndex.clamp(0, playlist.length - 1),
+      playMode: state.playMode,
+      playlistScope: state.playlistScope,
+      errorMessage: SHOMusicPlayerMessages.noValidTracks,
+    );
+    _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
   }
 
   Future<void> _saveProgress() async {
     final track = state.currentTrack;
     if (track == null) return;
     if (state.position <= Duration.zero) return;
+    final duration = state.duration;
+    if (duration > Duration.zero &&
+        state.position >= duration - const Duration(seconds: 2)) {
+      return;
+    }
     await _playbackStorage.writePosition(track.id, state.position);
   }
 

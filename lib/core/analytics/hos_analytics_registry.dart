@@ -220,6 +220,57 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const downloadItemClick = SHOAnalyticsEventDef(
+    key: 'download_item_click',
+    title: 'Download item click',
+    description: 'User tapped a download list item',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'payload',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description:
+            'JSON: download_url, download_time, file_type, file_id, resource_name',
+        example:
+            '{"download_url":"https://example.com/a.zip","download_time":"2026-06-06T12:00:00.000Z","file_type":"zip","file_id":"task_1","resource_name":"music.zip"}',
+      ),
+    ],
+  );
+
+  static const musicPackExtract = SHOAnalyticsEventDef(
+    key: 'music_pack_extract',
+    title: 'Music pack extract',
+    description: 'Music resources extracted from a download zip',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'payload',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description:
+            'JSON: resource_name, file_type, file_id, download_url, extract_paths',
+        example:
+            '{"resource_name":"music.zip","file_type":"zip","file_id":"task_1","download_url":"https://example.com/a.zip","extract_paths":["/path/audio.mp3"]}',
+      ),
+    ],
+  );
+
+  static const musicPackAlreadyExtracted = SHOAnalyticsEventDef(
+    key: 'music_pack_already_extracted',
+    title: 'Music pack already extracted',
+    description: 'User opened a music pack that was already cached locally',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'payload',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description:
+            'JSON: resource_name, file_type, file_id, download_url, extract_paths',
+        example:
+            '{"resource_name":"music.zip","file_type":"zip","file_id":"task_1","download_url":"https://example.com/a.zip","extract_paths":["/path/audio.mp3"]}',
+      ),
+    ],
+  );
+
   static final List<SHOAnalyticsEventDef> all = [
     appLaunch,
     appClose,
@@ -232,6 +283,9 @@ abstract final class SHOAnalyticsRegistry {
     paymentSuccess,
     search,
     shareProduct,
+    downloadItemClick,
+    musicPackExtract,
+    musicPackAlreadyExtracted,
   ];
 
   static SHOAnalyticsEventDef? find(String key) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/dialogs/hos_confirm_card_dialog.dart';
@@ -11,8 +12,10 @@ import '../../../core/widgets/hos_profile_section_card.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/hos_download_task.dart';
 import 'hos_download_file_type_ui.dart';
+import 'hos_download_preview_helper.dart';
+import 'hos_download_task_status.dart';
 
-class SHODownloadTaskTile extends StatelessWidget {
+class SHODownloadTaskTile extends ConsumerWidget {
   const SHODownloadTaskTile({
     super.key,
     required this.task,
@@ -50,11 +53,34 @@ class SHODownloadTaskTile extends StatelessWidget {
     }
   }
 
-  List<PopupMenuEntry<String>> _menuItems(AppLocalizations l10n) {
+  List<PopupMenuEntry<String>> _menuItems(
+    AppLocalizations l10n,
+    SHODownloadTaskStatus status,
+  ) {
     final copyItem = PopupMenuItem(
       value: 'copy',
       child: Text(l10n.downloadActionCopyUrl),
     );
+
+    final extraItems = <PopupMenuEntry<String>>[];
+    if (task.status == SHODownloadStatus.completed) {
+      if (status.isTxtNovel && !status.inBookshelf) {
+        extraItems.add(
+          PopupMenuItem(
+            value: 'add_bookshelf',
+            child: Text(l10n.downloadActionAddBookshelf),
+          ),
+        );
+      }
+      if (status.isMusicPack && !status.inMusicLibrary) {
+        extraItems.add(
+          PopupMenuItem(
+            value: 'add_music',
+            child: Text(l10n.downloadActionAddMusicLibrary),
+          ),
+        );
+      }
+    }
 
     final statusItems = switch (task.status) {
       SHODownloadStatus.downloading => [
@@ -70,7 +96,7 @@ class SHODownloadTaskTile extends StatelessWidget {
         ],
     };
 
-    return [copyItem, ...statusItems];
+    return [copyItem, ...extraItems, ...statusItems];
   }
 
   void _handleMenu(String? action) {
@@ -81,6 +107,8 @@ class SHODownloadTaskTile extends StatelessWidget {
         onResume();
       case 'delete':
       case 'copy':
+      case 'add_bookshelf':
+      case 'add_music':
         break;
     }
   }
@@ -93,8 +121,27 @@ class SHODownloadTaskTile extends StatelessWidget {
     };
   }
 
+  List<Widget> _statusBadges(
+    AppLocalizations l10n,
+    SHODownloadTaskStatus status,
+  ) {
+    final badges = <Widget>[];
+    if (task.status != SHODownloadStatus.completed) return badges;
+
+    if (status.showExtractedBadge) {
+      badges.add(_StatusBadge(label: l10n.downloadBadgeExtracted));
+    }
+    if (status.showInMusicBadge) {
+      badges.add(_StatusBadge(label: l10n.downloadBadgeInMusicLibrary));
+    }
+    if (status.showInBookshelfBadge) {
+      badges.add(_StatusBadge(label: l10n.downloadBadgeInBookshelf));
+    }
+    return badges;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = context.shoTheme;
     final date = DateFormat.yMd().add_Hm().format(task.createdAt);
@@ -102,6 +149,9 @@ class SHODownloadTaskTile extends StatelessWidget {
         ? '${formatFileSize(task.downloadedBytes)} / ${formatFileSize(task.totalBytes!)}'
         : formatFileSize(task.downloadedBytes);
     final isCompleted = task.status == SHODownloadStatus.completed;
+    final statusAsync = ref.watch(downloadTaskStatusProvider(task.id));
+    final status = statusAsync.value ?? const SHODownloadTaskStatus();
+    final badges = _statusBadges(l10n, status);
 
     return SHOProfileSectionCard(
       padding: const EdgeInsets.all(SHOAppSpacing.lg),
@@ -164,6 +214,14 @@ class SHODownloadTaskTile extends StatelessWidget {
                             ],
                           ),
                         ),
+                        if (badges.isNotEmpty) ...[
+                          const SizedBox(height: SHOAppSpacing.xs),
+                          Wrap(
+                            spacing: SHOAppSpacing.xs,
+                            runSpacing: SHOAppSpacing.xxs,
+                            children: badges,
+                          ),
+                        ],
                         const SizedBox(height: SHOAppSpacing.sm),
                         SizedBox(
                           height: 4,
@@ -217,13 +275,41 @@ class SHODownloadTaskTile extends StatelessWidget {
                 if (context.mounted) await _confirmDelete(context);
               } else if (value == 'copy') {
                 await _copyUrl(context);
+              } else if (value == 'add_bookshelf') {
+                await addDownloadTaskToBookshelf(context, ref, task);
+              } else if (value == 'add_music') {
+                await addDownloadMusicPackToLibrary(context, ref, task);
               } else {
                 _handleMenu(value);
               }
             },
-            itemBuilder: (context) => _menuItems(l10n),
+            itemBuilder: (context) => _menuItems(l10n, status),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: SHOAppColors.accent.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: SHOAppColors.accent,
+              fontWeight: FontWeight.w600,
+            ),
       ),
     );
   }

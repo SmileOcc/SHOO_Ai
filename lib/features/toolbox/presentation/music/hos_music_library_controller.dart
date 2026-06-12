@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/storage/hos_local_storage.dart';
 import '../../data/hos_download_paths.dart';
 import '../../data/hos_music_cache_paths.dart';
+import '../../data/hos_music_bundle_service.dart';
 import '../../data/hos_music_catalog.dart';
 import '../../data/hos_music_pack_added_storage.dart';
 import '../../data/hos_music_pack_service.dart';
@@ -59,9 +60,27 @@ final musicLibraryListProvider =
   final dismissedTracks = ref.watch(musicDismissedTrackIdsProvider);
   final addedPackIds = ref.watch(musicPackAddedTasksProvider);
   final packService = ref.watch(musicPackServiceProvider);
+  final bundleService = ref.watch(musicBundleServiceProvider);
 
   final items = <SHOMusicLibraryListItem>[];
   final seenSongKeys = <String>{};
+
+  final bundledTracks = await bundleService.loadBundledTracks(
+    dismissedTrackIds: dismissedTracks,
+    seenSongKeys: seenSongKeys,
+  );
+  for (final track in bundledTracks) {
+    items.add(
+      SHOMusicLibraryListItem(
+        track: track,
+        lastPosition: progressStorage.readPosition(track.id),
+        stats: statsStorage.read(track.id),
+        isOnline: false,
+        isLocalCached: true,
+        canDeleteCache: true,
+      ),
+    );
+  }
 
   for (final packTaskId in addedPackIds) {
     SHODownloadTask? packTask;
@@ -92,7 +111,6 @@ final musicLibraryListProvider =
         allowedPackTaskIds: {packTaskId},
       );
       if (!assets.hasAudio) continue;
-      if (seenSongKeys.contains(song.songKey)) continue;
       seenSongKeys.add(song.songKey);
 
       items.add(
@@ -122,7 +140,7 @@ final musicLibraryListProvider =
     }
   }
 
-  if (addedPackIds.isEmpty) {
+  if (bundledTracks.isEmpty && addedPackIds.isEmpty) {
     for (final track in SHOMusicCatalog.demoTracks) {
       if (dismissedTracks.contains(track.id)) continue;
       final songKey = SHOMusicSongKey.fromTitle(track.title);
@@ -155,7 +173,7 @@ final musicLibraryListProvider =
     }
   }
 
-  if (addedPackIds.isEmpty) {
+  if (bundledTracks.isEmpty && addedPackIds.isEmpty) {
     for (final task in tasks) {
       if (task.fileType != SHODownloadFileType.audio) continue;
       if (task.status != SHODownloadStatus.completed) continue;
@@ -235,8 +253,10 @@ final musicLibraryListProvider =
       deduped[key] = item;
       continue;
     }
-    final preferNew = item.track.id.startsWith(SHOMusicTrack.packIdPrefix) &&
-        !existing.track.id.startsWith(SHOMusicTrack.packIdPrefix);
+    final preferNew = (item.track.id.startsWith(SHOMusicTrack.packIdPrefix) ||
+            item.track.id.startsWith(SHOMusicTrack.bundleIdPrefix)) &&
+        !existing.track.id.startsWith(SHOMusicTrack.packIdPrefix) &&
+        !existing.track.id.startsWith(SHOMusicTrack.bundleIdPrefix);
     if (preferNew) deduped[key] = item;
   }
 
@@ -328,6 +348,31 @@ class SHOMusicDismissedTrackIdsNotifier extends StateNotifier<Set<String>> {
       next.toList(),
     );
   }
+
+  Future<void> undismiss(String trackId) async {
+    if (!state.contains(trackId)) return;
+    final next = {...state}..remove(trackId);
+    state = next;
+    await _prefs.setStringList(
+      SHOMusicStorageKeys.dismissedTrackIds,
+      next.toList(),
+    );
+  }
+
+  Future<void> undismissPackTracks(String packTaskId) async {
+    final prefix = '${SHOMusicTrack.packIdPrefix}$packTaskId}_';
+    final targets = state.where((id) => id.startsWith(prefix)).toList();
+    if (targets.isEmpty) return;
+    final next = {...state};
+    for (final id in targets) {
+      next.remove(id);
+    }
+    state = next;
+    await _prefs.setStringList(
+      SHOMusicStorageKeys.dismissedTrackIds,
+      next.toList(),
+    );
+  }
 }
 
 class SHOMusicDismissedTasksNotifier extends StateNotifier<Set<String>> {
@@ -409,6 +454,107 @@ Future<void> removeTrackFromLibrary(
   await ref.read(musicPlaybackStorageProvider).remove(track.id);
   await ref.read(musicStatsStorageProvider).remove(track.id);
   ref.read(musicLibraryRevisionProvider.notifier).state++;
+  await syncMusicPackAddedAfterRemove(ref, track.packTaskId);
+}
+
+Future<void> syncMusicPackAddedAfterRemove(
+  WidgetRef ref,
+  String? packTaskId,
+) async {
+  if (packTaskId == null || packTaskId.startsWith('bundle_')) return;
+  ref.invalidate(musicLibraryListProvider);
+  final items = await ref.read(musicLibraryListProvider.future);
+  final hasPack = items.any((item) => item.track.packTaskId == packTaskId);
+  if (!hasPack) {
+    await ref.read(musicPackAddedTasksProvider.notifier).remove(packTaskId);
+  }
+}
+
+Future<void> reconcileStaleMusicPackAddedTasks(WidgetRef ref) async {
+  final addedIds = ref.read(musicPackAddedTasksProvider);
+  if (addedIds.isEmpty) return;
+
+  final items = await ref.read(musicLibraryListProvider.future);
+  for (final packId in addedIds.toList()) {
+    final hasVisible =
+        musicPackItemsInLibrary(items, packId).isNotEmpty;
+    if (!hasVisible) {
+      await ref.read(musicPackAddedTasksProvider.notifier).remove(packId);
+    }
+  }
+}
+
+Future<({List<SHOMusicLibraryListItem> items, List<String> extractedPaths})>
+    ensurePackInLibrary(
+  WidgetRef ref, {
+  required SHODownloadTask packTask,
+  required SHOMusicPackService packService,
+}) async {
+  await ref.read(musicPackAddedTasksProvider.notifier).add(packTask.id);
+  await restorePackForLibrary(
+    ref,
+    packTask: packTask,
+    packService: packService,
+  );
+  final extractedPaths = await packService.importPackToLibrary(
+    packTask: packTask,
+    downloadTasks: ref.read(downloadTasksProvider),
+  );
+  ref.invalidate(musicLibraryListProvider);
+  ref.read(musicLibraryRevisionProvider.notifier).state++;
+  await ref.read(musicLibraryListProvider.future);
+  await syncMusicPackAddedAfterRemove(ref, packTask.id);
+  final syncedItems = await ref.read(musicLibraryListProvider.future);
+  return (items: syncedItems, extractedPaths: extractedPaths);
+}
+
+Future<List<String>> ensurePackCached(
+  WidgetRef ref, {
+  required SHODownloadTask packTask,
+  required SHOMusicPackService packService,
+}) async {
+  final extractedPaths = await packService.importPackToLibrary(
+    packTask: packTask,
+    downloadTasks: ref.read(downloadTasksProvider),
+  );
+  ref.invalidate(musicLibraryListProvider);
+  ref.read(musicLibraryRevisionProvider.notifier).state++;
+  return extractedPaths;
+}
+
+Future<void> restorePackForLibrary(
+  WidgetRef ref, {
+  required SHODownloadTask packTask,
+  required SHOMusicPackService packService,
+}) async {
+  await ref
+      .read(musicDismissedTrackIdsProvider.notifier)
+      .undismissPackTracks(packTask.id);
+
+  final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
+  if (zipPath == null) return;
+
+  final songs = await packService.discoverSongsInPack(zipPath);
+  final dismissed = ref.read(musicDismissedTrackIdsProvider.notifier);
+  final removedCached = ref.read(musicRemovedCachedProvider.notifier);
+  for (final song in songs) {
+    await dismissed.undismiss(SHOMusicTrack.cachedTrackId(song.songKey));
+    await removedCached.restore(song.songKey);
+  }
+}
+
+List<SHOMusicLibraryListItem> musicPackItemsInLibrary(
+  List<SHOMusicLibraryListItem> items,
+  String packTaskId,
+) {
+  return items.where((item) => item.track.packTaskId == packTaskId).toList();
+}
+
+Future<bool> isMusicTrackPlayable(SHOMusicTrack track) async {
+  if (track.isOnlineSource) return true;
+
+  final path = await resolveMusicLocalPath(track);
+  return path != null && File(path).existsSync();
 }
 
 Future<String?> resolveMusicLocalPath(SHOMusicTrack track) async {

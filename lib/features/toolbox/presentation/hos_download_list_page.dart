@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +14,7 @@ import 'hos_download_controller.dart';
 import 'hos_download_file_type_ui.dart';
 import 'hos_download_preview_helper.dart';
 import 'hos_download_task_tile.dart';
+import 'music/hos_music_library_controller.dart';
 
 class SHODownloadListPage extends ConsumerStatefulWidget {
   const SHODownloadListPage({super.key});
@@ -31,6 +34,10 @@ class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(reconcileStaleMusicPackAddedTasks(ref));
+    });
   }
 
   @override

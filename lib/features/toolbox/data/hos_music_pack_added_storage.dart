@@ -30,4 +30,14 @@ class SHOMusicPackAddedTasksNotifier extends StateNotifier<Set<String>> {
       next.toList(),
     );
   }
+
+  Future<void> remove(String taskId) async {
+    if (!state.contains(taskId)) return;
+    final next = {...state}..remove(taskId);
+    state = next;
+    await _prefs.setStringList(
+      SHOMusicStorageKeys.addedMusicPackTasks,
+      next.toList(),
+    );
+  }
 }

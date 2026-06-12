@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/hos_local_api_paths.dart';
 import '../domain/hos_download_task.dart';
+import '../domain/hos_music_color_utils.dart';
 import '../domain/hos_music_song_assets.dart';
 import '../domain/hos_music_song_key.dart';
+import '../domain/hos_music_track.dart';
 import 'hos_download_paths.dart';
 import 'hos_music_cache_paths.dart';
 
@@ -104,6 +106,25 @@ class SHOMusicPackService {
     );
   }
 
+  Future<List<SHOMusicPackSongRef>> discoverSongsInArchive(List<int> bytes) async {
+    final archive = ZipDecoder().decodeBytes(bytes);
+    return _discoverSongsInArchive(archive);
+  }
+
+  Future<SHOMusicSongAssets> importSongFromArchive({
+    required List<int> zipBytes,
+    required String bundleKey,
+    required SHOMusicPackSongRef song,
+  }) async {
+    final archive = ZipDecoder().decodeBytes(zipBytes);
+    return _extractSongFromArchive(
+      archive: archive,
+      songKey: song.songKey,
+      title: song.displayTitle,
+      packTaskId: 'bundle_$bundleKey',
+    );
+  }
+
   Future<SHOMusicSongAssets> _extractSongFromZip({
     required String zipPath,
     required String songKey,
@@ -112,7 +133,20 @@ class SHOMusicPackService {
   }) async {
     final bytes = await File(zipPath).readAsBytes();
     final archive = ZipDecoder().decodeBytes(bytes);
+    return _extractSongFromArchive(
+      archive: archive,
+      songKey: songKey,
+      title: title,
+      packTaskId: packTaskId,
+    );
+  }
 
+  Future<SHOMusicSongAssets> _extractSongFromArchive({
+    required Archive archive,
+    required String songKey,
+    required String title,
+    required String packTaskId,
+  }) async {
     String? audioSourceName;
     String? coverSourceName;
     String? bgSourceName;
@@ -136,6 +170,31 @@ class SHOMusicPackService {
       } else if (lower.contains('song_lyrics/') &&
           SHOMusicCachePaths.isLyricsEntry(entryName)) {
         lyricsSourceName ??= entryName;
+      }
+    }
+
+    if (audioSourceName != null) {
+      final root = _zipRootPrefix(audioSourceName);
+      for (final file in archive) {
+        if (file.isFile != true) continue;
+        final entryName = file.name.replaceAll('\\', '/');
+        if (SHOMusicCachePaths.isIgnoredZipEntry(entryName)) continue;
+        if (!_entryUnderRoot(entryName, root)) continue;
+
+        final lower = entryName.toLowerCase();
+        if (coverSourceName == null &&
+            lower.contains('song_cover/') &&
+            SHOMusicCachePaths.isImageEntry(entryName)) {
+          coverSourceName = entryName;
+        } else if (bgSourceName == null &&
+            lower.contains('song_bg/') &&
+            SHOMusicCachePaths.isImageEntry(entryName)) {
+          bgSourceName = entryName;
+        } else if (lyricsSourceName == null &&
+            lower.contains('song_lyrics/') &&
+            SHOMusicCachePaths.isLyricsEntry(entryName)) {
+          lyricsSourceName = entryName;
+        }
       }
     }
 
@@ -200,17 +259,31 @@ class SHOMusicPackService {
     final normalized = entryPath.replaceAll('\\', '/').toLowerCase();
     final keys = <String>{
       songKey.toLowerCase(),
-      SHOMusicSongKey.fromTitle(title).toLowerCase(),
+      SHOMusicSongKey.normalize(title).toLowerCase(),
     };
     for (final key in keys) {
       if (key.isEmpty) continue;
       if (normalized.contains('/$key/') ||
+          normalized.contains('$key/') ||
+          normalized.startsWith('$key/') ||
           normalized.contains('/$key.') ||
           normalized.endsWith('/$key')) {
         return true;
       }
     }
     return false;
+  }
+
+  String? _zipRootPrefix(String entryPath) {
+    final segments = entryPath.replaceAll('\\', '/').split('/').where((s) => s.isNotEmpty).toList();
+    if (segments.length <= 1) return null;
+    return segments.first;
+  }
+
+  bool _entryUnderRoot(String entryPath, String? root) {
+    if (root == null || root.isEmpty) return true;
+    final normalized = entryPath.replaceAll('\\', '/');
+    return normalized.startsWith('$root/');
   }
 
   bool _isAssetFolderAudio(String entryPath) {
@@ -277,7 +350,10 @@ class SHOMusicPackService {
 
   Future<List<SHOMusicPackSongRef>> discoverSongsInPack(String zipPath) async {
     final bytes = await File(zipPath).readAsBytes();
-    final archive = ZipDecoder().decodeBytes(bytes);
+    return discoverSongsInArchive(bytes);
+  }
+
+  List<SHOMusicPackSongRef> _discoverSongsInArchive(Archive archive) {
     final songs = <String, SHOMusicPackSongRef>{};
 
     for (final file in archive) {
@@ -304,21 +380,116 @@ class SHOMusicPackService {
       ..sort((a, b) => a.displayTitle.compareTo(b.displayTitle));
   }
 
-  Future<void> importPackToLibrary({
+  Future<bool> hasCachedSongsForPack(SHODownloadTask packTask) async {
+    final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
+    if (zipPath == null) return false;
+
+    final songs = await discoverSongsInPack(zipPath);
+    for (final song in songs) {
+      if (await SHOMusicCachePaths.isSongCached(song.songKey)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<List<SHOMusicTrack>> buildCachedPackTracks({
     required SHODownloadTask packTask,
     required List<SHODownloadTask> downloadTasks,
   }) async {
     final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
-    if (zipPath == null) return;
+    if (zipPath == null) return const [];
 
     final songs = await discoverSongsInPack(zipPath);
+    final tracks = <SHOMusicTrack>[];
+
     for (final song in songs) {
+      final assets = await resolveSongAssets(
+        title: song.displayTitle,
+        downloadTasks: downloadTasks,
+        allowedPackTaskIds: {packTask.id},
+      );
+      if (!assets.hasAudio) continue;
+
+      tracks.add(
+        SHOMusicTrack(
+          id: SHOMusicTrack.packTrackId(packTask.id, song.songKey),
+          title: song.displayTitle,
+          artist: '本地音乐',
+          songKey: song.songKey,
+          source: SHOMusicSource.cached,
+          localPath: assets.audioPath,
+          coverPath: assets.coverPath,
+          bgPath: assets.bgPath,
+          lrc: assets.lyricsText,
+          coverColor: SHOMusicColorUtils.colorForKey(song.songKey, salt: 11),
+          bgColor: SHOMusicColorUtils.colorForKey(song.songKey, salt: 29),
+          packTaskId: packTask.id,
+          isCachedLocally: true,
+        ),
+      );
+    }
+
+    return tracks;
+  }
+
+  Future<List<String>> importPackToLibrary({
+    required SHODownloadTask packTask,
+    required List<SHODownloadTask> downloadTasks,
+  }) async {
+    final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
+    if (zipPath == null) return const [];
+
+    final songs = await discoverSongsInPack(zipPath);
+    final extractedPaths = <String>[];
+
+    for (final song in songs) {
+      final beforePaths = await _cachePathsForSong(song.songKey);
       await resolveSongAssets(
         title: song.displayTitle,
         downloadTasks: downloadTasks,
         allowedPackTaskIds: {packTask.id},
       );
+      final afterPaths = await _cachePathsForSong(song.songKey);
+      for (final path in afterPaths) {
+        if (!beforePaths.contains(path)) {
+          extractedPaths.add(path);
+        }
+      }
     }
+
+    return extractedPaths;
+  }
+
+  Future<List<String>> collectPackCachePaths(SHODownloadTask packTask) async {
+    final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
+    if (zipPath == null) return const [];
+
+    final songs = await discoverSongsInPack(zipPath);
+    final paths = <String>[];
+
+    for (final song in songs) {
+      paths.addAll(await _cachePathsForSong(song.songKey));
+    }
+
+    return paths;
+  }
+
+  Future<List<String>> _cachePathsForSong(String songKey) async {
+    final paths = <String>[];
+    final audio = await SHOMusicCachePaths.audioPath(songKey);
+    if (audio != null) paths.add(audio);
+
+    final cover = await SHOMusicCachePaths.coverPath(songKey);
+    if (cover != null) paths.add(cover);
+
+    final bg = await SHOMusicCachePaths.bgPath(songKey);
+    if (bg != null) paths.add(bg);
+
+    final lyrics = await SHOMusicCachePaths.lyricsPath(songKey);
+    if (lyrics != null) paths.add(lyrics);
+
+    return paths;
   }
 }
 

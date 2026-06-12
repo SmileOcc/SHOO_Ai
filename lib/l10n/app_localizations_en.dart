@@ -1372,6 +1372,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadPreviewOk => 'OK';
 
   @override
+  String get downloadBadgeExtracted => 'Extracted';
+
+  @override
+  String get downloadBadgeInMusicLibrary => 'In music';
+
+  @override
+  String get downloadBadgeInBookshelf => 'In bookshelf';
+
+  @override
+  String get downloadActionAddBookshelf => 'Add to bookshelf';
+
+  @override
+  String get downloadActionAddMusicLibrary => 'Add to music list';
+
+  @override
+  String get downloadAddedToMusicLibrary => 'Added to music list';
+
+  @override
+  String get musicInvalidTitle => 'Invalid music';
+
+  @override
+  String get musicInvalidMessage =>
+      'Local extracted files were not found. Playback is unavailable.';
+
+  @override
   String get txtReaderLoadingFile => 'Reading file…';
 
   @override
@@ -1694,6 +1719,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get musicPlayerDownloadFailed =>
       'Cannot download yet. Please download the music resource zip first.';
+
+  @override
+  String get musicPlayerPlaylistTitle => 'Playlist';
+
+  @override
+  String get musicPlayerLikedPlaylistTitle => 'Liked Songs';
+
+  @override
+  String musicPlayerPlaylistCount(String count) {
+    return '$count songs';
+  }
+
+  @override
+  String get musicPlayerPlaylistEmpty => 'No songs in playlist';
+
+  @override
+  String get musicPlayerLikedPlaylistEmpty =>
+      'No liked songs yet. Tap ♥ in the music library.';
+
+  @override
+  String get musicPlayerNoValidTracks =>
+      'No playable tracks found. Playback paused.';
+
+  @override
+  String get musicPlayerMoreTitle => 'More';
+
+  @override
+  String get musicPlayerShare => 'Share';
+
+  @override
+  String get musicLibraryBuiltinBadge => 'Built-in';
 
   @override
   String get profileAddresses => 'Addresses';
