@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/analytics/hos_tab_analytics.dart';
 import '../../core/debug/core/hos_debug_tap_detector.dart';
 import '../../core/navigation/hos_tab_badge_provider.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';
@@ -96,9 +97,16 @@ class SHOMainShell extends ConsumerWidget {
           currentIndex: current,
           enableFeedback: false,
           onTap: (index) {
+            final fromIndex = navigationShell.currentIndex;
+            final isReselect = index == fromIndex;
+            SHOTabAnalyticsReporter.reportSwitch(
+              fromIndex: fromIndex,
+              toIndex: index,
+              isReselect: isReselect,
+            );
             navigationShell.goBranch(
               index,
-              initialLocation: index == navigationShell.currentIndex,
+              initialLocation: isReselect,
             );
           },
           items: List.generate(_tabs.length, (index) {

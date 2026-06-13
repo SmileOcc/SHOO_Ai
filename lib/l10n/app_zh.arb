@@ -213,6 +213,34 @@
   "debugAnalyticsHistoryEmpty": "暂无上报记录",
   "debugAnalyticsClearHistory": "清空历史",
   "debugAnalyticsBackendsUsed": "通道",
+  "debugFeedbackEntry": "全局反馈调试",
+  "debugFeedbackEntryHint": "试玩全局 Loading 遮罩与错误 Toast/Dialog",
+  "debugFeedbackTitle": "全局反馈调试",
+  "debugFeedbackHint": "触发全局 Loading 遮罩与错误 Toast/Dialog。遮罩使用引用计数，并发任务全部结束后才消失。",
+  "debugFeedbackLoadingSection": "Loading 遮罩",
+  "debugFeedbackErrorSection": "全局错误",
+  "debugFeedbackLoadingBasic": "显示 Loading（2 秒）",
+  "debugFeedbackLoadingMessage": "带文案 Loading（3 秒）",
+  "debugFeedbackLoadingConcurrent": "并发 Loading x2",
+  "debugFeedbackLoadingThenError": "Loading 后报错 Toast",
+  "debugFeedbackErrorToast": "错误 Toast（服务端）",
+  "debugFeedbackErrorDialog": "错误弹窗",
+  "debugFeedbackErrorNetwork": "错误 Toast（网络）",
+  "debugFeedbackErrorStatic": "静态错误上报（无 WidgetRef）",
+  "debugFeedbackStatusTitle": "状态",
+  "debugFeedbackOverlayCount": "遮罩引用计数：{count}",
+  "@debugFeedbackOverlayCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "debugFeedbackLastActionEmpty": "最近操作：—",
+  "debugFeedbackLastAction": "最近操作：{action}",
+  "@debugFeedbackLastAction": {
+    "placeholders": {
+      "action": { "type": "String" }
+    }
+  },
   "debugToolsSection": "调试工具",
   "debugUpdateEntry": "版本更新调试",
   "debugUpdateEntryHint": "配置版本号、升级说明、是否强更",

@@ -56,7 +56,7 @@ class SHOApp extends ConsumerWidget {
       ],
       routerConfig: router,   // ← 路由配置（动态）
       builder: (context, child) {
-        // 离线提示条
+        // 所有页面外层包裹离线提示条 监听网络状态，显示离线提示
         return SHOAppShell(child: child ?? const SizedBox.shrink());
       },
       ),

@@ -611,6 +611,65 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugAnalyticsBackendsUsed => '通道';
 
   @override
+  String get debugFeedbackEntry => '全局反馈调试';
+
+  @override
+  String get debugFeedbackEntryHint => '试玩全局 Loading 遮罩与错误 Toast/Dialog';
+
+  @override
+  String get debugFeedbackTitle => '全局反馈调试';
+
+  @override
+  String get debugFeedbackHint =>
+      '触发全局 Loading 遮罩与错误 Toast/Dialog。遮罩使用引用计数，并发任务全部结束后才消失。';
+
+  @override
+  String get debugFeedbackLoadingSection => 'Loading 遮罩';
+
+  @override
+  String get debugFeedbackErrorSection => '全局错误';
+
+  @override
+  String get debugFeedbackLoadingBasic => '显示 Loading（2 秒）';
+
+  @override
+  String get debugFeedbackLoadingMessage => '带文案 Loading（3 秒）';
+
+  @override
+  String get debugFeedbackLoadingConcurrent => '并发 Loading x2';
+
+  @override
+  String get debugFeedbackLoadingThenError => 'Loading 后报错 Toast';
+
+  @override
+  String get debugFeedbackErrorToast => '错误 Toast（服务端）';
+
+  @override
+  String get debugFeedbackErrorDialog => '错误弹窗';
+
+  @override
+  String get debugFeedbackErrorNetwork => '错误 Toast（网络）';
+
+  @override
+  String get debugFeedbackErrorStatic => '静态错误上报（无 WidgetRef）';
+
+  @override
+  String get debugFeedbackStatusTitle => '状态';
+
+  @override
+  String debugFeedbackOverlayCount(int count) {
+    return '遮罩引用计数：$count';
+  }
+
+  @override
+  String get debugFeedbackLastActionEmpty => '最近操作：—';
+
+  @override
+  String debugFeedbackLastAction(String action) {
+    return '最近操作：$action';
+  }
+
+  @override
   String get debugToolsSection => '调试工具';
 
   @override

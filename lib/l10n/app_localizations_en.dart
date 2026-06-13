@@ -627,6 +627,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugAnalyticsBackendsUsed => 'Backends';
 
   @override
+  String get debugFeedbackEntry => 'Global feedback';
+
+  @override
+  String get debugFeedbackEntryHint =>
+      'Test global loading overlay and error handling';
+
+  @override
+  String get debugFeedbackTitle => 'Global feedback debug';
+
+  @override
+  String get debugFeedbackHint =>
+      'Trigger global Loading mask and error Toast/Dialog. Overlay uses ref-count; concurrent tasks keep the mask visible until all finish.';
+
+  @override
+  String get debugFeedbackLoadingSection => 'Loading overlay';
+
+  @override
+  String get debugFeedbackErrorSection => 'Global error';
+
+  @override
+  String get debugFeedbackLoadingBasic => 'Show loading (2s)';
+
+  @override
+  String get debugFeedbackLoadingMessage => 'Show loading with message (3s)';
+
+  @override
+  String get debugFeedbackLoadingConcurrent => 'Concurrent loading x2';
+
+  @override
+  String get debugFeedbackLoadingThenError => 'Loading then error toast';
+
+  @override
+  String get debugFeedbackErrorToast => 'Error toast (server)';
+
+  @override
+  String get debugFeedbackErrorDialog => 'Error dialog';
+
+  @override
+  String get debugFeedbackErrorNetwork => 'Error toast (network)';
+
+  @override
+  String get debugFeedbackErrorStatic => 'Static error report (no WidgetRef)';
+
+  @override
+  String get debugFeedbackStatusTitle => 'Status';
+
+  @override
+  String debugFeedbackOverlayCount(int count) {
+    return 'Overlay ref-count: $count';
+  }
+
+  @override
+  String get debugFeedbackLastActionEmpty => 'Last action: —';
+
+  @override
+  String debugFeedbackLastAction(String action) {
+    return 'Last action: $action';
+  }
+
+  @override
   String get debugToolsSection => 'Debug Tools';
 
   @override

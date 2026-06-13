@@ -20,6 +20,12 @@
 | 替换 | `didReplace` | `route_replace` |
 | 移除 | `didRemove` | `route_remove` |
 
+**Shell Tab 切换**（`SHOMainShell.onTap`）：
+
+| 语义 | 触发 | 事件 key |
+|------|------|----------|
+| Tab 切换 / 重复点击 | `navigationShell.goBranch` | `tab_switch` |
+
 ## 架构
 
 ```
@@ -47,7 +53,8 @@ MaterialApp.router
 | `hos_page_analytics_nav_observer.dart` | 栈级 `NavigatorObserver` |
 | `hos_page_analytics_reporter.dart` | 统一上报 `SHOAnalyticsManager` |
 | `hos_page_route_info.dart` | 路由 path / uri / pageName 解析 |
-| `hos_analytics_registry.dart` | 事件注册（page_* / route_*） |
+| `hos_tab_analytics.dart` | Shell Tab 切换埋点 |
+| `hos_analytics_registry.dart` | 事件注册（page_* / route_* / tab_switch） |
 
 ## 接入步骤
 
@@ -101,7 +108,7 @@ Debug 面板 → Analytics 可查看 `page_enter` / `route_push` 等历史记录
 
 ## 注意事项
 
-1. **Shell Tab**：`StatefulShellRoute.indexedStack` 切换 Tab 不一定产生 push/pop，`RouteAware` 主要适用于 Tab 内再 push 的全屏子页。Tab 切换埋点需另监听 `navigationShell.currentIndex`。
+1. **Shell Tab**：Tab 切换由 `SHOTabAnalyticsReporter` 在 `SHOMainShell` 的 `onTap` 上报 `tab_switch`；重复点击当前 Tab 时 `is_reselect: true`。
 2. **重复事件**：同一导航动作可能同时触发 `route_push`（栈级）与 `page_enter`（单页），语义不同，分析时按需选用。
 3. **Dialog / BottomSheet**：若使用独立 Navigator，需在对应 `showDialog` 的 `routeSettings` 或子 Navigator 上另行挂载 Observer（当前仅 root Navigator）。
 

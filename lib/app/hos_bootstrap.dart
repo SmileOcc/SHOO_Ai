@@ -1,58 +1,71 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/analytics/hos_app_startup_timer.dart';
 import '../core/config/hos_config.dart';
 import '../core/debug/core/hos_app_restart.dart';
+import '../core/feedback/hos_global_error.dart';
 import '../core/logging/hos_log_manager.dart';
+import '../core/logging/hos_logger.dart';
 import '../core/storage/hos_image_cache_manager.dart';
 
 Future<void> bootstrap() async {
-  // 确保 Flutter 框架绑定已初始化
-  WidgetsFlutterBinding.ensureInitialized();
-  //标记进程启动时间点,用于性能监控
-  SHOAppStartupTimer.markProcessStart();
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    SHOAppStartupTimer.markProcessStart();
 
-  //初始化应用配置(环境变量、API 地址、Mock 设置等)
-  await SHOAppConfig.init();
-  //初始化日志系统,支持本地缓存和远程上报
-  await SHOAppLogManager.instance.init();
-  //预热图片缓存管理器
-  await SHOImageCacheManager.ensureReady();
-  //置全局图片缓存管理器
-  CachedNetworkImageProvider.defaultCacheManager =
-      SHOImageCacheManager.instance;
+    await SHOAppConfig.init();
+    await SHOAppLogManager.instance.init();
+    await SHOImageCacheManager.ensureReady();
+    CachedNetworkImageProvider.defaultCacheManager =
+        SHOImageCacheManager.instance;
 
-  //捕获全局平台错误
-  final previousPlatformErrorHandler = PlatformDispatcher.instance.onError;
-  //特殊处理图片缓存的只读数据库错误
-  PlatformDispatcher.instance.onError = (error, stack) {
-    if (SHOImageCacheManager.isReadonlyDbError(error)) {
-      unawaited(
-        //特殊处理图片缓存的只读数据库错误
-        SHOImageCacheManager.recoverFromReadonlyError(error: error),
+    final previousPlatformErrorHandler = PlatformDispatcher.instance.onError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      if (SHOImageCacheManager.isReadonlyDbError(error)) {
+        unawaited(
+          SHOImageCacheManager.recoverFromReadonlyError(error: error),
+        );
+        return true;
+      }
+      SHOAppLogger.error('Uncaught platform error', error, stack);
+      SHOGlobalError.report(error);
+      return previousPlatformErrorHandler?.call(error, stack) ?? true;
+    };
+
+    final previousFlutterErrorHandler = FlutterError.onError;
+    FlutterError.onError = (details) {
+      if (kDebugMode) {
+        FlutterError.presentError(details);
+      }
+      SHOAppLogger.error(
+        'Flutter framework error',
+        details.exception,
+        details.stack,
       );
-      return true;
-    }
-    return previousPlatformErrorHandler?.call(error, stack) ?? false;
-  };
+      if (!details.silent) {
+        SHOGlobalError.report(details.exception);
+      }
+      previousFlutterErrorHandler?.call(details);
+    };
 
-  //初始化 SharedPreferences(持久化存储)
-  final sharedPreferences = await SharedPreferences.getInstance();
-  //准备运行时环境(环境切换、配置刷新等)
-  await prepareRuntimeAfterEnvChange(sharedPreferences);
-  //标记 Bootstrap 阶段结束
-  SHOAppStartupTimer.markBootstrapEnd();
+    final sharedPreferences = await SharedPreferences.getInstance();
+    await prepareRuntimeAfterEnvChange(sharedPreferences);
+    SHOAppStartupTimer.markBootstrapEnd();
 
-  //环境重建: SHOAppRestart 支持在 Debug 模式下重建 Provider 树
-  //状态保持: SharedPreferences 作为参数传递,避免重复初始化
-  //✅ 热重启: Debug 模式下支持环境切换后自动重建
-  //✅ 状态共享: SharedPreferences 实例在整个应用生命周期中共享
-  runApp(SHOAppRestart(sharedPreferences: sharedPreferences));
+    runApp(SHOAppRestart(sharedPreferences: sharedPreferences));
+  }, (error, stack) {
+    // 所有未捕获的异步异常都会走到这里
+    SHOAppLogger.e('全局捕获到异常: $error');
+    SHOAppLogger.e('堆栈: $stack');
+
+    SHOAppLogger.error('Uncaught zone error', error, stack);
+    SHOGlobalError.report(error);
+  }) ?? Future<void>.value();
 }
 
 /**

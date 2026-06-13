@@ -234,6 +234,34 @@
   "debugAnalyticsHistoryEmpty": "No analytics records yet",
   "debugAnalyticsClearHistory": "Clear history",
   "debugAnalyticsBackendsUsed": "Backends",
+  "debugFeedbackEntry": "Global feedback",
+  "debugFeedbackEntryHint": "Test global loading overlay and error handling",
+  "debugFeedbackTitle": "Global feedback debug",
+  "debugFeedbackHint": "Trigger global Loading mask and error Toast/Dialog. Overlay uses ref-count; concurrent tasks keep the mask visible until all finish.",
+  "debugFeedbackLoadingSection": "Loading overlay",
+  "debugFeedbackErrorSection": "Global error",
+  "debugFeedbackLoadingBasic": "Show loading (2s)",
+  "debugFeedbackLoadingMessage": "Show loading with message (3s)",
+  "debugFeedbackLoadingConcurrent": "Concurrent loading x2",
+  "debugFeedbackLoadingThenError": "Loading then error toast",
+  "debugFeedbackErrorToast": "Error toast (server)",
+  "debugFeedbackErrorDialog": "Error dialog",
+  "debugFeedbackErrorNetwork": "Error toast (network)",
+  "debugFeedbackErrorStatic": "Static error report (no WidgetRef)",
+  "debugFeedbackStatusTitle": "Status",
+  "debugFeedbackOverlayCount": "Overlay ref-count: {count}",
+  "@debugFeedbackOverlayCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "debugFeedbackLastActionEmpty": "Last action: —",
+  "debugFeedbackLastAction": "Last action: {action}",
+  "@debugFeedbackLastAction": {
+    "placeholders": {
+      "action": { "type": "String" }
+    }
+  },
   "debugToolsSection": "Debug Tools",
   "debugUpdateEntry": "Update Popup",
   "debugUpdateEntryHint": "Configure version, notes, force update",

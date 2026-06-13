@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../theme/hos_colors.dart';
+import '../theme/hos_spacing.dart';
+
+/// 全局 Loading 卡片圆角。
+const _kLoadingCardRadius = 12.0;
 
 /// 全局半透明 Loading 遮罩（引用计数，支持并发请求）。
 class SHOOverlayLoadingController extends Notifier<int> {
@@ -69,9 +73,18 @@ class _LoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Material(
+      color: Theme.of(context).cardColor,
+      elevation: 6,
+      shadowColor: Colors.black26,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(_kLoadingCardRadius),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(
+          horizontal: SHOAppSpacing.xxxl,
+          vertical: SHOAppSpacing.xl,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -79,9 +92,9 @@ class _LoadingCard extends StatelessWidget {
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(SHOAppColors.accent),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: SHOAppSpacing.md),
             Text(
-              message ?? MaterialLocalizations.of(context).dialogLabel,
+              message ?? 'Loading...',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

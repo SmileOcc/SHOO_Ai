@@ -43,3 +43,24 @@ String userFacingMessage(SHOAppException error) {
     SHOUnknownException() => 'Something went wrong. Please try again.',
   };
 }
+
+/// 将任意异常转为用户可读文案（全局错误处理统一入口）。
+String messageFromAny(Object error) {
+  if (error is SHOAppException) return userFacingMessage(error);
+  if (error is DioException) return userFacingMessage(mapDioError(error));
+  if (error is SHONativeBridgeException) {
+    return userFacingMessage(mapNativeBridgeError(error));
+  }
+  final text = error.toString().trim();
+  if (text.isEmpty) {
+    return 'Something went wrong. Please try again.';
+  }
+  return text;
+}
+
+Object normalizeToAppException(Object error) {
+  if (error is SHOAppException) return error;
+  if (error is DioException) return mapDioError(error);
+  if (error is SHONativeBridgeException) return mapNativeBridgeError(error);
+  return SHOUnknownException(messageFromAny(error));
+}

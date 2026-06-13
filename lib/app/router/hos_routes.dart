@@ -109,6 +109,7 @@ abstract final class SHOAppRoutes {
   static const debugBrand = '/debug/brand';
   static const debugAnalytics = '/debug/analytics';
   static const debugNetworkLog = '/debug/network-log';
+  static const debugFeedback = '/debug/feedback';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

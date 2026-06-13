@@ -30,6 +30,7 @@ export 'hos_tab_bar.dart';
 export 'hos_text_field.dart';
 export 'hos_banner_carousel.dart';
 export 'hos_empty_state.dart';
+export '../feedback/hos_feedback.dart';
 export 'hos_product_card.dart';
 export 'hos_promo_tag.dart';
 export 'hos_quick_entry_grid.dart';

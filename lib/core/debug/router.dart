@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router/hos_routes.dart';
+import 'modules/feedback/hos_debug_feedback_page.dart';
 import 'modules/analytics/hos_debug_analytics_page.dart';
 import 'modules/network_log/hos_debug_network_log_page.dart';
 import 'modules/brand/hos_debug_brand_page.dart';
@@ -37,6 +38,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) => 
           GoRoute(
             path: 'network-log',
             builder: (context, state) => const SHODebugNetworkLogPage(),
+          ),
+          GoRoute(
+            path: 'feedback',
+            builder: (context, state) => const SHODebugFeedbackPage(),
           ),
           GoRoute(
             path: 'native',

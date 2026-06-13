@@ -434,6 +434,57 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const tabSwitch = SHOAnalyticsEventDef(
+    key: 'tab_switch',
+    title: 'Tab switch',
+    description: 'User switched bottom navigation tab (StatefulShellRoute)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'from_index',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 0,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'to_index',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 1,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'from_route',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'to_route',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/category',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'from_tab_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'home / category / cart / profile',
+        example: 'home',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'to_tab_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'category',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'is_reselect',
+        type: SHOAnalyticsFieldType.boolValue,
+        description: 'Tapped the already active tab (pop branch to root)',
+        example: false,
+      ),
+    ],
+  );
+
   static const musicPackAlreadyExtracted = SHOAnalyticsEventDef(
     key: 'music_pack_already_extracted',
     title: 'Music pack already extracted',
@@ -463,6 +514,7 @@ abstract final class SHOAnalyticsRegistry {
     routePop,
     routeReplace,
     routeRemove,
+    tabSwitch,
     loginSuccess,
     logout,
     productView,

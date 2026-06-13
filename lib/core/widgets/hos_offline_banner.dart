@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/hos_config.dart';
 import '../debug/core/hos_runtime_env_provider.dart';
+import '../feedback/hos_global_error.dart';
 import '../feedback/hos_overlay_loading.dart';
 import '../network/hos_connectivity_service.dart';
 import '../network/hos_local_server_health.dart';
@@ -49,11 +50,12 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
 
     final topInset = MediaQuery.paddingOf(context).top;
 
-    return SHOGlobalLoadingOverlay(
-      child: Stack(
+    return SHOGlobalErrorListener(
+      child: SHOGlobalLoadingOverlay(
+        child: Stack(
         fit: StackFit.expand,
         children: [
-          widget.child,
+          widget.child, // ← 页面内容
           if (showLocalServerBanner || showOfflineBanner)
             Positioned(
               top: 0,
@@ -96,6 +98,7 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
             ),
           const SHOMusicMiniPlayer(),
         ],
+      ),
       ),
     );
   }
@@ -161,3 +164,12 @@ class _ShellTopBanner extends StatelessWidget {
     );
   }
 }
+
+/*
+优势总结:
+
+✅ 全局生效: 在所有页面外层包裹，无需单独处理
+✅ 自动监听: 自动监听网络状态，显示/隐藏提示条
+✅ 简洁: 一行代码完成全局 UI 增强
+✅ 性能: 使用 ConsumerWidget，自动优化
+*/

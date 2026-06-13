@@ -25,6 +25,7 @@
 /// | route_pop | 导航栈 pop | NavigatorObserver |
 /// | route_replace | 路由替换 | NavigatorObserver |
 /// | route_remove | 路由移除 | NavigatorObserver |
+/// | tab_switch | 底部 Tab 切换 | SHOMainShell.onTap |
 ///
 /// ## 接入步骤
 ///
@@ -40,11 +41,11 @@
 /// ## Shell Tab 说明
 ///
 /// [StatefulShellRoute] 的 Tab 切换由 indexedStack 管理，不一定触发 push/pop。
-/// Tab 内再 push 的子页面可正常使用本方案；若需 Tab 切换埋点，请监听
-/// `navigationShell.currentIndex` 另行上报。
+/// Tab 切换使用 [SHOTabAnalyticsReporter]（见 [hos_tab_analytics.dart]）。
 library;
 
 export 'hos_page_analytics_action.dart';
+export 'hos_tab_analytics.dart';
 export 'hos_page_analytics_binder.dart';
 export 'hos_page_analytics_nav_observer.dart';
 export 'hos_page_analytics_reporter.dart';

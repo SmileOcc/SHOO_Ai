@@ -18,6 +18,7 @@ export 'core/hos_debug_tap_detector.dart';
 export 'modules/activity/hos_debug_activity_config.dart';
 export 'modules/activity/hos_debug_activity_config_page.dart';
 export 'modules/activity/hos_debug_activity_config_provider.dart';
+export 'modules/feedback/hos_debug_feedback_page.dart';
 export 'modules/native/hos_debug_native_example_page.dart';
 export 'modules/native/hos_debug_native_hub_page.dart';
 export 'modules/update/hos_debug_update_config.dart';

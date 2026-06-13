@@ -1250,6 +1250,114 @@ abstract class AppLocalizations {
   /// **'Backends'**
   String get debugAnalyticsBackendsUsed;
 
+  /// No description provided for @debugFeedbackEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Global feedback'**
+  String get debugFeedbackEntry;
+
+  /// No description provided for @debugFeedbackEntryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Test global loading overlay and error handling'**
+  String get debugFeedbackEntryHint;
+
+  /// No description provided for @debugFeedbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Global feedback debug'**
+  String get debugFeedbackTitle;
+
+  /// No description provided for @debugFeedbackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger global Loading mask and error Toast/Dialog. Overlay uses ref-count; concurrent tasks keep the mask visible until all finish.'**
+  String get debugFeedbackHint;
+
+  /// No description provided for @debugFeedbackLoadingSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading overlay'**
+  String get debugFeedbackLoadingSection;
+
+  /// No description provided for @debugFeedbackErrorSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Global error'**
+  String get debugFeedbackErrorSection;
+
+  /// No description provided for @debugFeedbackLoadingBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Show loading (2s)'**
+  String get debugFeedbackLoadingBasic;
+
+  /// No description provided for @debugFeedbackLoadingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Show loading with message (3s)'**
+  String get debugFeedbackLoadingMessage;
+
+  /// No description provided for @debugFeedbackLoadingConcurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Concurrent loading x2'**
+  String get debugFeedbackLoadingConcurrent;
+
+  /// No description provided for @debugFeedbackLoadingThenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading then error toast'**
+  String get debugFeedbackLoadingThenError;
+
+  /// No description provided for @debugFeedbackErrorToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Error toast (server)'**
+  String get debugFeedbackErrorToast;
+
+  /// No description provided for @debugFeedbackErrorDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Error dialog'**
+  String get debugFeedbackErrorDialog;
+
+  /// No description provided for @debugFeedbackErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Error toast (network)'**
+  String get debugFeedbackErrorNetwork;
+
+  /// No description provided for @debugFeedbackErrorStatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Static error report (no WidgetRef)'**
+  String get debugFeedbackErrorStatic;
+
+  /// No description provided for @debugFeedbackStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get debugFeedbackStatusTitle;
+
+  /// No description provided for @debugFeedbackOverlayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay ref-count: {count}'**
+  String debugFeedbackOverlayCount(int count);
+
+  /// No description provided for @debugFeedbackLastActionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Last action: —'**
+  String get debugFeedbackLastActionEmpty;
+
+  /// No description provided for @debugFeedbackLastAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Last action: {action}'**
+  String debugFeedbackLastAction(String action);
+
   /// No description provided for @debugToolsSection.
   ///
   /// In en, this message translates to:
