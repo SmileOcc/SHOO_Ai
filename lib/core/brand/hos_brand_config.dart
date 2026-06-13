@@ -21,20 +21,21 @@ abstract final class SHOAppBrandConfig {
 }
 
 final appIconStyleProvider =
-    StateNotifierProvider<SHOAppIconStyleNotifier, SHOAppIconStyle>((ref) {
-  return SHOAppIconStyleNotifier(ref.watch(localStorageProvider));
-});
+    NotifierProvider<SHOAppIconStyleNotifier, SHOAppIconStyle>(
+  SHOAppIconStyleNotifier.new,
+);
 
-class SHOAppIconStyleNotifier extends StateNotifier<SHOAppIconStyle> {
-  SHOAppIconStyleNotifier(this._storage)
-      : super(SHOAppBrandConfig.iconStyle) {
-    _restore();
+class SHOAppIconStyleNotifier extends Notifier<SHOAppIconStyle> {
+  late final SHOLocalStorage _storage;
+
+  @override
+  SHOAppIconStyle build() {
+    _storage = ref.read(localStorageProvider);
+    Future.microtask(_persistDefault);
+    return SHOAppBrandConfig.iconStyle;
   }
 
-  final SHOLocalStorage _storage;
-
-  Future<void> _restore() async {
-    state = SHOAppBrandConfig.iconStyle;
+  Future<void> _persistDefault() async {
     await _storage.write(_iconStyleStorageKey, state.name);
   }
 

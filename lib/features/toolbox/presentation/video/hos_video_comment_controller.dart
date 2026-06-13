@@ -3,20 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/hos_video_comment_storage.dart';
 import '../../domain/hos_video_comment.dart';
 
-final videoCommentsProvider = StateNotifierProvider.family<
+final videoCommentsProvider = NotifierProvider.family<
     SHOVideoCommentsNotifier, List<SHOVideoComment>, String>(
-  (ref, videoId) => SHOVideoCommentsNotifier(
-    ref.watch(videoCommentStorageProvider),
-    videoId,
-  ),
+  SHOVideoCommentsNotifier.new,
 );
 
-class SHOVideoCommentsNotifier extends StateNotifier<List<SHOVideoComment>> {
-  SHOVideoCommentsNotifier(this._storage, this._videoId)
-      : super(_storage.read(_videoId));
+class SHOVideoCommentsNotifier
+    extends FamilyNotifier<List<SHOVideoComment>, String> {
+  late final SHOVideoCommentStorage _storage;
 
-  final SHOVideoCommentStorage _storage;
-  final String _videoId;
+  @override
+  List<SHOVideoComment> build(String videoId) {
+    _storage = ref.read(videoCommentStorageProvider);
+    return _storage.read(videoId);
+  }
 
   Future<SHOVideoComment?> add(String content, {required String authorName}) async {
     final trimmed = content.trim();
@@ -24,7 +24,7 @@ class SHOVideoCommentsNotifier extends StateNotifier<List<SHOVideoComment>> {
 
     final comment = SHOVideoComment(
       id: 'vc_${DateTime.now().millisecondsSinceEpoch}',
-      videoId: _videoId,
+      videoId: arg,
       content: trimmed,
       createdAt: DateTime.now(),
       authorName: authorName,

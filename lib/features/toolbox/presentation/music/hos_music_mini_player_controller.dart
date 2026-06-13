@@ -41,12 +41,13 @@ Future<bool> openMusicPlayerPage(
 }
 
 final musicMiniPlayerDismissedProvider =
-    StateNotifierProvider<SHOMusicMiniPlayerDismissedNotifier, bool>((ref) {
-  return SHOMusicMiniPlayerDismissedNotifier();
-});
+    NotifierProvider<SHOMusicMiniPlayerDismissedNotifier, bool>(
+  SHOMusicMiniPlayerDismissedNotifier.new,
+);
 
-class SHOMusicMiniPlayerDismissedNotifier extends StateNotifier<bool> {
-  SHOMusicMiniPlayerDismissedNotifier() : super(true);
+class SHOMusicMiniPlayerDismissedNotifier extends Notifier<bool> {
+  @override
+  bool build() => true;
 
   void show() => state = false;
 
@@ -54,18 +55,18 @@ class SHOMusicMiniPlayerDismissedNotifier extends StateNotifier<bool> {
 }
 
 final musicMiniPlayerOffsetProvider =
-    StateNotifierProvider<SHOMusicMiniPlayerOffsetNotifier, Offset?>((ref) {
-  return SHOMusicMiniPlayerOffsetNotifier(ref.watch(sharedPreferencesProvider));
-});
+    NotifierProvider<SHOMusicMiniPlayerOffsetNotifier, Offset?>(
+  SHOMusicMiniPlayerOffsetNotifier.new,
+);
 
-class SHOMusicMiniPlayerOffsetNotifier extends StateNotifier<Offset?> {
-  SHOMusicMiniPlayerOffsetNotifier(this._prefs) : super(_readOffset(_prefs));
+class SHOMusicMiniPlayerOffsetNotifier extends Notifier<Offset?> {
+  late final SharedPreferences _prefs;
 
-  final SharedPreferences _prefs;
-
-  static Offset? _readOffset(SharedPreferences prefs) {
-    final dx = prefs.getDouble(SHOMusicStorageKeys.miniPlayerOffsetDx);
-    final dy = prefs.getDouble(SHOMusicStorageKeys.miniPlayerOffsetDy);
+  @override
+  Offset? build() {
+    _prefs = ref.read(sharedPreferencesProvider);
+    final dx = _prefs.getDouble(SHOMusicStorageKeys.miniPlayerOffsetDx);
+    final dy = _prefs.getDouble(SHOMusicStorageKeys.miniPlayerOffsetDy);
     if (dx == null || dy == null) return null;
     return Offset(dx, dy);
   }

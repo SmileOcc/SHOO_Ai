@@ -5,19 +5,19 @@ import 'hos_debug_network_log_config.dart';
 import 'hos_debug_network_log_config_bridge.dart';
 
 final debugNetworkLogConfigProvider =
-    StateNotifierProvider<SHODebugNetworkLogConfigNotifier, SHODebugNetworkLogConfig>(
-  (ref) {
-    return SHODebugNetworkLogConfigNotifier(ref.watch(debugConfigRepositoryProvider));
-  },
+    NotifierProvider<SHODebugNetworkLogConfigNotifier, SHODebugNetworkLogConfig>(
+  SHODebugNetworkLogConfigNotifier.new,
 );
 
-class SHODebugNetworkLogConfigNotifier extends StateNotifier<SHODebugNetworkLogConfig> {
-  SHODebugNetworkLogConfigNotifier(this._repo)
-      : super(const SHODebugNetworkLogConfig()) {
-    restore();
-  }
+class SHODebugNetworkLogConfigNotifier extends Notifier<SHODebugNetworkLogConfig> {
+  late final SHODebugConfigRepository _repo;
 
-  final SHODebugConfigRepository _repo;
+  @override
+  SHODebugNetworkLogConfig build() {
+    _repo = ref.read(debugConfigRepositoryProvider);
+    Future.microtask(restore);
+    return const SHODebugNetworkLogConfig();
+  }
 
   Future<void> restore() async {
     state = await _repo.loadNetworkLogConfig();

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router/hos_routes.dart';
+import '../../features/study/presentation/study_article_page.dart';
+import '../../features/study/presentation/study_home_page.dart';
 import 'presentation/hos_download_list_page.dart';
 import 'presentation/hos_toolbox_page.dart';
 import 'presentation/hos_txt_reader_route_page.dart';
@@ -15,6 +17,21 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SHOToolboxPage(),
         routes: [
+          GoRoute(
+            path: 'study',
+            parentNavigatorKey: rootKey,
+            builder: (context, state) => const SHOStudyHomePage(),
+            routes: [
+              GoRoute(
+                path: 'article',
+                parentNavigatorKey: rootKey,
+                builder: (context, state) {
+                  final slug = state.uri.queryParameters['slug'] ?? '';
+                  return SHOStudyArticlePage(articleId: slug);
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: 'downloads',
             parentNavigatorKey: rootKey,

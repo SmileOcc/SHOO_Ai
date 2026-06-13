@@ -1228,6 +1228,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxFileDownload => '文件下载';
 
   @override
+  String get toolboxGroupLearning => '学习';
+
+  @override
+  String get toolboxStudy => '面试学习';
+
+  @override
+  String get studyTitle => '学习';
+
+  @override
+  String get studyHomeSubtitle => '移动端与 Flutter 面试题详解，结合项目实战整理。';
+
+  @override
+  String get studySectionFlutterMobile => '移动端 / Flutter';
+
+  @override
   String get toolboxComingSoon => '敬请期待';
 
   @override

@@ -5,17 +5,19 @@ import '../../product/domain/hos_product_detail.dart';
 import '../data/hos_cart_storage.dart';
 import '../domain/hos_cart.dart';
 
-final cartProvider =
-    StateNotifierProvider<SHOCartNotifier, SHOCartSnapshot>((ref) {
-  final notifier = SHOCartNotifier(ref.watch(cartStorageProvider));
-  Future.microtask(notifier.restore);
-  return notifier;
-});
+final cartProvider = NotifierProvider<SHOCartNotifier, SHOCartSnapshot>(
+  SHOCartNotifier.new,
+);
 
-class SHOCartNotifier extends StateNotifier<SHOCartSnapshot> {
-  SHOCartNotifier(this._storage) : super(const SHOCartSnapshot());
+class SHOCartNotifier extends Notifier<SHOCartSnapshot> {
+  late final SHOCartStorage _storage;
 
-  final SHOCartStorage _storage;
+  @override
+  SHOCartSnapshot build() {
+    _storage = ref.read(cartStorageProvider);
+    Future.microtask(restore);
+    return const SHOCartSnapshot();
+  }
 
   Future<void> restore() async {
     state = await _storage.load();

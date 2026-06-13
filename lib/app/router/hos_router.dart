@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/analytics/hos_page_analytics.dart';
 import '../../features/toolbox/presentation/music/hos_music_nav_observer.dart';
 import '../../features/toolbox/presentation/music/hos_music_route_state.dart';
 
@@ -32,9 +33,13 @@ final routerProvider = Provider<GoRouter>((ref) {
   router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: SHOAppRoutes.splash,
-    refreshListenable: notifier,
-    redirect: notifier.redirect,
-    observers: [SHOMusicNavigatorObserver(syncMusicRoute)],
+    refreshListenable: notifier,  // ← 路由守卫刷新
+    redirect: notifier.redirect,  // ← 路由守卫逻辑
+    observers: [
+      shoPageRouteObserver,
+      SHOPageAnalyticsNavigatorObserver.root,
+      SHOMusicNavigatorObserver(syncMusicRoute),
+    ],
     errorBuilder: (context, state) => SHONotFoundPage(location: state.uri.toString()),
     routes: [
       ...shoSplashRoutes(),

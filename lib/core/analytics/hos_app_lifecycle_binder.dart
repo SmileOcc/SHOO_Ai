@@ -17,6 +17,8 @@ class SHOAppLifecycleBinder extends ConsumerStatefulWidget {
       _SHOAppLifecycleBinderState();
 }
 
+//WidgetsBindingObserver	Flutter 官方生命周期监听接口
+// AppLifecycleListener (Flutter 3.13+)	✅ 更简洁	⚠️ 需要新版本 Flutter	新项目
 class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
     with WidgetsBindingObserver {
   static bool _launchReported = false;
@@ -24,7 +26,9 @@ class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
   @override
   void initState() {
     super.initState();
+    // ← 注册生命周期监听
     WidgetsBinding.instance.addObserver(this);
+    // 在首帧渲染后执行，记录准确时间
     WidgetsBinding.instance.addPostFrameCallback((_) => _onFirstFrame());
   }
 
@@ -35,6 +39,7 @@ class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
   }
 
   Future<void> _onFirstFrame() async {
+    // ← 记录首帧渲染时间
     if (SHOAppStartupTimer.hasFirstFrame) return;
     SHOAppStartupTimer.markFirstFrame();
     await SHOStartupTimingLog.printAndTrack();
@@ -55,6 +60,7 @@ class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // ← 处理生命周期变化
     switch (state) {
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:

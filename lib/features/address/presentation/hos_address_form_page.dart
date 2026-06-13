@@ -6,6 +6,7 @@ import '../../../core/feedback/hos_toast.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_validators.dart';
 import '../../../core/widgets/hos_button.dart';
+import '../../../core/widgets/hos_loading_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/hos_address.dart';
 import 'hos_address_controller.dart';
@@ -31,6 +32,7 @@ class _SHOAddressFormPageState extends ConsumerState<SHOAddressFormPage> {
   late final TextEditingController _postalCtrl;
   var _isDefault = false;
   var _saving = false;
+  var _addressInitialized = false;
 
   bool get _isEditing => widget.addressId != null;
 
@@ -44,23 +46,19 @@ class _SHOAddressFormPageState extends ConsumerState<SHOAddressFormPage> {
     _cityCtrl = TextEditingController();
     _regionCtrl = TextEditingController();
     _postalCtrl = TextEditingController();
-    _loadAddress();
   }
 
-  Future<void> _loadAddress() async {
-    if (!_isEditing) return;
-    final addresses = await ref.read(addressesProvider.future);
-    final address = addresses.where((item) => item.id == widget.addressId);
-    if (address.isEmpty || !mounted) return;
-    final current = address.first;
-    _nameCtrl.text = current.name;
-    _phoneCtrl.text = current.phone;
-    _line1Ctrl.text = current.line1;
-    _line2Ctrl.text = current.line2;
-    _cityCtrl.text = current.city;
-    _regionCtrl.text = current.region;
-    _postalCtrl.text = current.postalCode;
-    setState(() => _isDefault = current.isDefault);
+  void _populateFromAddress(SHOAddress? address) {
+    if (address == null || _addressInitialized) return;
+    _addressInitialized = true;
+    _nameCtrl.text = address.name;
+    _phoneCtrl.text = address.phone;
+    _line1Ctrl.text = address.line1;
+    _line2Ctrl.text = address.line2;
+    _cityCtrl.text = address.city;
+    _regionCtrl.text = address.region;
+    _postalCtrl.text = address.postalCode;
+    _isDefault = address.isDefault;
   }
 
   @override
@@ -80,7 +78,7 @@ class _SHOAddressFormPageState extends ConsumerState<SHOAddressFormPage> {
 
     setState(() => _saving = true);
     try {
-      final addresses = await ref.read(addressesProvider.future);
+      final addresses = ref.read(addressesProvider).valueOrNull ?? const <SHOAddress>[];
       final id =
           widget.addressId ?? 'addr_${DateTime.now().millisecondsSinceEpoch}';
       final shouldDefault = _isDefault || addresses.isEmpty;
@@ -97,7 +95,7 @@ class _SHOAddressFormPageState extends ConsumerState<SHOAddressFormPage> {
         isDefault: shouldDefault,
       );
 
-      await saveAddress(ref, address);
+      await ref.read(addressesProvider.notifier).save(address);
       if (!mounted) return;
       SHOAppToast.success(AppLocalizations.of(context).addressSaved);
       context.pop();
@@ -109,6 +107,32 @@ class _SHOAddressFormPageState extends ConsumerState<SHOAddressFormPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    if (_isEditing && widget.addressId != null) {
+      final addressId = widget.addressId!;
+      final addressAsync = ref.watch(addressByIdProvider(addressId));
+
+      ref.listen(addressByIdProvider(addressId), (_, next) {
+        next.whenData(_populateFromAddress);
+      });
+      _populateFromAddress(addressAsync.valueOrNull);
+
+      if (!_addressInitialized) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              l10n.addressFormEditTitle,
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+          ),
+          body: addressAsync.whenLoadingState(
+            onRetry: () => ref.read(addressesProvider.notifier).refresh(),
+            empty: (address) => address == null,
+            data: (_) => const SizedBox.shrink(),
+          ),
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(

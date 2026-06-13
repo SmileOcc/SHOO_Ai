@@ -2444,6 +2444,36 @@ abstract class AppLocalizations {
   /// **'Downloads'**
   String get toolboxFileDownload;
 
+  /// No description provided for @toolboxGroupLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get toolboxGroupLearning;
+
+  /// No description provided for @toolboxStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Interview study'**
+  String get toolboxStudy;
+
+  /// No description provided for @studyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get studyTitle;
+
+  /// No description provided for @studyHomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile & Flutter interview Q&A tied to real project scenarios.'**
+  String get studyHomeSubtitle;
+
+  /// No description provided for @studySectionFlutterMobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile / Flutter'**
+  String get studySectionFlutterMobile;
+
   /// No description provided for @toolboxComingSoon.
   ///
   /// In en, this message translates to:

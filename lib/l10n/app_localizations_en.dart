@@ -1261,6 +1261,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxFileDownload => 'Downloads';
 
   @override
+  String get toolboxGroupLearning => 'Learning';
+
+  @override
+  String get toolboxStudy => 'Interview study';
+
+  @override
+  String get studyTitle => 'Study';
+
+  @override
+  String get studyHomeSubtitle =>
+      'Mobile & Flutter interview Q&A tied to real project scenarios.';
+
+  @override
+  String get studySectionFlutterMobile => 'Mobile / Flutter';
+
+  @override
   String get toolboxComingSoon => 'Coming soon';
 
   @override

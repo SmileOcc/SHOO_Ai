@@ -63,17 +63,8 @@ SHODownloadTask? resolveDownloadTaskForEntry(
 }
 
 final videoLibraryEntriesProvider =
-    StateNotifierProvider<SHOVideoLibraryNotifier, List<SHOVideoLibraryEntry>>(
-  (ref) {
-    final notifier = SHOVideoLibraryNotifier(
-      ref.watch(videoLibraryStorageProvider),
-      ref.read(downloadTasksProvider),
-    );
-    ref.listen(downloadTasksProvider, (_, tasks) {
-      notifier.syncFromDownloads(tasks);
-    });
-    return notifier;
-  },
+    NotifierProvider<SHOVideoLibraryNotifier, List<SHOVideoLibraryEntry>>(
+  SHOVideoLibraryNotifier.new,
 );
 
 final videoPlaybackRevisionProvider = StateProvider<int>((ref) => 0);
@@ -102,13 +93,19 @@ final videoLibraryListItemsProvider =
   return items;
 });
 
-class SHOVideoLibraryNotifier extends StateNotifier<List<SHOVideoLibraryEntry>> {
-  SHOVideoLibraryNotifier(this._storage, List<SHODownloadTask> initialTasks)
-      : super(_storage.readEntries()) {
-    unawaited(syncFromDownloads(initialTasks));
-  }
+class SHOVideoLibraryNotifier extends Notifier<List<SHOVideoLibraryEntry>> {
+  late final SHOVideoLibraryStorage _storage;
 
-  final SHOVideoLibraryStorage _storage;
+  @override
+  List<SHOVideoLibraryEntry> build() {
+    _storage = ref.read(videoLibraryStorageProvider);
+    final initialTasks = ref.read(downloadTasksProvider);
+    ref.listen(downloadTasksProvider, (_, tasks) {
+      unawaited(syncFromDownloads(tasks));
+    });
+    unawaited(syncFromDownloads(initialTasks));
+    return _storage.readEntries();
+  }
 
   Future<void> syncFromDownloads(List<SHODownloadTask> tasks) async {
     await syncLocalDownloads(tasks);

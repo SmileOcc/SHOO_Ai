@@ -33,25 +33,22 @@ class SHOSessionState {
   }
 }
 
-final sessionProvider =
-    StateNotifierProvider<SHOSessionNotifier, SHOSessionState>((ref) {
-  final notifier = SHOSessionNotifier(
-    ref.watch(authRepositoryProvider),
-    ref,
-  );
-  Future.microtask(notifier.restore);
-  return notifier;
-});
+final sessionProvider = NotifierProvider<SHOSessionNotifier, SHOSessionState>(
+  SHOSessionNotifier.new,
+);
 
-class SHOSessionNotifier extends StateNotifier<SHOSessionState> {
-  SHOSessionNotifier(this._repository, this._ref)
-      : super(const SHOSessionState(isRestoring: true));
+class SHOSessionNotifier extends Notifier<SHOSessionState> {
+  late final SHOAuthRepository _repository;
 
-  final SHOAuthRepository _repository;
-  final Ref _ref;
+  @override
+  SHOSessionState build() {
+    _repository = ref.read(authRepositoryProvider);
+    Future.microtask(restore);
+    return const SHOSessionState(isRestoring: true);
+  }
 
   void _syncToken(String? token) {
-    _ref.read(authTokenProvider.notifier).state = token;
+    ref.read(authTokenProvider.notifier).state = token;
   }
 
   Future<void> restore() async {

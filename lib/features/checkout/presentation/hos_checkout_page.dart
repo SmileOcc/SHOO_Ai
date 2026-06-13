@@ -14,7 +14,6 @@ import '../../../core/widgets/hos_network_image.dart';
 import '../../../core/widgets/hos_price_breakdown.dart';
 import '../../../features/auth/presentation/hos_session_provider.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../address/domain/hos_address.dart';
 import '../../address/presentation/hos_address_controller.dart';
 import '../../cart/presentation/hos_cart_controller.dart';
 import '../../coupon/domain/hos_coupon.dart';
@@ -31,7 +30,6 @@ class SHOCheckoutPage extends ConsumerStatefulWidget {
 class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
   bool _submitting = false;
   bool _checkoutTracked = false;
-  SHOAddress? _pickedAddress;
   String? _pickedCouponId;
 
   @override
@@ -56,10 +54,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
   }
 
   Future<void> _pickAddress() async {
-    final result = await context.push<SHOAddress>(SHOAppRoutes.addressesSelect);
-    if (result != null && mounted) {
-      setState(() => _pickedAddress = result);
-    }
+    await context.push(SHOAppRoutes.addressesSelect);
   }
 
   Future<void> _pickCoupon() async {
@@ -78,8 +73,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
       return;
     }
 
-    final address =
-        _pickedAddress ?? ref.read(selectedAddressProvider).valueOrNull;
+    final address = ref.read(selectedAddressProvider).valueOrNull;
     if (address == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.checkoutNoAddress)),
@@ -186,22 +180,21 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
                 loading: () => Text(l10n.loading),
                 error: (_, __) => Text(l10n.loadFailed),
                 data: (address) {
-                  final display = _pickedAddress ?? address;
-                  if (display == null) {
+                  if (address == null) {
                     return Text(l10n.checkoutAddAddress);
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${display.name}  ${display.phone}',
+                        '${address.name}  ${address.phone}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                       ),
                       const SizedBox(height: SHOAppSpacing.xs),
                       Text(
-                        display.fullLine,
+                        address.fullLine,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],

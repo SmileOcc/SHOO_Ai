@@ -12,25 +12,22 @@ final debugPrefsProvider = Provider<SHODebugPrefs>((ref) {
 });
 
 final runtimeEnvOverrideProvider =
-    StateNotifierProvider<SHORuntimeEnvOverrideNotifier, SHOAppEnvironment?>(
-  (ref) => SHORuntimeEnvOverrideNotifier(ref.watch(debugPrefsProvider)),
+    NotifierProvider<SHORuntimeEnvOverrideNotifier, SHOAppEnvironment?>(
+  SHORuntimeEnvOverrideNotifier.new,
 );
 
-final showEnvBadgeProvider =
-    StateNotifierProvider<SHOShowEnvBadgeNotifier, bool>(
-  (ref) => SHOShowEnvBadgeNotifier(ref.watch(debugPrefsProvider)),
+final showEnvBadgeProvider = NotifierProvider<SHOShowEnvBadgeNotifier, bool>(
+  SHOShowEnvBadgeNotifier.new,
 );
 
-class SHORuntimeEnvOverrideNotifier extends StateNotifier<SHOAppEnvironment?> {
-  SHORuntimeEnvOverrideNotifier(this._prefs) : super(null) {
-    _restore();
-  }
+class SHORuntimeEnvOverrideNotifier extends Notifier<SHOAppEnvironment?> {
+  late final SHODebugPrefs _prefs;
 
-  final SHODebugPrefs _prefs;
-
-  void _restore() {
-    if (!_debugPanelActive) return;
-    state = _prefs.readEnvOverride();
+  @override
+  SHOAppEnvironment? build() {
+    _prefs = ref.read(debugPrefsProvider);
+    if (!_debugPanelActive) return null;
+    return _prefs.readEnvOverride();
   }
 
   Future<void> setOverride(SHOAppEnvironment env) async {
@@ -50,16 +47,14 @@ class SHORuntimeEnvOverrideNotifier extends StateNotifier<SHOAppEnvironment?> {
   }
 }
 
-class SHOShowEnvBadgeNotifier extends StateNotifier<bool> {
-  SHOShowEnvBadgeNotifier(this._prefs) : super(false) {
-    _restore();
-  }
+class SHOShowEnvBadgeNotifier extends Notifier<bool> {
+  late final SHODebugPrefs _prefs;
 
-  final SHODebugPrefs _prefs;
-
-  void _restore() {
-    if (!_debugPanelActive) return;
-    state = _prefs.readShowEnvBadge();
+  @override
+  bool build() {
+    _prefs = ref.read(debugPrefsProvider);
+    if (!_debugPanelActive) return false;
+    return _prefs.readShowEnvBadge();
   }
 
   Future<void> setEnabled(bool value) async {

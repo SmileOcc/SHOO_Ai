@@ -254,6 +254,186 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const pageEnter = SHOAnalyticsEventDef(
+    key: 'page_enter',
+    title: 'Page enter',
+    description: 'Page became visible (RouteAware.didPush)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'SHOMusicPlayerPage',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_uri',
+        type: SHOAnalyticsFieldType.string,
+        example: '/toolbox/music?trackId=t1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'previous_route_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/toolbox/downloads',
+      ),
+    ],
+  );
+
+  static const pageExit = SHOAnalyticsEventDef(
+    key: 'page_exit',
+    title: 'Page exit',
+    description: 'Page removed from stack (RouteAware.didPop)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'SHOMusicPlayerPage',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+    ],
+  );
+
+  static const pageCover = SHOAnalyticsEventDef(
+    key: 'page_cover',
+    title: 'Page cover',
+    description: 'Page hidden by route pushed on top (RouteAware.didPushNext)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'SHODownloadListPage',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/downloads',
+      ),
+    ],
+  );
+
+  static const pageResume = SHOAnalyticsEventDef(
+    key: 'page_resume',
+    title: 'Page resume',
+    description: 'Page visible again after cover removed (RouteAware.didPopNext)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'SHODownloadListPage',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/downloads',
+      ),
+    ],
+  );
+
+  static const routePush = SHOAnalyticsEventDef(
+    key: 'route_push',
+    title: 'Route push',
+    description: 'Navigator stack push (NavigatorObserver.didPush)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'navigator_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'root',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'previous_route_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/toolbox',
+      ),
+    ],
+  );
+
+  static const routePop = SHOAnalyticsEventDef(
+    key: 'route_pop',
+    title: 'Route pop',
+    description: 'Navigator stack pop (NavigatorObserver.didPop)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'navigator_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'root',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'previous_route_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/toolbox/downloads',
+      ),
+    ],
+  );
+
+  static const routeReplace = SHOAnalyticsEventDef(
+    key: 'route_replace',
+    title: 'Route replace',
+    description: 'Navigator route replaced (NavigatorObserver.didReplace)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'navigator_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'root',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+    ],
+  );
+
+  static const routeRemove = SHOAnalyticsEventDef(
+    key: 'route_remove',
+    title: 'Route remove',
+    description: 'Navigator route removed (NavigatorObserver.didRemove)',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'navigator_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'root',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: '/toolbox/music',
+      ),
+    ],
+  );
+
   static const musicPackAlreadyExtracted = SHOAnalyticsEventDef(
     key: 'music_pack_already_extracted',
     title: 'Music pack already extracted',
@@ -275,6 +455,14 @@ abstract final class SHOAnalyticsRegistry {
     appLaunch,
     appClose,
     appStartupTime,
+    pageEnter,
+    pageExit,
+    pageCover,
+    pageResume,
+    routePush,
+    routePop,
+    routeReplace,
+    routeRemove,
     loginSuccess,
     logout,
     productView,

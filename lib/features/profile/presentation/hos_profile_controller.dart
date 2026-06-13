@@ -16,14 +16,18 @@ final profileFeedTabProvider =
     StateProvider<SHOProfileFeedTab>((ref) => SHOProfileFeedTab.guessYouLike);
 
 final profileActivityProvider =
-    StateNotifierProvider<SHOProfileActivityNotifier, SHOProfileActivitySnapshot>(
-  (ref) => SHOProfileActivityNotifier(ref.watch(profileActivityStorageProvider)),
+    NotifierProvider<SHOProfileActivityNotifier, SHOProfileActivitySnapshot>(
+  SHOProfileActivityNotifier.new,
 );
 
-class SHOProfileActivityNotifier extends StateNotifier<SHOProfileActivitySnapshot> {
-  SHOProfileActivityNotifier(this._storage) : super(_storage.read());
+class SHOProfileActivityNotifier extends Notifier<SHOProfileActivitySnapshot> {
+  late final SHOProfileActivityStorage _storage;
 
-  final SHOProfileActivityStorage _storage;
+  @override
+  SHOProfileActivitySnapshot build() {
+    _storage = ref.read(profileActivityStorageProvider);
+    return _storage.read();
+  }
 
   Future<void> refresh() async {
     state = _storage.read();

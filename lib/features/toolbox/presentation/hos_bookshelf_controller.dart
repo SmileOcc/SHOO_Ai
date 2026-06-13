@@ -6,8 +6,8 @@ import '../domain/hos_download_task.dart';
 import 'hos_download_controller.dart';
 
 final bookshelfEntriesProvider =
-    StateNotifierProvider<SHOBookshelfNotifier, List<SHOBookshelfEntry>>(
-  (ref) => SHOBookshelfNotifier(ref.watch(bookshelfStorageProvider)),
+    NotifierProvider<SHOBookshelfNotifier, List<SHOBookshelfEntry>>(
+  SHOBookshelfNotifier.new,
 );
 
 class SHOBookshelfListItem {
@@ -30,10 +30,14 @@ final bookshelfListItemsProvider = Provider<List<SHOBookshelfListItem>>((ref) {
   ];
 });
 
-class SHOBookshelfNotifier extends StateNotifier<List<SHOBookshelfEntry>> {
-  SHOBookshelfNotifier(this._storage) : super(_storage.read());
+class SHOBookshelfNotifier extends Notifier<List<SHOBookshelfEntry>> {
+  late final SHOBookshelfStorage _storage;
 
-  final SHOBookshelfStorage _storage;
+  @override
+  List<SHOBookshelfEntry> build() {
+    _storage = ref.read(bookshelfStorageProvider);
+    return _storage.read();
+  }
 
   bool contains(String taskId) {
     return state.any((entry) => entry.taskId == taskId);

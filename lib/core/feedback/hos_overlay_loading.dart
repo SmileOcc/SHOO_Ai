@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/hos_colors.dart';
 
 /// 全局半透明 Loading 遮罩（引用计数，支持并发请求）。
-class SHOOverlayLoadingController extends StateNotifier<int> {
-  SHOOverlayLoadingController() : super(0);
+class SHOOverlayLoadingController extends Notifier<int> {
+  @override
+  int build() => 0;
 
   void show() => state = state + 1;
 
@@ -24,9 +25,9 @@ class SHOOverlayLoadingController extends StateNotifier<int> {
 }
 
 final overlayLoadingProvider =
-    StateNotifierProvider<SHOOverlayLoadingController, int>((ref) {
-  return SHOOverlayLoadingController();
-});
+    NotifierProvider<SHOOverlayLoadingController, int>(
+  SHOOverlayLoadingController.new,
+);
 
 final overlayLoadingMessageProvider = StateProvider<String?>((ref) => null);
 

@@ -313,29 +313,27 @@ int _compareDate(DateTime? a, DateTime? b) {
 }
 
 final musicDismissedTasksProvider =
-    StateNotifierProvider<SHOMusicDismissedTasksNotifier, Set<String>>((ref) {
-  return SHOMusicDismissedTasksNotifier(ref.watch(sharedPreferencesProvider));
-});
+    NotifierProvider<SHOMusicDismissedTasksNotifier, Set<String>>(
+  SHOMusicDismissedTasksNotifier.new,
+);
 
 final musicRemovedCachedProvider =
-    StateNotifierProvider<SHOMusicRemovedCachedNotifier, Set<String>>((ref) {
-  return SHOMusicRemovedCachedNotifier(ref.watch(sharedPreferencesProvider));
-});
+    NotifierProvider<SHOMusicRemovedCachedNotifier, Set<String>>(
+  SHOMusicRemovedCachedNotifier.new,
+);
 
 final musicDismissedTrackIdsProvider =
-    StateNotifierProvider<SHOMusicDismissedTrackIdsNotifier, Set<String>>((ref) {
-  return SHOMusicDismissedTrackIdsNotifier(
-    ref.watch(sharedPreferencesProvider),
-  );
-});
+    NotifierProvider<SHOMusicDismissedTrackIdsNotifier, Set<String>>(
+  SHOMusicDismissedTrackIdsNotifier.new,
+);
 
-class SHOMusicDismissedTrackIdsNotifier extends StateNotifier<Set<String>> {
-  SHOMusicDismissedTrackIdsNotifier(this._prefs) : super(_readDismissed(_prefs));
+class SHOMusicDismissedTrackIdsNotifier extends Notifier<Set<String>> {
+  late final SharedPreferences _prefs;
 
-  final SharedPreferences _prefs;
-
-  static Set<String> _readDismissed(SharedPreferences prefs) {
-    final raw = prefs.getStringList(SHOMusicStorageKeys.dismissedTrackIds);
+  @override
+  Set<String> build() {
+    _prefs = ref.read(sharedPreferencesProvider);
+    final raw = _prefs.getStringList(SHOMusicStorageKeys.dismissedTrackIds);
     return raw?.toSet() ?? {};
   }
 
@@ -375,13 +373,13 @@ class SHOMusicDismissedTrackIdsNotifier extends StateNotifier<Set<String>> {
   }
 }
 
-class SHOMusicDismissedTasksNotifier extends StateNotifier<Set<String>> {
-  SHOMusicDismissedTasksNotifier(this._prefs) : super(_readDismissed(_prefs));
+class SHOMusicDismissedTasksNotifier extends Notifier<Set<String>> {
+  late final SharedPreferences _prefs;
 
-  final SharedPreferences _prefs;
-
-  static Set<String> _readDismissed(SharedPreferences prefs) {
-    final raw = prefs.getStringList(SHOMusicStorageKeys.dismissedLocalTasks);
+  @override
+  Set<String> build() {
+    _prefs = ref.read(sharedPreferencesProvider);
+    final raw = _prefs.getStringList(SHOMusicStorageKeys.dismissedLocalTasks);
     return raw?.toSet() ?? {};
   }
 
@@ -396,13 +394,13 @@ class SHOMusicDismissedTasksNotifier extends StateNotifier<Set<String>> {
   }
 }
 
-class SHOMusicRemovedCachedNotifier extends StateNotifier<Set<String>> {
-  SHOMusicRemovedCachedNotifier(this._prefs) : super(_readRemoved(_prefs));
+class SHOMusicRemovedCachedNotifier extends Notifier<Set<String>> {
+  late final SharedPreferences _prefs;
 
-  final SharedPreferences _prefs;
-
-  static Set<String> _readRemoved(SharedPreferences prefs) {
-    final raw = prefs.getStringList(SHOMusicStorageKeys.removedCachedSongs);
+  @override
+  Set<String> build() {
+    _prefs = ref.read(sharedPreferencesProvider);
+    final raw = _prefs.getStringList(SHOMusicStorageKeys.removedCachedSongs);
     return raw?.toSet() ?? {};
   }
 

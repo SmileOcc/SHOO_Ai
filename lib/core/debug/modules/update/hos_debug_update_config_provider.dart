@@ -4,16 +4,19 @@ import '../../core/hos_debug_config_repository.dart';
 import 'hos_debug_update_config.dart';
 
 final debugUpdateConfigProvider =
-    StateNotifierProvider<SHODebugUpdateConfigNotifier, SHODebugUpdateConfig>((ref) {
-  return SHODebugUpdateConfigNotifier(ref.watch(debugConfigRepositoryProvider));
-});
+    NotifierProvider<SHODebugUpdateConfigNotifier, SHODebugUpdateConfig>(
+  SHODebugUpdateConfigNotifier.new,
+);
 
-class SHODebugUpdateConfigNotifier extends StateNotifier<SHODebugUpdateConfig> {
-  SHODebugUpdateConfigNotifier(this._repo) : super(const SHODebugUpdateConfig()) {
-    restore();
+class SHODebugUpdateConfigNotifier extends Notifier<SHODebugUpdateConfig> {
+  late final SHODebugConfigRepository _repo;
+
+  @override
+  SHODebugUpdateConfig build() {
+    _repo = ref.read(debugConfigRepositoryProvider);
+    Future.microtask(restore);
+    return const SHODebugUpdateConfig();
   }
-
-  final SHODebugConfigRepository _repo;
 
   Future<void> restore() async {
     state = await _repo.loadUpdateConfig();

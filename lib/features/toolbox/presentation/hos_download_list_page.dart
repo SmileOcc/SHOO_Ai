@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/analytics/hos_page_analytics.dart';
 import '../../../core/dialogs/hos_download_task_dialog.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
@@ -25,7 +26,7 @@ class SHODownloadListPage extends ConsumerStatefulWidget {
 }
 
 class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin {
   late final TabController _tabController;
 
   static const _tabs = SHODownloadListTab.values;

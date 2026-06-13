@@ -39,6 +39,17 @@ class SHOToolboxPage extends StatelessWidget {
         ],
       ),
       _ToolboxGroup(
+        title: l10n.toolboxGroupLearning,
+        items: [
+          _ToolboxMenuItem(
+            icon: Icons.school_outlined,
+            color: const Color(0xFF42A5F5),
+            label: l10n.toolboxStudy,
+            onTap: () => context.push(SHOAppRoutes.toolboxStudy),
+          ),
+        ],
+      ),
+      _ToolboxGroup(
         title: l10n.toolboxGroupTools,
         items: [
           _ToolboxMenuItem(

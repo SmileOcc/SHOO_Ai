@@ -10,3 +10,4 @@ export 'hos_analytics_field.dart';
 export 'hos_analytics_manager.dart';
 export 'hos_analytics_provider.dart';
 export 'hos_analytics_registry.dart';
+export 'hos_page_analytics.dart';

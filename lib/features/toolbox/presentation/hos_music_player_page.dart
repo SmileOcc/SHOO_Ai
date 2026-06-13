@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/hos_page_analytics.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/share/hos_share_service.dart';
 import '../../../core/theme/hos_colors.dart';
@@ -43,11 +44,21 @@ class SHOMusicPlayerPage extends ConsumerStatefulWidget {
   ConsumerState<SHOMusicPlayerPage> createState() => _SHOMusicPlayerPageState();
 }
 
-class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage> {
+class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
+    with SHOPageRouteAnalyticsMixin {
   var _showLyrics = true;
   var _initialized = false;
   var _bootstrapping = true;
   String? _lastSyncedTrackId;
+
+  @override
+  String get pageAnalyticsName => 'SHOMusicPlayerPage';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'track_id': widget.trackId,
+        if (widget.fromDownloadPack) 'from_download_pack': true,
+      };
 
   @override
   void initState() {

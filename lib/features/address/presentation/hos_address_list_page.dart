@@ -24,12 +24,6 @@ class SHOAddressListPage extends ConsumerStatefulWidget {
 }
 
 class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
-  var _deleteMode = false;
-
-  void _exitDeleteMode() {
-    setState(() => _deleteMode = false);
-  }
-
   Future<void> _confirmDelete(SHOAddress address) async {
     final l10n = AppLocalizations.of(context);
     final ok = await SHOAppDialog.confirm(
@@ -41,10 +35,11 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
       isDestructive: true,
     );
     if (!ok || !mounted) return;
-    await deleteAddress(ref, address.id);
+    await ref.read(addressesProvider.notifier).delete(address.id);
     if (!mounted) return;
-    if (_deleteMode && (ref.read(addressesProvider).valueOrNull?.isEmpty ?? true)) {
-      _exitDeleteMode();
+    final deleteMode = ref.read(addressListDeleteModeProvider);
+    if (deleteMode && (ref.read(addressesProvider).valueOrNull?.isEmpty ?? true)) {
+      ref.read(addressListDeleteModeProvider.notifier).state = false;
     }
   }
 
@@ -67,6 +62,8 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
     final l10n = AppLocalizations.of(context);
     final addressesAsync = ref.watch(addressesProvider);
     final selectedId = ref.watch(selectedAddressIdProvider);
+    final deleteMode = ref.watch(addressListDeleteModeProvider);
+    final addressesNotifier = ref.read(addressesProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,23 +71,26 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
           widget.selectMode ? l10n.addressSelectTitle : l10n.addressListTitle,
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
-        leading: _deleteMode
+        leading: deleteMode
             ? IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: _exitDeleteMode,
+                onPressed: () =>
+                    ref.read(addressListDeleteModeProvider.notifier).state =
+                        false,
               )
             : null,
-        automaticallyImplyLeading: !_deleteMode,
+        automaticallyImplyLeading: !deleteMode,
         actions: [
-          if (!widget.selectMode && !_deleteMode)
+          if (!widget.selectMode && !deleteMode)
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => setState(() => _deleteMode = true),
+              onPressed: () =>
+                  ref.read(addressListDeleteModeProvider.notifier).state = true,
             ),
         ],
       ),
       body: addressesAsync.whenLoadingState(
-        onRetry: () => ref.invalidate(addressesProvider),
+        onRetry: addressesNotifier.refresh,
         empty: (list) => list.isEmpty,
         data: (addresses) {
           if (addresses.isEmpty) {
@@ -123,9 +123,9 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
                 address: address,
                 selectMode: widget.selectMode,
                 selected: selected,
-                deleteMode: _deleteMode,
+                deleteMode: deleteMode,
                 onTap: () {
-                  if (_deleteMode) return;
+                  if (deleteMode) return;
                   if (widget.selectMode) {
                     _selectAddress(address);
                     return;

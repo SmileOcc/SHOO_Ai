@@ -11,32 +11,26 @@ import '../data/hos_txt_reader_progress_storage.dart';
 import '../domain/hos_download_task.dart';
 
 final downloadTasksProvider =
-    StateNotifierProvider<SHODownloadTasksNotifier, List<SHODownloadTask>>(
-  (ref) {
-    final notifier = SHODownloadTasksNotifier(
-      ref.watch(downloadStorageProvider),
-      ref.watch(bookshelfStorageProvider),
-      ref.watch(txtReaderProgressStorageProvider),
-    );
-    ref.onDispose(notifier.dispose);
-    return notifier;
-  },
+    NotifierProvider<SHODownloadTasksNotifier, List<SHODownloadTask>>(
+  SHODownloadTasksNotifier.new,
 );
 
-class SHODownloadTasksNotifier extends StateNotifier<List<SHODownloadTask>> {
-  SHODownloadTasksNotifier(
-    this._storage,
-    this._bookshelfStorage,
-    this._progressStorage,
-  ) : super(const []) {
-    unawaited(_bootstrap());
-  }
-
-  final SHODownloadStorage _storage;
-  final SHOBookshelfStorage _bookshelfStorage;
-  final SHOTxtReaderProgressStorage _progressStorage;
+class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
+  late final SHODownloadStorage _storage;
+  late final SHOBookshelfStorage _bookshelfStorage;
+  late final SHOTxtReaderProgressStorage _progressStorage;
   SHODownloadEngine? _engine;
   var _ready = false;
+
+  @override
+  List<SHODownloadTask> build() {
+    _storage = ref.read(downloadStorageProvider);
+    _bookshelfStorage = ref.read(bookshelfStorageProvider);
+    _progressStorage = ref.read(txtReaderProgressStorageProvider);
+    ref.onDispose(() => _engine?.dispose());
+    unawaited(_bootstrap());
+    return const [];
+  }
 
   SHODownloadEngine get engine {
     return _engine ??= SHODownloadEngine(
@@ -59,12 +53,6 @@ class SHODownloadTasksNotifier extends StateNotifier<List<SHODownloadTask>> {
     state = normalized;
     await _storage.write(normalized);
     _ready = true;
-  }
-
-  @override
-  void dispose() {
-    _engine?.dispose();
-    super.dispose();
   }
 
   Future<void> _persist() => _storage.write(state);

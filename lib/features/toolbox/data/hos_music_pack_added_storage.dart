@@ -5,17 +5,17 @@ import '../../../core/storage/hos_local_storage.dart';
 import 'hos_music_storage_keys.dart';
 
 final musicPackAddedTasksProvider =
-    StateNotifierProvider<SHOMusicPackAddedTasksNotifier, Set<String>>((ref) {
-  return SHOMusicPackAddedTasksNotifier(ref.watch(sharedPreferencesProvider));
-});
+    NotifierProvider<SHOMusicPackAddedTasksNotifier, Set<String>>(
+  SHOMusicPackAddedTasksNotifier.new,
+);
 
-class SHOMusicPackAddedTasksNotifier extends StateNotifier<Set<String>> {
-  SHOMusicPackAddedTasksNotifier(this._prefs) : super(_readAdded(_prefs));
+class SHOMusicPackAddedTasksNotifier extends Notifier<Set<String>> {
+  late final SharedPreferences _prefs;
 
-  final SharedPreferences _prefs;
-
-  static Set<String> _readAdded(SharedPreferences prefs) {
-    final raw = prefs.getStringList(SHOMusicStorageKeys.addedMusicPackTasks);
+  @override
+  Set<String> build() {
+    _prefs = ref.read(sharedPreferencesProvider);
+    final raw = _prefs.getStringList(SHOMusicStorageKeys.addedMusicPackTasks);
     return raw?.toSet() ?? {};
   }
 

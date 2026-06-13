@@ -5,22 +5,21 @@ import '../storage/hos_local_storage.dart';
 
 const supportedLocaleCodes = ['en', 'zh'];
 
-final localeProvider = StateNotifierProvider<SHOLocaleNotifier, Locale?>((ref) {
-  return SHOLocaleNotifier(ref.watch(localStorageProvider));
-});
+final localeProvider = NotifierProvider<SHOLocaleNotifier, Locale?>(
+  SHOLocaleNotifier.new,
+);
 
-class SHOLocaleNotifier extends StateNotifier<Locale?> {
-  SHOLocaleNotifier(this._storage) : super(null) {
-    _restore();
-  }
+class SHOLocaleNotifier extends Notifier<Locale?> {
+  late final SHOLocalStorage _storage;
 
-  final SHOLocalStorage _storage;
-
-  void _restore() {
+  @override
+  Locale? build() {
+    _storage = ref.read(localStorageProvider);
     final code = _storage.getLocaleCode();
     if (code != null && supportedLocaleCodes.contains(code)) {
-      state = Locale(code);
+      return Locale(code);
     }
+    return null;
   }
 
   Future<void> setLocale(Locale locale) async {

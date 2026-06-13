@@ -5,21 +5,19 @@ import '../../core/hos_debug_config_repository.dart';
 import 'hos_debug_activity_config.dart';
 
 final debugActivityConfigProvider =
-    StateNotifierProvider<SHODebugActivityConfigNotifier, SHODebugActivityConfig>((ref) {
-  return SHODebugActivityConfigNotifier(
-    ref.watch(debugConfigRepositoryProvider),
-    ref,
-  );
-});
+    NotifierProvider<SHODebugActivityConfigNotifier, SHODebugActivityConfig>(
+  SHODebugActivityConfigNotifier.new,
+);
 
-class SHODebugActivityConfigNotifier extends StateNotifier<SHODebugActivityConfig> {
-  SHODebugActivityConfigNotifier(this._repo, this._ref)
-      : super(const SHODebugActivityConfig()) {
-    _restore();
+class SHODebugActivityConfigNotifier extends Notifier<SHODebugActivityConfig> {
+  late final SHODebugConfigRepository _repo;
+
+  @override
+  SHODebugActivityConfig build() {
+    _repo = ref.read(debugConfigRepositoryProvider);
+    Future.microtask(_restore);
+    return const SHODebugActivityConfig();
   }
-
-  final SHODebugConfigRepository _repo;
-  final Ref _ref;
 
   Future<void> _restore() async {
     state = await _repo.loadActivityConfig();
@@ -31,7 +29,7 @@ class SHODebugActivityConfigNotifier extends StateNotifier<SHODebugActivityConfi
     state = config;
     await _repo.saveActivityConfig(config);
     if (config.prefetchEnabled && config.overrideEnabled) {
-      await _ref.read(activityPrefetchServiceProvider).prefetchFromDebug(config);
+      await ref.read(activityPrefetchServiceProvider).prefetchFromDebug(config);
     }
   }
 }

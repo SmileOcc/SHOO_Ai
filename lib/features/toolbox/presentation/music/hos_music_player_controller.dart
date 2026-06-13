@@ -96,31 +96,14 @@ class SHOMusicPlayerState {
 }
 
 final musicPlayerProvider =
-    StateNotifierProvider<SHOMusicPlayerNotifier, SHOMusicPlayerState>((ref) {
-  final notifier = SHOMusicPlayerNotifier(
-    ref.watch(musicPlaybackStorageProvider),
-    ref.watch(musicStatsStorageProvider),
-    ref.watch(musicPackServiceProvider),
-    ref,
-  );
-  ref.onDispose(notifier.dispose);
-  return notifier;
-});
+    NotifierProvider<SHOMusicPlayerNotifier, SHOMusicPlayerState>(
+  SHOMusicPlayerNotifier.new,
+);
 
-class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
-  SHOMusicPlayerNotifier(
-    this._playbackStorage,
-    this._statsStorage,
-    this._packService,
-    this._ref,
-  ) : super(const SHOMusicPlayerState()) {
-    _bindPlayerStreams();
-  }
-
-  final SHOMusicPlaybackStorage _playbackStorage;
-  final SHOMusicStatsStorage _statsStorage;
-  final SHOMusicPackService _packService;
-  final Ref _ref;
+class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
+  late final SHOMusicPlaybackStorage _playbackStorage;
+  late final SHOMusicStatsStorage _statsStorage;
+  late final SHOMusicPackService _packService;
   final AudioPlayer _player = AudioPlayer();
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<Duration?>? _durationSub;
@@ -130,27 +113,38 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
   var _loadToken = 0;
   var _statsRecordedForTrackId = '';
   var _handlingCompletion = false;
+  var _disposed = false;
 
   static const _resumeTail = Duration(seconds: 5);
 
+  @override
+  SHOMusicPlayerState build() {
+    _playbackStorage = ref.read(musicPlaybackStorageProvider);
+    _statsStorage = ref.read(musicStatsStorageProvider);
+    _packService = ref.read(musicPackServiceProvider);
+    ref.onDispose(_dispose);
+    _bindPlayerStreams();
+    return const SHOMusicPlayerState();
+  }
+
   void _bindPlayerStreams() {
     _positionSub = _player.positionStream.listen((position) {
-      if (!mounted) return;
+      if (_disposed) return;
       state = state.copyWith(position: position);
     });
     _durationSub = _player.durationStream.listen((duration) {
-      if (!mounted || duration == null) return;
+      if (_disposed || duration == null) return;
       state = state.copyWith(duration: duration);
     });
     _playerStateSub = _player.playerStateStream.listen((playerState) {
-      if (!mounted) return;
+      if (_disposed) return;
       state = state.copyWith(isPlaying: playerState.playing);
       if (playerState.playing) {
         unawaited(_recordPlayStats());
       }
     });
     _processingSub = _player.processingStateStream.listen((processingState) {
-      if (!mounted) return;
+      if (_disposed) return;
       final loading = processingState == ProcessingState.loading ||
           processingState == ProcessingState.buffering;
       state = state.copyWith(isLoading: loading);
@@ -187,7 +181,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
         playlistScope: scope,
         errorMessage: () => null,
       );
-      _ref.read(musicMiniPlayerDismissedProvider.notifier).show();
+      ref.read(musicMiniPlayerDismissedProvider.notifier).show();
       if (autoPlay && !state.isPlaying) {
         await _player.play();
       }
@@ -209,7 +203,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       playlistScope: scope,
       errorMessage: () => null,
     );
-    _ref.read(musicMiniPlayerDismissedProvider.notifier).show();
+    ref.read(musicMiniPlayerDismissedProvider.notifier).show();
     await _loadTrackAt(index, autoPlay: autoPlay);
   }
 
@@ -225,7 +219,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
         state.playlist.where((track) => track.id != trackId).toList();
     if (playlist.isEmpty) {
       await stop();
-      _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
+      ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
       return;
     }
 
@@ -269,7 +263,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
 
     if (track.isCachedLocally) return true;
 
-    final tasks = _ref.read(downloadTasksProvider);
+    final tasks = ref.read(downloadTasksProvider);
     final assets = await _packService.cacheSongFromPack(
       title: track.title,
       downloadTasks: tasks,
@@ -280,7 +274,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     final playlist = [...state.playlist];
     playlist[state.currentIndex] = enriched;
     state = state.copyWith(playlist: playlist);
-    _ref.read(musicLibraryRevisionProvider.notifier).state++;
+    ref.read(musicLibraryRevisionProvider.notifier).state++;
     return true;
   }
 
@@ -535,7 +529,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
   }
 
   Future<SHOMusicTrack> _resolveTrackResources(SHOMusicTrack track) async {
-    final tasks = _ref.read(downloadTasksProvider);
+    final tasks = ref.read(downloadTasksProvider);
     final allowedPackIds = track.packTaskId == null
         ? null
         : {track.packTaskId!};
@@ -683,7 +677,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       duration: Duration.zero,
       errorMessage: () => null,
     );
-    _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
+    ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
   }
 
   Future<void> _pauseWithNoValidTracks({
@@ -701,7 +695,7 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
       playlistScope: state.playlistScope,
       errorMessage: SHOMusicPlayerMessages.noValidTracks,
     );
-    _ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
+    ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
   }
 
   Future<void> _saveProgress() async {
@@ -716,8 +710,9 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     await _playbackStorage.writePosition(track.id, state.position);
   }
 
-  @override
-  void dispose() {
+  void _dispose() {
+    if (_disposed) return;
+    _disposed = true;
     _loadToken++;
     unawaited(_saveProgress());
     _positionSub?.cancel();
@@ -726,6 +721,5 @@ class SHOMusicPlayerNotifier extends StateNotifier<SHOMusicPlayerState> {
     _processingSub?.cancel();
     _progressSaveTimer?.cancel();
     unawaited(_player.dispose());
-    super.dispose();
   }
 }

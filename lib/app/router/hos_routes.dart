@@ -27,6 +27,11 @@ abstract final class SHOAppRoutes {
   static const profileMusicLibrary = '/profile/music';
   static const toolbox = '/toolbox';
   static const toolboxDownloads = '/toolbox/downloads';
+  static const toolboxStudy = '/toolbox/study';
+  static const toolboxStudyArticle = '/toolbox/study/article';
+
+  static String toolboxStudyArticleFor(String slug) =>
+      '$toolboxStudyArticle?slug=${Uri.encodeComponent(slug)}';
   static const toolboxReader = '/toolbox/reader';
 
   static String toolboxReaderFor(String taskId) =>
