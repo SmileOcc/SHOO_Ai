@@ -59,13 +59,8 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage> {
     });
   }
 
-  @override
-  void dispose() {
-    ref.read(musicOnPlayerPageProvider.notifier).state = false;
-    super.dispose();
-  }
-
   void _syncViewModeForTrack(SHOMusicTrack? track) {
+    if (!mounted) return;
     final trackId = track?.id;
     if (trackId == null || trackId == _lastSyncedTrackId) return;
     _lastSyncedTrackId = trackId;
@@ -143,7 +138,7 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage> {
         final items = await ref.read(musicLibraryListProvider.future);
         playlist = items.map((item) => item.track).toList();
       }
-      if (playlist.isEmpty) return;
+      if (!mounted || playlist.isEmpty) return;
 
       var startIndex = widget.startIndex;
       final trackIndex = playlist.indexWhere((t) => t.id == widget.trackId);
@@ -171,7 +166,7 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage> {
   @override
   void didUpdateWidget(covariant SHOMusicPlayerPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.trackId != widget.trackId) {
+    if (oldWidget.trackId != widget.trackId && mounted) {
       setState(() => _bootstrapping = true);
       unawaited(_loadPlaylistForRoute());
     }
@@ -239,6 +234,7 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     ref.listen<SHOMusicPlayerState>(musicPlayerProvider, (previous, next) {
+      if (!mounted) return;
       if (previous?.currentTrack?.id != next.currentTrack?.id) {
         _syncViewModeForTrack(next.currentTrack);
       }

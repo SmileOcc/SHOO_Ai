@@ -36,9 +36,7 @@ Future<bool> openMusicPlayerPage(
     );
     return true;
   } finally {
-    Future.microtask(() {
-      ref.read(musicOpenPlayerGuardProvider.notifier).state = false;
-    });
+    ref.read(musicOpenPlayerGuardProvider.notifier).state = false;
   }
 }
 
