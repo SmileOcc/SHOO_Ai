@@ -14,6 +14,7 @@ import '../core/logging/hos_logger.dart';
 import '../core/storage/hos_image_cache_manager.dart';
 
 Future<void> bootstrap() async {
+  // 运行 Zone 捕获未处理的异步错误
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     SHOAppStartupTimer.markProcessStart();

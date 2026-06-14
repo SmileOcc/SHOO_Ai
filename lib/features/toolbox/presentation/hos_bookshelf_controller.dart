@@ -31,11 +31,10 @@ final bookshelfListItemsProvider = Provider<List<SHOBookshelfListItem>>((ref) {
 });
 
 class SHOBookshelfNotifier extends Notifier<List<SHOBookshelfEntry>> {
-  late final SHOBookshelfStorage _storage;
+  SHOBookshelfStorage get _storage => ref.read(bookshelfStorageProvider);
 
   @override
   List<SHOBookshelfEntry> build() {
-    _storage = ref.read(bookshelfStorageProvider);
     return _storage.read();
   }
 

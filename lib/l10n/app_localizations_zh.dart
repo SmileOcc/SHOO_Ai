@@ -654,6 +654,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugFeedbackErrorStatic => '静态错误上报（无 WidgetRef）';
 
   @override
+  String get debugFeedbackAsyncSection => 'AsyncValue 错误处理';
+
+  @override
+  String get debugFeedbackAsyncHint =>
+      '模拟 ref.watch(ordersProvider) + AsyncValue.when。错误时自动 ref.showGlobalError(error)，内联面板支持 ref.invalidate 重试。';
+
+  @override
+  String get debugFeedbackAsyncLoadSuccess => '加载成功';
+
+  @override
+  String get debugFeedbackAsyncLoadFail => '加载失败';
+
+  @override
+  String get debugFeedbackAsyncLoadFailed => '加载失败';
+
+  @override
+  String get debugFeedbackAsyncRetry => '重试';
+
+  @override
   String get debugFeedbackStatusTitle => '状态';
 
   @override
@@ -1405,6 +1424,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get downloadPreviewFailed => '无法打开该文件，请稍后重试';
+
+  @override
+  String get downloadPreviewEncodingUnsupported => '无法阅读该文本';
+
+  @override
+  String get downloadPreviewEncodingUnsupportedHint =>
+      '文件编码不受支持或内容已损坏，请使用 UTF-8 或 GBK 编码的 TXT 文件';
 
   @override
   String get downloadPreviewOk => '知道了';

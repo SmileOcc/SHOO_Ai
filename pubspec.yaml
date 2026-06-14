@@ -36,6 +36,7 @@ dependencies:
   archive: ^4.0.9
   path: ^1.9.1
   flutter_markdown: ^0.7.7
+  fast_gbk: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -66,4 +67,6 @@ flutter:
     - assets/mock/
     - assets/brand/
     - assets/music/
+    - assets/book/
+    - assets/video/
     - study/

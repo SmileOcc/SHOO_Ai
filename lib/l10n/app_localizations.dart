@@ -1334,6 +1334,42 @@ abstract class AppLocalizations {
   /// **'Static error report (no WidgetRef)'**
   String get debugFeedbackErrorStatic;
 
+  /// No description provided for @debugFeedbackAsyncSection.
+  ///
+  /// In en, this message translates to:
+  /// **'AsyncValue error handling'**
+  String get debugFeedbackAsyncSection;
+
+  /// No description provided for @debugFeedbackAsyncHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulates ref.watch(ordersProvider) + AsyncValue.when. On error, ref.showGlobalError(error) fires and the inline panel offers retry via ref.invalidate.'**
+  String get debugFeedbackAsyncHint;
+
+  /// No description provided for @debugFeedbackAsyncLoadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Load success'**
+  String get debugFeedbackAsyncLoadSuccess;
+
+  /// No description provided for @debugFeedbackAsyncLoadFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Load fail'**
+  String get debugFeedbackAsyncLoadFail;
+
+  /// No description provided for @debugFeedbackAsyncLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Load failed'**
+  String get debugFeedbackAsyncLoadFailed;
+
+  /// No description provided for @debugFeedbackAsyncRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get debugFeedbackAsyncRetry;
+
   /// No description provided for @debugFeedbackStatusTitle.
   ///
   /// In en, this message translates to:
@@ -2791,6 +2827,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to open this file. Please try again later'**
   String get downloadPreviewFailed;
+
+  /// No description provided for @downloadPreviewEncodingUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot read this text file'**
+  String get downloadPreviewEncodingUnsupported;
+
+  /// No description provided for @downloadPreviewEncodingUnsupportedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Encoding is not supported or the file is corrupted. Use UTF-8 or GBK encoded TXT.'**
+  String get downloadPreviewEncodingUnsupportedHint;
 
   /// No description provided for @downloadPreviewOk.
   ///

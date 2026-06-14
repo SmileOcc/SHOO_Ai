@@ -671,6 +671,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugFeedbackErrorStatic => 'Static error report (no WidgetRef)';
 
   @override
+  String get debugFeedbackAsyncSection => 'AsyncValue error handling';
+
+  @override
+  String get debugFeedbackAsyncHint =>
+      'Simulates ref.watch(ordersProvider) + AsyncValue.when. On error, ref.showGlobalError(error) fires and the inline panel offers retry via ref.invalidate.';
+
+  @override
+  String get debugFeedbackAsyncLoadSuccess => 'Load success';
+
+  @override
+  String get debugFeedbackAsyncLoadFail => 'Load fail';
+
+  @override
+  String get debugFeedbackAsyncLoadFailed => 'Load failed';
+
+  @override
+  String get debugFeedbackAsyncRetry => 'Retry';
+
+  @override
   String get debugFeedbackStatusTitle => 'Status';
 
   @override
@@ -1443,6 +1462,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get downloadPreviewFailed =>
       'Unable to open this file. Please try again later';
+
+  @override
+  String get downloadPreviewEncodingUnsupported => 'Cannot read this text file';
+
+  @override
+  String get downloadPreviewEncodingUnsupportedHint =>
+      'Encoding is not supported or the file is corrupted. Use UTF-8 or GBK encoded TXT.';
 
   @override
   String get downloadPreviewOk => 'OK';

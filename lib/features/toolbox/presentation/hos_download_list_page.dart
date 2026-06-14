@@ -126,7 +126,7 @@ class _SHODownloadTabView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final tasks = ref.watch(downloadTasksProvider);
+    final tasks = ref.watch(userDownloadTasksProvider);
     final filtered = switch (tab) {
       SHODownloadListTab.all => tasks,
       SHODownloadListTab.downloading => tasks

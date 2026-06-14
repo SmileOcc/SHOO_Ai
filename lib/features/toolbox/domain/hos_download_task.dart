@@ -161,3 +161,11 @@ SHODownloadPreviewKind? previewKindForFileName(String fileName) {
 bool isDownloadTaskPreviewable(SHODownloadTask task) {
   return previewKindForFileName(task.fileName) != null;
 }
+
+/// 内置资源（assets/book、assets/video）注册的任务 URL 前缀。
+const bundledDownloadUrlPrefix = 'asset://';
+
+bool isBundledDownloadTask(SHODownloadTask task) {
+  return task.url.startsWith(bundledDownloadUrlPrefix) ||
+      task.id.startsWith('bundle_');
+}

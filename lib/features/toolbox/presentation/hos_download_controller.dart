@@ -4,16 +4,27 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/hos_bookshelf_storage.dart';
+import '../data/hos_bundled_library_service.dart';
 import '../data/hos_download_engine.dart';
 import '../data/hos_download_paths.dart';
 import '../data/hos_download_storage.dart';
 import '../data/hos_txt_reader_progress_storage.dart';
 import '../domain/hos_download_task.dart';
+import 'hos_bookshelf_controller.dart';
 
 final downloadTasksProvider =
     NotifierProvider<SHODownloadTasksNotifier, List<SHODownloadTask>>(
   SHODownloadTasksNotifier.new,
 );
+
+/// 用户主动下载的任务（排除内置 book/video）。
+final userDownloadTasksProvider = Provider<List<SHODownloadTask>>((ref) {
+  final tasks = ref.watch(downloadTasksProvider);
+  return [
+    for (final task in tasks)
+      if (!isBundledDownloadTask(task)) task,
+  ];
+});
 
 class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
   late final SHODownloadStorage _storage;
@@ -50,8 +61,16 @@ class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
     for (final task in saved) {
       normalized.add(await SHODownloadPaths.reconcileTask(task));
     }
-    state = normalized;
-    await _storage.write(normalized);
+
+    final importResult = await ref
+        .read(bundledLibraryServiceProvider)
+        .importAll(existing: normalized);
+
+    state = importResult.tasks;
+    await _storage.write(state);
+    if (importResult.addedBookTaskIds.isNotEmpty) {
+      ref.invalidate(bookshelfEntriesProvider);
+    }
     _ready = true;
   }
 
@@ -73,14 +92,20 @@ class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
   }
 
   List<SHODownloadTask> tasksForTab(SHODownloadListTab tab) {
+    final visible = [
+      for (final task in state)
+        if (!isBundledDownloadTask(task)) task,
+    ];
     return switch (tab) {
-      SHODownloadListTab.all => state,
-      SHODownloadListTab.downloading =>
-        state.where((t) => t.status == SHODownloadStatus.downloading).toList(),
+      SHODownloadListTab.all => visible,
+      SHODownloadListTab.downloading => visible
+          .where((t) => t.status == SHODownloadStatus.downloading)
+          .toList(),
       SHODownloadListTab.paused =>
-        state.where((t) => t.status == SHODownloadStatus.paused).toList(),
-      SHODownloadListTab.completed =>
-        state.where((t) => t.status == SHODownloadStatus.completed).toList(),
+        visible.where((t) => t.status == SHODownloadStatus.paused).toList(),
+      SHODownloadListTab.completed => visible
+          .where((t) => t.status == SHODownloadStatus.completed)
+          .toList(),
     };
   }
 
@@ -136,8 +161,9 @@ class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
   Future<void> resumeTask(String id) => engine.resume(id);
 
   Future<void> deleteTask(String id) async {
-    await engine.pause(id);
     final task = taskById(id);
+    if (task != null && isBundledDownloadTask(task)) return;
+    await engine.pause(id);
     state = state.where((item) => item.id != id).toList();
     await _persist();
     await _bookshelfStorage.removeByTaskId(id);

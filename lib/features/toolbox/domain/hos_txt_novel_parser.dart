@@ -1,21 +1,16 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import 'hos_txt_novel_models.dart';
+import 'hos_text_encoding.dart';
+
+export 'hos_text_encoding.dart'
+    show decodeTxtBytes, looksLikeGarbledText, isChapterContentTooLarge;
 
 bool isTxtNovelFile(String fileName) {
   return fileName.split('.').last.toLowerCase() == 'txt';
-}
-
-String decodeTxtBytes(List<int> bytes) {
-  try {
-    return utf8.decode(bytes, allowMalformed: true);
-  } catch (_) {
-    return latin1.decode(bytes, allowInvalid: true);
-  }
 }
 
 final _chapterHeadingPattern = RegExp(
@@ -87,6 +82,7 @@ Future<List<SHONovelChapterMeta>> scanChapterMetas(
           : <int>[];
 
       onProgress(offset / total);
+      await Future<void>.delayed(Duration.zero);
     }
 
     if (pending.isNotEmpty) {

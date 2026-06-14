@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../errors/hos_exception.dart';
 import '../../../feedback/hos_global_error.dart';
 import '../../../feedback/hos_overlay_loading.dart';
 import '../../../theme/hos_spacing.dart';
 import '../../../theme/hos_theme_extension.dart';
-import '../../../../l10n/app_localizations.dart';
+import 'hos_debug_feedback_async_demo.dart';
 
 /// Debug：全局 Loading 遮罩与全局错误处理试玩页。
 class SHODebugFeedbackPage extends ConsumerStatefulWidget {
@@ -109,14 +110,11 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
           Text(
             l10n.debugFeedbackHint,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.shoTheme.textSecondary,
-                ),
+              color: context.shoTheme.textSecondary,
+            ),
           ),
           const SizedBox(height: SHOAppSpacing.lg),
-          _StatusCard(
-            overlayCount: overlayCount,
-            lastAction: _lastAction,
-          ),
+          _StatusCard(overlayCount: overlayCount, lastAction: _lastAction),
           const SizedBox(height: SHOAppSpacing.xl),
           Text(
             l10n.debugFeedbackLoadingSection,
@@ -169,6 +167,13 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
             label: l10n.debugFeedbackErrorStatic,
             onPressed: _errorStaticReport,
           ),
+          const Divider(height: SHOAppSpacing.xxxl),
+          Text(
+            l10n.debugFeedbackAsyncSection,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: SHOAppSpacing.sm),
+          SHODebugFeedbackAsyncDemo(onAction: _note),
         ],
       ),
     );
@@ -176,10 +181,7 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
 }
 
 class _StatusCard extends StatelessWidget {
-  const _StatusCard({
-    required this.overlayCount,
-    required this.lastAction,
-  });
+  const _StatusCard({required this.overlayCount, required this.lastAction});
 
   final int overlayCount;
   final String lastAction;
@@ -240,3 +242,37 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
+
+
+/*
+// 场景 1: 简单错误展示（Widget 中）
+ElevatedButton(
+  onPressed: () async {
+    try {
+      await api.fetchData();
+    } catch (error) {
+      ref.showGlobalError(error);  // 一行代码
+    }
+  },
+  child: const Text('加载数据'),
+)
+
+// 场景 2: 异步任务 + 自动 Loading + 错误处理（最常用）
+ElevatedButton(
+  onPressed: () async {
+    await ref.withGlobalLoading(() async {
+      final data = await api.fetchData();  // 期间显示 Loading
+      return processData(data);
+    });  // 异常自动捕获并展示
+  },
+  child: const Text('提交'),
+)
+
+// 场景 3: 严重错误用 Dialog
+ref.showGlobalError(
+  error,
+  presentation: SHOGlobalErrorPresentation.dialog,
+  title: '授权失败',
+);
+
+*/

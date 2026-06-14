@@ -10,14 +10,14 @@ const _kGlobalDialogRadius = 12.0;
 
 /// 全局错误展示方式。
 enum SHOGlobalErrorPresentation {
-  /// 底部 Toast（默认，适合大多数业务错误）。
+  /// 底部 Toast（自动消失，默认，适合大多数业务错误）。
   toast,
 
   /// 居中对话框（适合需用户确认的严重错误）。
   dialog,
 }
 
-/// 一次待展示的全局错误事件。
+/// 错误事件数据结构。
 class SHOGlobalErrorEvent {
   const SHOGlobalErrorEvent({
     required this.id,
@@ -35,14 +35,25 @@ class SHOGlobalErrorEvent {
 }
 
 class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
+  // 维护当前错误状态 (SHOGlobalErrorEvent?)
+  // 维护待处理队列 (_pending)
+  // 为什么使用静态变量:
+  // 跨实例共享: Provider 可能重建，但静态变量始终保持
+  // 生命周期独立: 不依赖 Widget 树生命周期
+  // 静态变量不会被 GC 回收，需注意内存管理（通过 unbind 释放）
   static final List<SHOGlobalErrorEvent> _pending = [];
   static SHOGlobalErrorController? _bound;
 
-  var _seq = 0;
+  var _seq = 0; // 事件序列号（用于区分同一毫秒内的多个事件）
+
+  /// 生成事件ID：毫秒时间戳 × 1000 + 序号
+  int _nextId() =>
+      DateTime.now().millisecondsSinceEpoch * 1000 + (++_seq % 1000);
 
   @override
   SHOGlobalErrorEvent? build() => null;
 
+  /// 上报 Object 类型错误（自动映射为用户消息）
   void report(
     Object error, {
     SHOGlobalErrorPresentation presentation = SHOGlobalErrorPresentation.toast,
@@ -50,8 +61,8 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
   }) {
     _emit(
       SHOGlobalErrorEvent(
-        id: ++_seq,
-        message: messageFromAny(error),
+        id: _nextId(),
+        message: messageFromAny(error), // 自动映射为用户可读消息
         title: title,
         presentation: presentation,
         source: error,
@@ -59,6 +70,7 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
     );
   }
 
+  /// 直接上报字符串消息（无需映射）
   void reportMessage(
     String message, {
     SHOGlobalErrorPresentation presentation = SHOGlobalErrorPresentation.toast,
@@ -66,7 +78,7 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
   }) {
     _emit(
       SHOGlobalErrorEvent(
-        id: ++_seq,
+        id: _nextId(),
         message: message,
         title: title,
         presentation: presentation,
@@ -74,22 +86,31 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
     );
   }
 
+  // 发射错误事件：若已绑定则立即展示，否则加入等待队列
   void _emit(SHOGlobalErrorEvent event) {
     if (_bound == null) {
-      _pending.add(event);
+      _pending.add(event); // Widget 未初始化，排队等待
       return;
     }
-    state = event;
+    state = event; // 更新状态，触发 Listener 响应
   }
 
+  /// 消费错误（展示完成后清除状态）
   void consume() => state = null;
 
+  // 绑定 Controller + 处理等待队列
   static void bind(SHOGlobalErrorController controller) {
     _bound = controller;
     if (_pending.isEmpty) return;
-    final event = _pending.last;
+    /**
+     * 避免错误风暴: 启动阶段可能连续发生多个错误，只展示最紧急的最后一条
+     * 用户体验: 避免多个 Toast/Dialog 同时弹出
+     * 性能优化: 减少不必要的 UI 更新
+     */
+    final event = _pending.last; // 只取最后一条，
     _pending.clear();
     if (event.source != null) {
+      // 重新发射排队的错误
       controller.report(
         event.source!,
         presentation: event.presentation,
@@ -111,8 +132,8 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
 
 final globalErrorProvider =
     NotifierProvider<SHOGlobalErrorController, SHOGlobalErrorEvent?>(
-  SHOGlobalErrorController.new,
-);
+      SHOGlobalErrorController.new,
+    );
 
 /// 无 [WidgetRef] 场景（bootstrap / zone guard）上报全局错误。
 abstract final class SHOGlobalError {
@@ -149,13 +170,15 @@ class SHOGlobalErrorListener extends ConsumerStatefulWidget {
       _SHOGlobalErrorListenerState();
 }
 
-class _SHOGlobalErrorListenerState extends ConsumerState<SHOGlobalErrorListener> {
+class _SHOGlobalErrorListenerState
+    extends ConsumerState<SHOGlobalErrorListener> {
   SHOGlobalErrorController? _controller;
   SHOGlobalErrorEvent? _dialogEvent;
 
   @override
   void initState() {
     super.initState();
+    // 首帧后绑定 Controller，处理等待队列
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _controller = ref.read(globalErrorProvider.notifier);
@@ -172,17 +195,24 @@ class _SHOGlobalErrorListenerState extends ConsumerState<SHOGlobalErrorListener>
     super.dispose();
   }
 
+  // 本场景选择 listen 的原因:
+  // 错误事件不需要直接在 build 中使用
+  // 避免不必要的 Widget 重建（提升性能）
+  // 只需要在错误发生时触发展示逻辑
   @override
   Widget build(BuildContext context) {
+    // 监听错误事件（使用 ref.listen 避免不必要的 Widget 重建）
+    //(ref.watch 返回值 + 监听变化，需要根据 Provider 值构建 UI, 重建Widget)
     ref.listen<SHOGlobalErrorEvent?>(globalErrorProvider, (previous, next) {
       if (next == null) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        _present(next);
+        _present(next); // 展示错误
         ref.read(globalErrorProvider.notifier).consume();
       });
     });
 
+    // 构建 UI：Stack 叠加 Dialog 遮罩
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -285,13 +315,12 @@ extension SHOGlobalFeedbackRef on WidgetRef {
     globalError.report(error, presentation: presentation, title: title);
   }
 
-  Future<T> withGlobalLoading<T>(
-    Future<T> Function() task, {
-    String? message,
-  }) {
+  // ← 异步操作带 Loading
+  Future<T> withGlobalLoading<T>(Future<T> Function() task, {String? message}) {
     if (message != null) {
       read(overlayLoadingMessageProvider.notifier).state = message;
     }
+    //等待task完成，再隐藏loading
     return read(overlayLoadingProvider.notifier).run(task).whenComplete(() {
       if (message != null) {
         read(overlayLoadingMessageProvider.notifier).state = null;
@@ -299,3 +328,84 @@ extension SHOGlobalFeedbackRef on WidgetRef {
     });
   }
 }
+
+
+/**
+ 应用启动
+    ↓
+bootstrap() 执行（可能发生错误）
+    ↓ （此时 SHOGlobalErrorListener 还未初始化）
+SHOGlobalError.report(error)  ← 错误发生
+    ↓
+_bound == null  ← 还未绑定
+    ↓
+_pending.add(event)  ← 加入等待队列
+    ↓
+Widget 树构建完成
+    ↓
+SHOGlobalErrorListener.initState()  执行
+    ↓
+SHOGlobalErrorController.bind(_controller!)
+    ↓
+处理 _pending 队列中的错误
+    ↓
+用户看到 Toast/Dialog
+ */
+
+
+/**
+ ┌─────────────────────────────────────────────────────────────┐
+│              全局错误处理工作流                               │
+└─────────────────────────────────────────────────────────────┘
+
+【错误发生】
+    ↓
+┌─────────────────────────────────────────────────────────────┐
+│         错误上报方式选择                                     │
+├─────────────────────────────────────────────────────────────┤
+│  Widget 中:     ref.showGlobalError(error)                   │
+│  Bootstrap 中:  SHOGlobalError.report(error)                 │
+│  Zone 捕获:    SHOGlobalError.report(error)                 │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────────────────┐
+│         Controller._emit()  分发错误                        │
+├─────────────────────────────────────────────────────────────┤
+│  _bound != null?                                            │
+│  ├─ 是 → state = event  (立即触发 Listener 响应)            │
+│  └─ 否 → _pending.add(event)  (加入等待队列)                │
+└─────────────────────────────────────────────────────────────┘
+    ↓
+    ↓ 【场景 A: Widget 已初始化】
+    ├─ ref.listen 检测到 state 变化
+    ├─ addPostFrameCallback 等待帧完成
+    ├─ _present(event) 展示 Toast/Dialog
+    └─ consume() 清除 state
+    ↓
+    ↓ 【场景 B: Widget 未初始化（Bootstrap 阶段）】
+    ├─ 错误进入 _pending 队列
+    ├─ SHOGlobalErrorListener.initState() 执行
+    ├─ SHOGlobalErrorController.bind(controller)
+    ├─ 处理 _pending 队列
+    └─ 展示最后一条错误
+    ↓
+【用户看到 Toast/Dialog】
+    ↓
+【用户点击 OK（仅 Dialog）】
+    ↓
+setState(() => _dialogEvent = null)
+    ↓
+Dialog 关闭
+ */
+
+
+/*
+1. 对比传统 try-catch 分散处理
+维度	全局错误处理	分散 try-catch
+代码复用	✅ 统一 API，一处定义到处使用	❌ 每个地方写一遍 Toast 调用
+用户体验	✅ 统一视觉风格，一致的错误提示	⚠️ 不同页面风格可能不一致
+启动阶段错误	✅ 排队机制，Widget 就绪后自动展示	❌ 可能无法展示（Scaffold 未就绪）
+错误统计	✅ 可轻松接入埋点统计	❌ 需手动添加统计代码
+学习成本	⭐⭐⭐⭐⭐ 极低	⭐⭐ 需记住各种 Toast API
+维护成本	⭐⭐⭐⭐⭐ 一处修改，全局生效	⭐⭐⭐ 需遍历所有调用点
+*/

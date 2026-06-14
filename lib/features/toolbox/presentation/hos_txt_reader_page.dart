@@ -15,6 +15,7 @@ import '../../../l10n/app_localizations.dart';
 import '../data/hos_download_paths.dart';
 import '../data/hos_txt_reader_progress_storage.dart';
 import 'hos_bookshelf_controller.dart';
+import '../domain/hos_download_preview_support.dart';
 import '../domain/hos_download_task.dart';
 import '../domain/hos_txt_novel_models.dart';
 import '../data/hos_txt_chapter_index_cache.dart';
@@ -30,8 +31,28 @@ class SHOTxtReaderPage extends ConsumerStatefulWidget {
   static Future<void> open({
     required BuildContext context,
     required SHODownloadTask task,
-  }) {
-    return context.push(SHOAppRoutes.toolboxReaderFor(task.id));
+  }) async {
+    final l10n = AppLocalizations.of(context);
+    final assessment = await assessDownloadTaskPreview(
+      task,
+      unsupportedTitle: l10n.downloadPreviewUnsupported,
+      notCompletedTitle: l10n.downloadPreviewNotCompleted,
+      failedTitle: l10n.downloadPreviewFailed,
+      encodingUnsupportedTitle: l10n.downloadPreviewEncodingUnsupported,
+      encodingUnsupportedMessage: l10n.downloadPreviewEncodingUnsupportedHint,
+    );
+    if (!assessment.canOpen) {
+      if (!context.mounted) return;
+      await SHOConfirmCardDialog.show(
+        context,
+        title: assessment.dialogTitle ?? l10n.downloadPreviewUnsupported,
+        message: assessment.dialogMessage,
+        confirmLabel: l10n.downloadPreviewOk,
+      );
+      return;
+    }
+    if (!context.mounted) return;
+    await context.push(SHOAppRoutes.toolboxReaderFor(task.id));
   }
 
   @override
@@ -285,7 +306,10 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
           _progress = value * 0.85;
           _phase = SHOTxtReaderLoadPhase.indexing;
         });
-      });
+      }).timeout(
+        const Duration(seconds: 45),
+        onTimeout: () => throw StateError('chapter_scan_timeout'),
+      );
 
       if (!mounted) return;
       setState(() {
@@ -310,6 +334,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         chapterIndex: chapterIndex,
         pageIndexInChapter: pageInChapter,
         pagination: pagination,
+      ).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () => throw StateError('chapter_open_timeout'),
       );
 
       if (!mounted) return;
@@ -333,6 +360,20 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     } catch (_) {
       if (!mounted) return;
       setState(() => _phase = SHOTxtReaderLoadPhase.failed);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        final l10n = AppLocalizations.of(context);
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+        if (!context.mounted) return;
+        await SHOConfirmCardDialog.show(
+          context,
+          title: l10n.downloadPreviewEncodingUnsupported,
+          message: l10n.downloadPreviewEncodingUnsupportedHint,
+          confirmLabel: l10n.downloadPreviewOk,
+        );
+      });
     }
   }
 

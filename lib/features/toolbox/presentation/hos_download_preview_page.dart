@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:video_player/video_player.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../data/hos_download_paths.dart';
 import '../domain/hos_download_task.dart';
+import '../domain/hos_txt_novel_parser.dart';
 
 class SHODownloadPreviewPage extends StatefulWidget {
   const SHODownloadPreviewPage({
@@ -69,7 +69,10 @@ class _SHODownloadPreviewPageState extends State<SHODownloadPreviewPage> {
           return;
         case SHODownloadPreviewKind.text:
           final bytes = await File(widget.localPath).readAsBytes();
-          final content = _decodeText(bytes);
+          final content = decodeTxtBytes(bytes);
+          if (content.trim().isEmpty) {
+            throw StateError('empty text');
+          }
           if (mounted) setState(() => _textContent = content);
         case SHODownloadPreviewKind.video:
           final controller = VideoPlayerController.file(File(widget.localPath));
@@ -95,14 +98,6 @@ class _SHODownloadPreviewPageState extends State<SHODownloadPreviewPage> {
       }
     } catch (error) {
       if (mounted) setState(() => _error = error.toString());
-    }
-  }
-
-  String _decodeText(List<int> bytes) {
-    try {
-      return utf8.decode(bytes, allowMalformed: true);
-    } catch (_) {
-      return latin1.decode(bytes, allowInvalid: true);
     }
   }
 

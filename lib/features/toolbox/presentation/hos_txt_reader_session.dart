@@ -61,6 +61,9 @@ class SHOTxtReaderSession {
 
     final meta = chapterMetas[chapterIndex];
     final content = await readChapterContent(file, meta);
+    if (isChapterContentTooLarge(content)) {
+      throw StateError('chapter_too_large');
+    }
     final pageTexts = paginateChapterContent(
       content: content.isEmpty ? '' : content,
       width: pagination.pageWidth,

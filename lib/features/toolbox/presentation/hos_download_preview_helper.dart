@@ -8,6 +8,7 @@ import '../../../app/router/hos_routes.dart';
 import '../../../core/dialogs/hos_confirm_card_dialog.dart';
 import '../../../core/feedback/hos_overlay_loading.dart';
 import '../../../l10n/app_localizations.dart';
+import '../domain/hos_download_preview_support.dart';
 import '../domain/hos_download_task.dart';
 import '../domain/hos_music_track.dart';
 import '../domain/hos_txt_novel_parser.dart';
@@ -46,21 +47,20 @@ Future<void> handleDownloadTaskTap(
     return;
   }
 
-  final previewable = isDownloadTaskPreviewable(task);
-
-  if (!previewable) {
+  final assessment = await assessDownloadTaskPreview(
+    task,
+    unsupportedTitle: l10n.downloadPreviewUnsupported,
+    notCompletedTitle: l10n.downloadPreviewNotCompleted,
+    failedTitle: l10n.downloadPreviewFailed,
+    encodingUnsupportedTitle: l10n.downloadPreviewEncodingUnsupported,
+    encodingUnsupportedMessage: l10n.downloadPreviewEncodingUnsupportedHint,
+  );
+  if (!assessment.canOpen) {
+    if (!context.mounted) return;
     await SHOConfirmCardDialog.show(
       context,
-      title: l10n.downloadPreviewUnsupported,
-      confirmLabel: l10n.downloadPreviewOk,
-    );
-    return;
-  }
-
-  if (task.status != SHODownloadStatus.completed) {
-    await SHOConfirmCardDialog.show(
-      context,
-      title: l10n.downloadPreviewNotCompleted,
+      title: assessment.dialogTitle ?? l10n.downloadPreviewUnsupported,
+      message: assessment.dialogMessage,
       confirmLabel: l10n.downloadPreviewOk,
     );
     return;
@@ -262,7 +262,7 @@ Future<void> addDownloadTaskToBookshelf(
   SHODownloadTask task,
 ) async {
   if (task.status != SHODownloadStatus.completed) return;
-  if (!isTxtNovelFile(task.fileName)) return;
+  if (!isBookshelfReadableFile(task.fileName)) return;
   if (isDownloadInBookshelf(ref, task.id)) return;
 
   await ref.read(bookshelfEntriesProvider.notifier).add(task.id);
