@@ -8,6 +8,7 @@ import '../../core/navigation/hos_tab_badge_provider.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';
 import '../../features/category/presentation/hos_category_controller.dart';
 import '../../features/home/presentation/hos_home_page.dart';
+import '../../features/home/presentation/hos_home_side_drawer.dart';
 import '../../l10n/app_localizations.dart';
 import '../router/hos_routes.dart';
 
@@ -61,65 +62,68 @@ class SHOMainShell extends ConsumerWidget {
 
     final isProfileTab = current == 3;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: isProfileTab
-          ? null
-          : SHODebugTapAppBar(
-              appBar: showSearch
-                  ? AppBar(
-                      toolbarHeight: 52,
-                      title: SHOHomeSearchBar(
-                        onSearchTap: () => context.push(SHOAppRoutes.search),
-                      ),
-                      titleSpacing: 0,
-                    )
-                  : AppBar(
-                      title: Text(
-                        isCategoryTab && categoryTitle.isNotEmpty
-                            ? categoryTitle
-                            : _tabLabel(l10n, current),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
+    return SHOHomeSideDrawerHost(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: isProfileTab
+            ? null
+            : SHODebugTapAppBar(
+                appBar: showSearch
+                    ? AppBar(
+                        toolbarHeight: 52,
+                        title: SHOHomeSearchBar(
+                          onSearchTap: () => context.push(SHOAppRoutes.search),
+                          onBrandTap: () => openHomeSideDrawer(ref),
+                        ),
+                        titleSpacing: 0,
+                      )
+                    : AppBar(
+                        title: Text(
+                          isCategoryTab && categoryTitle.isNotEmpty
+                              ? categoryTitle
+                              : _tabLabel(l10n, current),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ),
-                    ),
-            ),
-      body: navigationShell,
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashFactory: NoSplash.splashFactory,
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-          currentIndex: current,
-          enableFeedback: false,
-          onTap: (index) {
-            final fromIndex = navigationShell.currentIndex;
-            final isReselect = index == fromIndex;
-            SHOTabAnalyticsReporter.reportSwitch(
-              fromIndex: fromIndex,
-              toIndex: index,
-              isReselect: isReselect,
-            );
-            navigationShell.goBranch(
-              index,
-              initialLocation: isReselect,
-            );
-          },
-          items: List.generate(_tabs.length, (index) {
-            final tab = _tabs[index];
-            final selected = index == current;
-            return BottomNavigationBarItem(
-              icon: SHOTabBadgeIcon(
-                icon: selected ? tab.activeIcon : tab.icon,
-                badge: badges[index],
               ),
-              label: _tabLabel(l10n, index),
-            );
-          }),
+        body: navigationShell,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashFactory: NoSplash.splashFactory,
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+          ),
+          child: BottomNavigationBar(
+            currentIndex: current,
+            enableFeedback: false,
+            onTap: (index) {
+              final fromIndex = navigationShell.currentIndex;
+              final isReselect = index == fromIndex;
+              SHOTabAnalyticsReporter.reportSwitch(
+                fromIndex: fromIndex,
+                toIndex: index,
+                isReselect: isReselect,
+              );
+              navigationShell.goBranch(
+                index,
+                initialLocation: isReselect,
+              );
+            },
+            items: List.generate(_tabs.length, (index) {
+              final tab = _tabs[index];
+              final selected = index == current;
+              return BottomNavigationBarItem(
+                icon: SHOTabBadgeIcon(
+                  icon: selected ? tab.activeIcon : tab.icon,
+                  badge: badges[index],
+                ),
+                label: _tabLabel(l10n, index),
+              );
+            }),
+          ),
         ),
       ),
     );

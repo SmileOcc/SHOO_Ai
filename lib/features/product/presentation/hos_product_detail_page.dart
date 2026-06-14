@@ -205,7 +205,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                   SHOAppToast.info(l10n.productCustomerServiceHint),
               onCart: () {
                 if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                context.go(SHOAppRoutes.cart);
+                context.push(SHOAppRoutes.cartStack);
               },
               onAddToBag: () {
                 if (!SHOAuthGuard.requireAuth(context, ref)) return;

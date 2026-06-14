@@ -93,7 +93,9 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
               icon: Icons.person_outline_rounded,
               actionLabel: l10n.cartLoginAction,
               onAction: () => context.push(
-                SHOAuthGuard.loginPath(redirectTo: SHOAppRoutes.cart),
+                SHOAuthGuard.loginPath(
+                  redirectTo: GoRouterState.of(context).uri.toString(),
+                ),
               ),
             ),
           ),
@@ -112,7 +114,13 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
               subtitle: l10n.cartEmptySubtitle,
               icon: Icons.shopping_bag_outlined,
               actionLabel: l10n.cartEmptyAction,
-              onAction: () => context.go(SHOAppRoutes.home),
+              onAction: () {
+                if (context.canPop()) {
+                  context.pop();
+                  return;
+                }
+                context.go(SHOAppRoutes.home);
+              },
             ),
           ),
         ],
@@ -184,7 +192,14 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
                   if (!SHOAuthGuard.requireAuth(context, ref)) {
                     return;
                   }
-                  context.push(SHOAppRoutes.checkout);
+                  final fromCartStack =
+                      GoRouterState.of(context).uri.path ==
+                          SHOAppRoutes.cartStack;
+                  context.push(
+                    SHOAppRoutes.checkoutWithContext(
+                      fromCartStack: fromCartStack,
+                    ),
+                  );
                 }
               : null,
         ),

@@ -206,6 +206,18 @@ abstract class AppLocalizations {
   /// **'Search styles, trends...'**
   String get searchHint;
 
+  /// No description provided for @homeSideDrawerQuickSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick access'**
+  String get homeSideDrawerQuickSection;
+
+  /// No description provided for @homeSideDrawerToolsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading & tools'**
+  String get homeSideDrawerToolsSection;
+
   /// No description provided for @recommendedTitle.
   ///
   /// In en, this message translates to:
@@ -1394,6 +1406,72 @@ abstract class AppLocalizations {
   /// **'Last action: {action}'**
   String debugFeedbackLastAction(String action);
 
+  /// No description provided for @debugMicrotaskEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Future.microtask Demo'**
+  String get debugMicrotaskEntry;
+
+  /// No description provided for @debugMicrotaskEntryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug event loop execution order with microtask examples'**
+  String get debugMicrotaskEntryHint;
+
+  /// No description provided for @debugMicrotaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Future.microtask Debug'**
+  String get debugMicrotaskTitle;
+
+  /// No description provided for @debugMicrotaskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Demonstrates sync code, microtask, and macrotask execution order. Run demo to see real-time log output.'**
+  String get debugMicrotaskHint;
+
+  /// No description provided for @debugMicrotaskRunDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Event Loop Demo'**
+  String get debugMicrotaskRunDemo;
+
+  /// No description provided for @debugMicrotaskRunRouterScenario.
+  ///
+  /// In en, this message translates to:
+  /// **'Run Router Scenario'**
+  String get debugMicrotaskRunRouterScenario;
+
+  /// No description provided for @debugMicrotaskCodeExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Example'**
+  String get debugMicrotaskCodeExample;
+
+  /// No description provided for @debugMicrotaskLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Execution Log'**
+  String get debugMicrotaskLog;
+
+  /// No description provided for @debugMicrotaskLogCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} entries'**
+  String debugMicrotaskLogCount(int count);
+
+  /// No description provided for @debugMicrotaskClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get debugMicrotaskClear;
+
+  /// No description provided for @debugMicrotaskEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No logs yet. Run a demo to see execution order.'**
+  String get debugMicrotaskEmpty;
+
   /// No description provided for @debugToolsSection.
   ///
   /// In en, this message translates to:
@@ -2389,6 +2467,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment'**
   String get paymentTitle;
+
+  /// No description provided for @paymentOrderInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Order details'**
+  String get paymentOrderInfo;
+
+  /// No description provided for @paymentAmountDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount due'**
+  String get paymentAmountDue;
+
+  /// No description provided for @paymentMethodsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get paymentMethodsTitle;
+
+  /// No description provided for @paymentMethodWechat.
+  ///
+  /// In en, this message translates to:
+  /// **'WeChat Pay'**
+  String get paymentMethodWechat;
+
+  /// No description provided for @paymentMethodAlipay.
+  ///
+  /// In en, this message translates to:
+  /// **'Alipay'**
+  String get paymentMethodAlipay;
+
+  /// No description provided for @paymentMethodBankCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank card'**
+  String get paymentMethodBankCard;
+
+  /// No description provided for @paymentDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm payment'**
+  String get paymentDialogTitle;
+
+  /// No description provided for @paymentCancelPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get paymentCancelPay;
+
+  /// No description provided for @paymentConfirmPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm payment'**
+  String get paymentConfirmPay;
 
   /// No description provided for @paymentMockTitle.
   ///

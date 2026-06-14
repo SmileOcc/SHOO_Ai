@@ -110,7 +110,13 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
                 .toList(),
           );
       if (mounted) {
-        context.push(SHOAppRoutes.payment(order.id));
+        final fromCartStack =
+            GoRouterState.of(context).uri.queryParameters['fromCartStack'] ==
+                '1';
+        context.push(
+          SHOAppRoutes.payment(order.id, fromCartStack: fromCartStack),
+          extra: order,
+        );
       }
     } catch (error) {
       if (mounted) {

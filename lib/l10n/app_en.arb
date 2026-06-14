@@ -18,6 +18,8 @@
   "tabBag": "Bag",
   "tabMe": "Me",
   "searchHint": "Search styles, trends...",
+  "homeSideDrawerQuickSection": "Quick access",
+  "homeSideDrawerToolsSection": "Reading & tools",
   "recommendedTitle": "RECOMMENDED FOR YOU",
   "cartEmptyTitle": "Your bag is empty",
   "cartEmptySubtitle": "Add items to get started.",
@@ -268,6 +270,22 @@
       "action": { "type": "String" }
     }
   },
+  "debugMicrotaskEntry": "Future.microtask Demo",
+  "debugMicrotaskEntryHint": "Debug event loop execution order with microtask examples",
+  "debugMicrotaskTitle": "Future.microtask Debug",
+  "debugMicrotaskHint": "Demonstrates sync code, microtask, and macrotask execution order. Run demo to see real-time log output.",
+  "debugMicrotaskRunDemo": "Run Event Loop Demo",
+  "debugMicrotaskRunRouterScenario": "Run Router Scenario",
+  "debugMicrotaskCodeExample": "Code Example",
+  "debugMicrotaskLog": "Execution Log",
+  "debugMicrotaskLogCount": "{count} entries",
+  "@debugMicrotaskLogCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "debugMicrotaskClear": "Clear",
+  "debugMicrotaskEmpty": "No logs yet. Run a demo to see execution order.",
   "debugToolsSection": "Debug Tools",
   "debugUpdateEntry": "Update Popup",
   "debugUpdateEntryHint": "Configure version, notes, force update",
@@ -476,6 +494,15 @@
   "checkoutNoAddress": "Please select a shipping address",
   "checkoutPlaceOrder": "Place Order",
   "paymentTitle": "Payment",
+  "paymentOrderInfo": "Order details",
+  "paymentAmountDue": "Amount due",
+  "paymentMethodsTitle": "Payment methods",
+  "paymentMethodWechat": "WeChat Pay",
+  "paymentMethodAlipay": "Alipay",
+  "paymentMethodBankCard": "Bank card",
+  "paymentDialogTitle": "Confirm payment",
+  "paymentCancelPay": "Cancel",
+  "paymentConfirmPay": "Confirm payment",
   "paymentMockTitle": "Mock Checkout",
   "paymentMockHint": "This is a simulated payment. No real charge will be made.",
   "paymentPayNow": "Pay Now",

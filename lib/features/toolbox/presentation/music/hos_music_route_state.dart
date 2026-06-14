@@ -40,10 +40,12 @@ void _applyMusicPlayerRouteState({
   required GoRouter router,
 }) {
   try {
+     // 检查路由栈是否为空
     if (router.routerDelegate.currentConfiguration.isEmpty) {
       setOnPlayerPage(false);
       return;
     }
+    // 判断当前是否在音乐播放器页面
     setOnPlayerPage(isRouterOnMusicPlayerPage(router));
   } catch (_) {
     setOnPlayerPage(false);

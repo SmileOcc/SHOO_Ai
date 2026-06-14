@@ -11,6 +11,7 @@ import '../../../core/widgets/hos_loading_state.dart';
 import '../../../core/widgets/hos_network_image.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/hos_order.dart';
+import '../../../core/navigation/hos_payment_flow_navigation.dart';
 import 'hos_order_controller.dart';
 import 'hos_order_status_label.dart';
 
@@ -20,18 +21,43 @@ bool _canApplyAfterSale(SHOOrderStatus status) =>
     status == SHOOrderStatus.paid;
 
 class SHOOrderDetailPage extends ConsumerWidget {
-  const SHOOrderDetailPage({super.key, required this.orderId});
+  const SHOOrderDetailPage({
+    super.key,
+    required this.orderId,
+    this.skipPaymentFlowOnPop = false,
+  });
 
   final String orderId;
+  final bool skipPaymentFlowOnPop;
+
+  void _handleBack(BuildContext context) {
+    if (skipPaymentFlowOnPop) {
+      popOrderDetailPastPaymentFlow(GoRouter.of(context));
+      return;
+    }
+    if (context.canPop()) context.pop();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final detailAsync = ref.watch(orderDetailProvider(orderId));
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.orderDetailTitle)),
-      body: detailAsync.whenLoadingState(
+    return PopScope(
+      canPop: !skipPaymentFlowOnPop,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && skipPaymentFlowOnPop) {
+          popOrderDetailPastPaymentFlow(GoRouter.of(context));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.orderDetailTitle),
+          leading: skipPaymentFlowOnPop
+              ? BackButton(onPressed: () => _handleBack(context))
+              : null,
+        ),
+        body: detailAsync.whenLoadingState(
         onRetry: () => ref.invalidate(orderDetailProvider(orderId)),
         data: (detail) => ListView(
           padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -161,6 +187,7 @@ class SHOOrderDetailPage extends ConsumerWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

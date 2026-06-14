@@ -146,9 +146,14 @@ class _SHOHomeSkeleton extends StatelessWidget {
 }
 
 class SHOHomeSearchBar extends StatelessWidget {
-  const SHOHomeSearchBar({super.key, required this.onSearchTap});
+  const SHOHomeSearchBar({
+    super.key,
+    required this.onSearchTap,
+    this.onBrandTap,
+  });
 
   final VoidCallback onSearchTap;
+  final VoidCallback? onBrandTap;
 
   @override
   Widget build(BuildContext context) {
@@ -163,12 +168,36 @@ class SHOHomeSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            l10n.appName,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.2,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onBrandTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.xs,
+                  vertical: SHOAppSpacing.xs,
                 ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.dehaze_rounded,
+                      size: 20,
+                      color: context.shoTheme.textSecondary,
+                    ),
+                    const SizedBox(width: SHOAppSpacing.xs),
+                    Text(
+                      l10n.appName,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.2,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           const SizedBox(width: SHOAppSpacing.lg),
           Expanded(

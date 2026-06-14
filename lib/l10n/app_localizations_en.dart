@@ -64,6 +64,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search styles, trends...';
 
   @override
+  String get homeSideDrawerQuickSection => 'Quick access';
+
+  @override
+  String get homeSideDrawerToolsSection => 'Reading & tools';
+
+  @override
   String get recommendedTitle => 'RECOMMENDED FOR YOU';
 
   @override
@@ -706,6 +712,44 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get debugMicrotaskEntry => 'Future.microtask Demo';
+
+  @override
+  String get debugMicrotaskEntryHint =>
+      'Debug event loop execution order with microtask examples';
+
+  @override
+  String get debugMicrotaskTitle => 'Future.microtask Debug';
+
+  @override
+  String get debugMicrotaskHint =>
+      'Demonstrates sync code, microtask, and macrotask execution order. Run demo to see real-time log output.';
+
+  @override
+  String get debugMicrotaskRunDemo => 'Run Event Loop Demo';
+
+  @override
+  String get debugMicrotaskRunRouterScenario => 'Run Router Scenario';
+
+  @override
+  String get debugMicrotaskCodeExample => 'Code Example';
+
+  @override
+  String get debugMicrotaskLog => 'Execution Log';
+
+  @override
+  String debugMicrotaskLogCount(int count) {
+    return '$count entries';
+  }
+
+  @override
+  String get debugMicrotaskClear => 'Clear';
+
+  @override
+  String get debugMicrotaskEmpty =>
+      'No logs yet. Run a demo to see execution order.';
+
+  @override
   String get debugToolsSection => 'Debug Tools';
 
   @override
@@ -1236,6 +1280,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentOrderInfo => 'Order details';
+
+  @override
+  String get paymentAmountDue => 'Amount due';
+
+  @override
+  String get paymentMethodsTitle => 'Payment methods';
+
+  @override
+  String get paymentMethodWechat => 'WeChat Pay';
+
+  @override
+  String get paymentMethodAlipay => 'Alipay';
+
+  @override
+  String get paymentMethodBankCard => 'Bank card';
+
+  @override
+  String get paymentDialogTitle => 'Confirm payment';
+
+  @override
+  String get paymentCancelPay => 'Cancel';
+
+  @override
+  String get paymentConfirmPay => 'Confirm payment';
 
   @override
   String get paymentMockTitle => 'Mock Checkout';

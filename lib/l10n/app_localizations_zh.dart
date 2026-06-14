@@ -63,6 +63,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchHint => '搜索款式、潮流...';
 
   @override
+  String get homeSideDrawerQuickSection => '快捷入口';
+
+  @override
+  String get homeSideDrawerToolsSection => '阅读与工具';
+
+  @override
   String get recommendedTitle => '为你推荐';
 
   @override
@@ -689,6 +695,41 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get debugMicrotaskEntry => 'Future.microtask 演示';
+
+  @override
+  String get debugMicrotaskEntryHint => '调试事件循环执行顺序';
+
+  @override
+  String get debugMicrotaskTitle => 'Future.microtask 调试';
+
+  @override
+  String get debugMicrotaskHint => '演示同步代码、微任务、宏任务的执行顺序。点击运行查看实时日志输出。';
+
+  @override
+  String get debugMicrotaskRunDemo => '运行事件循环演示';
+
+  @override
+  String get debugMicrotaskRunRouterScenario => '运行路由场景';
+
+  @override
+  String get debugMicrotaskCodeExample => '代码示例';
+
+  @override
+  String get debugMicrotaskLog => '执行日志';
+
+  @override
+  String debugMicrotaskLogCount(int count) {
+    return '$count 条记录';
+  }
+
+  @override
+  String get debugMicrotaskClear => '清空';
+
+  @override
+  String get debugMicrotaskEmpty => '暂无日志，运行演示查看执行顺序';
+
+  @override
   String get debugToolsSection => '调试工具';
 
   @override
@@ -1205,6 +1246,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get paymentTitle => '收银台';
+
+  @override
+  String get paymentOrderInfo => '订单信息';
+
+  @override
+  String get paymentAmountDue => '应付金额';
+
+  @override
+  String get paymentMethodsTitle => '支付方式';
+
+  @override
+  String get paymentMethodWechat => '微信支付';
+
+  @override
+  String get paymentMethodAlipay => '支付宝';
+
+  @override
+  String get paymentMethodBankCard => '银行卡';
+
+  @override
+  String get paymentDialogTitle => '确认支付';
+
+  @override
+  String get paymentCancelPay => '取消支付';
+
+  @override
+  String get paymentConfirmPay => '确认支付';
 
   @override
   String get paymentMockTitle => '模拟支付';

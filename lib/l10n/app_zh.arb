@@ -18,6 +18,8 @@
   "tabBag": "购物袋",
   "tabMe": "我的",
   "searchHint": "搜索款式、潮流...",
+  "homeSideDrawerQuickSection": "快捷入口",
+  "homeSideDrawerToolsSection": "阅读与工具",
   "recommendedTitle": "为你推荐",
   "cartEmptyTitle": "购物袋是空的",
   "cartEmptySubtitle": "快去挑选心仪的商品吧。",
@@ -247,6 +249,22 @@
       "action": { "type": "String" }
     }
   },
+  "debugMicrotaskEntry": "Future.microtask 演示",
+  "debugMicrotaskEntryHint": "调试事件循环执行顺序",
+  "debugMicrotaskTitle": "Future.microtask 调试",
+  "debugMicrotaskHint": "演示同步代码、微任务、宏任务的执行顺序。点击运行查看实时日志输出。",
+  "debugMicrotaskRunDemo": "运行事件循环演示",
+  "debugMicrotaskRunRouterScenario": "运行路由场景",
+  "debugMicrotaskCodeExample": "代码示例",
+  "debugMicrotaskLog": "执行日志",
+  "debugMicrotaskLogCount": "{count} 条记录",
+  "@debugMicrotaskLogCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "debugMicrotaskClear": "清空",
+  "debugMicrotaskEmpty": "暂无日志，运行演示查看执行顺序",
   "debugToolsSection": "调试工具",
   "debugUpdateEntry": "版本更新调试",
   "debugUpdateEntryHint": "配置版本号、升级说明、是否强更",
@@ -445,6 +463,15 @@
   "checkoutNoAddress": "请选择收货地址",
   "checkoutPlaceOrder": "提交订单",
   "paymentTitle": "收银台",
+  "paymentOrderInfo": "订单信息",
+  "paymentAmountDue": "应付金额",
+  "paymentMethodsTitle": "支付方式",
+  "paymentMethodWechat": "微信支付",
+  "paymentMethodAlipay": "支付宝",
+  "paymentMethodBankCard": "银行卡",
+  "paymentDialogTitle": "确认支付",
+  "paymentCancelPay": "取消支付",
+  "paymentConfirmPay": "确认支付",
   "paymentMockTitle": "模拟支付",
   "paymentMockHint": "此为模拟支付，不会产生真实扣款。",
   "paymentPayNow": "立即支付",

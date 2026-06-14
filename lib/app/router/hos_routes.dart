@@ -19,6 +19,7 @@ abstract final class SHOAppRoutes {
     return '$categoryProducts?$encoded';
   }
   static const cart = '/cart';
+  static const cartStack = '/cart/view';
   static const profile = '/profile';
   static const profileFootprints = '/profile/footprints';
   static const profileFavorites = '/profile/favorites';
@@ -82,6 +83,12 @@ abstract final class SHOAppRoutes {
   static const messages = '/messages';
   static const search = '/search';
   static const checkout = '/checkout';
+
+  static String checkoutWithContext({bool fromCartStack = false}) {
+    if (fromCartStack) return '$checkout?fromCartStack=1';
+    return checkout;
+  }
+
   static const coupons = '/coupons';
   static const couponsSelect = '/coupons?select=1';
   static const afterSales = '/after-sales';
@@ -101,7 +108,11 @@ abstract final class SHOAppRoutes {
   static String productReviews(String id) => '/product/$id/reviews';
   static String order(String id) => '/orders/$id';
   static String orderLogistics(String id) => '/orders/$id/logistics';
-  static String payment(String orderId) => '/payment/$orderId';
+  static String payment(String orderId, {bool fromCartStack = false}) {
+    final base = '/payment/$orderId';
+    if (fromCartStack) return '$base?fromCartStack=1';
+    return base;
+  }
   static String afterSaleApply(String orderId) => '/after-sales/apply/$orderId';
   static const debugUpdate = '/debug/update';
   static const debugActivity = '/debug/activity';
@@ -110,6 +121,7 @@ abstract final class SHOAppRoutes {
   static const debugAnalytics = '/debug/analytics';
   static const debugNetworkLog = '/debug/network-log';
   static const debugFeedback = '/debug/feedback';
+  static const debugMicrotask = '/debug/microtask';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

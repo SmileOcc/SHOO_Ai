@@ -117,3 +117,18 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
     }
   }
 }
+
+
+/*
+用户登录/登出
+    ↓
+sessionProvider 状态变化
+    ↓
+SHORouterNotifier 监听到变化 → notifyListeners()
+    ↓
+GoRouter.refreshListenable 触发
+    ↓
+redirect() 重新执行
+    ↓
+路由守卫重新判断，可能触发重定向
+*/

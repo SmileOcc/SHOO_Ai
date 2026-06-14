@@ -96,7 +96,7 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
                 ),
               ),
             ),
-          const SHOMusicMiniPlayer(),
+          const SHOMusicMiniPlayer(), //迷你音乐播放器
         ],
       ),
       ),
