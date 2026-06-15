@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/hos_dio_client.dart';
+import '../../../core/constants/hos_constants.dart';
 import '../domain/hos_community_models.dart';
 
 final communityApiProvider = Provider<SHOCommunityApi>((ref) {
@@ -16,7 +17,7 @@ class SHOCommunityApi {
   Future<SHOCommunityFeedPage> fetchFeed({
     required SHOCommunitySort sort,
     int page = 1,
-    int pageSize = 20,
+    int pageSize = SHOAppConstants.defaultPageSize,
   }) {
     return _dio.getData<SHOCommunityFeedPage>(
       '/community/feed',

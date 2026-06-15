@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/widgets/hos_expandable_text.dart';
 import '../domain/hos_community_models.dart';
 import 'hos_community_cell_shared.dart';
 
@@ -18,73 +19,88 @@ class SHOCommunityNewsCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SHOCommunityFeedCard(
-      onTap: onTap,
+      onTap: null,
       child: switch (item.newsStyle) {
-        SHOCommunityNewsStyle.headline => _HeadlineNews(item: item),
-        SHOCommunityNewsStyle.imageText => _ImageTextNews(item: item),
-        SHOCommunityNewsStyle.tripleImage => _TripleImageNews(item: item),
-        SHOCommunityNewsStyle.video => _VideoNews(item: item),
-        SHOCommunityNewsStyle.topicCard => _TopicCardNews(item: item),
-        null => _ImageTextNews(item: item),
+        SHOCommunityNewsStyle.headline =>
+          _HeadlineNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.imageText =>
+          _ImageTextNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.tripleImage =>
+          _TripleImageNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.video => _VideoNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.topicCard =>
+          _TopicCardNews(item: item, onTap: onTap),
+        null => _ImageTextNews(item: item, onTap: onTap),
       },
     );
   }
 }
 
 class _HeadlineNews extends StatelessWidget {
-  const _HeadlineNews({required this.item});
+  const _HeadlineNews({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            if (item.isPinned) const SHOCommunityPinnedBadge(),
-            if (item.isPinned) const SizedBox(width: SHOAppSpacing.sm),
-            if (item.source.isNotEmpty)
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  if (item.isPinned) const SHOCommunityPinnedBadge(),
+                  if (item.isPinned) const SizedBox(width: SHOAppSpacing.sm),
+                  if (item.source.isNotEmpty)
+                    Text(
+                      item.source,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: SHOAppColors.accent,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: SHOAppSpacing.sm),
               Text(
-                item.source,
+                item.title,
                 style: const TextStyle(
-                  fontSize: 11,
-                  color: SHOAppColors.accent,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  height: 1.3,
+                  color: SHOAppColors.textPrimary,
                 ),
               ),
-          ],
-        ),
-        const SizedBox(height: SHOAppSpacing.sm),
-        Text(
-          item.title,
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w800,
-            height: 1.3,
-            color: SHOAppColors.textPrimary,
+            ],
           ),
         ),
         if (item.summary.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.sm),
-          Text(
-            item.summary,
+          SHOAppExpandableText(
+            text: item.summary,
             maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: SHOAppColors.textSecondary,
-              height: 1.4,
-            ),
+            fontSize: 13,
+            height: 1.4,
+            color: SHOAppColors.textSecondary,
           ),
         ],
-        const SizedBox(height: SHOAppSpacing.md),
-        SHOCommunityStatsRow(
-          readCount: item.readCount,
-          likeCount: item.likeCount,
-          commentCount: item.commentCount,
-          shareCount: item.shareCount,
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.only(top: SHOAppSpacing.md),
+            child: SHOCommunityStatsRow(
+              readCount: item.readCount,
+              likeCount: item.likeCount,
+              commentCount: item.commentCount,
+              shareCount: item.shareCount,
+            ),
+          ),
         ),
       ],
     );
@@ -92,13 +108,16 @@ class _HeadlineNews extends StatelessWidget {
 }
 
 class _ImageTextNews extends StatelessWidget {
-  const _ImageTextNews({required this.item});
+  const _ImageTextNews({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return SHOCommunityTappableSection(
+      onTap: onTap,
+      child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -141,14 +160,16 @@ class _ImageTextNews extends StatelessWidget {
           ),
         ],
       ],
+      ),
     );
   }
 }
 
 class _TripleImageNews extends StatelessWidget {
-  const _TripleImageNews({required this.item});
+  const _TripleImageNews({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +177,9 @@ class _TripleImageNews extends StatelessWidget {
         ? item.imageUrls.take(3).toList()
         : (item.coverUrl.isNotEmpty ? [item.coverUrl] : <String>[]);
 
-    return Column(
+    return SHOCommunityTappableSection(
+      onTap: onTap,
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -185,18 +208,22 @@ class _TripleImageNews extends StatelessWidget {
           style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
         ),
       ],
+      ),
     );
   }
 }
 
 class _VideoNews extends StatelessWidget {
-  const _VideoNews({required this.item});
+  const _VideoNews({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SHOCommunityTappableSection(
+      onTap: onTap,
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -238,14 +265,16 @@ class _VideoNews extends StatelessWidget {
             ),
           ),
       ],
+      ),
     );
   }
 }
 
 class _TopicCardNews extends StatelessWidget {
-  const _TopicCardNews({required this.item});
+  const _TopicCardNews({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -262,39 +291,46 @@ class _TopicCardNews extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            item.title,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+          SHOCommunityTappableSection(
+            onTap: onTap,
+            child: Text(
+              item.title,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+            ),
           ),
           if (item.summary.isNotEmpty) ...[
             const SizedBox(height: SHOAppSpacing.sm),
-            Text(
-              item.summary,
-              style: const TextStyle(
-                fontSize: 12,
-                color: SHOAppColors.textSecondary,
-              ),
+            SHOAppExpandableText(
+              text: item.summary,
+              maxLines: 2,
+              fontSize: 12,
+              color: SHOAppColors.textSecondary,
             ),
           ],
-          const SizedBox(height: SHOAppSpacing.md),
-          Row(
-            children: [
-              for (final url in item.topicAvatars.take(3)) ...[
-                CircleAvatar(
-                  radius: 12,
-                  backgroundImage: NetworkImage(url),
-                ),
-                const SizedBox(width: SHOAppSpacing.xxs),
-              ],
-              const SizedBox(width: SHOAppSpacing.sm),
-              Text(
-                '${item.topicDiscussCount} 讨论 · ${item.topicPostCount} 帖子',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: SHOAppColors.textMuted,
-                ),
+          SHOCommunityTappableSection(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.only(top: SHOAppSpacing.md),
+              child: Row(
+                children: [
+                  for (final url in item.topicAvatars.take(3)) ...[
+                    CircleAvatar(
+                      radius: 12,
+                      backgroundImage: NetworkImage(url),
+                    ),
+                    const SizedBox(width: SHOAppSpacing.xxs),
+                  ],
+                  const SizedBox(width: SHOAppSpacing.sm),
+                  Text(
+                    '${item.topicDiscussCount} 讨论 · ${item.topicPostCount} 帖子',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: SHOAppColors.textMuted,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),

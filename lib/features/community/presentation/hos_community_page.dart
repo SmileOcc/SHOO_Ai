@@ -28,99 +28,167 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
   String get pageAnalyticsName => 'SHOCommunityPage';
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
+  void _scrollToTop() {
     if (!_scrollController.hasClients) return;
-    final state = ref.read(communityFeedListProvider);
-    if (!state.hasMore || state.loadingMore || state.items.isEmpty) return;
-
-    final threshold = _scrollController.position.maxScrollExtent - 240;
-    if (_scrollController.position.pixels >= threshold) {
-      ref.read(communityFeedListProvider.notifier).loadMore();
-    }
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOut,
+    );
   }
 
-  Future<void> _onRefresh() {
-    return ref.read(communityFeedListProvider.notifier).refresh();
+  bool _onScrollNotification(ScrollNotification notification) {
+    final feedState = ref.read(communityFeedListProvider);
+    if (!feedState.hasMore || feedState.isLoadingMore) return false;
+    if (notification is ScrollEndNotification &&
+        notification.metrics.extentAfter < 120) {
+      ref.read(communityFeedListProvider.notifier).loadMore();
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<int>(communityFeedScrollToTopProvider, (previous, next) {
+      if (previous != null && next > previous) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToTop());
+      }
+    });
+
     final feedState = ref.watch(communityFeedListProvider);
     final selectedSort = ref.watch(communitySortProvider);
     final l10n = AppLocalizations.of(context);
     final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
-    if (feedState.items.isEmpty && feedState.loadingMore) {
-      return _buildLoadingSkeleton();
+    if (feedState.isInitialLoading) {
+      return RefreshIndicator(
+        color: SHOAppColors.accent,
+        onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
+        child: _buildLoadingSkeleton(),
+      );
     }
 
-    return RefreshIndicator(
-      onRefresh: _onRefresh,
-      child: CustomScrollView(
-        controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: SHOCommunityMenuBar(items: feedState.menuItems),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SHOCommunityFilterTabsDelegate(
-              backgroundColor: backgroundColor,
-              selected: selectedSort,
-              l10n: l10n,
-              onSortChanged: (sort) {
-                if (sort == selectedSort) return;
-                ref.read(communitySortProvider.notifier).state = sort;
-              },
+    if (feedState.isEmpty && feedState.error != null) {
+      return SHOAppErrorView(
+        message: feedState.error.toString(),
+        onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+      );
+    }
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: _onScrollNotification,
+      child: RefreshIndicator(
+        color: SHOAppColors.accent,
+        onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: SHOCommunityMenuBar(items: feedState.menuItems),
             ),
-          ),
-          if (feedState.items.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: SHOEmptyState(title: l10n.noData),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.only(bottom: SHOAppSpacing.xxxl),
-              sliver: SliverList.separated(
-                itemCount: feedState.items.length +
-                    (feedState.loadingMore ? 1 : 0),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: SHOCommunityFilterTabsDelegate(
+                backgroundColor: backgroundColor,
+                selected: selectedSort,
+                l10n: l10n,
+                onSortChanged: (sort) {
+                  if (sort == selectedSort) return;
+                  ref.read(communitySortProvider.notifier).state = sort;
+                },
+              ),
+            ),
+            if (feedState.error != null && feedState.items.isNotEmpty)
+              SliverToBoxAdapter(
+                child: _RefreshErrorBanner(
+                  message: feedState.error.toString(),
+                  onRetry: () =>
+                      ref.read(communityFeedListProvider.notifier).refresh(),
+                ),
+              ),
+            if (feedState.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: SHOEmptyState(title: l10n.noData),
+              )
+            else ...[
+              SliverList.separated(
+                itemCount: feedState.items.length,
                 separatorBuilder: (_, __) => const Divider(
                   height: 1,
                   color: SHOAppColors.divider,
                 ),
                 itemBuilder: (context, index) {
-                  if (index >= feedState.items.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(SHOAppSpacing.xl),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
                   return SHOCommunityFeedCell(item: feedState.items[index]);
                 },
               ),
-            ),
-        ],
+              SliverToBoxAdapter(child: _buildListFooter(context, feedState)),
+            ],
+          ],
+        ),
       ),
     );
   }
 
+  Widget _buildListFooter(
+    BuildContext context,
+    SHOCommunityFeedListState feedState,
+  ) {
+    final l10n = AppLocalizations.of(context);
+
+    if (feedState.isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.all(SHOAppSpacing.xl),
+        child: Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    if (feedState.loadMoreError != null) {
+      return Padding(
+        padding: const EdgeInsets.all(SHOAppSpacing.xl),
+        child: Center(
+          child: TextButton.icon(
+            onPressed: () =>
+                ref.read(communityFeedListProvider.notifier).loadMore(),
+            icon: const Icon(Icons.refresh_rounded, size: 18),
+            label: Text(l10n.retry),
+          ),
+        ),
+      );
+    }
+
+    if (!feedState.hasMore && feedState.items.isNotEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(SHOAppSpacing.xl),
+        child: Center(
+          child: Text(
+            l10n.pagedListNoMore,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: SHOAppColors.textMuted,
+                ),
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox(height: SHOAppSpacing.xxxl);
+  }
+
   Widget _buildLoadingSkeleton() {
     return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
       children: const [
         SHOSkeletonBox(height: 72),
@@ -148,6 +216,51 @@ class SHOCommunityPageError extends ConsumerWidget {
     return SHOAppErrorView(
       message: message,
       onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+    );
+  }
+}
+
+class _RefreshErrorBanner extends StatelessWidget {
+  const _RefreshErrorBanner({
+    required this.message,
+    required this.onRetry,
+  });
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Material(
+      color: SHOAppColors.error.withValues(alpha: 0.08),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SHOAppSpacing.pagePadding,
+          vertical: SHOAppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.error_outline, size: 16, color: SHOAppColors.error),
+            const SizedBox(width: SHOAppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: SHOAppColors.error,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: onRetry,
+              child: Text(l10n.retry),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

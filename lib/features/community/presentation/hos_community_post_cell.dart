@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/widgets/hos_expandable_text.dart';
 import '../../../core/widgets/hos_price_text.dart';
 import '../domain/hos_community_models.dart';
 import 'hos_community_cell_shared.dart';
@@ -19,61 +20,78 @@ class SHOCommunityPostCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SHOCommunityFeedCard(
-      onTap: onTap,
+      onTap: null,
       child: switch (item.postStyle) {
-        SHOCommunityPostStyle.standard => _StandardPost(item: item),
-        SHOCommunityPostStyle.multiImage => _MultiImagePost(item: item),
-        SHOCommunityPostStyle.poll => _PollPost(item: item),
-        SHOCommunityPostStyle.productShare => _ProductSharePost(item: item),
-        null => _StandardPost(item: item),
+        SHOCommunityPostStyle.standard =>
+          _StandardPost(item: item, onTap: onTap),
+        SHOCommunityPostStyle.multiImage =>
+          _MultiImagePost(item: item, onTap: onTap),
+        SHOCommunityPostStyle.poll => _PollPost(item: item, onTap: onTap),
+        SHOCommunityPostStyle.productShare =>
+          _ProductSharePost(item: item, onTap: onTap),
+        null => _StandardPost(item: item, onTap: onTap),
       },
     );
   }
 }
 
 class _StandardPost extends StatelessWidget {
-  const _StandardPost({required this.item});
+  const _StandardPost({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SHOCommunityAuthorRow(
-          author: item.author,
-          publishedAt: item.publishedAt,
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SHOCommunityAuthorRow(
+                author: item.author,
+                publishedAt: item.publishedAt,
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+              Text(
+                item.title,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              if (item.coverUrl.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.md),
+                SHOCommunityCoverImage(url: item.coverUrl, aspectRatio: 1),
+              ],
+            ],
+          ),
         ),
         if (item.summary.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.sm),
-          Text(
-            item.summary,
+          SHOAppExpandableText(
+            text: item.summary,
             maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: SHOAppColors.textSecondary,
-              height: 1.4,
-            ),
+            fontSize: 13,
+            height: 1.4,
+            color: SHOAppColors.textSecondary,
           ),
         ],
-        if (item.coverUrl.isNotEmpty) ...[
-          const SizedBox(height: SHOAppSpacing.md),
-          SHOCommunityCoverImage(url: item.coverUrl, aspectRatio: 1),
-        ],
-        const SizedBox(height: SHOAppSpacing.md),
-        SHOCommunityTagRow(tags: item.tags),
-        const SizedBox(height: SHOAppSpacing.sm),
-        SHOCommunityStatsRow(
-          likeCount: item.likeCount,
-          commentCount: item.commentCount,
-          shareCount: item.shareCount,
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: SHOAppSpacing.md),
+              SHOCommunityTagRow(tags: item.tags),
+              const SizedBox(height: SHOAppSpacing.sm),
+              SHOCommunityStatsRow(
+                likeCount: item.likeCount,
+                commentCount: item.commentCount,
+                shareCount: item.shareCount,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -81,9 +99,10 @@ class _StandardPost extends StatelessWidget {
 }
 
 class _MultiImagePost extends StatelessWidget {
-  const _MultiImagePost({required this.item});
+  const _MultiImagePost({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -94,35 +113,48 @@ class _MultiImagePost extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SHOCommunityAuthorRow(
-          author: item.author,
-          publishedAt: item.publishedAt,
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SHOCommunityAuthorRow(
+                author: item.author,
+                publishedAt: item.publishedAt,
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+              Text(
+                item.title,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
         ),
         if (item.summary.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.sm),
-          Text(
-            item.summary,
+          SHOAppExpandableText(
+            text: item.summary,
             maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: SHOAppColors.textSecondary,
-            ),
+            fontSize: 13,
+            color: SHOAppColors.textSecondary,
           ),
         ],
         if (images.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.md),
-          _ImageGrid(urls: images),
+          SHOCommunityTappableSection(
+            onTap: onTap,
+            child: _ImageGrid(urls: images),
+          ),
         ],
-        const SizedBox(height: SHOAppSpacing.md),
-        SHOCommunityStatsRow(
-          likeCount: item.likeCount,
-          commentCount: item.commentCount,
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.only(top: SHOAppSpacing.md),
+            child: SHOCommunityStatsRow(
+              likeCount: item.likeCount,
+              commentCount: item.commentCount,
+            ),
+          ),
         ),
       ],
     );
@@ -175,42 +207,58 @@ class _ImageGrid extends StatelessWidget {
 }
 
 class _PollPost extends StatelessWidget {
-  const _PollPost({required this.item});
+  const _PollPost({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SHOCommunityAuthorRow(
-          author: item.author,
-          publishedAt: item.publishedAt,
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SHOCommunityAuthorRow(
+                author: item.author,
+                publishedAt: item.publishedAt,
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+              Text(
+                item.title,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
         ),
         if (item.summary.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.sm),
-          Text(
-            item.summary,
-            style: const TextStyle(
-              fontSize: 13,
-              color: SHOAppColors.textSecondary,
-            ),
+          SHOAppExpandableText(
+            text: item.summary,
+            maxLines: 2,
+            fontSize: 13,
+            color: SHOAppColors.textSecondary,
           ),
         ],
-        const SizedBox(height: SHOAppSpacing.md),
-        for (final option in item.pollOptions) ...[
-          _PollBar(option: option),
-          const SizedBox(height: SHOAppSpacing.sm),
-        ],
-        Text(
-          '${item.pollParticipants} 人参与 · ${item.pollEndsIn}',
-          style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: SHOAppSpacing.md),
+              for (final option in item.pollOptions) ...[
+                _PollBar(option: option),
+                const SizedBox(height: SHOAppSpacing.sm),
+              ],
+              Text(
+                '${item.pollParticipants} 人参与 · ${item.pollEndsIn}',
+                style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -272,9 +320,10 @@ class _PollBar extends StatelessWidget {
 }
 
 class _ProductSharePost extends StatelessWidget {
-  const _ProductSharePost({required this.item});
+  const _ProductSharePost({required this.item, required this.onTap});
 
   final SHOCommunityFeedItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -282,28 +331,37 @@ class _ProductSharePost extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SHOCommunityAuthorRow(
-          author: item.author,
-          publishedAt: item.publishedAt,
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        SHOCommunityTappableSection(
+          onTap: onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SHOCommunityAuthorRow(
+                author: item.author,
+                publishedAt: item.publishedAt,
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+              Text(
+                item.title,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
         ),
         if (item.summary.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.sm),
-          Text(
-            item.summary,
-            style: const TextStyle(
-              fontSize: 13,
-              color: SHOAppColors.textSecondary,
-            ),
+          SHOAppExpandableText(
+            text: item.summary,
+            maxLines: 3,
+            fontSize: 13,
+            color: SHOAppColors.textSecondary,
           ),
         ],
         if (product != null && product.productId.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.md),
-          Container(
+          SHOCommunityTappableSection(
+            onTap: onTap,
+            child: Container(
             padding: const EdgeInsets.all(SHOAppSpacing.md),
             decoration: BoxDecoration(
               color: SHOAppColors.surfaceMuted,
@@ -344,6 +402,7 @@ class _ProductSharePost extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           ),
         ],
       ],

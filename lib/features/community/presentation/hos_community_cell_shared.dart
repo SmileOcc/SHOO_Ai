@@ -20,12 +20,33 @@ class SHOCommunityFeedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final content = Padding(padding: padding, child: child);
     return Material(
       color: SHOAppColors.surface,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(padding: padding, child: child),
-      ),
+      child: onTap == null
+          ? content
+          : InkWell(onTap: onTap, child: content),
+    );
+  }
+}
+
+/// Feed 卡片内可点击区域（与 [SHOAppExpandableText] 分区，避免「更多」触发跳转）。
+class SHOCommunityTappableSection extends StatelessWidget {
+  const SHOCommunityTappableSection({
+    super.key,
+    required this.onTap,
+    required this.child,
+  });
+
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: child,
     );
   }
 }

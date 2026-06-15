@@ -6,6 +6,7 @@ import '../../../core/analytics/hos_page_analytics.dart';
 import '../../../core/feedback/hos_toast.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
+import '../../../core/widgets/hos_expandable_text.dart';
 import '../domain/hos_community_models.dart';
 import 'hos_community_cell_shared.dart';
 import 'hos_community_format.dart';
@@ -94,15 +95,14 @@ class _SHOCommunityNewsDetailPageState extends State<SHOCommunityNewsDetailPage>
               ),
             ],
             const SizedBox(height: SHOAppSpacing.lg),
-            Text(
-              item.summary.isNotEmpty
+            SHOAppExpandableText(
+              text: item.summary.isNotEmpty
                   ? item.summary
                   : '正文内容加载中，完整文章即将上线。',
-              style: const TextStyle(
-                fontSize: 15,
-                height: 1.7,
-                color: SHOAppColors.textPrimary,
-              ),
+              fontSize: 15,
+              height: 1.7,
+              color: SHOAppColors.textPrimary,
+              maxLines: 6,
             ),
             const SizedBox(height: SHOAppSpacing.lg),
             SHOCommunityTagRow(tags: item.tags),
@@ -206,13 +206,12 @@ class _SHOCommunityPostDetailPageState extends State<SHOCommunityPostDetailPage>
             ),
             if (item.summary.isNotEmpty) ...[
               const SizedBox(height: SHOAppSpacing.md),
-              Text(
-                item.summary,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.7,
-                  color: SHOAppColors.textPrimary,
-                ),
+              SHOAppExpandableText(
+                text: item.summary,
+                fontSize: 15,
+                height: 1.7,
+                color: SHOAppColors.textPrimary,
+                maxLines: 5,
               ),
             ],
             if (images.isNotEmpty) ...[
