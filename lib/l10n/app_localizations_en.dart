@@ -18,6 +18,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabCategory => 'Category';
 
   @override
+  String get tabCommunity => 'Community';
+
+  @override
+  String get communityCenterTitle => 'Community';
+
+  @override
+  String get communitySortLatest => 'Latest';
+
+  @override
+  String get communitySortAll => 'All';
+
+  @override
+  String get communitySortHot => 'Hot';
+
+  @override
+  String get communityPostComingSoon => 'Posting is coming soon';
+
+  @override
   String get categorySortAll => 'All';
 
   @override

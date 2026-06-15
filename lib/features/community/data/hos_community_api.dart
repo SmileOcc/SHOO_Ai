@@ -1,0 +1,32 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/network/hos_dio_client.dart';
+import '../domain/hos_community_models.dart';
+
+final communityApiProvider = Provider<SHOCommunityApi>((ref) {
+  return SHOCommunityApi(ref.watch(dioProvider));
+});
+
+class SHOCommunityApi {
+  SHOCommunityApi(this._dio);
+
+  final Dio _dio;
+
+  Future<SHOCommunityFeedPage> fetchFeed({
+    required SHOCommunitySort sort,
+    int page = 1,
+    int pageSize = 20,
+  }) {
+    return _dio.getData<SHOCommunityFeedPage>(
+      '/community/feed',
+      queryParameters: {
+        'sort': communitySortToQuery(sort),
+        'page': page,
+        'pageSize': pageSize,
+      },
+      parser: (data) =>
+          SHOCommunityFeedPage.fromJson(data as Map<String, dynamic>),
+    );
+  }
+}

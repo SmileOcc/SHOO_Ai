@@ -6,6 +6,7 @@ import '../../core/analytics/hos_tab_analytics.dart';
 import '../../core/debug/core/hos_debug_tap_detector.dart';
 import '../../core/navigation/hos_tab_badge_provider.dart';
 import '../../core/widgets/hos_tab_badge_icon.dart';
+import '../../core/feedback/hos_toast.dart';
 import '../../features/category/presentation/hos_category_controller.dart';
 import '../../features/home/presentation/hos_home_page.dart';
 import '../../features/home/presentation/hos_home_side_drawer.dart';
@@ -33,6 +34,12 @@ class SHOMainShell extends ConsumerWidget {
       activeIcon: Icons.grid_view_rounded,
     ),
     _SHOTabItem(
+      route: SHOAppRoutes.community,
+      icon: Icons.people_outline_rounded,
+      activeIcon: Icons.people_rounded,
+      showCommunityActions: true,
+    ),
+    _SHOTabItem(
       route: SHOAppRoutes.cart,
       icon: Icons.shopping_bag_outlined,
       activeIcon: Icons.shopping_bag_rounded,
@@ -47,7 +54,8 @@ class SHOMainShell extends ConsumerWidget {
   String _tabLabel(AppLocalizations l10n, int index) => switch (index) {
         0 => l10n.tabShop,
         1 => l10n.tabCategory,
-        2 => l10n.tabBag,
+        2 => l10n.tabCommunity,
+        3 => l10n.tabBag,
         _ => l10n.tabMe,
       };
 
@@ -58,9 +66,10 @@ class SHOMainShell extends ConsumerWidget {
     final current = navigationShell.currentIndex;
     final showSearch = _tabs[current].showSearchBar;
     final isCategoryTab = current == 1;
+    final isCommunityTab = current == 2;
     final categoryTitle = ref.watch(categoryAppBarTitleProvider);
 
-    final isProfileTab = current == 3;
+    final isProfileTab = current == 4;
 
     return SHOHomeSideDrawerHost(
       child: Scaffold(
@@ -77,7 +86,30 @@ class SHOMainShell extends ConsumerWidget {
                         ),
                         titleSpacing: 0,
                       )
-                    : AppBar(
+                    : isCommunityTab
+                        ? AppBar(
+                            title: Text(
+                              l10n.communityCenterTitle,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            actions: [
+                              IconButton(
+                                icon: const Icon(Icons.search_rounded),
+                                onPressed: () =>
+                                    context.push(SHOAppRoutes.search),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit_outlined),
+                                onPressed: () => SHOAppToast.info(
+                                  l10n.communityPostComingSoon,
+                                ),
+                              ),
+                            ],
+                          )
+                        : AppBar(
                         title: Text(
                           isCategoryTab && categoryTitle.isNotEmpty
                               ? categoryTitle
@@ -136,10 +168,12 @@ class _SHOTabItem {
     required this.icon,
     required this.activeIcon,
     this.showSearchBar = false,
+    this.showCommunityActions = false,
   });
 
   final String route;
   final IconData icon;
   final IconData activeIcon;
   final bool showSearchBar;
+  final bool showCommunityActions;
 }

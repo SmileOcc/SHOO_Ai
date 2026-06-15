@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/cart/presentation/hos_cart_page.dart';
 import '../../features/category/presentation/hos_category_page.dart';
+import '../../features/community/presentation/hos_community_page.dart';
 import '../../features/home/presentation/hos_home_page.dart';
 import '../../features/message/presentation/hos_message_page.dart';
 import '../../features/profile/presentation/hos_profile_page.dart';
@@ -57,6 +58,16 @@ List<RouteBase> shoShellRoutes() => [
                 path: SHOAppRoutes.category,
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: SHOCategoryPage()),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorCommunityKey,
+            routes: [
+              GoRoute(
+                path: SHOAppRoutes.community,
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: SHOCommunityPage()),
               ),
             ],
           ),

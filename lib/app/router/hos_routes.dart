@@ -3,6 +3,9 @@ abstract final class SHOAppRoutes {
   static const onboarding = '/onboarding';  //引导页
   static const home = '/';
   static const category = '/category';
+  static const community = '/community';
+  static const communityNewsDetail = '/community/news';
+  static const communityPostDetail = '/community/post';
   static const categoryProducts = '/category/products';
 
   static String categoryProductsFiltered({

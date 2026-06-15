@@ -18,6 +18,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tabCategory => '分类';
 
   @override
+  String get tabCommunity => '社区';
+
+  @override
+  String get communityCenterTitle => '社区中心';
+
+  @override
+  String get communitySortLatest => '最新';
+
+  @override
+  String get communitySortAll => '全部';
+
+  @override
+  String get communitySortHot => '热门';
+
+  @override
+  String get communityPostComingSoon => '发帖功能即将上线';
+
+  @override
   String get categorySortAll => '全部';
 
   @override

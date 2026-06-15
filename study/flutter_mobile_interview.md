@@ -47,6 +47,91 @@ Widget（配置）  →  Element（树节点）  →  RenderObject（布局/绘�
 
 **常考坑：** 以为 Widget 就是 UI 本身——实际上频繁 `build()` 创建的是 Widget，Element 尽量复用。
 
+**优化要点 & 常见问题：**
+
+### Q1：小组件刷新会影响大组件吗？
+
+**答案：不会直接影响，但可能间接触发。**
+
+- **Element 树复用机制**：Flutter 通过 Widget 的 `key` 和 `runtimeType` 判断是否复用 Element
+- **局部刷新**：只有状态变化的 Widget 及其子树会 rebuild
+- **潜在问题**：如果父组件的 `build()` 被触发，子组件即使状态没变也会 rebuild（除非使用 const 或 Consumer）
+
+### Q2：如何减少不必要的刷新？
+
+**核心原则**：让 `build()` 尽可能"纯净"，避免执行耗时操作。
+
+**优化策略：**
+
+| 策略 | 适用场景 | 示例 |
+|------|---------|------|
+| `const` Widget | 无状态、参数不变 | `const Text('Hello')` |
+| `Consumer` / `Selector` (Riverpod) | 只监听必要状态 | `Consumer(builder: (_, ref, __) => Text(ref.watch(countProvider)))` |
+| `StatefulWidget` 拆分 | 复杂页面拆分为独立状态组件 | 将列表项抽为独立 StatefulWidget |
+| `AutomaticKeepAliveClientMixin` | Tab 切换保持状态 | 避免 Tab 切换时重复初始化 |
+| `LayoutBuilder` / `Builder` | 隔离 context | 避免不必要的依赖引用 |
+
+**示例对比：**
+
+```dart
+// ❌ 不好：父组件状态变化导致整个页面 rebuild
+class BadExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final count = ref.watch(countProvider); // 状态在顶层
+    return Column(
+      children: [
+        Text('Count: $count'), // 需要状态
+        Expanded(child: HugeList()), // 不需要状态，但也会 rebuild
+      ],
+    );
+  }
+}
+
+// ✅ 好：只在需要的地方监听状态
+class GoodExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Consumer(
+          builder: (_, ref, __) => Text('Count: ${ref.watch(countProvider)}'),
+        ),
+        const Expanded(child: HugeList()), // const 避免 rebuild
+      ],
+    );
+  }
+}
+```
+
+**小组件 vs 大组件刷新影响：**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      组件树示例                              │
+└─────────────────────────────────────────────────────────────┘
+
+                    ParentWidget (Stateful)
+                    ├── build() → 创建新 Widget 对象
+                    │
+                    ├── ChildA (Stateless, const)
+                    │       └── build() 不会执行（Element 复用）
+                    │
+                    └── ChildB (Consumer)
+                            └── 只在监听的 Provider 变化时 rebuild
+
+结论：ChildA 刷新不会影响 ParentWidget
+      ParentWidget 刷新会触发 ChildA.build() 创建新 Widget，但 Element 复用
+      使用 const/Consumer 可避免不必要的 rebuild
+```
+
+**实战技巧：**
+
+1. **使用 `flutter run --profile` 查看 rebuild 热点**
+2. **用 `const` 修饰静态子组件**
+3. **拆分大 StatefulWidget 为多个小组件**
+4. **Riverpod 用户优先使用 `Consumer` 而非 `ConsumerWidget`**
+
 ---
 
 ## 3. StatefulWidget 生命周期有哪些？dispose 里能做什么、不能做什么？

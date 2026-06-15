@@ -122,6 +122,10 @@ Map<String, dynamic> applyMockDynamic(
     return lookupProductReviews(reviewsCatalogEnvelope, productId);
   }
 
+  if (routePath == '/community/feed') {
+    return sortCommunityFeedEnvelope(envelope, query: query);
+  }
+
   final page = mockQueryInt(query, 'page', 0);
   if (page > 0) {
     final pageSize = mockQueryInt(query, 'pageSize', 10);
@@ -129,6 +133,49 @@ Map<String, dynamic> applyMockDynamic(
   }
 
   return envelope;
+}
+
+Map<String, dynamic> sortCommunityFeedEnvelope(
+  Map<String, dynamic> envelope, {
+  required Map<String, dynamic> query,
+}) {
+  final data = envelope['data'];
+  if (data is! Map<String, dynamic>) return envelope;
+
+  final items = (data['items'] as List<dynamic>?)
+      ?.whereType<Map<String, dynamic>>()
+      .map((e) => Map<String, dynamic>.from(e))
+      .toList();
+  if (items == null) return envelope;
+
+  final sort = query['sort']?.toString() ?? 'all';
+  items.sort((a, b) {
+    if (sort == 'latest') {
+      final at = a['publishedAt']?.toString() ?? '';
+      final bt = b['publishedAt']?.toString() ?? '';
+      return bt.compareTo(at);
+    }
+    if (sort == 'hot') {
+      final ah = a['hotScore'] as int? ?? 0;
+      final bh = b['hotScore'] as int? ?? 0;
+      return bh.compareTo(ah);
+    }
+    return 0;
+  });
+
+  final page = mockQueryInt(query, 'page', 0);
+  var result = {
+    ...envelope,
+    'data': {
+      ...data,
+      'items': items,
+    },
+  };
+  if (page > 0) {
+    final pageSize = mockQueryInt(query, 'pageSize', 20);
+    result = paginateMockEnvelope(result, page: page, pageSize: pageSize);
+  }
+  return result;
 }
 
 Map<String, dynamic> _productNotFound(String productId) {

@@ -10,6 +10,7 @@ import '../../features/auth/router.dart';
 import '../../features/cart/router.dart';
 import '../../features/category/router.dart';
 import '../../features/checkout/router.dart';
+import '../../features/community/router.dart';
 import '../../features/coupon/router.dart';
 import '../../features/order/router.dart';
 import '../../features/product/router.dart';
@@ -51,6 +52,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoCartRoutes(rootKey: rootNavigatorKey),
       ...shoSearchRoutes(rootKey: rootNavigatorKey),
       ...shoCategoryRoutes(rootKey: rootNavigatorKey),
+      ...shoCommunityRoutes(rootKey: rootNavigatorKey),
       ...shoProfileRoutes(rootKey: rootNavigatorKey),
       ...shoCheckoutRoutes(rootKey: rootNavigatorKey),
       ...shoCouponRoutes(rootKey: rootNavigatorKey),

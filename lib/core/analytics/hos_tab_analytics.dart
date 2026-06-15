@@ -7,6 +7,7 @@ abstract final class SHOTabAnalyticsRoutes {
   static const routes = <String>[
     SHOAppRoutes.home,
     SHOAppRoutes.category,
+    SHOAppRoutes.community,
     SHOAppRoutes.cart,
     SHOAppRoutes.profile,
   ];
@@ -16,7 +17,7 @@ abstract final class SHOTabAnalyticsRoutes {
     return routes[index];
   }
 
-  static const tabIds = <String>['home', 'category', 'cart', 'profile'];
+  static const tabIds = <String>['home', 'category', 'community', 'cart', 'profile'];
 
   static String tabIdAt(int index) {
     if (index < 0 || index >= tabIds.length) return 'unknown';

@@ -116,6 +116,42 @@ abstract class AppLocalizations {
   /// **'Category'**
   String get tabCategory;
 
+  /// No description provided for @tabCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get tabCommunity;
+
+  /// No description provided for @communityCenterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get communityCenterTitle;
+
+  /// No description provided for @communitySortLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest'**
+  String get communitySortLatest;
+
+  /// No description provided for @communitySortAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get communitySortAll;
+
+  /// No description provided for @communitySortHot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get communitySortHot;
+
+  /// No description provided for @communityPostComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Posting is coming soon'**
+  String get communityPostComingSoon;
+
   /// No description provided for @categorySortAll.
   ///
   /// In en, this message translates to:
