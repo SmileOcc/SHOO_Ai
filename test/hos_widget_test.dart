@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shoo/app/hos_shoo_app.dart';
+import 'package:shoo/app/root/hos_shoo_app.dart';
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/constants/hos_constants.dart';
 import 'package:shoo/core/storage/hos_local_storage.dart';

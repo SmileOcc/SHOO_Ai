@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../core/analytics/hos_app_lifecycle_binder.dart';
-import '../core/deeplink/hos_deeplink_listener.dart';
-import '../core/feedback/hos_toast.dart';
-import '../core/l10n/hos_locale_provider.dart';
-import '../core/theme/hos_theme.dart';
-import '../core/theme/hos_theme_mode_provider.dart';
-import '../core/widgets/hos_offline_banner.dart' show SHOAppShell;
-import '../l10n/app_localizations.dart';
-import 'router/hos_router.dart';
+import '../../core/analytics/hos_app_lifecycle_binder.dart';
+import '../../core/deeplink/hos_deeplink_listener.dart';
+import '../../core/feedback/hos_toast.dart';
+import '../../core/l10n/hos_locale_provider.dart';
+import '../../core/theme/hos_theme.dart';
+import '../../core/theme/hos_theme_mode_provider.dart';
+import '../../core/widgets/hos_offline_banner.dart' show SHOAppShell;
+import '../../l10n/app_localizations.dart';
+import '../router/hos_router.dart';
 
 //SHOApp 是 应用根 Widget，负责整合所有全局配置和基础设施。
 //它是整个应用的入口点，协调路由、主题、国际化、生命周期监控等核心功能。

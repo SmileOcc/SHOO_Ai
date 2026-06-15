@@ -6,7 +6,7 @@ import '../../../app/router/hos_routes.dart';
 import '../../config/hos_config.dart';
 import '../../config/hos_environment.dart';
 import '../../constants/hos_constants.dart';
-import '../core/hos_runtime_env_provider.dart';
+import '../../../app/root/hos_runtime_env_provider.dart';
 import '../../theme/hos_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 

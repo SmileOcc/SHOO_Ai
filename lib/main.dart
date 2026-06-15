@@ -1,3 +1,3 @@
-import 'app/hos_bootstrap.dart';
+import 'app/root/hos_bootstrap.dart';
 
 Future<void> main() => bootstrap();

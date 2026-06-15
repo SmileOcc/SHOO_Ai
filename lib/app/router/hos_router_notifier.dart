@@ -20,11 +20,14 @@ class SHORouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   String? redirect(BuildContext context, GoRouterState state) {
+    // 1. 读取当前会话状态
     final session = _ref.read(sessionProvider);
+    // 2. 如果正在恢复会话，不干预路由
     if (session.isRestoring) return null;
 
+    // 获取匹配的路径（不含查询参数）
     final location = state.matchedLocation;
-
+    // 3. Debug 路由权限检查
     if (SHOAppRoutes.debugRoutes.contains(location) &&
         !SHOAppConfig.instance.isDebugPanelEnabled) {
       return SHOAppRoutes.home;
@@ -33,6 +36,7 @@ class SHORouterNotifier extends ChangeNotifier {
     final loggingIn = location == SHOAppRoutes.login || location == SHOAppRoutes.register;
 
     if (!session.isAuthenticated && SHOAppRoutes.requiresAuth(location)) {
+      // 重定向到登录页，携带原目标地址 登录后自动跳转机制
       final redirectUri = Uri.encodeComponent(state.uri.toString());
       return '${SHOAppRoutes.login}?redirect=$redirectUri';
     }

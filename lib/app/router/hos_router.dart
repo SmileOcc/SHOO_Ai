@@ -114,3 +114,56 @@ musicOnPlayerPageProvider 状态更新
 UI 响应式更新（如迷你播放器显示/隐藏）
  * 
  */
+
+/*
+┌─────────────────────────────────────────────────────────────────────┐
+│                    routerProvider 初始化时序                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+时间轴 →
+
+T1: Provider 构建开始
+    │
+    ├── ref.watch(routerNotifierProvider)
+    │       └── 创建 SHORouterNotifier 实例
+    │           └── 监听 sessionProvider
+    │
+T2: 声明 router 变量
+    │
+T3: 定义 syncMusicRoute 闭包
+    │       └── 捕获 ref 和 router（此时 router 未赋值）
+    │
+T4: 创建 GoRouter 实例
+    │   ├── navigatorKey: rootNavigatorKey
+    │   ├── initialLocation: /splash
+    │   ├── refreshListenable: notifier
+    │   ├── redirect: notifier.redirect
+    │   ├── observers: [...]
+    │   ├── errorBuilder: ...
+    │   └── routes: [...]
+    │
+T5: router 变量赋值
+    │       └── syncMusicRoute 闭包中的 router 引用生效
+    │
+T6: 添加路由监听器
+    │       └── router.routerDelegate.addListener(syncMusicRoute)
+    │
+T7: 注册清理回调
+    │       └── ref.onDispose(() => removeListener)
+    │
+T8: 调度微任务
+    │       └── Future.microtask(syncMusicRoute)
+    │
+T9: 返回 router
+    │
+    ▼
+T10: Provider 构建完成
+    │
+    ▼
+T11: 微任务队列执行
+    │       └── syncMusicRoute() 执行
+    │           └── 更新 musicOnPlayerPageProvider
+    │
+    ▼
+T12: 应用就绪，等待用户交互
+*/

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/hos_config.dart';
-import '../debug/core/hos_runtime_env_provider.dart';
+import '../../app/root/hos_runtime_env_provider.dart';
 import '../feedback/hos_global_error.dart';
 import '../feedback/hos_overlay_loading.dart';
 import '../network/hos_connectivity_service.dart';

@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/analytics/hos_app_startup_timer.dart';
-import '../core/config/hos_config.dart';
-import '../core/debug/core/hos_app_restart.dart';
-import '../core/feedback/hos_global_error.dart';
-import '../core/logging/hos_log_manager.dart';
-import '../core/logging/hos_logger.dart';
-import '../core/storage/hos_image_cache_manager.dart';
+import '../../core/analytics/hos_app_startup_timer.dart';
+import '../../core/config/hos_config.dart';
+import 'hos_app_restart.dart';
+import '../../core/feedback/hos_global_error.dart';
+import '../../core/logging/hos_log_manager.dart';
+import '../../core/logging/hos_logger.dart';
+import '../../core/storage/hos_image_cache_manager.dart';
 
 Future<void> bootstrap() async {
   // 运行 Zone 捕获未处理的异步错误
