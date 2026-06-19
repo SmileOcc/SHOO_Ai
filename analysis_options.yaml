@@ -2,10 +2,11 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    prefer_const_constructors: true
+    prefer_const_constructors: true # 建议使用 const
     prefer_const_declarations: true
     avoid_print: true
     require_trailing_commas: true
+    prefer_const_literals_to_create_immutables: true  # 字面量使用 const
 
 analyzer:
   errors:

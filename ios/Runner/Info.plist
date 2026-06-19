@@ -52,6 +52,10 @@
 	<string>SHOO uses your location for delivery estimates.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>SHOO needs photo library access to upload images.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>SHOO uses Bluetooth to scan nearby devices in the native components demo.</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>SHOO uses NFC to read tags in the native components demo.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

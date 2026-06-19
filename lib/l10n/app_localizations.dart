@@ -2792,6 +2792,36 @@ abstract class AppLocalizations {
   /// **'Coming soon'**
   String get toolboxComingSoon;
 
+  /// No description provided for @toolboxGroupNative.
+  ///
+  /// In en, this message translates to:
+  /// **'Native Components'**
+  String get toolboxGroupNative;
+
+  /// No description provided for @toolboxNativeComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Native Hub'**
+  String get toolboxNativeComponents;
+
+  /// No description provided for @toolboxNativeComponentsIosOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Native components hub is iOS only for now'**
+  String get toolboxNativeComponentsIosOnly;
+
+  /// No description provided for @toolboxSActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'S Activity'**
+  String get toolboxSActivity;
+
+  /// No description provided for @toolboxSActivityIosOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'S Activity is iOS only for now'**
+  String get toolboxSActivityIosOnly;
+
   /// No description provided for @downloadListTitle.
   ///
   /// In en, this message translates to:

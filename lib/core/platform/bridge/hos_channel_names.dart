@@ -13,4 +13,7 @@ abstract final class SHOChannelNames {
 
   /// 二进制大数据专用（图片帧、音频块等，StandardMessageCodec 支持 Uint8List）
   static const String nativeBinary = '$prefix/native_binary';
+
+  /// Native → Flutter：导航、弹窗、需 BuildContext 的宿主能力
+  static const String nativeHost = '$prefix/native_host';
 }

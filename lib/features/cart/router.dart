@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router/hos_routes.dart';
+import '../../core/platform/hybrid/hos_hybrid_embedded_ui.dart';
 import '../../l10n/app_localizations.dart';
 import 'presentation/hos_cart_page.dart';
 
@@ -14,13 +15,18 @@ class SHOCartStackPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.tabBag,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+      appBar: SHOHybridEmbeddedUi.appBar(
+        AppBar(
+          title: Text(
+            l10n.tabBag,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
       ),
-      body: const SHOCartPage(),
+      body: SHOHybridEmbeddedUi.padBody(
+        context,
+        const SHOCartPage(),
+      ),
     );
   }
 }

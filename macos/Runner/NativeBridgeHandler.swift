@@ -47,6 +47,8 @@ private final class DebugTickStreamHandler: NSObject, FlutterStreamHandler {
   private var kind = "debug_tick"
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    timer?.invalidate()
+    timer = nil
     tick = 0
     if let args = arguments as? String {
       kind = args

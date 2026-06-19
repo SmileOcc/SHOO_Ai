@@ -1410,6 +1410,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxComingSoon => '敬请期待';
 
   @override
+  String get toolboxGroupNative => '原生组件';
+
+  @override
+  String get toolboxNativeComponents => '原生组件库';
+
+  @override
+  String get toolboxNativeComponentsIosOnly => '原生组件库目前仅支持 iOS';
+
+  @override
+  String get toolboxSActivity => 'S活动';
+
+  @override
+  String get toolboxSActivityIosOnly => 'S活动目前仅支持 iOS';
+
+  @override
   String get downloadListTitle => '下载列表';
 
   @override

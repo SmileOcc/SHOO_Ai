@@ -30,6 +30,9 @@ object NativeBridgeHandler {
 
                     "getPlatformVersion" -> result.success("Android ${Build.VERSION.RELEASE}")
 
+                    "sActivity/open", "sActivity/openDialogLab", "sActivity/popHybridPage",
+                    "nativeComponents/open", "nativeComponents/run" -> result.notImplemented()
+
                     else -> result.notImplemented()
                 }
             }
@@ -51,6 +54,7 @@ object NativeBridgeHandler {
                 private var args = EventArgs("debug_tick", emptyMap())
 
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    runnable?.let { handler?.removeCallbacks(it) }
                     tick = 0
                     downloadProgress = 0.0
                     args = parseArgs(arguments)

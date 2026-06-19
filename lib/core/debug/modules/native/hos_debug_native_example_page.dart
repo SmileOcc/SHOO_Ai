@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../platform/hos_native_stream_service.dart';
+import '../../../platform/bridge/hos_native_event_bridge.dart';
+import '../../../platform/bridge/hos_native_stream_service.dart';
 import '../../../theme/hos_spacing.dart';
 import 'hos_debug_native_examples.dart';
 import 'hos_debug_native_l10n.dart';
@@ -34,7 +35,7 @@ class _SHODebugNativeExamplePageState extends State<SHODebugNativeExamplePage> {
 
   @override
   void dispose() {
-    _stopEventStream();
+    unawaited(_stopEventStream());
     _messageCtrl.dispose();
     super.dispose();
   }
@@ -98,9 +99,10 @@ class _SHODebugNativeExamplePageState extends State<SHODebugNativeExamplePage> {
     );
   }
 
-  void _stopEventStream() {
-    _eventSub?.cancel();
+  Future<void> _stopEventStream() async {
+    final sub = _eventSub;
     _eventSub = null;
+    await SHONativeEventBridge.cancelSafely(sub);
     if (_streaming && mounted) {
       setState(() => _streaming = false);
     }

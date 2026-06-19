@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/platform/hybrid/hos_hybrid_embedded_ui.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/utils/hos_async_value_ui.dart';
 import '../../../core/widgets/hos_empty_state.dart';
@@ -32,13 +33,17 @@ class SHOCategoryProductsPage extends ConsumerWidget {
     final productsAsync = ref.watch(categoryProductsProvider(leafCategoryId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+      appBar: SHOHybridEmbeddedUi.appBar(
+        AppBar(
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
       ),
-      body: Column(
+      body: SHOHybridEmbeddedUi.padBody(
+        context,
+        Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SHOCategorySortBar(trailing: SHOCategoryFilterButton()),
@@ -100,6 +105,7 @@ class SHOCategoryProductsPage extends ConsumerWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

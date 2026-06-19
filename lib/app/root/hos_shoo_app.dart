@@ -6,6 +6,7 @@ import '../../core/analytics/hos_app_lifecycle_binder.dart';
 import '../../core/deeplink/hos_deeplink_listener.dart';
 import '../../core/feedback/hos_toast.dart';
 import '../../core/l10n/hos_locale_provider.dart';
+import '../../core/platform/hybrid/hos_hybrid_bridge_installer.dart';
 import '../../core/theme/hos_theme.dart';
 import '../../core/theme/hos_theme_mode_provider.dart';
 import '../../core/widgets/hos_offline_banner.dart' show SHOAppShell;
@@ -39,7 +40,8 @@ class SHOApp extends ConsumerWidget {
 
     //生命周期监控 - 监听应用启动、前后台切换等事件
     return SHOAppLifecycleBinder(
-      child: MaterialApp.router(
+      child: SHOHybridBridgeInstaller(
+        child: MaterialApp.router(
       scaffoldMessengerKey: scaffoldMessengerKey,     // ← 全局 Toast Key 全局访问 ScaffoldMessenger，显示 Toast
       onGenerateTitle: (context) => AppLocalizations.of(context).appName,
       debugShowCheckedModeBanner: false,
@@ -59,6 +61,7 @@ class SHOApp extends ConsumerWidget {
         // 所有页面外层包裹离线提示条 监听网络状态，显示离线提示
         return SHOAppShell(child: child ?? const SizedBox.shrink());
       },
+      ),
       ),
     );
   }

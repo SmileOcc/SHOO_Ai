@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/platform/hos_native_business_event.dart';
-import '../../../core/platform/hos_native_business_event_service.dart';
+import '../../../core/platform/business_event/hos_native_business_event.dart';
+import '../../../core/platform/business_event/hos_native_business_event_service.dart';
+import '../../../core/platform/bridge/hos_native_event_bridge.dart';
 import '../../../core/theme/hos_colors.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/widgets/hos_loading_state.dart';
@@ -53,7 +54,7 @@ class _SHOLogisticsPageState extends ConsumerState<SHOLogisticsPage> {
 
   @override
   void dispose() {
-    _nativeSub?.cancel();
+    SHONativeEventBridge.cancelSafely(_nativeSub);
     super.dispose();
   }
 

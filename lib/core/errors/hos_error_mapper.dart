@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../platform/hos_native_bridge_exception.dart';
+import '../platform/bridge/hos_native_bridge_exception.dart';
 import 'hos_exception.dart';
 
 SHOAppException mapDioError(DioException error) {

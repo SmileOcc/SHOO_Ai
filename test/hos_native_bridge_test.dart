@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shoo/core/platform/hos_native_type_caster.dart';
+import 'package:shoo/core/platform/bridge/hos_native_type_caster.dart';
 
 void main() {
   group('SHONativeTypeCaster', () {

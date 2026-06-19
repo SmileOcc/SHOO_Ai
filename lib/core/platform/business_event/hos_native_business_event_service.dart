@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'hos_native_business_event.dart';
-import 'hos_native_event_bridge.dart';
+import '../bridge/hos_native_event_bridge.dart';
 import 'hos_native_event_kinds.dart';
 
 final nativeBusinessEventServiceProvider =

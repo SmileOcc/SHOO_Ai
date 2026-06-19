@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../bridge/hos_native_event_bridge.dart';
+
 /// EventChannel 流订阅基类，强制在 [dispose] 时 cancel，避免内存泄漏。
 ///
 /// ```dart
@@ -25,7 +27,7 @@ abstract class SHONativeStreamService<T> {
   }
 
   void cancel() {
-    _subscription?.cancel();
+    SHONativeEventBridge.cancelSafely(_subscription);
     _subscription = null;
   }
 

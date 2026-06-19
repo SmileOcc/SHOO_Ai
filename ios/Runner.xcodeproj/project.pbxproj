@@ -17,6 +17,14 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		A1B2C3D41ED2DC5600515813 /* HybridBridgeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D31ED2DC5600515812 /* HybridBridgeCoordinator.swift */; };
+		A1B2C3D61ED2DC5600515815 /* SActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D51ED2DC5600515814 /* SActivityViewController.swift */; };
+		A1B2C3D81ED2DC5600515817 /* SDialogLabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D71ED2DC5600515816 /* SDialogLabViewController.swift */; };
+		A1B2C3D91ED2DC5600515819 /* HybridBridgeUIKitCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D81ED2DC5600515818 /* HybridBridgeUIKitCompat.swift */; };
+		B2C3D4E51ED2DC5600515820 /* HybridNativeShellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E41ED2DC5600515819 /* HybridNativeShellViewController.swift */; };
+		C3D4E5F61ED2DC5600515821 /* NativeComponentsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F51ED2DC5600515820 /* NativeComponentsCoordinator.swift */; };
+		C3D4E5F81ED2DC5600515823 /* NativeComponentsHubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F71ED2DC5600515822 /* NativeComponentsHubViewController.swift */; };
+		C3D4E5FA1ED2DC5600515825 /* NativeComponentDemos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F91ED2DC5600515824 /* NativeComponentDemos.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +75,14 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1B2C3D31ED2DC5600515812 /* HybridBridgeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HybridBridgeCoordinator.swift; sourceTree = "<group>"; };
+		A1B2C3D51ED2DC5600515814 /* SActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SActivityViewController.swift; sourceTree = "<group>"; };
+		A1B2C3D71ED2DC5600515816 /* SDialogLabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDialogLabViewController.swift; sourceTree = "<group>"; };
+		A1B2C3D81ED2DC5600515818 /* HybridBridgeUIKitCompat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HybridBridgeUIKitCompat.swift; sourceTree = "<group>"; };
+		B2C3D4E41ED2DC5600515819 /* HybridNativeShellViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HybridNativeShellViewController.swift; sourceTree = "<group>"; };
+		C3D4E5F51ED2DC5600515820 /* NativeComponentsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeComponentsCoordinator.swift; sourceTree = "<group>"; };
+		C3D4E5F71ED2DC5600515822 /* NativeComponentsHubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeComponentsHubViewController.swift; sourceTree = "<group>"; };
+		C3D4E5F91ED2DC5600515824 /* NativeComponentDemos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeComponentDemos.swift; sourceTree = "<group>"; };
 		C0B698FB778851F99E6897A6 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +167,14 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FB01ED2DC5600515811 /* NativeBridgeHandler.swift */,
+				A1B2C3D31ED2DC5600515812 /* HybridBridgeCoordinator.swift */,
+				A1B2C3D51ED2DC5600515814 /* SActivityViewController.swift */,
+				A1B2C3D71ED2DC5600515816 /* SDialogLabViewController.swift */,
+				A1B2C3D81ED2DC5600515818 /* HybridBridgeUIKitCompat.swift */,
+				B2C3D4E41ED2DC5600515819 /* HybridNativeShellViewController.swift */,
+				C3D4E5F51ED2DC5600515820 /* NativeComponentsCoordinator.swift */,
+				C3D4E5F71ED2DC5600515822 /* NativeComponentsHubViewController.swift */,
+				C3D4E5F91ED2DC5600515824 /* NativeComponentDemos.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
@@ -401,6 +425,14 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				74858FB11ED2DC5600515812 /* NativeBridgeHandler.swift in Sources */,
+				A1B2C3D41ED2DC5600515813 /* HybridBridgeCoordinator.swift in Sources */,
+				A1B2C3D61ED2DC5600515815 /* SActivityViewController.swift in Sources */,
+				A1B2C3D81ED2DC5600515817 /* SDialogLabViewController.swift in Sources */,
+				A1B2C3D91ED2DC5600515819 /* HybridBridgeUIKitCompat.swift in Sources */,
+				B2C3D4E51ED2DC5600515820 /* HybridNativeShellViewController.swift in Sources */,
+				C3D4E5F61ED2DC5600515821 /* NativeComponentsCoordinator.swift in Sources */,
+				C3D4E5F81ED2DC5600515823 /* NativeComponentsHubViewController.swift in Sources */,
+				C3D4E5FA1ED2DC5600515825 /* NativeComponentDemos.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,6 +530,7 @@
 				DEVELOPMENT_TEAM = LU6255RGX8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -682,6 +715,7 @@
 				DEVELOPMENT_TEAM = LU6255RGX8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -706,6 +740,7 @@
 				DEVELOPMENT_TEAM = LU6255RGX8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

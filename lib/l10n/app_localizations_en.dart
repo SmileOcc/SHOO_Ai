@@ -1448,6 +1448,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxComingSoon => 'Coming soon';
 
   @override
+  String get toolboxGroupNative => 'Native Components';
+
+  @override
+  String get toolboxNativeComponents => 'Native Hub';
+
+  @override
+  String get toolboxNativeComponentsIosOnly =>
+      'Native components hub is iOS only for now';
+
+  @override
+  String get toolboxSActivity => 'S Activity';
+
+  @override
+  String get toolboxSActivityIosOnly => 'S Activity is iOS only for now';
+
+  @override
   String get downloadListTitle => 'Downloads';
 
   @override

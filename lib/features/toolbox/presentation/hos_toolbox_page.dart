@@ -2,10 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/hos_routes.dart';
+import '../../../core/feedback/hos_toast.dart';
+import '../../../core/platform/hybrid/hos_hybrid_bridge.dart';
+import '../../../core/platform/native_components/hos_native_components_bridge.dart';
 import '../../../core/theme/hos_spacing.dart';
 import '../../../core/theme/hos_theme_extension.dart';
 import '../../../core/widgets/hos_profile_section_card.dart';
 import '../../../l10n/app_localizations.dart';
+
+Future<void> _openNativeComponents(BuildContext context) async {
+  if (!SHONativeComponentsBridge.isSupported) {
+    context.showToast(AppLocalizations.of(context).toolboxNativeComponentsIosOnly);
+    return;
+  }
+  try {
+    await SHONativeComponentsBridge.openHub();
+  } catch (error) {
+    if (context.mounted) {
+      context.showToast('${AppLocalizations.of(context).toolboxNativeComponents}: $error');
+    }
+  }
+}
+
+Future<void> _openSActivity(BuildContext context) async {
+  if (!SHOHybridBridge.isNativeActivitySupported) {
+    context.showToast(AppLocalizations.of(context).toolboxSActivityIosOnly);
+    return;
+  }
+  try {
+    await SHOHybridBridge.openSActivity();
+  } catch (error) {
+    if (context.mounted) {
+      context.showToast('${AppLocalizations.of(context).toolboxSActivity}: $error');
+    }
+  }
+}
 
 class SHOToolboxPage extends StatelessWidget {
   const SHOToolboxPage({super.key});
@@ -50,6 +81,17 @@ class SHOToolboxPage extends StatelessWidget {
         ],
       ),
       _ToolboxGroup(
+        title: l10n.toolboxGroupNative,
+        items: [
+          _ToolboxMenuItem(
+            icon: Icons.widgets_outlined,
+            color: const Color(0xFF00897B),
+            label: l10n.toolboxNativeComponents,
+            onTap: () => _openNativeComponents(context),
+          ),
+        ],
+      ),
+      _ToolboxGroup(
         title: l10n.toolboxGroupTools,
         items: [
           _ToolboxMenuItem(
@@ -57,6 +99,12 @@ class SHOToolboxPage extends StatelessWidget {
             color: const Color(0xFF4A90E2),
             label: l10n.toolboxFileDownload,
             onTap: () => context.push(SHOAppRoutes.toolboxDownloads),
+          ),
+          _ToolboxMenuItem(
+            icon: Icons.hub_outlined,
+            color: const Color(0xFF6A5ACD),
+            label: l10n.toolboxSActivity,
+            onTap: () => _openSActivity(context),
           ),
           _ToolboxMenuItem(
             icon: Icons.qr_code_scanner_outlined,

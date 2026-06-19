@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import '../logging/hos_logger.dart';
+import '../../logging/hos_logger.dart';
 import 'hos_channel_names.dart';
 import 'hos_native_bridge_exception.dart';
 import 'hos_native_type_caster.dart';

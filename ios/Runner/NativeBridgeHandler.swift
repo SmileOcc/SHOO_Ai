@@ -7,7 +7,10 @@ enum NativeBridgeHandler {
   private static let messageChannel = "com.shoo.shoo/native_message"
   private static let eventChannel = "com.shoo.shoo/native_event"
 
-  static func register(messenger: FlutterBinaryMessenger) {
+  static func register(messenger: FlutterBinaryMessenger, flutterViewController: FlutterViewController) {
+    HybridBridgeCoordinator.shared.attach(flutterViewController: flutterViewController)
+    NativeComponentsCoordinator.shared.attach(flutterViewController: flutterViewController)
+
     let channel = FlutterMethodChannel(name: methodChannel, binaryMessenger: messenger)
     channel.setMethodCallHandler { call, result in
       switch call.method {
@@ -18,6 +21,23 @@ enum NativeBridgeHandler {
         ])
       case "getPlatformVersion":
         result(UIDevice.current.systemVersion)
+      case "sActivity/open":
+        HybridBridgeCoordinator.shared.presentSActivity()
+        result(["ok": true])
+      case "sActivity/openDialogLab":
+        HybridBridgeCoordinator.shared.presentDialogLab()
+        result(["ok": true])
+      case "sActivity/popHybridPage":
+        HybridBridgeCoordinator.shared.popHybridFlutterPage()
+        result(["ok": true])
+      case "nativeComponents/open":
+        NativeComponentsCoordinator.shared.presentHub()
+        result(["ok": true])
+      case "nativeComponents/run":
+        let args = call.arguments as? [String: Any]
+        let moduleId = args?["module"] as? String ?? ""
+        NativeComponentsCoordinator.shared.runModule(moduleId)
+        result(["ok": true, "module": moduleId])
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -69,6 +89,8 @@ private final class BusinessEventStreamHandler: NSObject, FlutterStreamHandler {
   private var args = EventArgs(kind: "debug_tick", params: [:])
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    timer?.invalidate()
+    timer = nil
     tick = 0
     downloadProgress = 0.0
     args = parseArgs(arguments)
