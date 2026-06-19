@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../config/hos_environment.dart';
-import '../../constants/hos_constants.dart';
+import 'package:shoo/core/config/hos_environment.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
 
 /// Debug 面板偏好：环境覆盖、环境角标开关等。
 class SHODebugPrefs {

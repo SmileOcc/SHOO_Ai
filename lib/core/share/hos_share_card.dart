@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../features/product/domain/hos_product_detail.dart';
-import '../deeplink/hos_deeplink_config.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../widgets/hos_network_image.dart';
-import '../widgets/hos_price_text.dart';
+import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_network_image.dart';
+import 'package:shoo/core/widgets/hos_price_text.dart';
 
 /// 商品分享卡片（用于生成分享图）。
 class SHOShareProductCard extends StatelessWidget {

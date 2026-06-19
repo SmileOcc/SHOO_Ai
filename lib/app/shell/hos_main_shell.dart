@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/analytics/hos_tab_analytics.dart';
-import '../../core/debug/core/hos_debug_tap_detector.dart';
-import '../../core/navigation/hos_tab_badge_provider.dart';
-import '../../core/widgets/hos_tab_badge_icon.dart';
-import '../../core/feedback/hos_toast.dart';
-import '../../features/category/presentation/hos_category_controller.dart';
-import '../../features/home/presentation/hos_home_page.dart';
-import '../../features/home/presentation/hos_home_side_drawer.dart';
-import '../../l10n/app_localizations.dart';
-import '../router/hos_routes.dart';
+import 'package:shoo/core/debug/core/hos_debug_tap_detector.dart';
+import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/features/category/presentation/state/hos_category_controller.dart';
+import 'package:shoo/features/home/presentation/pages/hos_home_page.dart';
+import 'package:shoo/features/home/presentation/widgets/hos_home_side_drawer.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'hos_bottom_nav.dart';
 
 class SHOMainShell extends ConsumerWidget {
   const SHOMainShell({
@@ -22,29 +20,29 @@ class SHOMainShell extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
   static const _tabs = [
-    _SHOTabItem(
+    SHOAppTabItem(
       route: SHOAppRoutes.home,
       icon: Icons.home_outlined,
       activeIcon: Icons.home_rounded,
       showSearchBar: true,
     ),
-    _SHOTabItem(
+    SHOAppTabItem(
       route: SHOAppRoutes.category,
       icon: Icons.grid_view_rounded,
       activeIcon: Icons.grid_view_rounded,
     ),
-    _SHOTabItem(
+    SHOAppTabItem(
       route: SHOAppRoutes.community,
       icon: Icons.people_outline_rounded,
       activeIcon: Icons.people_rounded,
       showCommunityActions: true,
     ),
-    _SHOTabItem(
+    SHOAppTabItem(
       route: SHOAppRoutes.cart,
       icon: Icons.shopping_bag_outlined,
       activeIcon: Icons.shopping_bag_rounded,
     ),
-    _SHOTabItem(
+    SHOAppTabItem(
       route: SHOAppRoutes.profile,
       icon: Icons.person_outline_rounded,
       activeIcon: Icons.person_rounded,
@@ -62,7 +60,6 @@ class SHOMainShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final badges = ref.watch(tabBadgesProvider);
     final current = navigationShell.currentIndex;
     final showSearch = _tabs[current].showSearchBar;
     final isCategoryTab = current == 1;
@@ -122,58 +119,12 @@ class SHOMainShell extends ConsumerWidget {
                       ),
               ),
         body: navigationShell,
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashFactory: NoSplash.splashFactory,
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-          ),
-          child: BottomNavigationBar(
-            currentIndex: current,
-            enableFeedback: false,
-            onTap: (index) {
-              final fromIndex = navigationShell.currentIndex;
-              final isReselect = index == fromIndex;
-              SHOTabAnalyticsReporter.reportSwitch(
-                fromIndex: fromIndex,
-                toIndex: index,
-                isReselect: isReselect,
-              );
-              navigationShell.goBranch(
-                index,
-                initialLocation: isReselect,
-              );
-            },
-            items: List.generate(_tabs.length, (index) {
-              final tab = _tabs[index];
-              final selected = index == current;
-              return BottomNavigationBarItem(
-                icon: SHOTabBadgeIcon(
-                  icon: selected ? tab.activeIcon : tab.icon,
-                  badge: badges[index],
-                ),
-                label: _tabLabel(l10n, index),
-              );
-            }),
-          ),
+        bottomNavigationBar: SHOAppBottomNav(
+          navigationShell: navigationShell,
+          tabs: _tabs,
+          tabLabel: _tabLabel,
         ),
       ),
     );
   }
-}
-
-class _SHOTabItem {
-  const _SHOTabItem({
-    required this.route,
-    required this.icon,
-    required this.activeIcon,
-    this.showSearchBar = false,
-    this.showCommunityActions = false,
-  });
-
-  final String route;
-  final IconData icon;
-  final IconData activeIcon;
-  final bool showSearchBar;
-  final bool showCommunityActions;
 }

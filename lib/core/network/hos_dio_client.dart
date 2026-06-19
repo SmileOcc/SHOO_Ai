@@ -2,17 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../config/hos_config.dart';
-import '../debug/modules/network_log/hos_debug_network_log_config_provider.dart';
-import '../errors/hos_exception.dart';
-import '../errors/hos_error_mapper.dart';
-import '../logging/hos_logger.dart';
-import '../logging/hos_remote_log_base_url.dart';
-import '../logging/hos_remote_log_client.dart';
-import '../../features/auth/presentation/hos_auth_token_provider.dart';
-import 'hos_auth_interceptor.dart';
-import 'hos_mock_interceptor.dart';
-import 'hos_network_log_interceptor.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_provider.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
+import 'package:shoo/core/errors/hos_error_mapper.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/logging/hos_remote_log_base_url.dart';
+import 'package:shoo/core/logging/hos_remote_log_client.dart';
+import 'package:shoo/features/auth/presentation/state/hos_auth_token_provider.dart';
+import 'package:shoo/core/network/interceptors/hos_auth_interceptor.dart';
+import 'package:shoo/core/network/hos_mock_interceptor.dart';
+import 'package:shoo/core/network/interceptors/hos_network_log_interceptor.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);

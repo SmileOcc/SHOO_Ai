@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/foundation.dart';
 
-import '../../core/config/hos_environment.dart';
-import '../../core/storage/hos_local_storage.dart';
-import 'hos_app_restart.dart';
-import '../../core/debug/core/hos_debug_prefs.dart';
+import 'package:shoo/core/config/hos_environment.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/app/root/hos_app_restart.dart';
+import 'package:shoo/core/debug/core/hos_debug_prefs.dart';
 
 final debugPrefsProvider = Provider<SHODebugPrefs>((ref) {
   return SHODebugPrefs(ref.watch(sharedPreferencesProvider));

@@ -1,4 +1,4 @@
-import 'hos_analytics_field.dart';
+import 'package:shoo/core/analytics/hos_analytics_field.dart';
 
 /// 业务上报事件定义：上报 key、字段、说明。
 class SHOAnalyticsEventDef {

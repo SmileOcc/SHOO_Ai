@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-import '../debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
-import '../logging/hos_log_manager.dart';
-import '../logging/hos_logger.dart';
-import '../logging/hos_remote_log_base_url.dart';
-import '../logging/hos_remote_log_uploader.dart';
-import 'hos_analytics_backend.dart';
-import 'hos_analytics_event.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/logging/hos_remote_log_base_url.dart';
+import 'package:shoo/core/logging/hos_remote_log_uploader.dart';
+import 'package:shoo/core/analytics/hos_analytics_backend.dart';
+import 'package:shoo/core/analytics/hos_analytics_event.dart';
 
 /// 控制台输出（Debug 构建默认启用）。
 class SHOAnalyticsConsoleBackend extends SHOAnalyticsBackend {

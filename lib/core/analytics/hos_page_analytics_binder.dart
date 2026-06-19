@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'hos_page_route_analytics_mixin.dart';
+import 'package:shoo/core/analytics/hos_page_route_analytics_mixin.dart';
 
 /// 为 [StatelessWidget] 页面包裹 [RouteAware] 埋点，无需改写为 StatefulWidget。
 ///

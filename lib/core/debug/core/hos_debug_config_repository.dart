@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../config/hos_config.dart';
-import '../../storage/hos_local_storage.dart';
-import '../modules/activity/hos_debug_activity_config.dart';
-import '../modules/network_log/hos_debug_network_log_config.dart';
-import '../modules/update/hos_debug_update_config.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
 
 const debugUpdateConfigKey = 'debug_update_config_v1';
 const debugActivityConfigKey = 'debug_activity_config_v1';

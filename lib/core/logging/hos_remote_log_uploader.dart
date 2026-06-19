@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../config/hos_config.dart';
-import 'hos_logger.dart';
-import 'hos_remote_log_client.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/logging/hos_remote_log_client.dart';
 
 /// 将调试日志 POST 到本地/远程 server（真实接口）。
 abstract final class SHORemoteLogUploader {

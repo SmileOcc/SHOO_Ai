@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 
 /// 可配置样式的文本组件，支持最大行数、省略号，以及「更多 / 收起」展开交互。
 ///

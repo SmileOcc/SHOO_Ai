@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/review/presentation/hos_reviews_page.dart';
-import 'presentation/hos_product_detail_page.dart';
+import 'package:shoo/features/review/presentation/pages/hos_reviews_page.dart';
+import 'package:shoo/features/product/presentation/pages/hos_product_detail_page.dart';
 
 List<RouteBase> shoProductRoutes({required GlobalKey<NavigatorState> rootKey}) => [
       GoRoute(

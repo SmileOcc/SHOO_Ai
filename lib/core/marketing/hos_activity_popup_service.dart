@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../debug/core/hos_debug_override_gate.dart';
-import '../debug/modules/activity/hos_debug_activity_config_provider.dart';
-import '../debug/modules/activity/hos_debug_activity_config.dart';
-import '../network/hos_dio_client.dart';
+import 'package:shoo/core/debug/core/hos_debug_override_gate.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_provider.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
+import 'package:shoo/core/network/hos_dio_client.dart';
 
 final activityPopupServiceProvider = Provider<SHOActivityPopupService>((ref) {
   return SHOActivityPopupService(ref.watch(dioProvider), ref);

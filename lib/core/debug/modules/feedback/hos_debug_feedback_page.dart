@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../l10n/app_localizations.dart';
-import '../../../errors/hos_exception.dart';
-import '../../../feedback/hos_global_error.dart';
-import '../../../feedback/hos_overlay_loading.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../theme/hos_theme_extension.dart';
-import 'hos_debug_feedback_async_demo.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
+import 'package:shoo/core/feedback/hos_global_error.dart';
+import 'package:shoo/core/feedback/hos_overlay_loading.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/debug/modules/feedback/hos_debug_feedback_async_demo.dart';
 
 /// Debug：全局 Loading 遮罩与全局错误处理试玩页。
 class SHODebugFeedbackPage extends ConsumerStatefulWidget {

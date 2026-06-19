@@ -1,5 +1,5 @@
-import 'hos_analytics_event.dart';
-import 'hos_analytics_field.dart';
+import 'package:shoo/core/analytics/hos_analytics_event.dart';
+import 'package:shoo/core/analytics/hos_analytics_field.dart';
 
 /// 业务上报事件注册表（新增事件在此登记 key 与字段）。
 abstract final class SHOAnalyticsRegistry {

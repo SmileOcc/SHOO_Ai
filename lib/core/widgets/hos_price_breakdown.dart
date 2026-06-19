@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../pricing/hos_price_calculator.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../utils/hos_price_formatter.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:shoo/core/pricing/hos_price_calculator.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/utils/hos_price_formatter.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 结算价格明细行。
 class SHOPriceBreakdownView extends StatelessWidget {

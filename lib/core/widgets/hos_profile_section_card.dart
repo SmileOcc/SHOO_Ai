@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 
 /// 个人中心模块卡片：圆角 + 0.5 描边。
 class SHOProfileSectionCard extends StatelessWidget {

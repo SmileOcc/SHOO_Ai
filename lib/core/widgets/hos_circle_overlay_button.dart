@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 浮层圆形半透明按钮，用于商品详情等沉浸式顶图场景。
 class SHOCircleOverlayButton extends StatelessWidget {

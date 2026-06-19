@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../analytics/hos_analytics.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../theme/hos_theme_extension.dart';
-import '../../../../l10n/app_localizations.dart';
+import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 class SHODebugAnalyticsPage extends ConsumerStatefulWidget {
   const SHODebugAnalyticsPage({super.key});

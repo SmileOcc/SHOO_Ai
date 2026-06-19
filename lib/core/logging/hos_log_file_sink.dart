@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'hos_log_manager.dart';
-import 'hos_log_record.dart';
-import 'hos_log_sink.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
+import 'package:shoo/core/logging/hos_log_record.dart';
+import 'package:shoo/core/logging/hos_log_sink.dart';
 
 /// 写入本地文件缓存（复用 [SHOAppLogManager]）。
 class SHOLogFileSink implements SHOLogSink {

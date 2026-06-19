@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
-import '../widgets/hos_profile_section_card.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 
 /// 圆角卡片弹窗外壳：右上角关闭 X。
 class SHOCardDialogShell extends StatelessWidget {

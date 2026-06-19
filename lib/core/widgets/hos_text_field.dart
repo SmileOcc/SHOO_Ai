@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 /// 统一输入框组件。
 ///
 /// 参考文章第三步：统一边框、错误提示、字数统计、前缀/后缀图标。

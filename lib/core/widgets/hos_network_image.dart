@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'hos_image_view.dart';
+import 'package:shoo/core/widgets/hos_image_view.dart';
 
 /// 网络图片快捷组件，底层使用 [SHOAppImage]。
 class SHOAppNetworkImage extends StatelessWidget {

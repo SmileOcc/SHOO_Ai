@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../config/hos_config.dart';
-import '../../../app/router/hos_routes.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/app/router/hos_routes.dart';
 
 /// 连点 5 次进入 Debug 面板（仅非 Release 包生效）。
 ///

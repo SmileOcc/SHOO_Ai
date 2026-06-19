@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'hos_shoo_app.dart';
-import '../../core/config/hos_config.dart';
-import '../../core/logging/hos_remote_log_client.dart';
-import '../../core/logging/hos_remote_log_uploader.dart';
-import '../../core/logging/hos_startup_config_log.dart';
-import '../../core/storage/hos_local_storage.dart';
-import '../../core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
-import '../../core/debug/core/hos_debug_config_repository.dart';
-import '../../core/debug/core/hos_debug_prefs.dart';
+import 'package:shoo/app/root/hos_shoo_app.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/logging/hos_remote_log_client.dart';
+import 'package:shoo/core/logging/hos_remote_log_uploader.dart';
+import 'package:shoo/core/logging/hos_startup_config_log.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
+import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
+import 'package:shoo/core/debug/core/hos_debug_prefs.dart';
 
 /// Debug 环境切换后重建 [ProviderScope]，使 Dio / 路由等依赖新配置重新初始化。
 /// SHOAppRestart 是一个 应用重启管理器，专门用于 Debug 模式下的环境热切换。

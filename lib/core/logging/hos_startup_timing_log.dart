@@ -1,7 +1,7 @@
-import '../analytics/hos_analytics_manager.dart';
-import '../analytics/hos_analytics_registry.dart';
-import '../analytics/hos_app_startup_timer.dart';
-import 'hos_log_manager.dart';
+import 'package:shoo/core/analytics/hos_analytics_manager.dart';
+import 'package:shoo/core/analytics/hos_analytics_registry.dart';
+import 'package:shoo/core/analytics/hos_app_startup_timer.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
 
 /// 启动耗时日志（上下分隔线，便于筛选）。
 abstract final class SHOStartupTimingLog {

@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../logging/hos_startup_timing_log.dart';
-import 'hos_analytics.dart';
-import 'hos_app_startup_timer.dart';
+import 'package:shoo/core/logging/hos_startup_timing_log.dart';
+import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/analytics/hos_app_startup_timer.dart';
 
 /// 监听 App 生命周期：冷启动、进入后台、进程结束。
 class SHOAppLifecycleBinder extends ConsumerStatefulWidget {

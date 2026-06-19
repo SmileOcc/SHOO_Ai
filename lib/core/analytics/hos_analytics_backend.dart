@@ -1,4 +1,4 @@
-import 'hos_analytics_event.dart';
+import 'package:shoo/core/analytics/hos_analytics_event.dart';
 
 /// 业务上报通道（可扩展：控制台、本地日志、远程 SDK 等）。
 abstract class SHOAnalyticsBackend {

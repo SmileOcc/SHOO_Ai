@@ -4,16 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../constants/hos_constants.dart';
-import '../logging/hos_log_manager.dart';
-import '../marketing/hos_activity_prefetch_service.dart';
-import '../storage/hos_image_cache_manager.dart';
-import '../storage/hos_local_storage.dart';
-import '../../features/cart/data/hos_cart_storage.dart';
-import '../../features/search/data/hos_search_history_storage.dart';
-import '../../features/toolbox/data/hos_reading_storage_keys.dart';
-import '../../features/toolbox/data/hos_music_storage_keys.dart';
-import '../../features/toolbox/data/hos_video_storage_keys.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
+import 'package:shoo/core/marketing/hos_activity_prefetch_service.dart';
+import 'package:shoo/core/cache/hos_image_cache_manager.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/features/cart/data/datasources/local/hos_cart_storage.dart';
+import 'package:shoo/features/search/data/datasources/local/hos_search_history_storage.dart';
+import 'package:shoo/features/toolbox/data/datasources/local/hos_reading_storage_keys.dart';
+import 'package:shoo/features/toolbox/data/datasources/local/hos_music_storage_keys.dart';
+import 'package:shoo/features/toolbox/data/datasources/local/hos_video_storage_keys.dart';
 
 enum SHOCacheCategory {
   logs,

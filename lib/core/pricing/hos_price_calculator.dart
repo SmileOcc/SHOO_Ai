@@ -1,4 +1,4 @@
-import '../../features/coupon/domain/hos_coupon.dart';
+import 'package:shoo/features/coupon/domain/entities/hos_coupon.dart';
 
 /// 订单价格明细（纯数据，无副作用）。
 class SHOPriceBreakdown {

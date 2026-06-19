@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
-import '../config/hos_config.dart';
-import '../logging/hos_logger.dart';
-import 'hos_mock_dynamic.dart';
-import 'hos_mock_order_store.dart';
-import 'hos_mock_route_registry.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/network/hos_mock_dynamic.dart';
+import 'package:shoo/core/network/hos_mock_order_store.dart';
+import 'package:shoo/core/network/hos_mock_route_registry.dart';
 
 /// 拦截 Dio 请求并返回本地 JSON Mock 数据。
 class SHOMockInterceptor extends Interceptor {

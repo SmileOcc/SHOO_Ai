@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../app/router/hos_route_navigator.dart';
-import '../../features/home/domain/hos_banner.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
-import 'hos_network_image.dart';
+import 'package:shoo/app/router/hos_route_navigator.dart';
+import 'package:shoo/features/home/domain/entities/hos_banner.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/widgets/hos_network_image.dart';
 
 class SHOBannerCarousel extends StatefulWidget {
   const SHOBannerCarousel({

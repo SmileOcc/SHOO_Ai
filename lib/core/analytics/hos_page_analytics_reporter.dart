@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
-import 'hos_analytics_manager.dart';
-import 'hos_analytics_registry.dart';
-import 'hos_page_analytics_action.dart';
-import 'hos_page_route_info.dart';
+import 'package:shoo/core/analytics/hos_analytics_manager.dart';
+import 'package:shoo/core/analytics/hos_analytics_registry.dart';
+import 'package:shoo/core/analytics/hos_page_analytics_action.dart';
+import 'package:shoo/core/analytics/hos_page_route_info.dart';
 
 /// 页面与路由栈埋点统一上报入口。
 abstract final class SHOPageAnalyticsReporter {

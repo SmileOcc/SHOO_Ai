@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../config/hos_config.dart';
-import '../debug/core/hos_debug_config_repository.dart';
-import '../debug/modules/update/hos_debug_update_config.dart';
-import '../network/hos_dio_client.dart';
-import '../logging/hos_logger.dart';
-import '../utils/hos_version_utils.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
+import 'package:shoo/core/network/hos_dio_client.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/utils/hos_version_utils.dart';
 
 final appUpdateServiceProvider = Provider<SHOAppUpdateService>((ref) {
   return SHOAppUpdateService(ref.watch(dioProvider), ref);

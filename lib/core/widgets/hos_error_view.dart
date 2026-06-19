@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import 'hos_empty_state.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_empty_state.dart';
 
 class SHOAppErrorView extends StatelessWidget {
   const SHOAppErrorView({

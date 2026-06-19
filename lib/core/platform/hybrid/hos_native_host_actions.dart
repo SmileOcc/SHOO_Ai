@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/router/hos_router_keys.dart';
-import '../../../app/router/hos_routes.dart';
-import '../../logging/hos_logger.dart';
-import '../../analytics/hos_analytics_manager.dart';
-import '../../widgets/hos_dialog.dart';
-import 'hos_hybrid_bridge_protocol.dart';
-import 'hos_hybrid_native_overlay_coordinator.dart';
-import '../bridge/hos_native_device_service.dart';
-import '../bridge/hos_native_event_bridge.dart';
-import '../bridge/hos_native_message_bridge.dart';
+import 'package:shoo/app/router/hos_router_keys.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/analytics/hos_analytics_manager.dart';
+import 'package:shoo/core/widgets/hos_dialog.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_protocol.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_native_overlay_coordinator.dart';
+import 'package:shoo/core/platform/bridge/hos_native_device_service.dart';
+import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_message_bridge.dart';
 
 /// 处理 Native → Flutter 的宿主能力（导航、弹窗、Channel 学习示例）。
 abstract final class SHONativeHostActions {

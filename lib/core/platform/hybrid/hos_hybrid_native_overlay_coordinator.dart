@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import '../../logging/hos_logger.dart';
-import 'hos_hybrid_bridge_protocol.dart';
-import '../bridge/hos_native_bridge.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_protocol.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge.dart';
 
 /// 原生 Nav Push [HybridFlutterRouteViewController] 时的会话协调。
 abstract final class SHOHybridNativeOverlayCoordinator {

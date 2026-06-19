@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../brand/hos_app_icon.dart';
-import '../brand/hos_app_icon_style.dart';
-import '../brand/hos_brand_config.dart';
+import 'package:shoo/core/brand/hos_app_icon.dart';
+import 'package:shoo/core/brand/hos_app_icon_style.dart';
+import 'package:shoo/core/brand/hos_brand_config.dart';
 /// 品牌加载组件：圆角 App Icon + 内部浅灰圆形旋转环。
 ///
 /// ```dart

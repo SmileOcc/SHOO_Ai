@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import 'presentation/hos_coupon_list_page.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/coupon/presentation/pages/hos_coupon_list_page.dart';
 
 List<RouteBase> shoCouponRoutes({required GlobalKey<NavigatorState> rootKey}) => [
       GoRoute(

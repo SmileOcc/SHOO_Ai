@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../theme/hos_spacing.dart';
-import '../widgets/hos_button.dart';
-import 'hos_update_download_service.dart';
-import 'hos_update_service.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/update/hos_update_download_service.dart';
+import 'package:shoo/core/update/hos_update_service.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 更新弹窗：支持可选更新与强制更新（层级高于活动弹窗）。
 abstract final class SHOAppUpdateDialog {

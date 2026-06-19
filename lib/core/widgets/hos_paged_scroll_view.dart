@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 下拉刷新 + 触底加载更多 列表容器。
 class SHOPagedScrollView extends StatelessWidget {

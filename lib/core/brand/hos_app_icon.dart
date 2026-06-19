@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import 'hos_app_icon_style.dart';
-import 'hos_brand_config.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/brand/hos_app_icon_style.dart';
+import 'package:shoo/core/brand/hos_brand_config.dart';
 
 /// SHOO 品牌 App Icon，支持多款视觉风格。
 class SHOAppIcon extends StatelessWidget {

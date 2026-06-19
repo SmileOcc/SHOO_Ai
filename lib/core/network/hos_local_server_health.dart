@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../config/hos_config.dart';
+import 'package:shoo/core/config/hos_config.dart';
 
 /// 检测本地 Mock Server（`/health`）是否可达。
 abstract final class SHOLocalServerHealth {

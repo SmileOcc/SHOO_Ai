@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../storage/hos_image_cache_manager.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_theme_extension.dart';
-import 'hos_skeleton_box.dart';
+import 'package:shoo/core/cache/hos_image_cache_manager.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/widgets/hos_skeleton_box.dart';
 
 /// 通用图片组件：支持网络/本地图、占位图、圆角、边框与填充模式。
 ///

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/router/hos_routes.dart';
-import '../../config/hos_config.dart';
-import '../../config/hos_environment.dart';
-import '../../constants/hos_constants.dart';
-import '../../../app/root/hos_runtime_env_provider.dart';
-import '../../theme/hos_spacing.dart';
-import '../../../l10n/app_localizations.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/config/hos_environment.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/app/root/hos_runtime_env_provider.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// Debug 调试面板：环境切换、Mock 延迟等（Release 包不可进入）。
 class SHODebugPanelPage extends ConsumerWidget {

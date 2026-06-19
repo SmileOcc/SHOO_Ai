@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'hos_log_manager.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
 
 final logReportServiceProvider = Provider<SHOLogReportService>((ref) {
   return const SHOLogReportService();

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-import '../config/hos_config.dart';
-import '../config/hos_environment.dart';
-import '../constants/hos_constants.dart';
-import 'hos_log_manager.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/config/hos_environment.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/logging/hos_log_manager.dart';
 
 /// 启动时输出当前有效配置（上下分隔线便于筛选）。
 abstract final class SHOStartupConfigLog {

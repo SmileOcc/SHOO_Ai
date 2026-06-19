@@ -1,4 +1,4 @@
-import 'hos_mock_pagination.dart';
+import 'package:shoo/core/network/hos_mock_pagination.dart';
 
 /// 从路由 pattern 提取路径参数，如 `/products/{id}` + `/products/c1-p1` → `c1-p1`。
 String? mockPathParam(String pattern, String path, String name) {

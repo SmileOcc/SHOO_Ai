@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../l10n/app_localizations.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../theme/hos_theme_extension.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 
 /// Debug：Future.microtask 执行顺序调试演示页。
 class SHODebugMicrotaskPage extends ConsumerStatefulWidget {

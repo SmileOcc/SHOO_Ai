@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../marketing/hos_activity_prefetch_service.dart';
-import '../../core/hos_debug_config_repository.dart';
-import 'hos_debug_activity_config.dart';
+import 'package:shoo/core/marketing/hos_activity_prefetch_service.dart';
+import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
 
 final debugActivityConfigProvider =
     NotifierProvider<SHODebugActivityConfigNotifier, SHODebugActivityConfig>(

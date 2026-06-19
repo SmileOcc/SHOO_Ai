@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/hos_constants.dart';
-import '../../app/root/hos_runtime_env_provider.dart';
-import 'hos_environment.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/app/root/hos_runtime_env_provider.dart';
+import 'package:shoo/core/config/hos_environment.dart';
 
 /// 全局运行时配置，启动时通过 [SHOAppConfig.init] 初始化。
 ///

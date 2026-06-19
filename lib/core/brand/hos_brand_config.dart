@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/hos_constants.dart';
-import '../storage/hos_local_storage.dart';
-import 'hos_app_icon_style.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/brand/hos_app_icon_style.dart';
 
 const _iconStyleStorageKey = 'brand_icon_style_v1';
 

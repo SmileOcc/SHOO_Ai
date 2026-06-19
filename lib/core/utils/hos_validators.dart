@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 表单校验器集合，配合 [SHOAppTextField.validator] 使用。
 ///

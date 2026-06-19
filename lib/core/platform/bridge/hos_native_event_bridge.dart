@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-import '../../logging/hos_logger.dart';
-import 'hos_channel_names.dart';
-import 'hos_native_bridge_exception.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
 
 /// EventChannel 统一封装：原生主动推送，避免 Timer 轮询 MethodChannel。
 ///

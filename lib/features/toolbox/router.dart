@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import '../../features/study/presentation/study_article_page.dart';
-import '../../features/study/presentation/study_home_page.dart';
-import 'presentation/hos_download_list_page.dart';
-import 'presentation/hos_toolbox_page.dart';
-import 'presentation/hos_txt_reader_route_page.dart';
-import 'presentation/hos_music_player_route_page.dart';
-import 'presentation/hos_video_player_route_page.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/study/presentation/pages/study_article_page.dart';
+import 'package:shoo/features/study/presentation/pages/study_home_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_download_list_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_txt_reader_route_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_music_player_route_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_video_player_route_page.dart';
 
 List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =>
     [

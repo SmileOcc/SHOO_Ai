@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'hos_hybrid_bridge_protocol.dart';
-import '../bridge/hos_native_bridge.dart';
-import 'hos_native_host_bridge.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_protocol.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge.dart';
+import 'package:shoo/core/platform/hybrid/hos_native_host_bridge.dart';
 
 /// Hybrid Bridge 门面：统一 Flutter ↔ Native 混合能力入口。
 abstract final class SHOHybridBridge {

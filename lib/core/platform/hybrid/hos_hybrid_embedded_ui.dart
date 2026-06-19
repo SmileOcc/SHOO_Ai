@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'hos_hybrid_native_overlay_coordinator.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_native_overlay_coordinator.dart';
 
 /// 嵌入原生 Nav 时的 Flutter UI 适配（隐藏 Flutter AppBar，使用原生返回栏）。
 abstract final class SHOHybridEmbeddedUi {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import '../../features/auth/presentation/hos_session_provider.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 
 /// 登录态守卫：需要用户信息的操作先校验，未登录则跳转登录页。
 abstract final class SHOAuthGuard {

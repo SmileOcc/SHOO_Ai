@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 
-import '../../logging/hos_logger.dart';
-import 'hos_channel_names.dart';
-import 'hos_native_bridge_exception.dart';
-import 'hos_native_type_caster.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
+import 'package:shoo/core/platform/bridge/hos_native_type_caster.dart';
 
 /// MethodChannel 统一调用层：泛型调用 + 统一错误处理 + 日志。
 ///

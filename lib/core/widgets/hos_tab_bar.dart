@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_typography.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_typography.dart';
 
 /// 带下划线指示器的 Tab 导航封装。
 ///

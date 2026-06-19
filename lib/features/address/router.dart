@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import 'presentation/hos_address_form_page.dart';
-import 'presentation/hos_address_list_page.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/address/presentation/pages/hos_address_form_page.dart';
+import 'package:shoo/features/address/presentation/pages/hos_address_list_page.dart';
 
 List<RouteBase> shoAddressRoutes({required GlobalKey<NavigatorState> rootKey}) => [
       GoRoute(

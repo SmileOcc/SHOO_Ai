@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'hos_colors.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 
 /// Design Token — 字号 / 字重规范。
 ///

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'hos_remote_log_base_url.dart';
+import 'package:shoo/core/logging/hos_remote_log_base_url.dart';
 
 /// 远程日志上报专用客户端（不走 Mock 拦截器，直连本地 server 或真实 API）。
 abstract final class SHORemoteLogClient {

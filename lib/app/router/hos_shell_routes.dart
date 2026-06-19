@@ -1,17 +1,17 @@
 import 'package:go_router/go_router.dart';
 
-import '../../features/cart/presentation/hos_cart_page.dart';
-import '../../features/category/presentation/hos_category_page.dart';
-import '../../features/community/presentation/hos_community_page.dart';
-import '../../features/home/presentation/hos_home_page.dart';
-import '../../features/message/presentation/hos_message_page.dart';
-import '../../features/profile/presentation/hos_profile_page.dart';
-import '../../features/profile/presentation/hos_about_page.dart';
-import '../../features/profile/presentation/hos_settings_cache_page.dart';
-import '../../features/profile/presentation/hos_settings_page.dart';
-import '../shell/hos_main_shell.dart';
-import 'hos_router_keys.dart';
-import 'hos_routes.dart';
+import 'package:shoo/features/cart/presentation/pages/hos_cart_page.dart';
+import 'package:shoo/features/category/presentation/pages/hos_category_page.dart';
+import 'package:shoo/features/community/presentation/pages/hos_community_page.dart';
+import 'package:shoo/features/home/presentation/pages/hos_home_page.dart';
+import 'package:shoo/features/message/presentation/pages/hos_message_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_profile_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_about_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_cache_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_page.dart';
+import 'package:shoo/app/shell/hos_main_shell.dart';
+import 'package:shoo/app/router/hos_router_keys.dart';
+import 'package:shoo/app/router/hos_routes.dart';
 
 List<RouteBase> shoShellRoutes() => [
       GoRoute(

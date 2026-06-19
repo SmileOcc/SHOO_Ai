@@ -1,4 +1,4 @@
-import 'hos_log_record.dart';
+import 'package:shoo/core/logging/hos_log_record.dart';
 
 /// 日志输出器抽象接口（控制台 / 文件 / 远程等均可实现）。
 abstract interface class SHOLogSink {

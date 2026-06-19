@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
-import '../theme/hos_typography.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_typography.dart';
 
 /// 按钮变体：覆盖填充 / 描边 / 文字 / 幽灵 / 促销强调 5 种样式。
 enum SHOAppButtonVariant {

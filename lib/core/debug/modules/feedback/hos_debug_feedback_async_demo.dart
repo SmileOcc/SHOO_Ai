@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../errors/hos_exception.dart';
-import '../../../feedback/hos_global_error.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../theme/hos_theme_extension.dart';
-import '../../../../l10n/app_localizations.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
+import 'package:shoo/core/feedback/hos_global_error.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 下次请求是否失败（Debug 用）。
 final debugFeedbackOrdersFailProvider = StateProvider<bool>((ref) => false);

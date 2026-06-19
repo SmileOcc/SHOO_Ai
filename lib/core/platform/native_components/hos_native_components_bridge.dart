@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import '../bridge/hos_native_bridge.dart';
-import 'hos_native_components_protocol.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge.dart';
+import 'package:shoo/core/platform/native_components/hos_native_components_protocol.dart';
 
 /// 原生组件库门面（地图 / WebView / 支付等）。
 abstract final class SHONativeComponentsBridge {

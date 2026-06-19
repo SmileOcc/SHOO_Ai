@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../storage/hos_local_storage.dart';
-import '../widgets/hos_activity_popup_dialog.dart';
-import 'hos_activity_popup_service.dart';
-import 'hos_activity_prefetch_service.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/widgets/hos_activity_popup_dialog.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
+import 'package:shoo/core/marketing/hos_activity_prefetch_service.dart';
 
 String _dailyCountKey(String activityId) {
   final today = DateFormat('yyyy-MM-dd').format(DateTime.now());

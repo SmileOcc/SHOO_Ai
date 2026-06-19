@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../config/hos_config.dart';
-import '../logging/hos_logger.dart';
-import '../storage/hos_image_cache_manager.dart';
-import '../storage/hos_local_storage.dart';
-import '../debug/modules/activity/hos_debug_activity_config.dart';
-import 'hos_activity_popup_service.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/cache/hos_image_cache_manager.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
 
 const activityPrefetchConfigPrefix = 'activity_prefetch_config_';
 const activityPrefetchImagePrefix = 'activity_prefetch_image_';

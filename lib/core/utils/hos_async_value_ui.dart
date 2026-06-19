@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../errors/hos_exception.dart';
-import '../errors/hos_error_mapper.dart';
-import '../widgets/hos_error_view.dart';
-import '../widgets/hos_loading_state.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
+import 'package:shoo/core/errors/hos_error_mapper.dart';
+import 'package:shoo/core/widgets/hos_error_view.dart';
+import 'package:shoo/core/widgets/hos_loading_state.dart';
 
 extension SHOAsyncValueUI<T> on AsyncValue<T> {
   Widget whenWidget({

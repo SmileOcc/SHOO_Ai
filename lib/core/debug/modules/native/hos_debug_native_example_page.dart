@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../l10n/app_localizations.dart';
-import '../../../platform/bridge/hos_native_event_bridge.dart';
-import '../../../platform/bridge/hos_native_stream_service.dart';
-import '../../../theme/hos_spacing.dart';
-import 'hos_debug_native_examples.dart';
-import 'hos_debug_native_l10n.dart';
-import 'hos_debug_native_runner.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_stream_service.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_l10n.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_runner.dart';
 
 /// 单个原生调试示例：执行调用并展示结果 / 事件流。
 class SHODebugNativeExamplePage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 全局 Loading 卡片圆角。
 const _kLoadingCardRadius = 12.0;

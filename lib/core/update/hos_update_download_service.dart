@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../platform/business_event/hos_native_business_event.dart';
-import '../platform/business_event/hos_native_business_event_service.dart';
+import 'package:shoo/core/platform/business_event/hos_native_business_event.dart';
+import 'package:shoo/core/platform/business_event/hos_native_business_event_service.dart';
 
 final appUpdateDownloadServiceProvider =
     Provider<SHOAppUpdateDownloadService>((ref) {

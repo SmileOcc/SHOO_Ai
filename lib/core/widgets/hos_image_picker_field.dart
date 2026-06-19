@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../media/hos_image_picker_service.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/media/hos_image_picker_service.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 多图选择字段（相机 / 相册），用于评价晒图、售后凭证等。
 class SHOImagePickerField extends ConsumerWidget {

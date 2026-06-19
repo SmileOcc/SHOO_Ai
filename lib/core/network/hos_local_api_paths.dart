@@ -1,4 +1,4 @@
-import '../constants/hos_constants.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
 
 /// 本地 Mock Server 资源路径（与 `/api/v1/download` 风格一致）。
 ///

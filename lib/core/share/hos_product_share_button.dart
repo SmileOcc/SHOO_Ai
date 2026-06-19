@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/product/domain/hos_product_detail.dart';
-import 'hos_share_panel.dart';
-import 'hos_share_service.dart';
+import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
+import 'package:shoo/core/share/hos_share_panel.dart';
+import 'package:shoo/core/share/hos_share_service.dart';
 
 /// 商品详情分享按钮（含离屏卡片渲染）。
 class SHOProductShareButton extends ConsumerStatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/theme/hos_spacing.dart';
-import '../../core/widgets/hos_button.dart';
-import '../../core/widgets/hos_empty_state.dart';
-import '../../l10n/app_localizations.dart';
-import 'hos_routes.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/widgets/hos_empty_state.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/app/router/hos_routes.dart';
 
 /// 全局 404 页，由 [GoRouter.errorBuilder] 渲染。
 class SHONotFoundPage extends StatelessWidget {

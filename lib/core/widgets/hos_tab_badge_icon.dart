@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 
 /// Tab 角标：支持纯红点（dot）或数字角标（count）。
 ///

@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
+import 'package:shoo/app/router/hos_routes.dart';
 
 /// 标记从支付成功页进入订单详情，返回时需跳过收银台与确认订单。
 abstract final class SHOOrderDetailExtras {

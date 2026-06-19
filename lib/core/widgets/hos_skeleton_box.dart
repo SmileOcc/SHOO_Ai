@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 
 /// 骨架屏基础块，带渐变闪烁动画。
 ///

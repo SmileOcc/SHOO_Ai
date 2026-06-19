@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 全局 SnackBar / Toast 入口，样式统一。
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

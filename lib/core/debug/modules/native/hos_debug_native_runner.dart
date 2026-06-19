@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import '../../../platform/bridge/hos_channel_names.dart';
-import '../../../platform/bridge/hos_native_bridge.dart';
-import '../../../platform/bridge/hos_native_bridge_exception.dart';
-import '../../../platform/bridge/hos_native_event_bridge.dart';
-import '../../../platform/bridge/hos_native_message_bridge.dart';
-import 'hos_debug_native_examples.dart';
+import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
+import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_message_bridge.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 
 /// 执行原生调试示例，返回可展示的文本结果。
 abstract final class SHONativeDebugRunner {

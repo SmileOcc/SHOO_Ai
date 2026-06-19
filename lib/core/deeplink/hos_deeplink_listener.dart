@@ -4,9 +4,9 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../logging/hos_logger.dart';
-import 'hos_deeplink_mapper.dart';
-import '../../app/router/hos_router.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_mapper.dart';
+import 'package:shoo/app/router/hos_router.dart';
 
 final deepLinkListenerProvider = Provider<SHODeepLinkListener>((ref) {
   final router = ref.watch(routerProvider);

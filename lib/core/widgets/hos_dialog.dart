@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_theme_extension.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_typography.dart';
-import 'hos_button.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_typography.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
 
 /// 弹窗工具类：确认框 / 信息框 / 底部 Sheet。
 ///

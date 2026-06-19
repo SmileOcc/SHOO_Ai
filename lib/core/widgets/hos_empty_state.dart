@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import 'hos_button.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
 
 /// 空数据占位组件（图标 + 文案 + 可选操作按钮）。
 ///

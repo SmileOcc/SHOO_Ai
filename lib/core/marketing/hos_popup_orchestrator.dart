@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../update/hos_update_dialog.dart';
-import 'hos_activity_popup_manager.dart';
-import 'hos_activity_prefetch_service.dart';
-import 'hos_activity_popup_service.dart';
+import 'package:shoo/core/update/hos_update_dialog.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_manager.dart';
+import 'package:shoo/core/marketing/hos_activity_prefetch_service.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
 
 /// 弹窗编排：升级弹窗始终优先（最上层），活动弹窗在其后且层级更低。
 ///

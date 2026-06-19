@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../storage/hos_local_storage.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 
 const supportedLocaleCodes = ['en', 'zh'];
 

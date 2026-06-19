@@ -2,9 +2,9 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 
-import 'hos_log_level.dart';
-import 'hos_log_record.dart';
-import 'hos_log_sink.dart';
+import 'package:shoo/core/logging/hos_log_level.dart';
+import 'package:shoo/core/logging/hos_log_record.dart';
+import 'package:shoo/core/logging/hos_log_sink.dart';
 
 /// 基于 `dart:developer.log()` 的控制台输出器（原生平台友好）。
 class SHOLogConsoleSink implements SHOLogSink {

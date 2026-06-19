@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/hos_debug_config_repository.dart';
-import 'hos_debug_update_config.dart';
+import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
 
 final debugUpdateConfigProvider =
     NotifierProvider<SHODebugUpdateConfigNotifier, SHODebugUpdateConfig>(

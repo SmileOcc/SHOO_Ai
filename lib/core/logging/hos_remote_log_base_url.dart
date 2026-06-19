@@ -1,5 +1,5 @@
-import '../config/hos_config.dart';
-import '../constants/hos_constants.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
 
 /// 解析远程日志上报的 API 根地址（与业务 Mock 解耦）。
 abstract final class SHORemoteLogBaseUrl {

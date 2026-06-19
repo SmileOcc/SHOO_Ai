@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 统一卡片容器：固定圆角、内边距、可选点击。
 ///

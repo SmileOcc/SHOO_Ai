@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../features/order/domain/hos_order.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/features/order/domain/entities/hos_order.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 物流轨迹时间轴组件。
 class SHOLogisticsTimeline extends StatelessWidget {

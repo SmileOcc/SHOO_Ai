@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import 'domain/hos_community_models.dart';
-import 'presentation/hos_community_detail_pages.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
+import 'package:shoo/features/community/presentation/widgets/hos_community_detail_pages.dart';
 
 List<RouteBase> shoCommunityRoutes({
   required GlobalKey<NavigatorState> rootKey,

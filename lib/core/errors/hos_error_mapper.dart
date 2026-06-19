@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../platform/bridge/hos_native_bridge_exception.dart';
-import 'hos_exception.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
 
 SHOAppException mapDioError(DioException error) {
   switch (error.type) {

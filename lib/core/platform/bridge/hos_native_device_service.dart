@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'hos_native_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_bridge.dart';
 
 final nativeDeviceServiceProvider = Provider<SHONativeDeviceService>((ref) {
   return const SHONativeDeviceService();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'hos_colors.dart';
-import 'hos_spacing.dart';
-import 'hos_theme_extension.dart';
-import 'hos_typography.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_typography.dart';
 
 /// 应用主题管理：亮色 + 暗色，配合 [ThemeMode.system] 自动切换。
 ///

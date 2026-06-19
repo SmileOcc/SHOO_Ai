@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'hos_colors.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 
 /// 语义化主题色扩展 — 随亮/暗模式切换，避免硬编码 [SHOAppColors.surface]。
 @immutable

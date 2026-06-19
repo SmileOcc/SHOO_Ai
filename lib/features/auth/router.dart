@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import 'presentation/hos_login_page.dart';
-import 'presentation/hos_register_page.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/auth/presentation/pages/hos_login_page.dart';
+import 'package:shoo/features/auth/presentation/pages/hos_register_page.dart';
 
 List<RouteBase> shoAuthRoutes({required GlobalKey<NavigatorState> rootKey}) => [
       GoRoute(

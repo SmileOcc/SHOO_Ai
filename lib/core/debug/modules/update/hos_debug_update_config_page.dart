@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../update/hos_update_dialog.dart';
-import '../../../update/hos_update_service.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../core/hos_debug_flow_status_banner.dart';
-import 'hos_debug_update_config_provider.dart';
-import 'hos_debug_update_config.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/update/hos_update_dialog.dart';
+import 'package:shoo/core/update/hos_update_service.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/debug/core/hos_debug_flow_status_banner.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config_provider.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
 
 class SHODebugUpdateConfigPage extends ConsumerStatefulWidget {
   const SHODebugUpdateConfigPage({super.key});

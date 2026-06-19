@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'hos_hybrid_bridge.dart';
-import 'hos_hybrid_native_overlay_provider.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_native_overlay_provider.dart';
 
 /// 在应用根部挂载，确保 [SHOHybridBridge] 宿主通道已注册。
 class SHOHybridBridgeInstaller extends ConsumerStatefulWidget {

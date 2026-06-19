@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_spacing.dart';
-import '../widgets/hos_button.dart';
-import 'hos_card_dialog_shell.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/dialogs/hos_card_dialog_shell.dart';
 
 /// 通用卡片确认弹窗：标题、描述、底部确认按钮。
 class SHOConfirmCardDialog extends StatelessWidget {

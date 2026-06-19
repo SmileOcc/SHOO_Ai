@@ -1,5 +1,5 @@
-import '../../../../l10n/app_localizations.dart';
-import 'hos_debug_native_examples.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 
 extension SHONativeDebugL10n on AppLocalizations {
   String nativeCategoryTitle(SHONativeDebugCategory category) {

@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'hos_log_console_sink.dart';
-import 'hos_log_crash_reporter.dart';
-import 'hos_log_file_sink.dart';
-import 'hos_log_level.dart';
-import 'hos_log_record.dart';
-import 'hos_log_sink.dart';
+import 'package:shoo/core/logging/hos_log_console_sink.dart';
+import 'package:shoo/core/logging/hos_log_crash_reporter.dart';
+import 'package:shoo/core/logging/hos_log_file_sink.dart';
+import 'package:shoo/core/logging/hos_log_level.dart';
+import 'package:shoo/core/logging/hos_log_record.dart';
+import 'package:shoo/core/logging/hos_log_sink.dart';
 
 /// 日志引擎单例：级别过滤、输出器分发、错误上报。
 class SHOLoggerService {

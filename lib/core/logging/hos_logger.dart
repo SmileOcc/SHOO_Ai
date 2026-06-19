@@ -1,7 +1,7 @@
-import 'hos_log_crash_reporter.dart';
-import 'hos_log_level.dart';
-import 'hos_log_sink.dart';
-import 'hos_logger_service.dart';
+import 'package:shoo/core/logging/hos_log_crash_reporter.dart';
+import 'package:shoo/core/logging/hos_log_level.dart';
+import 'package:shoo/core/logging/hos_log_sink.dart';
+import 'package:shoo/core/logging/hos_logger_service.dart';
 
 /// SHOO 全局日志入口（基于 `dart:developer.log` + 可扩展 Sink）。
 ///

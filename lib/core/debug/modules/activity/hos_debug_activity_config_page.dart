@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../marketing/hos_activity_popup_service.dart';
-import '../../../marketing/hos_activity_prefetch_service.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../widgets/hos_activity_popup_dialog.dart';
-import '../../../../l10n/app_localizations.dart';
-import 'hos_debug_activity_config_provider.dart';
-import '../../core/hos_debug_flow_status_banner.dart';
-import 'hos_debug_activity_config.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
+import 'package:shoo/core/marketing/hos_activity_prefetch_service.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_activity_popup_dialog.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_provider.dart';
+import 'package:shoo/core/debug/core/hos_debug_flow_status_banner.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
 
 class SHODebugActivityConfigPage extends ConsumerStatefulWidget {
   const SHODebugActivityConfigPage({super.key});

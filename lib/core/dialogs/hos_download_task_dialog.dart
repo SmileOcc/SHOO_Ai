@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../theme/hos_spacing.dart';
-import '../utils/hos_validators.dart';
-import '../widgets/hos_button.dart';
-import '../widgets/hos_text_field.dart';
-import 'hos_card_dialog_shell.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/utils/hos_validators.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/widgets/hos_text_field.dart';
+import 'package:shoo/core/dialogs/hos_card_dialog_shell.dart';
 
 class SHODownloadTaskDialogResult {
   const SHODownloadTaskDialogResult({

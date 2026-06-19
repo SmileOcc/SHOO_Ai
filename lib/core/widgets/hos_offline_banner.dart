@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../config/hos_config.dart';
-import '../../app/root/hos_runtime_env_provider.dart';
-import '../feedback/hos_global_error.dart';
-import '../feedback/hos_overlay_loading.dart';
-import '../network/hos_connectivity_service.dart';
-import '../network/hos_local_server_health.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../../features/toolbox/presentation/music/hos_music_mini_player.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/app/root/hos_runtime_env_provider.dart';
+import 'package:shoo/core/feedback/hos_global_error.dart';
+import 'package:shoo/core/feedback/hos_overlay_loading.dart';
+import 'package:shoo/core/network/hos_network_info.dart';
+import 'package:shoo/core/network/hos_local_server_health.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/features/toolbox/presentation/music/widgets/hos_music_mini_player.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 const _offlineBannerSwipeUpVelocity = 120.0;
 

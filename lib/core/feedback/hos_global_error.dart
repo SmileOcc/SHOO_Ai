@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../errors/hos_error_mapper.dart';
-import '../theme/hos_spacing.dart';
-import 'hos_overlay_loading.dart';
-import 'hos_toast.dart';
+import 'package:shoo/core/errors/hos_error_mapper.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/feedback/hos_overlay_loading.dart';
+import 'package:shoo/core/feedback/hos_toast.dart';
 
 const _kGlobalDialogRadius = 12.0;
 

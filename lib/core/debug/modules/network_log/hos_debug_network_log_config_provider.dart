@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/hos_debug_config_repository.dart';
-import 'hos_debug_network_log_config.dart';
-import 'hos_debug_network_log_config_bridge.dart';
+import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config.dart';
+import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
 
 final debugNetworkLogConfigProvider =
     NotifierProvider<SHODebugNetworkLogConfigNotifier, SHODebugNetworkLogConfig>(

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../logging/hos_logger.dart';
-import '../permissions/hos_permission_service.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/permissions/hos_permission_service.dart';
 
 final imagePickerServiceProvider = Provider<SHOImagePickerService>((ref) {
   return SHOImagePickerService(ref.watch(permissionServiceProvider));

@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../features/product/domain/hos_product_detail.dart';
-import '../deeplink/hos_deeplink_config.dart';
-import '../analytics/hos_analytics.dart';
-import '../logging/hos_logger.dart';
-import '../utils/hos_widget_capture.dart';
-import 'hos_share_card.dart';
+import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
+import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/utils/hos_widget_capture.dart';
+import 'package:shoo/core/share/hos_share_card.dart';
 
 final shareServiceProvider = Provider<SHOShareService>((ref) => const SHOShareService());
 

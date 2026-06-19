@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/hos_spacing.dart';
-import '../../../l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 /// 调试面板顶部状态条：标明当前走正常流程还是调试覆盖。
 class SHODebugFlowStatusBanner extends StatelessWidget {

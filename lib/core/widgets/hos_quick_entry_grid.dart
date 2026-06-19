@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../features/category/domain/hos_category.dart';
-import '../theme/hos_theme_extension.dart';
-import '../theme/hos_spacing.dart';
+import 'package:shoo/features/category/domain/entities/hos_category.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
 
 class SHOQuickEntryGrid extends StatelessWidget {
   const SHOQuickEntryGrid({

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../features/home/domain/hos_product.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_theme_extension.dart';
-import '../utils/hos_price_formatter.dart';
-import 'hos_network_image.dart';
-import 'hos_price_text.dart';
-import 'hos_promo_tag.dart';
-import 'hos_profile_section_card.dart';
+import 'package:shoo/features/home/domain/entities/hos_product.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/utils/hos_price_formatter.dart';
+import 'package:shoo/core/widgets/hos_network_image.dart';
+import 'package:shoo/core/widgets/hos_price_text.dart';
+import 'package:shoo/core/widgets/hos_promo_tag.dart';
+import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 
 /// 双列商品卡：圆角卡片 + 图 + 标题 + 价格 + 评分。
 class SHOProductCard extends StatelessWidget {

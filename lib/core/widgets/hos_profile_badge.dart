@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../theme/hos_theme_extension.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 
 /// 个人中心数字角标。
 class SHOProfileBadge extends StatelessWidget {

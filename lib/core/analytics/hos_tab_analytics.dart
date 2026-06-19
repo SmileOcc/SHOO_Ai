@@ -1,6 +1,6 @@
-import '../../app/router/hos_routes.dart';
-import 'hos_analytics_manager.dart';
-import 'hos_analytics_registry.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_analytics_manager.dart';
+import 'package:shoo/core/analytics/hos_analytics_registry.dart';
 
 /// 底部 Tab 与路由 path 映射（与 [SHOMainShell] 分支顺序一致）。
 abstract final class SHOTabAnalyticsRoutes {

@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../../app/router/hos_route_navigator.dart';
-import '../../l10n/app_localizations.dart';
-import '../marketing/hos_activity_popup_service.dart';
-import '../theme/hos_spacing.dart';
-import 'hos_button.dart';
-import 'hos_network_image.dart';
+import 'package:shoo/app/router/hos_route_navigator.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/widgets/hos_network_image.dart';
 
 /// 活动运营弹窗广告（描述超 5 行可滚动）。
 class SHOActivityPopupDialog extends StatelessWidget {

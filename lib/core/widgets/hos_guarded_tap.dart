@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/hos_constants.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
 
 class SHOTapGuard {
   SHOTapGuard({Duration? interval})

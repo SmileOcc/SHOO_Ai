@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../bridge/hos_native_event_bridge.dart';
+import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
 
 /// EventChannel 流订阅基类，强制在 [dispose] 时 cancel，避免内存泄漏。
 ///

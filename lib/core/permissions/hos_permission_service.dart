@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../logging/hos_logger.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 
 final permissionServiceProvider = Provider<SHOPermissionService>((ref) {
   return const SHOPermissionService();

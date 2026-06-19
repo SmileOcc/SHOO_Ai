@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../app/router/hos_routes.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../theme/hos_spacing.dart';
-import 'hos_debug_native_examples.dart';
-import 'hos_debug_native_l10n.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
+import 'package:shoo/core/debug/modules/native/hos_debug_native_l10n.dart';
 
 /// 原生交互调试入口：按 Channel 类型分组列出示例。
 class SHODebugNativeHubPage extends StatelessWidget {

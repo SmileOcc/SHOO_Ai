@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/hos_colors.dart';
-import '../utils/hos_price_formatter.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/utils/hos_price_formatter.dart';
 
 class SHOAppPriceText extends StatelessWidget {
   const SHOAppPriceText({

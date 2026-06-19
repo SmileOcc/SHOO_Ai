@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/product/domain/hos_product_detail.dart';
-import '../../l10n/app_localizations.dart';
-import '../feedback/hos_toast.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../widgets/hos_dialog.dart';
-import 'hos_share_service.dart';
+import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_dialog.dart';
+import 'package:shoo/core/share/hos_share_service.dart';
 
 /// 成熟分享弹窗面板（复制链接 / 系统分享 / 商品卡片图 / 第三方入口占位）。
 abstract final class SHOSharePanel {

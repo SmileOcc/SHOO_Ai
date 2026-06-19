@@ -1,4 +1,4 @@
-import 'hos_log_level.dart';
+import 'package:shoo/core/logging/hos_log_level.dart';
 
 /// 单条日志记录，传递给各输出器。
 class SHOLogRecord {

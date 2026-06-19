@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../errors/hos_exception.dart';
-import '../errors/hos_error_mapper.dart';
-import '../theme/hos_colors.dart';
-import '../theme/hos_spacing.dart';
-import '../theme/hos_typography.dart';
-import 'hos_error_view.dart';
-import 'hos_skeleton_box.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/core/errors/hos_exception.dart';
+import 'package:shoo/core/errors/hos_error_mapper.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_typography.dart';
+import 'package:shoo/core/widgets/hos_error_view.dart';
+import 'package:shoo/core/widgets/hos_skeleton_box.dart';
 
 /// 页面数据状态枚举：loading / empty / error / success。
 enum SHOLoadingState { loading, empty, error, success }

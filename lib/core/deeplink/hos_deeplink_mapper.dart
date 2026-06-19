@@ -1,5 +1,5 @@
-import '../../app/router/hos_routes.dart';
-import 'hos_deeplink_config.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
 
 /// 将外部 URI（Custom Scheme / Universal Link）映射为 go_router 路径。
 abstract final class SHODeepLinkMapper {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../constants/hos_constants.dart';
+import 'package:shoo/core/constants/hos_constants.dart';
 
 class SHODebouncer {
   SHODebouncer({Duration? duration})

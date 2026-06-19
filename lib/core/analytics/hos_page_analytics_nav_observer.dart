@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'hos_page_analytics_action.dart';
-import 'hos_page_analytics_reporter.dart';
-import 'hos_page_route_info.dart';
+import 'package:shoo/core/analytics/hos_page_analytics_action.dart';
+import 'package:shoo/core/analytics/hos_page_analytics_reporter.dart';
+import 'package:shoo/core/analytics/hos_page_route_info.dart';
 
 /// 导航栈级埋点：监听全局 push / pop / replace / remove。
 ///

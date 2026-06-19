@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../brand/hos_app_icon.dart';
-import '../../../brand/hos_app_icon_style.dart';
-import '../../../brand/hos_brand_config.dart';
-import '../../../theme/hos_colors.dart';
-import '../../../theme/hos_spacing.dart';
-import '../../../widgets/hos_app_loading.dart';
+import 'package:shoo/core/brand/hos_app_icon.dart';
+import 'package:shoo/core/brand/hos_app_icon_style.dart';
+import 'package:shoo/core/brand/hos_brand_config.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_app_loading.dart';
 
 /// Debug：预览并选择 SHOO App Icon 风格。
 class SHODebugBrandPage extends ConsumerWidget {

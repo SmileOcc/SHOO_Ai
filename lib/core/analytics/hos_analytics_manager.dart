@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-import '../logging/hos_logger.dart';
-import 'hos_analytics_backend.dart';
-import 'hos_analytics_backends.dart';
-import 'hos_analytics_event.dart';
-import 'hos_analytics_registry.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/analytics/hos_analytics_backend.dart';
+import 'package:shoo/core/analytics/hos_analytics_backends.dart';
+import 'package:shoo/core/analytics/hos_analytics_event.dart';
+import 'package:shoo/core/analytics/hos_analytics_registry.dart';
 
 /// 业务上报管理器：统一 key、字段校验、多通道分发，支持扩展 Backend。
 class SHOAnalyticsManager {

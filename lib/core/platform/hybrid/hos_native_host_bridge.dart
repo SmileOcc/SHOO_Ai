@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 
-import '../../logging/hos_logger.dart';
-import '../bridge/hos_channel_names.dart';
-import 'hos_native_host_actions.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
+import 'package:shoo/core/platform/hybrid/hos_native_host_actions.dart';
 
 /// Native → Flutter 宿主通道：Dart 端注册 Handler。
 abstract final class SHONativeHostBridge {

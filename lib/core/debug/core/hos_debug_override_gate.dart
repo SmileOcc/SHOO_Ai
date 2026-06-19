@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../config/hos_config.dart';
-import '../modules/activity/hos_debug_activity_config_provider.dart';
-import '../modules/update/hos_debug_update_config_provider.dart';
+import 'package:shoo/core/config/hos_config.dart';
+import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_provider.dart';
+import 'package:shoo/core/debug/modules/update/hos_debug_update_config_provider.dart';
 
 /// 调试覆盖开关门禁：仅当 Debug 包且用户显式开启覆盖时才走调试配置。
 abstract final class SHODebugOverrideGate {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import '../toolbox/presentation/hos_bookshelf_list_page.dart';
-import '../toolbox/presentation/hos_music_library_page.dart';
-import '../toolbox/presentation/hos_video_library_page.dart';
-import 'presentation/hos_profile_activity_list_page.dart';
-import 'presentation/hos_profile_controller.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_bookshelf_list_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_music_library_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_video_library_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_profile_activity_list_page.dart';
+import 'package:shoo/features/profile/presentation/state/hos_profile_controller.dart';
 
 List<RouteBase> shoProfileRoutes({required GlobalKey<NavigatorState> rootKey}) =>
     [

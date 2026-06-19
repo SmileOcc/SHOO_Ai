@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'hos_page_analytics_action.dart';
-import 'hos_page_analytics_reporter.dart';
-import 'hos_page_route_info.dart';
-import 'hos_page_route_observer.dart';
+import 'package:shoo/core/analytics/hos_page_analytics_action.dart';
+import 'package:shoo/core/analytics/hos_page_analytics_reporter.dart';
+import 'package:shoo/core/analytics/hos_page_route_info.dart';
+import 'package:shoo/core/analytics/hos_page_route_observer.dart';
 
 /// 单页精细埋点：混入 [State] 后自动订阅 [shoPageRouteObserver] 并上报
 /// enter / exit / cover / resume。

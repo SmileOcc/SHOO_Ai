@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/router/hos_routes.dart';
-import '../../core/platform/hybrid/hos_hybrid_embedded_ui.dart';
-import '../../l10n/app_localizations.dart';
-import 'presentation/hos_cart_page.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_embedded_ui.dart';
+import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/features/cart/presentation/pages/hos_cart_page.dart';
 
 /// 从商品详情等页面 push 进入的购物车（带返回栏，pop 回到上一页）。
 class SHOCartStackPage extends StatelessWidget {
