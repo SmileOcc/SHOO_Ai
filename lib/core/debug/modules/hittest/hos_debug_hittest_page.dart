@@ -267,6 +267,13 @@ class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
                       _log('translucent', source, event, position: position),
                   showPointerMove: _showPointerMove,
                 ),
+                const SizedBox(height: 12),
+                // ========== opaque 阻断效果演示 ==========
+                _OpaqueBlockingDemo(
+                  onLog: (source, event, position) =>
+                      _log('opaque阻断', source, event, position: position),
+                  showPointerMove: _showPointerMove,
+                ),
               ],
             ),
           ),
@@ -871,6 +878,129 @@ class _BehaviorDemoCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// opaque 阻断效果演示：两层完全重叠，顶层 opaque 会阻断底层事件
+class _OpaqueBlockingDemo extends StatelessWidget {
+  const _OpaqueBlockingDemo({
+    required this.onLog,
+    required this.showPointerMove,
+  });
+
+  final _HitTestLog onLog;
+  final bool showPointerMove;
+
+  static const _cardHeight = 220.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('opaque 阻断效果', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 2),
+            Text(
+              '顶层 opaque 完全覆盖底层，阻断所有事件 ===>OK',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 10),
+            // 点击测试区域
+            SizedBox(
+              height: _cardHeight,
+              width: double.infinity,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // ========== 底层（蓝色）==========
+                  Positioned.fill(
+                    child: _HitLayer(
+                      label: '底层',
+                      behavior: HitTestBehavior.opaque,
+                      color: Colors.blue,
+                      onLog: onLog,
+                      showPointerMove: showPointerMove,
+                      child: const Center(
+                        child: Text(
+                          '底层\n（蓝色）',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // ========== 顶层（红色 opaque）==========
+                  // 关键：opaque 会阻断事件，不传递给底层
+                  Positioned(
+                    top: 30,
+                    left: 30,
+                    width: 100,
+                    height: 100,
+                    child: _HitLayer(
+                      label: '顶层',
+                      behavior: HitTestBehavior.opaque,
+                      color: Colors.red.withValues(alpha: 0.5),
+                      borderColor: Colors.red,
+                      onLog: onLog,
+                      showPointerMove: showPointerMove,
+                      child: const Center(
+                        child: Text(
+                          '顶层 opaque\n（阻断底层）',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 标注
+                  const Positioned(
+                    left: 8,
+                    top: 8,
+                    child: Text(
+                      '点击任意位置',
+                      style: TextStyle(color: Colors.white60, fontSize: 10),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            // 预期结果说明
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.amber.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: Colors.amber),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '预期：无论点击哪里，都只有"顶层"响应，因为 opaque 阻断了底层',
+                      style: TextStyle(fontSize: 11, color: Colors.amber),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
