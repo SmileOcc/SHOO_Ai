@@ -437,7 +437,7 @@ Stack(
 
 ### 重叠视图穿透点击
 ```dart
-/// 核心规则（同一 Stack 重叠区域）：
+/// 核心规则（同一 Stack 重叠区域）：全局 Listener + 坐标判断
 GlobalKey _bKey = GlobalKey();
  // 注册布局回调，获取 B 的实际位置和大小
 WidgetsBinding.instance.addPostFrameCallback((_) {

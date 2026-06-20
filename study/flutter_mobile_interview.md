@@ -232,7 +232,7 @@ RenderObject 树：布局和绘制
 // StatefulWidget 完整生命周期
 1. constructor             // Widget 创建（可多次）
 2. createState()          // 创建 State（只一次）
-3. initState()            // 初始化（只一次）
+3. initState()            // 初始化（只一次）此时 context 不可用
 4. didChangeDependencies() // 首次 build 前 + InheritedWidget 变化时
 5. build()                // 可多次
 6. didUpdateWidget()      // 父组件传入新配置
@@ -283,6 +283,40 @@ void dispose() {
   super.dispose();
 }
 修正：如果需要同步状态，在 deactivate 中做。
+
+### didChangeDependencies 生命周期
+
+1. 首次 build 前调用（在 initState 之后）
+2. 之后只要依赖的 InheritedWidget 变化就会再次调用
+3. 这里可以安全使用 context
+```dart
+@override
+  void initState() {
+    super.initState();
+    // ❌ 此时 context 还不能安全使用 MediaQuery
+    // _screenWidth = MediaQuery.of(context).size.width;
+    // ❌ 不能使用 InheritedWidget
+    // final width = MediaQuery.of(context).size.width; // 错误
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ✅ 这里安全，获取屏幕宽度
+    _screenWidth = MediaQuery.of(context).size.width;
+    
+    // 屏幕旋转、窗口大小变化时也会被调用
+    print('屏幕宽度变为: $_screenWidth');
+    // ❌ 但不能调用 setState 而不检查 mounted
+    // setState(() {}); // 可能导致错误
+
+    // ❌ 危险：如果 updateTheme 触发 build → didChangeDependencies
+    // 可能导致无限循环
+    // context.read<ThemeProvider>().updateTheme(newTheme);
+    // ✅ 安全：只读取，不修改
+    final theme = context.read<ThemeProvider>().theme;
+  }
+```
 
 2. Mixin 的 dispose 顺序
 

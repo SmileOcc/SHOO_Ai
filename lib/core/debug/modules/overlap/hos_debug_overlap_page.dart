@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shoo/core/debug/modules/overlap/hos_overlap_hittext_box.dart';
 
 /// 重叠视图点击事件调试页。
 ///
@@ -317,7 +318,14 @@ class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
-                children: [const SizedBox(height: 16), _buildCase7()],
+                children: [
+                  const SizedBox(height: 16),
+                  _buildCase7(),
+                  const SizedBox(height: 16),
+                  _buildCase8(),
+                  const SizedBox(height: 16),
+                  _buildCase9(),
+                ],
               ),
             ),
           ),
@@ -441,7 +449,7 @@ class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
                 },
                 child: // A 视图
                 Container(
-                  color: Colors.blue.withOpacity(0.3),
+                  color: Colors.blue.withAlpha(50),
                 ),
               ),
             ),
@@ -488,6 +496,59 @@ class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCase8() {
+    return _buildDemoCard(
+      title: '场景8：自定义 RenderBox 控制命中区域',
+      subtitle: 'B 整块压住 A；hitTest 仅 B 独占矩形 → 重叠 A / 独占 B',
+      child: Container(
+        width: double.infinity,
+        height: 150,
+        child: Stack(
+          children: [
+            // A：底层视图
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () =>
+                    _logDetail("场景8", "Overlap", 'Listener', 'A 底层 onTap 触发'),
+                child: Container(color: Colors.blue.withAlpha(90)),
+              ),
+            ),
+
+            // B：上层视图，自定义命中测试
+            Positioned(
+              top: 10,
+              left: 50,
+              width: 200,
+              height: 50,
+              child: SHOWidgetWithCustomHitTest(
+                onMessageBlock: (label) {
+                  _logDetail(label, "Overlap", 'Listener', 'onTap 区域: $label');
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCase9() {
+    return _buildDemoCard(
+      title: '场景9：自定义命中区域（RenderObject）',
+      subtitle:
+          'B 整块压住 A；hitTest 仅 B 独占矩形 → 重叠 A / 独占 B ：hitTest // 从上层到下层遍历（倒序）',
+      child: Container(
+        width: double.infinity,
+        height: 150,
+        child: SHOWidgetWithCustomHitTest2(
+          onMessageBlock: (label) {
+            _logDetail(label, "Overlap", 'Listener', 'onTap 区域: $label');
+          },
         ),
       ),
     );
