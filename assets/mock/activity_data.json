@@ -1,0 +1,195 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "id": "2024-double11",
+    "title": "双11狂欢节",
+    "subtitle": "百万好礼等你来拿",
+    "startTime": "2024-11-01T00:00:00Z",
+    "endTime": "2024-11-11T23:59:59Z",
+    "shareTitle": "🎉 双11狂欢节 - 百万好礼等你来拿",
+    "shareDesc": "快来参与活动，赢取丰厚奖品！",
+    "shareUrl": "https://m.shoo.com/activity/2024-double11",
+    "modules": [
+      {
+        "id": "camera",
+        "icon": "📷",
+        "title": "拍照打卡",
+        "desc": "上传照片赢大奖",
+        "type": "native",
+        "action": "openCamera",
+        "params": {
+          "type": "photo"
+        }
+      },
+      {
+        "id": "coupon",
+        "icon": "🎫",
+        "title": "领优惠券",
+        "desc": "满200减100",
+        "type": "flutter",
+        "action": "showCouponDialog",
+        "params": {
+          "amount": 100,
+          "condition": 200
+        }
+      },
+      {
+        "id": "location",
+        "icon": "📍",
+        "title": "附近门店",
+        "desc": "查看最近门店",
+        "type": "native",
+        "action": "openLocation",
+        "params": {
+          "lat": 39.9042,
+          "lng": 116.4074
+        }
+      },
+      {
+        "id": "lottery",
+        "icon": "🎰",
+        "title": "幸运抽奖",
+        "desc": "100%中奖",
+        "type": "flutter",
+        "action": "showLotteryDialog",
+        "params": {
+          "type": "wheel"
+        }
+      }
+    ],
+    "images": [
+      {
+        "url": "https://picsum.photos/400/600?random=1",
+        "title": "活动现场 1",
+        "width": 400,
+        "height": 600
+      },
+      {
+        "url": "https://picsum.photos/400/600?random=2",
+        "title": "活动现场 2",
+        "width": 400,
+        "height": 600
+      },
+      {
+        "url": "https://picsum.photos/400/600?random=3",
+        "title": "活动现场 3",
+        "width": 400,
+        "height": 600
+      },
+      {
+        "url": "https://picsum.photos/400/600?random=4",
+        "title": "活动现场 4",
+        "width": 400,
+        "height": 600
+      },
+      {
+        "url": "https://picsum.photos/400/600?random=5",
+        "title": "活动现场 5",
+        "width": 400,
+        "height": 600
+      }
+    ],
+    "coupons": [
+      {
+        "type": "满减",
+        "amount": 100,
+        "condition": 200,
+        "expireAt": "2024-12-31T23:59:59Z"
+      },
+      {
+        "type": "折扣",
+        "discount": 0.8,
+        "expireAt": "2024-12-31T23:59:59Z"
+      },
+      {
+        "type": "免邮",
+        "desc": "全场包邮",
+        "expireAt": "2024-11-30T23:59:59Z"
+      }
+    ],
+    "rules": [
+      "活动时间为 2024年11月1日至11月11日",
+      "每人每天可参与3次抽奖",
+      "优惠券领取后24小时内有效",
+      "满减券不可与其他优惠叠加使用",
+      "最终解释权归活动方所有"
+    ],
+    "paymentTestUrl": "https://wx.tenpay.com/mock/payment?orderId=test123&amount=100",
+    "navigation": {
+      "productListLeafId": "c1-g1-l1",
+      "productListTitle": "双11活动商品",
+      "sampleProductId": "c1-g1-l1-p1"
+    },
+    "promoBlocks": [
+      {
+        "type": "paragraph",
+        "segments": [
+          {
+            "type": "text",
+            "content": "🎉 双11狂欢节火热进行中！精选好物限时特惠，"
+          },
+          {
+            "type": "link",
+            "text": "查看活动详情",
+            "url": "/activity/detail"
+          },
+          {
+            "type": "text",
+            "content": "，也可浏览 "
+          },
+          {
+            "type": "link",
+            "text": "官方活动页",
+            "url": "https://m.shoo.com/activity/2024-double11"
+          },
+          {
+            "type": "text",
+            "content": " 了解更多规则与奖品。"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "url": "https://picsum.photos/seed/activity-promo-1/640/280",
+        "caption": "活动主视觉 — 点击图片可全屏预览",
+        "width": 640,
+        "height": 280
+      },
+      {
+        "type": "paragraph",
+        "segments": [
+          {
+            "type": "text",
+            "content": "下方为互动模块：打卡、领券、抽奖等，也可通过上方入口直达 "
+          },
+          {
+            "type": "link",
+            "text": "活动商品列表",
+            "url": "/category/products?leafId=c1-g1-l1&title=%E5%8F%8C11%E6%B4%BB%E5%8A%A8%E5%95%86%E5%93%81"
+          },
+          {
+            "type": "text",
+            "content": " 与 "
+          },
+          {
+            "type": "link",
+            "text": "示例商品详情",
+            "url": "/product/c1-g1-l1-p1"
+          },
+          {
+            "type": "text",
+            "content": "。"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "url": "https://picsum.photos/seed/activity-promo-2/640/200",
+        "caption": "限时秒杀专场宣传图",
+        "width": 640,
+        "height": 200
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 abstract final class SHOAppRoutes {
-  static const splash = '/splash';  //闪图
-  static const onboarding = '/onboarding';  //引导页
+  static const splash = '/splash'; //闪图
+  static const onboarding = '/onboarding'; //引导页
   static const home = '/';
   static const category = '/category';
   static const community = '/community';
@@ -12,15 +12,13 @@ abstract final class SHOAppRoutes {
     required String leafId,
     required String title,
   }) {
-    final query = <String, String>{
-      'leafId': leafId,
-      'title': title,
-    };
+    final query = <String, String>{'leafId': leafId, 'title': title};
     final encoded = query.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
     return '$categoryProducts?$encoded';
   }
+
   static const cart = '/cart';
   static const cartStack = '/cart/view';
   static const profile = '/profile';
@@ -42,6 +40,33 @@ abstract final class SHOAppRoutes {
       '$toolboxReader?taskId=${Uri.encodeComponent(taskId)}';
   static const toolboxVideo = '/toolbox/video';
   static const toolboxMusicPlayer = '/toolbox/music';
+  static const activity = '/activity';
+  static const activityWebview = '/activity/webview';
+  static const activityImagePreview = '/activity/image-preview';
+  static const activityPayment = '/activity/payment';
+  static const activityExternal = '/activity/external';
+  static const activityDetail = '/activity/detail';
+  static const activityLevel3Detail = '/activity/detail/level3';
+
+  static String activityWebviewFor(String url, {String? title}) {
+    final query = <String, String>{
+      'url': url,
+      if (title != null && title.isNotEmpty) 'title': title,
+    };
+    final encoded = query.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return '$activityWebview?$encoded';
+  }
+
+  static String activityImagePreviewFor({int index = 0}) =>
+      '$activityImagePreview?index=$index';
+
+  static String activityPaymentFor(String url) =>
+      '$activityPayment?url=${Uri.encodeComponent(url)}';
+
+  static String activityExternalFor(String url) =>
+      '$activityExternal?url=${Uri.encodeComponent(url)}';
 
   static String toolboxMusicPlayerFor(
     String trackId, {
@@ -65,10 +90,7 @@ abstract final class SHOAppRoutes {
   static String toolboxVideoFor(String taskId) =>
       '$toolboxVideo?taskId=${Uri.encodeComponent(taskId)}';
 
-  static String toolboxVideoForEntry(
-    String entryId, {
-    String? taskId,
-  }) {
+  static String toolboxVideoForEntry(String entryId, {String? taskId}) {
     final query = <String, String>{
       'entryId': entryId,
       if (taskId != null && taskId.isNotEmpty) 'taskId': taskId,
@@ -78,6 +100,7 @@ abstract final class SHOAppRoutes {
         .join('&');
     return '$toolboxVideo?$encoded';
   }
+
   static const login = '/login';
   static const register = '/register';
   static const settings = '/settings';
@@ -116,6 +139,7 @@ abstract final class SHOAppRoutes {
     if (fromCartStack) return '$base?fromCartStack=1';
     return base;
   }
+
   static String afterSaleApply(String orderId) => '/after-sales/apply/$orderId';
   static const debugUpdate = '/debug/update';
   static const debugActivity = '/debug/activity';
@@ -125,6 +149,8 @@ abstract final class SHOAppRoutes {
   static const debugNetworkLog = '/debug/network-log';
   static const debugFeedback = '/debug/feedback';
   static const debugMicrotask = '/debug/microtask';
+  static const debugHitTest = '/debug/hittest';
+  static const debugOverlap = '/debug/overlap';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

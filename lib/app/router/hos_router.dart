@@ -20,6 +20,7 @@ import 'package:shoo/features/splash/router.dart';
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_nav_observer.dart';
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_route_state.dart';
 import 'package:shoo/features/toolbox/router.dart';
+import 'package:shoo/features/activity_webview/router.dart';
 import 'package:shoo/app/router/hos_not_found_page.dart';
 import 'package:shoo/app/router/hos_router_keys.dart';
 import 'package:shoo/app/router/hos_router_notifier.dart';
@@ -61,6 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoOrderRoutes(rootKey: rootNavigatorKey),
       ...shoProductRoutes(rootKey: rootNavigatorKey),
       ...shoToolboxRoutes(rootKey: rootNavigatorKey),
+      ...shoActivityWebviewRoutes(rootKey: rootNavigatorKey),
       ...shoDebugRoutes(rootKey: rootNavigatorKey),
       ...shoShellRoutes(),
     ],

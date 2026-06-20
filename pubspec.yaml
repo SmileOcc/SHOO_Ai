@@ -37,6 +37,11 @@ dependencies:
   path: ^1.9.1
   flutter_markdown: ^0.7.7
   fast_gbk: ^1.0.0
+  webview_flutter: ^4.13.0
+  webview_flutter_android: ^4.7.0
+  webview_flutter_wkwebview: ^3.22.0
+  photo_view: ^0.15.0
+  gal: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -69,4 +74,5 @@ flutter:
     - assets/music/
     - assets/book/
     - assets/video/
+    - assets/activity/
     - study/

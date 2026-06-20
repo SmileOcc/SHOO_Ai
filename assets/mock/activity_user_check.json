@@ -1,0 +1,12 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "loggedIn": true,
+    "nickname": "用户***",
+    "avatar": "https://picsum.photos/100/100?random=avatar",
+    "level": "VIP3",
+    "coupons": 5,
+    "points": 1280
+  }
+}

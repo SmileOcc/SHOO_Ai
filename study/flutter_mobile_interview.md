@@ -623,10 +623,50 @@ redirect: (context, state) {
 
 **Event Loop 简版：**
 
-1. 执行同步代码
-2. 处理 Microtask Queue（`Future.microtask`）
-3. 处理 Event Queue（IO、Timer、手势）
-4. 重复
+```dart
+1、很多人以为 Future 和 async/await 是并列的选项，这其实是个误区。
+async/await 并不是和 Future、Stream 并列的第三种异步方案，它是基于 Future 的语法糖。
+
+当你用 await 等待一个表达式时，Dart 会：
+
+检查该表达式的类型：如果是 Future<T>，就“暂停”并等待其完成，解包出 T；如果是 Stream<T>，你需要用 await for，它等待的是流的关闭或下一个元素（注意有区别）。
+在底层，async 函数会被编译器转换成一个状态机，await 就是状态机里的 yield 点。它会自动将后续代码包装成 Future.then() 的回调。
+所以正确的分类是：
+
+数据源/结果类型：Future（单值） vs Stream（多值）
+代码风格：then/catchError（链式） vs async/await（同步风格）
+
+2、Event Loop 的深度解析：
+1. 两个队列的优先级与清空机制
+
+Microtask Queue (微任务)：优先级更高。Event Loop 在每次准备处理下一个 Event 之前，必须先清空 Microtask Queue。
+Event Queue (事件)：只有等 Microtask Queue 完全空了，才会从 Event Queue 里取一个事件来处理。处理完后，又会立刻回到检查 Microtask Queue 的逻辑。
+这意味着，如果你在微任务里不断产生新的微任务，主线程会永远卡在微任务阶段，Event Queue 里的 UI 绘制、点击事件将永远得不到响应，导致应用假死。
+
+2. 任务分发（什么会进入哪个队列？）
+
+### 进入 Microtask Queue 的“贵宾通道”：
+
+>scheduleMicrotask() 显式调度。
+>Future.microtask() 构造函数。
+>Completer.complete()：如果你在一个 Future 的 then 回调中调用了另一个 Completer 的 complete，并希望它的监听者立即执行，可以传入微任务（但一般 complete 默认是同步通知，后续监听才进微任务，这里需要细说）。更准确说：Future.then 的回调，如果这个 Future 已经完成，它会在微任务阶段被调用。
+>StreamController.add() 的同步订阅：流数据的传递本身可以是同步的，但某些异步订阅的回调也可能进入微任务。
+
+### 进入 Event Queue 的“普通通道”：
+
+>所有 IO 操作（网络、文件）。
+>Timer（Timer.run， Future.delayed 内部用 Timer）。
+>手势、绘图等 UI 事件。
+>通过 ReceivePort 发送的消息。
+
+
+
+###总结：
+Future 代表未来的单值，Stream 代表未来的一段数据流，而 async/await 是处理和组合 Future 的语法糖，让异步代码看起来像同步。
+核心：Event Loop：概念：单线程，两个队列，微任务优先级高且会阻塞事件队列
+Isolate，说明它的多线程模型和独立事件循环，是突破单线程性能瓶颈的关键
+
+```
 
 **面试常问输出题：**
 
@@ -636,6 +676,21 @@ Future(() => print('B'));
 Future.microtask(() => print('C'));
 print('D');
 // 输出：A D C B
+
+void main() {
+  print('1');
+  Future(() => print('2')); // 此 Future 构造函数: Future() -> Event Queue
+  Future.microtask(() => print('3')); // -> Microtask Queue
+  scheduleMicrotask(() => print('4')); // -> Microtask Queue
+  print('5');
+}
+答案是：1, 5, 3, 4, 2
+
+推演过程：
+先同步执行 main 里的代码：打印 1，将 2 加入事件队列，将 3 和 4 加入微任务队列，最后打印 5。
+main 函数结束，同步代码执行完毕。
+事件循环检查微任务队列：不为空，先执行 3，再执行 4。
+微任务队列清空，从事件队列取出一个任务 2，执行它。
 ```
 
 **项目注意：**

@@ -46,6 +46,11 @@ abstract final class SHOMockRouteRegistry {
     const SHOMockRouteEntry(method: 'GET', path: '/orders/{id}', asset: 'assets/mock/order_detail.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/orders/{id}/logistics', asset: 'assets/mock/order_logistics.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/community/feed', asset: 'assets/mock/community_feed.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/activity/data', asset: 'assets/mock/activity_data.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/activity/detail', asset: 'assets/mock/activity_detail.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/activity/detail/level3', asset: 'assets/mock/activity_level3_detail.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/activity/user/check', asset: 'assets/mock/activity_user_check.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/activity/config/url-rules', asset: 'assets/mock/activity_url_rules.json'),
   ];
 
   static void register(SHOMockRouteEntry entry) => _routes.add(entry);

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_page.dart';
 import 'package:shoo/core/debug/modules/analytics/hos_debug_analytics_page.dart';
 import 'package:shoo/core/debug/modules/brand/hos_debug_brand_page.dart';
 import 'package:shoo/core/debug/modules/feedback/hos_debug_feedback_page.dart';
+import 'package:shoo/core/debug/modules/hittest/hos_debug_hittest_page.dart';
 import 'package:shoo/core/debug/modules/microtask/hos_debug_microtask_page.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_example_page.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_hub_page.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_page.dart';
+import 'package:shoo/core/debug/modules/overlap/hos_debug_overlap_page.dart';
 import 'package:shoo/core/debug/modules/update/hos_debug_update_config_page.dart';
 import 'package:shoo/core/debug/panel/hos_debug_panel_page.dart';
 
@@ -48,6 +49,14 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) =>
           GoRoute(
             path: 'microtask',
             builder: (context, state) => const SHODebugMicrotaskPage(),
+          ),
+          GoRoute(
+            path: 'hittest',
+            builder: (context, state) => const SHODebugHitTestPage(),
+          ),
+          GoRoute(
+            path: 'overlap',
+            builder: (context, state) => const SHODebugOverlapPage(),
           ),
           GoRoute(
             path: 'native',

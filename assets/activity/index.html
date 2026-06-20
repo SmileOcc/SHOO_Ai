@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>活动页</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(160deg, #6a11cb 0%, #2575fc 50%, #ff6b6b 100%);
+      min-height: 100vh;
+      color: #333;
+      padding: 16px;
+      padding-bottom: 32px;
+    }
+    .hero { text-align: center; color: #fff; margin-bottom: 20px; }
+    .hero h1 { font-size: 28px; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,.2); }
+    .hero p { opacity: .9; font-size: 14px; }
+    .banner {
+      width: 100%; height: 140px; border-radius: 12px; object-fit: cover;
+      margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .card {
+      background: #fff; border-radius: 12px; padding: 16px 12px; text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08); transition: transform .15s; cursor: pointer;
+    }
+    .card:active { transform: scale(.96); }
+    .card .icon { font-size: 32px; margin-bottom: 8px; }
+    .card h3 { font-size: 15px; margin-bottom: 4px; }
+    .card p { font-size: 12px; color: #888; }
+    .section-title { color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+    .gallery {
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding-bottom: 8px; margin-bottom: 20px;
+    }
+    .gallery img {
+      flex: 0 0 140px; height: 200px; border-radius: 12px; object-fit: cover;
+      scroll-snap-align: start; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
+    .actions { display: flex; flex-direction: column; gap: 12px; }
+    .btn {
+      display: block; width: 100%; padding: 14px; border: none; border-radius: 25px;
+      font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    }
+    .btn-primary { background: linear-gradient(90deg, #ff6b6b, #ee5a24); color: #fff; }
+    .btn-secondary { background: #fff; color: #6a11cb; }
+    .btn-payment { background: #07c160; color: #fff; }
+    .loading { color: #fff; text-align: center; padding: 24px; }
+    .extension-root { margin-top: 24px; }
+    .entry-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+    }
+    .entry-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 14px; border-radius: 20px; background: rgba(255,255,255,.95);
+      color: #6a11cb; font-size: 14px; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1); border: none;
+    }
+    .entry-chip:active { transform: scale(.96); }
+    .promo-paragraph {
+      background: rgba(255,255,255,.92); border-radius: 12px; padding: 14px;
+      margin-bottom: 12px; font-size: 14px; line-height: 1.55; color: #333;
+    }
+    .promo-link {
+      color: #6a11cb; text-decoration: underline; cursor: pointer;
+      font-weight: 600;
+    }
+    .promo-image-wrap {
+      background: rgba(255,255,255,.92); border-radius: 12px; padding: 10px;
+      margin-bottom: 14px; overflow: hidden;
+    }
+    .promo-image-wrap img {
+      width: 100%; border-radius: 8px; display: block; cursor: pointer;
+    }
+    .promo-caption {
+      margin-top: 8px; font-size: 12px; color: #666; text-align: center;
+    }
+    .extension-promo-title { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1 id="hero-title">加载中...</h1>
+    <p id="hero-subtitle"></p>
+  </div>
+  <img class="banner" id="banner" src="https://picsum.photos/800/300?random=banner" alt="banner" />
+  <div class="grid" id="module-grid"></div>
+  <div class="section-title">活动现场</div>
+  <div class="gallery" id="gallery"></div>
+  <div class="actions">
+    <button class="btn btn-primary" id="btn-share">立即参与</button>
+    <button class="btn btn-secondary" id="btn-rules">活动规则</button>
+    <button class="btn btn-payment" id="btn-payment">微信支付测试</button>
+  </div>
+  <div id="extension-root" class="extension-root" hidden>
+    <div class="section-title">更多入口</div>
+    <div class="entry-row" id="nav-entries"></div>
+    <div class="section-title extension-promo-title">活动宣传</div>
+    <div id="promo-blocks"></div>
+  </div>
+  <script>
+    (function() {
+      window.__activityData = null;
+      window.__activityImages = [];
+      window.__promoImages = [];
+
+      window.postToFlutter = function(payload) {
+        try {
+          if (window.FlutterBridge && window.FlutterBridge.postMessage) {
+            window.FlutterBridge.postMessage(JSON.stringify(payload));
+            return true;
+          }
+        } catch (e) {}
+        return false;
+      };
+
+      window.onNativeEvent = function(action, params) {
+        postToFlutter({type:'native', action: action, params: params || {}});
+      };
+
+      window.onFlutterEvent = function(action, params) {
+        postToFlutter({type:'flutter', action: action, params: params || {}});
+      };
+
+      window.previewImage = function(url, title) {
+        postToFlutter({type:'preview', action:'previewImage', params:{url:url, title:title||''}});
+      };
+
+      window.openRoute = function(path) {
+        postToFlutter({type:'navigate', action:'openRoute', params:{path: path}});
+      };
+
+      window.openUrl = function(url) {
+        postToFlutter({type:'navigate', action:'openUrl', params:{url: url}});
+      };
+
+      window.openLink = function(url) {
+        if (!url) return;
+        if (url.charAt(0) === '/') openRoute(url);
+        else openUrl(url);
+      };
+
+      window.requestActivityScreenshot = function() {
+        function notifyFailed(message) {
+          postToFlutter({
+            type: 'screenshot',
+            action: 'failed',
+            params: { message: message || 'capture failed' }
+          });
+        }
+
+        function runCapture() {
+          if (!window.html2canvas) {
+            notifyFailed('html2canvas unavailable');
+            return;
+          }
+          var root = document.body;
+          var previousScrollY = window.scrollY;
+          window.scrollTo(0, 0);
+          html2canvas(root, {
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            scale: Math.min(window.devicePixelRatio || 2, 2),
+            width: root.scrollWidth,
+            height: root.scrollHeight,
+            windowWidth: root.scrollWidth,
+            windowHeight: root.scrollHeight,
+            scrollX: 0,
+            scrollY: 0
+          }).then(function(canvas) {
+            window.scrollTo(0, previousScrollY);
+            postToFlutter({
+              type: 'screenshot',
+              action: 'captured',
+              params: { data: canvas.toDataURL('image/png') }
+            });
+          }).catch(function(err) {
+            window.scrollTo(0, previousScrollY);
+            notifyFailed(String(err));
+          });
+        }
+
+        if (window.html2canvas) {
+          runCapture();
+          return;
+        }
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        script.onload = runCapture;
+        script.onerror = function() { notifyFailed('html2canvas load failed'); };
+        document.head.appendChild(script);
+      };
+
+      function renderNavigation(nav) {
+        var root = document.getElementById('extension-root');
+        var container = document.getElementById('nav-entries');
+        container.innerHTML = '';
+        if (!nav || !nav.productListLeafId) return false;
+
+        var entries = [
+          {
+            label: '活动商品列表',
+            path: '/category/products?leafId=' + encodeURIComponent(nav.productListLeafId) +
+              '&title=' + encodeURIComponent(nav.productListTitle || '活动商品')
+          },
+          {
+            label: '商品详情',
+            path: '/product/' + encodeURIComponent(nav.sampleProductId || '')
+          },
+          { label: '活动详情', path: '/activity/detail' }
+        ];
+
+        entries.forEach(function(item) {
+          if (!item.path) return;
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'entry-chip';
+          btn.textContent = item.label;
+          btn.onclick = function() { openRoute(item.path); };
+          container.appendChild(btn);
+        });
+        return entries.length > 0;
+      }
+
+      function renderPromoBlocks(blocks) {
+        var container = document.getElementById('promo-blocks');
+        container.innerHTML = '';
+        window.__promoImages = [];
+
+        (blocks || []).forEach(function(block) {
+          if (block.type === 'image' && block.url) {
+            window.__promoImages.push({url: block.url, title: block.caption || ''});
+            var wrap = document.createElement('div');
+            wrap.className = 'promo-image-wrap';
+            var img = document.createElement('img');
+            img.src = block.url;
+            img.alt = block.caption || '';
+            img.onclick = function() { previewImage(block.url, block.caption); };
+            wrap.appendChild(img);
+            if (block.caption) {
+              var cap = document.createElement('div');
+              cap.className = 'promo-caption';
+              cap.textContent = block.caption;
+              wrap.appendChild(cap);
+            }
+            container.appendChild(wrap);
+            return;
+          }
+
+          if (block.type !== 'paragraph' || !block.segments) return;
+          var p = document.createElement('div');
+          p.className = 'promo-paragraph';
+          (block.segments || []).forEach(function(seg) {
+            if (seg.type === 'link' && seg.url) {
+              var a = document.createElement('span');
+              a.className = 'promo-link';
+              a.textContent = seg.text || seg.url;
+              a.setAttribute('role', 'link');
+              (function(linkUrl) {
+                a.onclick = function(e) {
+                  e.preventDefault();
+                  openLink(linkUrl);
+                };
+              })(seg.url);
+              p.appendChild(a);
+            } else {
+              p.appendChild(document.createTextNode(seg.content || ''));
+            }
+          });
+          if (p.childNodes.length) container.appendChild(p);
+        });
+
+        return window.__promoImages.length > 0 || container.childNodes.length > 0;
+      }
+
+      window.getAllImages = function() {
+        return JSON.stringify((window.__activityImages || []).concat(window.__promoImages || []));
+      };
+
+      window.highlightImages = function() {
+        document.querySelectorAll('#gallery img').forEach(function(img) {
+          img.style.outline = '2px solid #6a11cb';
+          img.style.cursor = 'pointer';
+        });
+      };
+
+      window.onFlutterMessage = function(message) {
+        console.log('Flutter message:', message);
+      };
+
+      window.renderActivity = function(data) {
+        if (!data) return;
+        window.__activityData = data;
+        document.title = data.title || '活动页';
+        document.getElementById('hero-title').textContent = '🎉 ' + (data.title || '');
+        document.getElementById('hero-subtitle').textContent = data.subtitle || '';
+
+        var grid = document.getElementById('module-grid');
+        grid.innerHTML = '';
+        (data.modules || []).forEach(function(m) {
+          var card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = '<div class="icon">' + (m.icon || '') + '</div><h3>' + (m.title || '') + '</h3><p>' + (m.desc || '') + '</p>';
+          card.onclick = function() {
+            var params = m.params || {};
+            if (m.type === 'native') onNativeEvent(m.action, params);
+            else onFlutterEvent(m.action, params);
+          };
+          grid.appendChild(card);
+        });
+
+        var gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+        window.__activityImages = data.images || [];
+        window.__activityImages.forEach(function(item) {
+          var img = document.createElement('img');
+          img.src = item.url;
+          img.alt = item.title || '';
+          img.onclick = function() { previewImage(item.url, item.title); };
+          gallery.appendChild(img);
+        });
+
+        document.getElementById('btn-share').onclick = function() {
+          onNativeEvent('shareActivity', {title: data.shareTitle || data.title, desc: data.shareDesc || ''});
+        };
+        document.getElementById('btn-rules').onclick = function() {
+          onFlutterEvent('showRulesDialog', {});
+        };
+        document.getElementById('btn-payment').onclick = function() {
+          var url = data.paymentTestUrl || 'https://wx.tenpay.com/mock/payment?orderId=test123&amount=100';
+          openUrl(url);
+        };
+
+        var hasNav = renderNavigation(data.navigation);
+        var hasPromo = renderPromoBlocks(data.promoBlocks);
+        var extension = document.getElementById('extension-root');
+        if (hasNav || hasPromo) {
+          extension.hidden = false;
+          extension.style.display = 'block';
+        } else {
+          extension.hidden = true;
+          extension.style.display = 'none';
+        }
+
+        highlightImages();
+      };
+
+      function loadFromApi() {
+        var paths = ['/api/v1/activity/data', '/api/activity/data'];
+        function tryNext(i) {
+          if (i >= paths.length) throw new Error('all activity api paths failed');
+          return fetch(paths[i])
+            .then(function(r) {
+              if (!r.ok) throw new Error('HTTP ' + r.status);
+              return r.json();
+            })
+            .then(function(json) {
+              var data = json && json.data !== undefined ? json.data : json;
+              renderActivity(data);
+              postToFlutter({type:'pageReady', action:'pageReady', params:{id: data.id, source: paths[i]}});
+            })
+            .catch(function() { return tryNext(i + 1); });
+        }
+        return tryNext(0);
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        loadFromApi().catch(function(err) {
+          console.warn('Activity API load failed', err);
+          postToFlutter({type:'pageReady', action:'pageReady', params:{source: 'fallback'}});
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

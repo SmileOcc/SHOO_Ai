@@ -1,0 +1,60 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "id": "2024-double11",
+    "title": "双11狂欢节详情",
+    "summary": "百万好礼、限时秒杀、跨店满减，11月1日至11日全站狂欢。",
+    "bannerUrl": "https://picsum.photos/seed/activity-detail/800/320",
+    "sections": [
+      {
+        "title": "活动时间",
+        "content": "2024年11月1日 00:00 至 11月11日 23:59（北京时间）。"
+      },
+      {
+        "title": "参与方式",
+        "content": "登录 SHOO 账号，进入活动页完成打卡、领券、抽奖等任务即可获得奖励。"
+      },
+      {
+        "title": "奖品说明",
+        "content": "优惠券、积分、实物奖品将在活动结束后 7 个工作日内发放至账户。"
+      }
+    ],
+    "promoBlocks": [
+      {
+        "type": "paragraph",
+        "segments": [
+          {
+            "type": "text",
+            "content": "详情页同样支持图文混排："
+          },
+          {
+            "type": "link",
+            "text": "查看三级日程详情",
+            "url": "/activity/detail/level3"
+          },
+          {
+            "type": "text",
+            "content": "，或访问 "
+          },
+          {
+            "type": "link",
+            "text": "活动官网",
+            "url": "https://m.shoo.com/activity/2024-double11"
+          },
+          {
+            "type": "text",
+            "content": " 了解更多。"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "url": "https://picsum.photos/seed/activity-detail-1/640/360",
+        "caption": "主会场视觉 — 点击可预览大图",
+        "width": 640,
+        "height": 360
+      }
+    ]
+  }
+}

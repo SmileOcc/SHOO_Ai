@@ -2822,6 +2822,12 @@ abstract class AppLocalizations {
   /// **'S Activity is iOS only for now'**
   String get toolboxSActivityIosOnly;
 
+  /// No description provided for @toolboxWebViewActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'WebView Activity'**
+  String get toolboxWebViewActivity;
+
   /// No description provided for @downloadListTitle.
   ///
   /// In en, this message translates to:

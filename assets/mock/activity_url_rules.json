@@ -1,0 +1,26 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "whitelist": [
+      "shoo.com",
+      "m.shoo.com",
+      "localhost",
+      "127.0.0.1"
+    ],
+    "paymentDomains": [
+      "wx.tenpay.com",
+      "payapp.weixin.qq.com",
+      "alipay.com",
+      "alipaydev.com"
+    ],
+    "externalDomains": [
+      "open.weixin.qq.com",
+      "api.weibo.com",
+      "apps.apple.com",
+      "play.google.com",
+      "t.cn",
+      "dwz.cn"
+    ]
+  }
+}

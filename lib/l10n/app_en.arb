@@ -553,6 +553,7 @@
   "toolboxNativeComponentsIosOnly": "Native components hub is iOS only for now",
   "toolboxSActivity": "S Activity",
   "toolboxSActivityIosOnly": "S Activity is iOS only for now",
+  "toolboxWebViewActivity": "WebView Activity",
   "downloadListTitle": "Downloads",
   "downloadTabAll": "All",
   "downloadTabDownloading": "Downloading",

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:shoo/app/root/hos_runtime_env_provider.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/config/hos_environment.dart';
 import 'package:shoo/core/constants/hos_constants.dart';
-import 'package:shoo/app/root/hos_runtime_env_provider.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 
@@ -26,11 +25,20 @@ class SHODebugPanelPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
         children: [
-          Text(l10n.debugPanelHint, style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            l10n.debugPanelHint,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           const SizedBox(height: SHOAppSpacing.xl),
-          Text(l10n.debugEnvSection, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            l10n.debugEnvSection,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: SHOAppSpacing.xs),
-          Text(l10n.debugEnvRestarting, style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            l10n.debugEnvRestarting,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           const SizedBox(height: SHOAppSpacing.md),
           ...SHOAppEnvironment.values.map((env) {
             final selected = (override ?? config.environment) == env;
@@ -50,7 +58,8 @@ class SHODebugPanelPage extends ConsumerWidget {
           ListTile(
             title: Text(l10n.debugResetEnv),
             trailing: const Icon(Icons.restore),
-            onTap: () => ref.read(runtimeEnvOverrideProvider.notifier).resetOverride(),
+            onTap: () =>
+                ref.read(runtimeEnvOverrideProvider.notifier).resetOverride(),
           ),
           SwitchListTile(
             title: Text(l10n.debugShowEnvBadge),
@@ -60,7 +69,10 @@ class SHODebugPanelPage extends ConsumerWidget {
                 ref.read(showEnvBadgeProvider.notifier).setEnabled(v),
           ),
           const Divider(height: SHOAppSpacing.xxxl),
-          Text(l10n.debugToolsSection, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            l10n.debugToolsSection,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: SHOAppSpacing.md),
           ListTile(
             leading: const Icon(Icons.system_update),
@@ -105,6 +117,20 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugMicrotask),
           ),
           ListTile(
+            leading: const Icon(Icons.touch_app_outlined),
+            title: const Text('HitTestBehavior'),
+            subtitle: const Text('调试手势事件传递行为'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugHitTest),
+          ),
+          ListTile(
+            leading: const Icon(Icons.layers_outlined),
+            title: const Text('重叠视图点击事件'),
+            subtitle: const Text('调试A有点击→A响应；A无→B响应'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugOverlap),
+          ),
+          ListTile(
             leading: const Icon(Icons.palette_outlined),
             title: const Text('SHOO Brand / Icon'),
             subtitle: const Text('Preview and select app icon style'),
@@ -122,8 +148,14 @@ class SHODebugPanelPage extends ConsumerWidget {
           _SHOInfoTile(label: 'Build', value: SHOAppConstants.appVersion),
           _SHOInfoTile(label: 'API', value: config.apiBaseUrl),
           _SHOInfoTile(label: 'Mock API', value: '${config.useMockApi}'),
-          _SHOInfoTile(label: 'Mock Delay', value: '${config.mockNetworkDelay.inMilliseconds}ms'),
-          _SHOInfoTile(label: 'Debug Panel', value: '${config.isDebugPanelEnabled}'),
+          _SHOInfoTile(
+            label: 'Mock Delay',
+            value: '${config.mockNetworkDelay.inMilliseconds}ms',
+          ),
+          _SHOInfoTile(
+            label: 'Debug Panel',
+            value: '${config.isDebugPanelEnabled}',
+          ),
         ],
       ),
     );

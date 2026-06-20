@@ -1425,6 +1425,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxSActivityIosOnly => 'S活动目前仅支持 iOS';
 
   @override
+  String get toolboxWebViewActivity => 'WebView活动';
+
+  @override
   String get downloadListTitle => '下载列表';
 
   @override

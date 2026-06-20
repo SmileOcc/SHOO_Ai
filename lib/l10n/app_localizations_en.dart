@@ -1464,6 +1464,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxSActivityIosOnly => 'S Activity is iOS only for now';
 
   @override
+  String get toolboxWebViewActivity => 'WebView Activity';
+
+  @override
   String get downloadListTitle => 'Downloads';
 
   @override

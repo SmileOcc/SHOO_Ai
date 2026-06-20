@@ -9,6 +9,11 @@ abstract final class SHOAppConstants {
   /// 资源 URL 统一为 `{base}/{resource}/{fileName}`，如 `/download/xx.pdf`、`/music/xx.zip`
   static const String defaultLocalApiBaseUrl = 'http://127.0.0.1:3847/api/v1';
 
+  static const int localMockServerPort = 3847;
+
+  /// 活动页内嵌 Fallback Server（Node :3847 未启动时）
+  static const int activityMockServerPort = 8888;
+
   static const String defaultDevApiBaseUrl = 'https://mock.shoo.local/api/v1';
   static const String defaultStagingApiBaseUrl = 'https://api.staging.shoo.com/v1';
   static const String defaultProdApiBaseUrl = 'https://api.shoo.com/v1';
