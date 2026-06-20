@@ -131,6 +131,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugOverlap),
           ),
           ListTile(
+            leading: const Icon(Icons.link_outlined),
+            title: const Text('InheritedWidget 依赖监听'),
+            subtitle: const Text('监听所有 InheritedWidget 变化'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugDependencies),
+          ),
+          ListTile(
             leading: const Icon(Icons.palette_outlined),
             title: const Text('SHOO Brand / Icon'),
             subtitle: const Text('Preview and select app icon style'),

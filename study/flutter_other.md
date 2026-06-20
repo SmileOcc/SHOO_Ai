@@ -434,3 +434,30 @@ Stack(
 
 顶层   ← opaque 阻断了事件穿透到 Stack 的下一个 child（底层）
 ```
+
+### 重叠视图穿透点击
+```dart
+/// 核心规则（同一 Stack 重叠区域）：
+GlobalKey _bKey = GlobalKey();
+ // 注册布局回调，获取 B 的实际位置和大小
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  print("获取B的实际大小");
+  _calculateClickableAreas();
+});
+
+// 1. 获取 A 和 B 的全局位置和大小
+final bRenderBox = _bKey.currentContext?.findRenderObject() as RenderBox?;
+final aRenderBox = _aKey.currentContext?.findRenderObject() as RenderBox?;
+
+// 1. 获取 A 和 B 的全局位置和大小
+final bGlobalOffset = bRenderBox.localToGlobal(Offset.zero);
+final bSize = bRenderBox.size;
+final Rect bRect = Rect.fromLTWH(
+  bGlobalOffset.dx,
+  bGlobalOffset.dy,
+  bSize.width,
+  bSize.height,
+);
+2. 计算 A 和 B 的重叠区域
+3. 从 B 中排除重叠区域，得到 B 的可点击区域
+```

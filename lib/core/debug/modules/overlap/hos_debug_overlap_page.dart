@@ -6,8 +6,8 @@ import 'package:flutter/rendering.dart';
 /// 重叠视图点击事件调试页。
 ///
 /// 核心规则（同一 Stack 重叠区域）：
-/// GlobalKey _bKey = GlobalKey();
-/// // 注册布局回调，获取 B 的实际位置和大小
+// GlobalKey _bKey = GlobalKey();
+//  // 注册布局回调，获取 B 的实际位置和大小
 // WidgetsBinding.instance.addPostFrameCallback((_) {
 //   print("获取B的实际大小");
 //   _calculateClickableAreas();

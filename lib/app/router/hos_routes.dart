@@ -151,6 +151,7 @@ abstract final class SHOAppRoutes {
   static const debugMicrotask = '/debug/microtask';
   static const debugHitTest = '/debug/hittest';
   static const debugOverlap = '/debug/overlap';
+  static const debugDependencies = '/debug/dependencies';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 
