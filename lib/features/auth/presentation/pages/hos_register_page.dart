@@ -44,7 +44,7 @@ class _SHORegisterPageState extends ConsumerState<SHORegisterPage> {
 
     setState(() => _isLoading = true);
     try {
-      final session = await ref.read(sessionProvider.notifier).loginRequest(
+      final session = await ref.read(sessionProvider.notifier).registerRequest(
             SHOLoginRequest(
               phone: _phoneController.text.trim(),
               password: _passwordController.text,

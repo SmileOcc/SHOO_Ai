@@ -26,6 +26,13 @@ class SHOAuthRepositoryImpl implements SHOAuthRepository {
   }
 
   @override
+  Future<SHOAuthSession> register(SHOLoginRequest request) async {
+    final session = await _remote.register(request);
+    await _local.writeToken(session.token);
+    return session;
+  }
+
+  @override
   Future<SHOAuthSession?> restoreSession() async {
     final token = await _local.readToken();
     if (token == null || token.isEmpty) return null;

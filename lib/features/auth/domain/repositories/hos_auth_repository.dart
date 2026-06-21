@@ -4,6 +4,8 @@ import 'package:shoo/features/auth/domain/entities/hos_auth_user.dart';
 abstract interface class SHOAuthRepository {
   Future<SHOAuthSession> login(SHOLoginRequest request);
 
+  Future<SHOAuthSession> register(SHOLoginRequest request);
+
   Future<SHOAuthSession?> restoreSession();
 
   Future<void> logout();

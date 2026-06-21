@@ -6,45 +6,52 @@ import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_provider.dart';
 import 'package:shoo/core/errors/hos_exception.dart';
 import 'package:shoo/core/errors/hos_error_mapper.dart';
-import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/logging/hos_remote_log_base_url.dart';
 import 'package:shoo/core/logging/hos_remote_log_client.dart';
 import 'package:shoo/features/auth/presentation/state/hos_auth_token_provider.dart';
-import 'package:shoo/core/network/interceptors/hos_auth_interceptor.dart';
 import 'package:shoo/core/network/hos_mock_interceptor.dart';
 import 'package:shoo/core/network/interceptors/hos_network_log_interceptor.dart';
+import 'package:shoo/core/network/security/hos_crypto_service.dart';
+import 'package:shoo/core/network/security/interceptors/hos_rsa_encrypt_interceptor.dart';
+import 'package:shoo/core/network/security/hos_secure_dio_factory.dart';
+import 'package:shoo/core/storage/secure/hos_secure_storage.dart';
+
+final cryptoServiceProvider = Provider<SHOCryptoService>((ref) {
+  return SHOCryptoService(ref.watch(secureStorageProvider));
+});
 
 final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);
   SHORemoteLogBaseUrl.setEffectiveConfig(config);
   SHORemoteLogClient.reset();
 
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: config.apiBaseUrl,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      headers: {'Content-Type': 'application/json'},
-    ),
+  final crypto = ref.watch(cryptoServiceProvider);
+
+  final prepend = <Interceptor>[
+    if (config.useMockApi) SHOMockInterceptor(),
+  ];
+
+  final append = <Interceptor>[
+    if (config.isDebugPanelEnabled)
+      SHONetworkLogInterceptor(
+        () => ref.read(debugNetworkLogConfigProvider),
+      )
+    else if (kDebugMode && config.enableNetworkLogging)
+      LogInterceptor(requestBody: true, responseBody: true),
+  ];
+
+  final dio = SHOSecureDioFactory.create(
+    baseUrl: config.apiBaseUrl,
+    securityLevel: config.securityLevel,
+    crypto: crypto,
+    tokenReader: () => ref.read(authTokenProvider),
+    skipEncryption: config.useMockApi,
+    prependInterceptors: prepend,
+    appendInterceptors: append,
   );
 
   if (config.useMockApi) {
-    dio.interceptors.add(SHOMockInterceptor());
-    SHOAppLogger.info('Dio using SHOMockInterceptor');
-  }
-
-  dio.interceptors.add(
-    SHOAuthInterceptor(() => ref.read(authTokenProvider)),
-  );
-
-  if (config.isDebugPanelEnabled) {
-    dio.interceptors.add(
-      SHONetworkLogInterceptor(() => ref.read(debugNetworkLogConfigProvider)),
-    );
-  } else if (kDebugMode && config.enableNetworkLogging) {
-    dio.interceptors.add(
-      LogInterceptor(requestBody: true, responseBody: true),
-    );
+    debugPrint('Dio using SHOMockInterceptor + SHOSecureDioFactory');
   }
 
   return dio;
@@ -55,9 +62,14 @@ extension SHODioClientX on Dio {
     String path, {
     required T Function(dynamic json) parser,
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
   }) async {
     try {
-      final response = await get<dynamic>(path, queryParameters: queryParameters);
+      final response = await get<dynamic>(
+        path,
+        queryParameters: queryParameters,
+        options: headers == null ? null : Options(headers: headers),
+      );
       return _parseEnvelope(response.data, parser);
     } on DioException catch (error) {
       throw mapDioError(error);
@@ -68,9 +80,20 @@ extension SHODioClientX on Dio {
     String path, {
     Object? data,
     required T Function(dynamic json) parser,
+    Map<String, dynamic>? headers,
+    bool skipPayloadEncrypt = false,
   }) async {
     try {
-      final response = await post<dynamic>(path, data: data);
+      final response = await post<dynamic>(
+        path,
+        data: data,
+        options: Options(
+          headers: headers,
+          extra: skipPayloadEncrypt
+              ? {SHORsaEncryptInterceptor.skipEncryptExtraKey: true}
+              : null,
+        ),
+      );
       return _parseEnvelope(response.data, parser);
     } on DioException catch (error) {
       throw mapDioError(error);

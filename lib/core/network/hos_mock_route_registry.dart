@@ -25,6 +25,7 @@ abstract final class SHOMockRouteRegistry {
     const SHOMockRouteEntry(method: 'GET', path: '/products', asset: 'assets/mock/products.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/categories', asset: 'assets/mock/categories.json'),
     const SHOMockRouteEntry(method: 'POST', path: '/auth/login', asset: 'assets/mock/auth_login.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/auth/register', asset: 'assets/mock/auth_login.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/auth/profile', asset: 'assets/mock/auth_profile.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/products/{id}', asset: 'assets/mock/product_catalog.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/cart', asset: 'assets/mock/cart.json'),

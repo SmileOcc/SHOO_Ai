@@ -152,6 +152,7 @@ abstract final class SHOAppRoutes {
   static const debugHitTest = '/debug/hittest';
   static const debugOverlap = '/debug/overlap';
   static const debugDependencies = '/debug/dependencies';
+  static const debugSecureNetwork = '/debug/secure-network';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

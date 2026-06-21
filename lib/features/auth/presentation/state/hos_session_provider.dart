@@ -86,6 +86,10 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
     return _repository.login(request);
   }
 
+  Future<SHOAuthSession> registerRequest(SHOLoginRequest request) {
+    return _repository.register(request);
+  }
+
   Future<void> commitLogin(SHOAuthSession session) async {
     _syncToken(session.token);
     state = SHOSessionState(token: session.token, user: session.user);

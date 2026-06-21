@@ -13,6 +13,7 @@ import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_hub_page.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_page.dart';
 import 'package:shoo/core/debug/modules/overlap/hos_debug_overlap_page.dart';
+import 'package:shoo/core/debug/modules/secure_network/hos_debug_secure_network_page.dart';
 import 'package:shoo/core/debug/modules/update/hos_debug_update_config_page.dart';
 import 'package:shoo/core/debug/panel/hos_debug_panel_page.dart';
 
@@ -42,6 +43,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) =>
           GoRoute(
             path: 'network-log',
             builder: (context, state) => const SHODebugNetworkLogPage(),
+          ),
+          GoRoute(
+            path: 'secure-network',
+            builder: (context, state) => const SHODebugSecureNetworkPage(),
           ),
           GoRoute(
             path: 'feedback',

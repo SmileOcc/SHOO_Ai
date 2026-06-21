@@ -25,6 +25,12 @@ abstract final class SHOAppConstants {
   static const String themeModeKey = 'theme_mode';
   static const String localeKey = 'locale_code';
   static const String secureTokenKey = 'auth_token';
+  static const String secureAesKeyKey = 'aes_session_key';
+  static const String secureSignSecretKey = 'request_sign_secret';
+  static const String secureRsaPublicKeyKey = 'rsa_public_key_pem';
+  static const String secureRsaModulusKey = 'rsa_modulus';
+  static const String secureRsaExponentKey = 'rsa_exponent';
+  static const String secureSm4KeyKey = 'sm4_session_key';
   static const String cartStorageKey = 'cart_snapshot';
   static const String searchHistoryKey = 'search_history_v1';
   static const int searchHistoryMax = 10;

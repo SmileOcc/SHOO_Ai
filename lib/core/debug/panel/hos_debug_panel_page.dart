@@ -96,6 +96,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugNetworkLog),
           ),
           ListTile(
+            leading: const Icon(Icons.security_outlined),
+            title: const Text('安全网络 / 加密调试'),
+            subtitle: const Text('RSA/AES 加密、GET/POST 接口调试'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugSecureNetwork),
+          ),
+          ListTile(
             leading: const Icon(Icons.analytics_outlined),
             title: Text(l10n.debugAnalyticsEntry),
             subtitle: Text(l10n.debugAnalyticsEntryHint),

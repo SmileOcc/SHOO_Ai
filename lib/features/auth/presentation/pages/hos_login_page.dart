@@ -71,6 +71,7 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
   }
 
   Future<void> _submit() async {
+    // 表单校验机制解析 自动聚焦到第一个错误字段，引导用户修正
     if (!SHOFormHelper.validateAndFocus(_formKey)) return;
 
     setState(() {
