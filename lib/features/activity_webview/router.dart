@@ -16,6 +16,11 @@ List<RouteBase> shoActivityWebviewRoutes({
 }) =>
     [
       GoRoute(
+        path: SHOAppRoutes.webview,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => SHOWebViewPage.fromRoute(state),
+      ),
+      GoRoute(
         path: SHOAppRoutes.activity,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SHOActivityPage(),
@@ -35,10 +40,11 @@ List<RouteBase> shoActivityWebviewRoutes({
           GoRoute(
             path: 'webview',
             parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final url = state.uri.queryParameters['url'] ?? '';
+            redirect: (context, state) {
+              final url = state.uri.queryParameters['url'];
+              if (url == null || url.isEmpty) return SHOAppRoutes.toolboxWeb;
               final title = state.uri.queryParameters['title'];
-              return SHOWebViewPage(url: url, title: title);
+              return SHOAppRoutes.webviewFor(url, title: title);
             },
           ),
           GoRoute(

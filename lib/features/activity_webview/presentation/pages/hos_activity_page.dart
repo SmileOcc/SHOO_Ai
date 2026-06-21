@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_config.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_activity_config_provider.dart';
@@ -15,6 +13,7 @@ import 'package:shoo/features/activity_webview/presentation/state/hos_share_prov
 import 'package:shoo/features/activity_webview/presentation/state/hos_webview_loading_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/dialogs/hos_activity_dialog_host.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_container.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SHOActivityPage extends ConsumerStatefulWidget {
   const SHOActivityPage({super.key});
@@ -30,21 +29,23 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
   Widget build(BuildContext context) {
     final configAsync = ref.watch(activityConfigProvider);
     final loading = ref.watch(webviewLoadingProvider);
-    final title = loading.pageTitle ??
-        configAsync.valueOrNull?.title ??
-        '活动页';
+    final title = loading.pageTitle ?? configAsync.valueOrNull?.title ?? '活动页';
 
     ref.listen(activityConfigProvider, (_, next) {
+      if (!mounted) return;
       final controller = _controller;
       if (controller == null) return;
-      next.whenData(
-        (config) => unawaited(_injectConfig(controller, config)),
-      );
+      next.whenData((config) => unawaited(_injectConfig(controller, config)));
     });
 
-    ref.listen(activityDialogProvider, (_, __) => _syncWebViewInteraction());
-    ref.listen(shareProvider, (_, __) => _syncWebViewInteraction());
-
+    ref.listen(activityDialogProvider, (_, __) {
+      if (!mounted) return;
+      _syncWebViewInteraction();
+    });
+    ref.listen(shareProvider, (_, __) {
+      if (!mounted) return;
+      _syncWebViewInteraction();
+    });
 
     return PopScope(
       canPop: !loading.canGoBack,
@@ -52,6 +53,7 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
         if (didPop) return;
         if (_controller != null && await _controller!.canGoBack()) {
           await _controller!.goBack();
+          if (!mounted) return;
           final canGoBack = await _controller!.canGoBack();
           ref.read(webviewLoadingProvider.notifier).setCanGoBack(canGoBack);
         } else if (context.mounted) {
@@ -80,6 +82,7 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
           body: _ActivityWebViewBody(
             onControllerReady: (controller) {
               _controller = controller;
+              if (!mounted) return;
               final config = ref.read(activityConfigProvider).valueOrNull;
               if (config != null) {
                 unawaited(_injectConfig(controller, config));
@@ -93,6 +96,7 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
   }
 
   Future<void> _onSharePressed() async {
+    if (!mounted) return;
     final controller = _controller;
     if (controller == null) {
       context.showToast('页面尚未加载完成');

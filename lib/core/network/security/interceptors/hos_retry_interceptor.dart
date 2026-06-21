@@ -91,3 +91,24 @@ class SHORetryInterceptor extends Interceptor {
     return code != null && code >= 500; // 500-599 状态码应该重试
   }
 }
+
+// ```dart 
+// 调用 ---- 触发的路径    ---- onResponse 是否执行
+// handler.resolve(response) 直接返回给调用者 ❌ 不会执行 
+// handler.next(err) 继续传递给下一个 onError ❌ 不会执行 
+// handler.reject(err) 拒绝并返回给调用者 ❌ 不会执行
+
+
+// ### 核心原理
+// 1. 拦截器链是单向的 ：错误链和响应链是两条独立路径
+// 2. resolve 直接短路 ：在错误链中调用 resolve ，相当于"短路"整个链条
+// 3. 不会回头执行 ：不会重新触发响应链的拦截器
+
+
+// ### 总结
+// 不会触发后续拦截器 。 handler.resolve() 的作用就是：
+
+// 1. 将错误状态转为成功状态
+// 2. 立即返回给原始调用者
+// 3. 终止 整个拦截器链的执行
+// ```

@@ -11,6 +11,9 @@ import 'package:shoo/core/platform/webview/hos_webview_capture.dart';
 import 'package:shoo/core/platform/webview/hos_activity_native_dispatcher.dart';
 import 'package:shoo/core/platform/webview/hos_url_navigator.dart';
 import 'package:shoo/core/platform/webview/hos_url_router_service.dart';
+import 'package:shoo/core/platform/webview/hos_payment_handler.dart';
+import 'package:shoo/core/platform/webview/hos_url_decision.dart';
+import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
 import 'package:shoo/core/platform/webview/hos_webview_security.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_activity_config_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_dialog_provider.dart';
@@ -28,12 +31,14 @@ class SHOWebViewContainer extends ConsumerStatefulWidget {
     this.loadAsset,
     this.title,
     this.onControllerReady,
+    this.navigationPolicy = SHOWebViewNavigationPolicy.whitelist,
   });
 
   final String? initialUrl;
   final String? loadAsset;
   final String? title;
   final void Function(WebViewController controller)? onControllerReady;
+  final SHOWebViewNavigationPolicy navigationPolicy;
 
   @override
   ConsumerState<SHOWebViewContainer> createState() => _SHOWebViewContainerState();
@@ -101,18 +106,8 @@ class _SHOWebViewContainerState extends ConsumerState<SHOWebViewContainer> {
               error.errorCode,
             );
           },
-          onNavigationRequest: (request) {
-            final url = request.url;
-            if (SHOWebViewSecurity.isBlockedScheme(Uri.parse(url).scheme)) {
-              unawaited(SHOURLNavigator.open(context, ref, url, router: _router));
-              return NavigationDecision.prevent;
-            }
-            if (!_router.shouldAllowWebViewNavigation(url)) {
-              unawaited(SHOURLNavigator.open(context, ref, url, router: _router));
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
+          onNavigationRequest: (request) =>
+              _handleNavigationRequest(request.url),
         ),
       );
 
@@ -125,6 +120,54 @@ class _SHOWebViewContainerState extends ConsumerState<SHOWebViewContainer> {
 
     widget.onControllerReady?.call(controller);
     return controller;
+  }
+
+  NavigationDecision _handleNavigationRequest(String url) {
+    final scheme = Uri.parse(url).scheme.toLowerCase();
+
+    if (SHOWebViewSecurity.isBlockedScheme(scheme)) {
+      unawaited(SHOURLNavigator.open(context, ref, url, router: _router));
+      return NavigationDecision.prevent;
+    }
+
+    if (widget.navigationPolicy == SHOWebViewNavigationPolicy.inApp) {
+      if (scheme == 'http' || scheme == 'https') {
+        final decision = _router.resolve(url);
+        if (decision.target == SHOURLTarget.payment) {
+          unawaited(SHOPaymentHandler.openPaymentUrl(url));
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      }
+      unawaited(SHOURLNavigator.open(context, ref, url, router: _router));
+      return NavigationDecision.prevent;
+    }
+
+    if (!_router.shouldAllowWebViewNavigation(url)) {
+      unawaited(SHOURLNavigator.open(context, ref, url, router: _router));
+      return NavigationDecision.prevent;
+    }
+    return NavigationDecision.navigate;
+  }
+
+  Future<void> _openUrl(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+
+    if (widget.navigationPolicy == SHOWebViewNavigationPolicy.inApp) {
+      final scheme = uri.scheme.toLowerCase();
+      if (scheme == 'http' || scheme == 'https') {
+        final decision = _router.resolve(url);
+        if (decision.target == SHOURLTarget.payment) {
+          await SHOPaymentHandler.openPaymentUrl(url);
+          return;
+        }
+        await _controller?.loadRequest(uri);
+        return;
+      }
+    }
+
+    await SHOURLNavigator.open(context, ref, url, router: _router);
   }
 
   Future<void> _onBridgeMessage(String raw) async {
@@ -151,7 +194,7 @@ class _SHOWebViewContainerState extends ConsumerState<SHOWebViewContainer> {
         } else {
           final url = params['url']?.toString();
           if (url != null) {
-            await SHOURLNavigator.open(context, ref, url, router: _router);
+            await _openUrl(url);
           }
         }
       case 'screenshot':

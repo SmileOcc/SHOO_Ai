@@ -3,6 +3,7 @@
   "message": "ok",
   "data": {
     "whitelist": [
+      "api.shoo.com",
       "shoo.com",
       "m.shoo.com",
       "localhost",

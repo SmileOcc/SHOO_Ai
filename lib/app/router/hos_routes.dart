@@ -1,3 +1,5 @@
+import 'package:shoo/core/platform/webview/hos_webview_config.dart';
+
 abstract final class SHOAppRoutes {
   static const splash = '/splash'; //闪图
   static const onboarding = '/onboarding'; //引导页
@@ -40,6 +42,8 @@ abstract final class SHOAppRoutes {
       '$toolboxReader?taskId=${Uri.encodeComponent(taskId)}';
   static const toolboxVideo = '/toolbox/video';
   static const toolboxMusicPlayer = '/toolbox/music';
+  static const toolboxWeb = '/toolbox/web';
+  static const webview = '/webview';
   static const activity = '/activity';
   static const activityWebview = '/activity/webview';
   static const activityImagePreview = '/activity/image-preview';
@@ -48,15 +52,38 @@ abstract final class SHOAppRoutes {
   static const activityDetail = '/activity/detail';
   static const activityLevel3Detail = '/activity/detail/level3';
 
-  static String activityWebviewFor(String url, {String? title}) {
+  static String activityWebviewFor(String url, {String? title}) =>
+      webviewFor(url, title: title);
+
+  static String webviewFor(
+    String url, {
+    String? title,
+    SHOWebViewMode mode = SHOWebViewMode.inApp,
+    bool? pullToRefresh,
+    bool? showAppBar,
+  }) {
     final query = <String, String>{
       'url': url,
       if (title != null && title.isNotEmpty) 'title': title,
+      if (mode != SHOWebViewMode.inApp) 'mode': _webViewModeQuery(mode),
+      if (pullToRefresh != null) 'pullToRefresh': pullToRefresh ? '1' : '0',
+      if (showAppBar != null) 'showAppBar': showAppBar ? '1' : '0',
     };
     final encoded = query.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
-    return '$activityWebview?$encoded';
+    return '$webview?$encoded';
+  }
+
+  static String _webViewModeQuery(SHOWebViewMode mode) {
+    switch (mode) {
+      case SHOWebViewMode.inApp:
+        return 'inApp';
+      case SHOWebViewMode.systemBrowser:
+        return 'system';
+      case SHOWebViewMode.auto:
+        return 'auto';
+    }
   }
 
   static String activityImagePreviewFor({int index = 0}) =>

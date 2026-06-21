@@ -2828,6 +2828,12 @@ abstract class AppLocalizations {
   /// **'WebView Activity'**
   String get toolboxWebViewActivity;
 
+  /// No description provided for @toolboxGeneralWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'General Web'**
+  String get toolboxGeneralWeb;
+
   /// No description provided for @downloadListTitle.
   ///
   /// In en, this message translates to:

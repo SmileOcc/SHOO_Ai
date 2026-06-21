@@ -101,6 +101,12 @@ class SHOToolboxPage extends StatelessWidget {
             onTap: () => context.push(SHOAppRoutes.toolboxDownloads),
           ),
           _ToolboxMenuItem(
+            icon: Icons.language_outlined,
+            color: const Color(0xFF26A69A),
+            label: l10n.toolboxGeneralWeb,
+            onTap: () => context.push(SHOAppRoutes.toolboxWeb),
+          ),
+          _ToolboxMenuItem(
             icon: Icons.web_outlined,
             color: const Color(0xFF7E57C2),
             label: l10n.toolboxWebViewActivity,

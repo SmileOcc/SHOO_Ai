@@ -1467,6 +1467,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxWebViewActivity => 'WebView Activity';
 
   @override
+  String get toolboxGeneralWeb => 'General Web';
+
+  @override
   String get downloadListTitle => 'Downloads';
 
   @override
