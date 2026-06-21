@@ -383,7 +383,7 @@ GestureDetector(
   ),
 )
 
-点击红色小方块，控制台输出： 子 onTap 触发 ✅  父 onTap 触发 ✅
+点击红色小方块，控制台输出： 子 onTap 触发 ✅ 
 戳空白处  → 没有子被戳中 ❌ → 父也不算被戳中 ❌ → 没人触发
 ```
 
@@ -460,4 +460,201 @@ final Rect bRect = Rect.fromLTWH(
 );
 2. 计算 A 和 B 的重叠区域
 3. 从 B 中排除重叠区域，得到 B 的可点击区域
+```
+
+### 核心区分：Listener vs GestureDetector
+```dart
+// Listener：不走手势竞技场，直接响应原始指针事件
+Listener(
+  onPointerDown: (event) => print('原始 Down 事件'),
+  onPointerMove: (event) => print('原始 Move 事件'),
+  onPointerUp: (event) => print('原始 Up 事件'),
+  child: Container(),
+)
+
+// GestureDetector：走手势竞技场，需要"赢得"手势才能响应
+GestureDetector(
+  onTap: () => print('Tap（需要赢得竞技场）'),
+  onPanStart: (details) => print('Pan（需要赢得竞技场）'),
+  child: Container(),
+)
+
+// 点击事件的分发链路：
+
+1. 指针事件（PointerEvent）到达
+          ↓
+2. 命中测试（hitTest）：构建命中列表
+   命中列表 = [顶层 Widget, 中间 Widget, 底层 Widget, ...]
+          ↓
+3. 事件分发（dispatchEvent）：
+   ├── 命中列表中的所有节点都能收到 PointerEvent
+   │   ├── 有 Listener 的 → 直接触发 onPointerDown/Up/Move
+   │   └── 有 GestureDetector 的 → 进入手势竞技场
+   │        └── 竞技场裁决后，胜者收到 onTap/onPan 等
+   └── 所有 Listener 都会收到事件，无论竞技场结果
+```
+
+```dart
+
+### 为什么 Listener 能"穿透"竞技场？
+// Flutter 源码简化版
+// 1. 命中测试阶段
+void hitTest(BoxHitTestResult result, Offset position) {
+  // 从上到下遍历所有节点
+  for (child in children.reversed) {
+    if (child.contains(position)) {
+      result.add(child);  // 加入命中列表
+      // 注意：Flutter 默认找到第一个就 break
+      // 但如果自定义，可以全部添加
+    }
+  }
+}
+
+// 2. 事件分发阶段
+void dispatchEvent(PointerEvent event, HitTestResult result) {
+  // 遍历命中列表中的所有节点
+  for (entry in result.path) {
+    entry.target.handleEvent(event, entry);
+    // ⚠️ 所有节点都会收到事件！
+  }
+}
+
+// 3. 手势竞技场（只有 GestureDetector 参与）
+class GestureRecognizer {
+  void addPointer(PointerEvent event) {
+    // 将指针加入竞技场
+    GestureBinding.instance.gestureArena.add(event.pointer, this);
+  }
+  
+  void acceptGesture(int pointer) {
+    // 竞技场胜出 → 触发 onTap/onPan
+  }
+}
+
+// 4. Listener 不走竞技场
+class RenderPointerListener {
+  void handleEvent(PointerEvent event, HitTestEntry entry) {
+    if (event is PointerDownEvent) {
+      onPointerDown?.call(event);  // 直接触发！
+      // 不参与竞技场，不受竞技场结果影响
+    }
+    if (event is PointerUpEvent) {
+      onPointerUp?.call(event);    // 直接触发！
+    }
+  }
+}
+```
+
+### 问题：Listener 不能阻止 GestureDetector 竞技
+
+解决方案1：用 Listener + 手动状态管理
+```dart
+解决方案2：使用 AbsorbPointer 阻止竞技
+GestureDetector(
+  onTap: () {
+    if (shouldHandleB) {
+      _handleB();
+    }
+  },
+  child: AbsorbPointer(
+    absorbing: shouldHandleB, // true 时阻止子节点参与竞技
+    child: A的GestureDetector,
+  ),
+)
+```
+
+```dart
+核心记忆：
+Listener = 原始事件监听器，不走竞技场，总能收到事件
+GestureDetector = 手势识别器，走竞技场，赢了才响应
+两者可以共存于命中列表，各自独立工作
+利用 Listener 不参与竞技场的特性，可以实现事件穿透
+```
+
+
+##### ===== behavior属性 =====
+behavior属性，它决定子组件如何响应命中测试，它的值类型为HitTestBehavior，这是一个枚举类，有三个枚举值
+
+HitTestBehavior.deferToChild
+
+对子组件一个接一个的进行命中测试，如果子组件中有测试通过的，则当前组件通过，这就意味着，如果指针事件作用于子组件上时，其父级组件也肯定可以收到该事件。
+
+HitTestBehavior.opaque
+
+在命中测试时，将当前组件当成[不透明处]理(即使本身是透明的)，最终的效果相当于当前Widget的整个区域都是点击区域
+
+HitTestBehavior.translucent
+
+点击组件[透明区域]时，可以对自身边界内及底部可视区域都进行命中测试，这意味着点击顶部组件透明区域时，顶部组件和底部组件都可以接收到事件
+```dart
+import 'package:flutter/material.dart';
+
+
+class ListenerSimpleExample extends StatefulWidget {
+  @override
+  _ListenerSimpleExampleState createState() => _ListenerSimpleExampleState();
+}
+
+class _ListenerSimpleExampleState extends State<ListenerSimpleExample> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Listener"),
+      ),
+      body: Center(
+        child: Stack(
+          children: [
+            Listener(
+              child: ConstrainedBox(
+                  constraints: BoxConstraints.tight(Size(400, 200)),
+                  child: Container(
+                    color: Colors.greenAccent,
+                  )
+              ),
+              onPointerDown: (event) => print("绿色盒子被点击了"),
+            ),
+            Listener(
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tight(Size(400, 200)),
+                child: Center(child: Text("点击文字", style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30
+                ),)),
+              ),
+              onPointerDown: (event) => print("文字点击事件回调"),
+              behavior: HitTestBehavior.deferToChild,
+              // behavior: HitTestBehavior.opaque,
+              // behavior: HitTestBehavior.translucent,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+当属性设置为HitTestBehavior.deferToChild控制台输出结果
+
+我们这里演示每次都是先点击绿色盒子在点击文字，以便大家能更好的分辨出这三个属性的使用区别
+flutter: 绿色盒子被点击了
+flutter: 文字点击事件回调
+
+当属性设置为HitTestBehavior.opaque控制台输出结果
+flutter: 文字点击事件回调
+flutter: 文字点击事件回调
+
+当属性设置为HitTestBehavior.translucent控制台输出结果
+flutter: 文字点击事件回调
+flutter: 绿色盒子被点击了
+flutter: 文字点击事件回调
+总结
+
+Listener是Flutter中比较重要的功能性组件，它主要的功能是用来监听屏幕触摸事件，
+事件回调可以获取对应的属性来个性化定制app功能。
 ```

@@ -274,6 +274,20 @@ class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
                       _log('opaque阻断', source, event, position: position),
                   showPointerMove: _showPointerMove,
                 ),
+                const SizedBox(height: 12),
+                // ========== translucent 穿透效果演示 ==========
+                _TranslucentPenetrateDemo(
+                  onLog: (source, event, position) =>
+                      _log('translucent穿透', source, event, position: position),
+                  showPointerMove: _showPointerMove,
+                ),
+
+                // ========== other  穿透无效果演示 ==========
+                _OtherPenetrateDemo(
+                  onLog: (source, event, position) =>
+                      _log('translucent不穿透', source, event, position: position),
+                  showPointerMove: _showPointerMove,
+                ),
               ],
             ),
           ),
@@ -292,6 +306,12 @@ class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              '// ============================================\n// 使用 GestureDetector（走竞技场）\n// ============================================',
+            ),
+            Text(
+              '// ============================================\n// 使用 Listener（不走竞技场）\n// ============================================',
+            ),
             Text(
               '每组演示：底层灰板 + 半透明父层 + 中央子按钮',
               style: Theme.of(context).textTheme.bodyMedium,
@@ -994,6 +1014,191 @@ class _OpaqueBlockingDemo extends StatelessWidget {
                     child: Text(
                       '预期：无论点击哪里，都只有"顶层"响应，因为 opaque 阻断了底层',
                       style: TextStyle(fontSize: 11, color: Colors.amber),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// translucent 穿透效果演示：顶层 translucent 允许事件穿透到底层
+class _TranslucentPenetrateDemo extends StatelessWidget {
+  const _TranslucentPenetrateDemo({
+    required this.onLog,
+    required this.showPointerMove,
+  });
+
+  final _HitTestLog onLog;
+  final bool showPointerMove;
+
+  static const _cardHeight = 220.0;
+
+  final String descResult = """
+当属性设置为HitTestBehavior.deferToChild控制台输出结果
+
+我们这里演示每次都是先点击绿色盒子在点击文字，以便大家能更好的分辨出这三个属性的使用区别
+
+flutter: 绿色盒子被点击了
+flutter: 文字点击事件回调
+
+当属性设置为HitTestBehavior.opaque:
+flutter: 文字点击事件回调
+flutter: 文字点击事件回调
+
+当属性设置为HitTestBehavior.translucent:
+flutter: 文字点击事件回调
+flutter: 绿色盒子被点击了
+flutter: 文字点击事件回调
+""";
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Text('$descResult'),
+            const SizedBox(height: 10),
+            // 点击测试区域
+            SizedBox(
+              height: _cardHeight,
+              width: double.infinity,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Listener(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.tight(Size(400, 200)),
+                      child: Container(color: Colors.greenAccent),
+                    ),
+                    onPointerDown: (event) => print("绿色盒子被点击了"),
+                  ),
+                  Listener(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.tight(Size(200, 200)),
+                      child: Center(
+                        child: Text(
+                          "点击文字",
+                          style: TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      ),
+                    ),
+                    onPointerDown: (event) => print("文字点击事件回调"),
+                    behavior: HitTestBehavior.translucent,
+                    // behavior: HitTestBehavior.opaque,
+                    // behavior: HitTestBehavior.translucent,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OtherPenetrateDemo extends StatelessWidget {
+  const _OtherPenetrateDemo({
+    required this.onLog,
+    required this.showPointerMove,
+  });
+
+  final _HitTestLog onLog;
+  final bool showPointerMove;
+
+  static const _cardHeight = 220.0;
+
+  final String descResult = """
+
+""";
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$descResult'),
+            const SizedBox(height: 10),
+            // 点击测试区域
+            SizedBox(
+              height: _cardHeight,
+              width: double.infinity,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // ========== 底层（蓝色）==========
+                  Positioned(
+                    left: 100,
+                    top: 100,
+                    child: GestureDetector(
+                      onTap: () => print('A'),
+                      child: Container(
+                        color: Colors.blue,
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                  ),
+
+                  // Positioned(
+                  //   left: 150,
+                  //   top: 150,
+                  //   child: IgnorePointer( // 这种可以
+                  //     // ← 关键：B 完全不参与命中测试
+                  //     child: Container(
+                  //       width: 100,
+                  //       height: 100,
+                  //       color: Colors.red.withValues(alpha: 0.5),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   left: 150,
+                  //   top: 150,
+                  //   child: Listener(
+                  //     behavior: HitTestBehavior.translucent,
+                  //     onPointerDown: (event) {
+                  //       // 在这里自己写逻辑，决定是否要处理
+                  //       // 如果处理，可以做标记；如果不处理，A的 GestureDetector 仍会正常响应
+                  //       print('B - onPointerDown at ${event.localPosition}');
+                  //     },
+                  //     child: Container(
+                  //       width: 100,
+                  //       height: 100,
+                  //       color: const Color.fromARGB(
+                  //         255,
+                  //         54,
+                  //         244,
+                  //         76,
+                  //       ).withValues(alpha: 0.5),
+                  //     ),
+                  //   ),
+                  // ),
+                  Positioned(
+                    left: 150,
+                    top: 150,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      //onTap: () => print('B'),//打不打开，底部重叠也不会触发底层事件
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.red.withValues(alpha: 0.5),
+                      ),
                     ),
                   ),
                 ],
