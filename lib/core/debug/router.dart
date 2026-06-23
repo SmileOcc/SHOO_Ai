@@ -11,6 +11,7 @@ import 'package:shoo/core/debug/modules/microtask/hos_debug_microtask_page.dart'
 import 'package:shoo/core/debug/modules/native/hos_debug_native_example_page.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_hub_page.dart';
+import 'package:shoo/core/debug/modules/mixin/hos_debug_mixin_page.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_page.dart';
 import 'package:shoo/core/debug/modules/overlap/hos_debug_overlap_page.dart';
 import 'package:shoo/core/debug/modules/secure_network/hos_debug_secure_network_page.dart';
@@ -39,6 +40,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) =>
           GoRoute(
             path: 'analytics',
             builder: (context, state) => const SHODebugAnalyticsPage(),
+          ),
+          GoRoute(
+            path: 'mixin',
+            builder: (context, state) => const SHODebugMixinPage(),
           ),
           GoRoute(
             path: 'network-log',

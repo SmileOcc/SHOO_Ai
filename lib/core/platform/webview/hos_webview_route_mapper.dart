@@ -31,6 +31,10 @@ abstract final class SHOWebViewRouteMapper {
     if (path.startsWith('/orders/') && segments.length >= 2) {
       return SHOAppRoutes.order(segments[1]);
     }
+    // 个人中心映射：/personal → /profile
+    if (segments.length == 1 && segments[0] == 'personal') {
+      return SHOAppRoutes.profile;
+    }
     if (path.startsWith('/')) return path;
     return null;
   }

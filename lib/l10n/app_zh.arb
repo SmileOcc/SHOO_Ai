@@ -524,6 +524,7 @@
   "toolboxSActivityIosOnly": "S活动目前仅支持 iOS",
   "toolboxWebViewActivity": "WebView活动",
   "toolboxGeneralWeb": "通用Web",
+  "toolboxWebDebug": "Web调试",
   "downloadListTitle": "下载列表",
   "downloadTabAll": "全部",
   "downloadTabDownloading": "下载中",

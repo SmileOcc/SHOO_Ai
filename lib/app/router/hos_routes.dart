@@ -43,6 +43,7 @@ abstract final class SHOAppRoutes {
   static const toolboxVideo = '/toolbox/video';
   static const toolboxMusicPlayer = '/toolbox/music';
   static const toolboxWeb = '/toolbox/web';
+  static const toolboxWebDebug = '/toolbox/web-debug';
   static const webview = '/webview';
   static const activity = '/activity';
   static const activityWebview = '/activity/webview';
@@ -180,6 +181,7 @@ abstract final class SHOAppRoutes {
   static const debugOverlap = '/debug/overlap';
   static const debugDependencies = '/debug/dependencies';
   static const debugSecureNetwork = '/debug/secure-network';
+  static const debugMixin = '/debug/mixin';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 
@@ -204,6 +206,20 @@ abstract final class SHOAppRoutes {
     '/payment/',
     '/after-sales/',
   ];
+
+  /// 底部 Tab 页（须用 [GoRouter.go]，不可 push，否则会重复 Page Key）。
+  static const shellTabRoutes = <String>{
+    home,
+    category,
+    community,
+    cart,
+    profile,
+  };
+
+  static bool isShellTabRoute(String location) {
+    final path = Uri.tryParse(location)?.path ?? location;
+    return shellTabRoutes.contains(path);
+  }
 
   static bool requiresAuth(String location) {
     if (protectedRoutes.contains(location)) return true;

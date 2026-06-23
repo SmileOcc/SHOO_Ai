@@ -555,6 +555,7 @@
   "toolboxSActivityIosOnly": "S Activity is iOS only for now",
   "toolboxWebViewActivity": "WebView Activity",
   "toolboxGeneralWeb": "General Web",
+  "toolboxWebDebug": "Web Debug",
   "downloadListTitle": "Downloads",
   "downloadTabAll": "All",
   "downloadTabDownloading": "Downloading",

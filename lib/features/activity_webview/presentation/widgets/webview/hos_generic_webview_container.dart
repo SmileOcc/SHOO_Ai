@@ -2,12 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
+import 'package:shoo/core/platform/webview/hos_webview_bridge_handler.dart';
 import 'package:shoo/core/platform/webview/hos_webview_config.dart';
 import 'package:shoo/core/platform/webview/hos_webview_route_mapper.dart';
 import 'package:shoo/core/platform/webview/hos_webview_service.dart';
+import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_error_widget.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_loading_overlay.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_progress_bar.dart';
@@ -15,7 +20,7 @@ import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_
 enum _SHOWebViewLoadingState { loading, finished, error }
 
 /// 通用 WebView 容器（技术方案 WebViewContainer 的 SHOO 实现，不含 Scaffold）。
-class SHOGenericWebViewContainer extends StatefulWidget {
+class SHOGenericWebViewContainer extends ConsumerStatefulWidget {
   const SHOGenericWebViewContainer({
     super.key,
     required this.config,
@@ -32,11 +37,12 @@ class SHOGenericWebViewContainer extends StatefulWidget {
   final void Function(WebViewController controller)? onControllerReady;
 
   @override
-  State<SHOGenericWebViewContainer> createState() =>
+  ConsumerState<SHOGenericWebViewContainer> createState() =>
       _SHOGenericWebViewContainerState();
 }
 
-class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer> {
+class _SHOGenericWebViewContainerState
+    extends ConsumerState<SHOGenericWebViewContainer> {
   WebViewController? _controller;
   final _service = SHOWebViewService.instance;
 
@@ -59,7 +65,6 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
   @override
   void dispose() {
     _timeoutTimer?.cancel();
-    unawaited(_controller?.clearCache());
     super.dispose();
   }
 
@@ -109,7 +114,10 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
           widget.onUrlChanged?.call(url);
 
           if (widget.config.cookies != null) {
-            await _service.syncCookiesToWebView(controller, widget.config.cookies!);
+            await _service.syncCookiesToWebView(
+              controller,
+              widget.config.cookies!,
+            );
           }
           if (widget.config.injectedJavaScript != null) {
             await controller.runJavaScript(widget.config.injectedJavaScript!);
@@ -140,6 +148,20 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
       ),
     );
 
+    if (widget.config.enableFlutterBridge) {
+      controller.addJavaScriptChannel(
+        'FlutterBridge',
+        onMessageReceived: (msg) => unawaited(
+          SHOWebViewBridgeHandler.handle(
+            context,
+            ref,
+            controller,
+            msg.message,
+          ),
+        ),
+      );
+    }
+
     for (final channel in widget.config.javaScriptChannels ?? const []) {
       controller.addJavaScriptChannel(
         channel.name,
@@ -161,7 +183,7 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
       );
     }
 
-    await _loadUrl(controller, widget.config.url);
+    await _loadInitial(controller);
 
     if (!mounted) return;
     setState(() {
@@ -169,6 +191,15 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
       _initializing = false;
     });
     widget.onControllerReady?.call(controller);
+  }
+
+  Future<void> _loadInitial(WebViewController controller) async {
+    final asset = widget.config.loadAsset;
+    if (asset != null && asset.isNotEmpty) {
+      await controller.loadFlutterAsset(asset);
+      return;
+    }
+    await _loadUrl(controller, widget.config.url);
   }
 
   Future<void> _injectScrollListener(WebViewController controller) async {
@@ -183,6 +214,16 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
   }
 
   Future<NavigationDecision> _resolveNavigation(String url) async {
+    if (SHODeepLinkResolver.isDeepLink(url)) {
+      _deferDeepLink(url);
+      return NavigationDecision.prevent;
+    }
+
+    if (_service.shouldOpenExternally(url, widget.config.mode)) {
+      unawaited(_service.openInSystemBrowser(url));
+      return NavigationDecision.prevent;
+    }
+
     final interceptors = widget.config.interceptors;
     if (interceptors != null && interceptors.isNotEmpty) {
       final result = await _service.handleInterception(url, interceptors);
@@ -190,16 +231,11 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
         if (result.nativeUrl != null && mounted) {
           final route = SHOWebViewRouteMapper.toAppRoute(result.nativeUrl!);
           if (route != null) {
-            await context.push(route);
+            _deferRoutePush(route);
           }
         }
         return NavigationDecision.prevent;
       }
-    }
-
-    if (_service.shouldOpenExternally(url, widget.config.mode)) {
-      await _service.openInSystemBrowser(url);
-      return NavigationDecision.prevent;
     }
 
     final customHeaders = widget.config.customHeaders;
@@ -215,6 +251,21 @@ class _SHOGenericWebViewContainerState extends State<SHOGenericWebViewContainer>
     }
 
     return NavigationDecision.navigate;
+  }
+
+  void _deferDeepLink(String url) {
+    SHODeepLinkNavigator.openFromWebView(
+      context,
+      url,
+      session: ref.read(sessionProvider),
+    );
+  }
+
+  void _deferRoutePush(String route) {
+    scheduleMicrotask(() {
+      if (!mounted) return;
+      context.push(route);
+    });
   }
 
   Future<void> _loadUrl(WebViewController controller, String url) async {

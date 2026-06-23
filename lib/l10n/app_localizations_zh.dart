@@ -1431,6 +1431,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxGeneralWeb => '通用Web';
 
   @override
+  String get toolboxWebDebug => 'Web调试';
+
+  @override
   String get downloadListTitle => '下载列表';
 
   @override

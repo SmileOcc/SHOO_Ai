@@ -73,26 +73,10 @@ final categoryAppBarTitleProvider = Provider<String>((ref) {
 final categoryProductsProvider =
     FutureProvider.family<List<SHOProduct>, String>((ref, categoryId) async {
   final repo = ref.watch(categoryRepositoryProvider);
-  final first = await repo.getProductsByCategory(
+  final page = await repo.getProductsByCategory(
     categoryId: categoryId,
     page: 1,
     pageSize: 100,
   );
-
-  if (!first.hasMore) return first.items;
-
-  final all = [...first.items];
-  var page = 2;
-  var hasMore = first.hasMore;
-  while (hasMore) {
-    final next = await repo.getProductsByCategory(
-      categoryId: categoryId,
-      page: page,
-      pageSize: 100,
-    );
-    all.addAll(next.items);
-    hasMore = next.hasMore;
-    page++;
-  }
-  return all;
+  return page.items;
 });

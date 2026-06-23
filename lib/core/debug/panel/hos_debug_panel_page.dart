@@ -138,6 +138,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugOverlap),
           ),
           ListTile(
+            leading: const Icon(Icons.hub_outlined),
+            title: const Text('Mixin 调试'),
+            subtitle: const Text('线性化链 / 同名方法 / 业务聚合'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugMixin),
+          ),
+          ListTile(
             leading: const Icon(Icons.link_outlined),
             title: const Text('InheritedWidget 依赖监听'),
             subtitle: const Text('监听所有 InheritedWidget 变化'),

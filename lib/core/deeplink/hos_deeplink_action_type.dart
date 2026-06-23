@@ -1,0 +1,23 @@
+/// Deep Link 事件类型（活动 / Banner / H5 点击统一维护）。
+enum SHODeepLinkActionType {
+  home,
+  productDetail,
+  productList,
+  orders,
+  orderDetail,
+  payment,
+  afterSales,
+  search,
+  login,
+  cart,
+  category,
+  profile,
+  checkout,
+  coupons,
+  activity,
+  flashSale,
+  newArrivals,
+  trending,
+  webview,
+  unknown,
+}

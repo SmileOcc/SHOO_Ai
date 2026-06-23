@@ -1470,6 +1470,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxGeneralWeb => 'General Web';
 
   @override
+  String get toolboxWebDebug => 'Web Debug';
+
+  @override
   String get downloadListTitle => 'Downloads';
 
   @override

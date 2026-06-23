@@ -40,7 +40,7 @@ class _SHOWebViewPageState extends State<SHOWebViewPage> {
 
   SHOWebViewConfig get _config => widget.config;
 
-  bool get _hasUrl => _config.url.trim().isNotEmpty;
+  bool get _hasUrl => _config.hasContent;
 
   String get _displayTitle =>
       _config.title ?? _dynamicTitle ?? _currentUrlOrFallback;

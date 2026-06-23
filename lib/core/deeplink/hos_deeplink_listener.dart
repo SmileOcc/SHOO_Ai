@@ -4,13 +4,15 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:shoo/core/logging/hos_logger.dart';
-import 'package:shoo/core/deeplink/hos_deeplink_mapper.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
 import 'package:shoo/app/router/hos_router.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 
 final deepLinkListenerProvider = Provider<SHODeepLinkListener>((ref) {
   final router = ref.watch(routerProvider);
-  final listener = SHODeepLinkListener(router);
+  final listener = SHODeepLinkListener(router, ref);
   listener.start();
   ref.onDispose(listener.dispose);
   return listener;
@@ -18,9 +20,10 @@ final deepLinkListenerProvider = Provider<SHODeepLinkListener>((ref) {
 
 /// 监听系统深链并导航到 go_router 路径。
 class SHODeepLinkListener {
-  SHODeepLinkListener(this._router);
+  SHODeepLinkListener(this._router, this._ref);
 
   final GoRouter _router;
+  final Ref _ref;
   final AppLinks _appLinks = AppLinks();
   StreamSubscription<Uri>? _subscription;
   bool _started = false;
@@ -36,13 +39,14 @@ class SHODeepLinkListener {
 
   void _navigate(Uri? uri) {
     if (uri == null) return;
-    final path = SHODeepLinkMapper.toAppPath(uri);
-    if (path == null) {
+    final target = SHODeepLinkResolver.resolveUri(uri);
+    if (target == null) {
       SHOAppLogger.warn('Unsupported deep link: $uri');
       return;
     }
-    SHOAppLogger.info('Deep link → $path');
-    _router.go(path);
+
+    final session = _ref.read(sessionProvider);
+    SHODeepLinkNavigator.navigate(_router, target, session: session);
   }
 
   void dispose() {

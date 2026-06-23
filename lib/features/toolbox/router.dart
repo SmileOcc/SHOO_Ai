@@ -6,6 +6,7 @@ import 'package:shoo/features/study/presentation/pages/study_article_page.dart';
 import 'package:shoo/features/study/presentation/pages/study_home_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_download_list_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_web_debug_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_web_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_txt_reader_route_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_music_player_route_page.dart';
@@ -37,6 +38,11 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
             path: 'downloads',
             parentNavigatorKey: rootKey,
             builder: (context, state) => const SHODownloadListPage(),
+          ),
+          GoRoute(
+            path: 'web-debug',
+            parentNavigatorKey: rootKey,
+            builder: (context, state) => const SHOToolboxWebDebugPage(),
           ),
           GoRoute(
             path: 'web',

@@ -16,7 +16,9 @@ abstract final class SHODeepLinkMapper {
 
   static String? toAppPath(Uri uri) {
     final segments = _pathSegments(uri);
-    if (segments.isEmpty) return SHOAppRoutes.home;
+    if (segments.isEmpty) {
+      return _isAppUri(uri) ? SHOAppRoutes.home : null;
+    }
 
     switch (segments.first) {
       case 'product':
@@ -35,6 +37,26 @@ abstract final class SHODeepLinkMapper {
           }
           return SHOAppRoutes.order(id);
         }
+        return SHOAppRoutes.orders;
+      case 'category':
+        if (segments.length >= 2 && segments[1] == 'products') {
+          final leafId = uri.queryParameters['leafId'] ?? '';
+          final title = uri.queryParameters['title'] ?? '商品列表';
+          return SHOAppRoutes.categoryProductsFiltered(
+            leafId: leafId,
+            title: title,
+          );
+        }
+        return SHOAppRoutes.category;
+      case 'activity':
+        return SHOAppRoutes.activity;
+      case 'webview':
+        final url = uri.queryParameters['url'];
+        if (url != null && url.isNotEmpty) {
+          final title = uri.queryParameters['title'];
+          return SHOAppRoutes.webviewFor(url, title: title);
+        }
+        return null;
       case 'payment':
         if (segments.length >= 2) {
           return SHOAppRoutes.payment(segments[1]);
@@ -61,8 +83,6 @@ abstract final class SHODeepLinkMapper {
         return '${SHOAppRoutes.search}?q=trending';
       case 'cart':
         return SHOAppRoutes.cart;
-      case 'category':
-        return SHOAppRoutes.category;
       case 'profile':
         return SHOAppRoutes.profile;
       case 'checkout':
@@ -93,5 +113,15 @@ abstract final class SHODeepLinkMapper {
       return uri.pathSegments.where((s) => s.isNotEmpty).toList();
     }
     return [];
+  }
+
+  /// 是否为应用内可识别的 URI（shoo.app / shoo:// / 相对路径）。
+  static bool _isAppUri(Uri uri) {
+    if (uri.scheme.isEmpty) return true;
+    if (uri.scheme == SHODeepLinkConfig.scheme) return true;
+    if (uri.scheme == 'https' || uri.scheme == 'http') {
+      return SHODeepLinkConfig.isSupportedHost(uri.host);
+    }
+    return false;
   }
 }

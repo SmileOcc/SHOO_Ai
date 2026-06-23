@@ -78,4 +78,5 @@ flutter:
     - assets/book/
     - assets/video/
     - assets/activity/
+    - assets/webview/
     - study/

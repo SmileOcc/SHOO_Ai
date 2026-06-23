@@ -2834,6 +2834,12 @@ abstract class AppLocalizations {
   /// **'General Web'**
   String get toolboxGeneralWeb;
 
+  /// No description provided for @toolboxWebDebug.
+  ///
+  /// In en, this message translates to:
+  /// **'Web Debug'**
+  String get toolboxWebDebug;
+
   /// No description provided for @downloadListTitle.
   ///
   /// In en, this message translates to:
