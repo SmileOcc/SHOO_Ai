@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -24,8 +26,17 @@ class SHOFlashSalePage extends ConsumerStatefulWidget {
   ConsumerState<SHOFlashSalePage> createState() => _SHOFlashSalePageState();
 }
 
-class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
+class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _scrollController = ScrollController();
+
+  @override
+  String get pageName => 'flash_sale';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'activity_id': widget.activityId,
+      };
 
   // 获取闪购控制器（通过 ref.read 获取 notifier）
   SHOFlashSaleController get _controller =>
@@ -65,7 +76,8 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
     // 获取页面数据
     final pageData = state.pageData;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           SHOFlashSaleActivities.titleFor(widget.activityId),
@@ -142,6 +154,8 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
                 ],
               ),
       ),
+    ),
+    onRetry: _controller.refresh,
     );
   }
 }

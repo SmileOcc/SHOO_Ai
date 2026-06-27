@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/dialogs/hos_confirm_card_dialog.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -19,10 +21,20 @@ import 'package:shoo/features/toolbox/presentation/video/state/hos_video_library
 import 'package:shoo/features/toolbox/presentation/video/widgets/hos_video_online_play_dialog.dart';
 import 'package:shoo/features/toolbox/presentation/video/widgets/hos_video_player_widget.dart';
 
-class SHOVideoLibraryPage extends ConsumerWidget {
+class SHOVideoLibraryPage extends ConsumerStatefulWidget {
   const SHOVideoLibraryPage({super.key});
 
-  Future<void> _openOnlinePlay(BuildContext context, WidgetRef ref) async {
+  @override
+  ConsumerState<SHOVideoLibraryPage> createState() =>
+      _SHOVideoLibraryPageState();
+}
+
+class _SHOVideoLibraryPageState extends ConsumerState<SHOVideoLibraryPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'video_library';
+
+  Future<void> _openOnlinePlay(BuildContext context) async {
     final url = await SHOVideoOnlinePlayDialog.show(context);
     if (url == null || !context.mounted) return;
 
@@ -45,7 +57,6 @@ class SHOVideoLibraryPage extends ConsumerWidget {
 
   Future<void> _openItem(
     BuildContext context,
-    WidgetRef ref,
     SHOVideoLibraryListItem item,
   ) async {
     final l10n = AppLocalizations.of(context);
@@ -139,11 +150,12 @@ class SHOVideoLibraryPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final items = ref.watch(videoLibraryListItemsProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           l10n.videoLibraryTitle,
@@ -151,7 +163,7 @@ class SHOVideoLibraryPage extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => _openOnlinePlay(context, ref),
+            onPressed: () => _openOnlinePlay(context),
             child: Text(
               l10n.videoLibraryOnlinePlay,
               style: const TextStyle(fontWeight: FontWeight.w700),
@@ -304,12 +316,14 @@ class SHOVideoLibraryPage extends ConsumerWidget {
                       trailing: canPlay
                           ? const Icon(Icons.play_circle_outline)
                           : null,
-                      onTap: () => _openItem(context, ref, item),
+                      onTap: () => _openItem(context, item),
                     ),
                   ),
                 );
               },
             ),
+    ),
+    onRetry: () => ref.invalidate(videoLibraryEntriesProvider),
     );
   }
 }

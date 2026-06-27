@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/share/hos_share_service.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
@@ -46,7 +46,7 @@ class SHOMusicPlayerPage extends ConsumerStatefulWidget {
 }
 
 class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   var _showLyrics = true;
   var _initialized = false;
   var _bootstrapping = true;
@@ -274,13 +274,16 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
     final bgPath = track?.bgPath;
 
     if (_bootstrapping && track == null) {
-      return const Scaffold(
+      return buildTrackedPage(
+        const Scaffold(
         backgroundColor: Color(0xFF14141F),
         body: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -328,6 +331,7 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
           ),
         ],
       ),
+    ),
     );
   }
 

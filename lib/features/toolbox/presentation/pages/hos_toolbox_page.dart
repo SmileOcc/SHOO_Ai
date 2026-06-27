@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge.dart';
 import 'package:shoo/core/platform/native_components/hos_native_components_bridge.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -38,8 +41,17 @@ Future<void> _openSActivity(BuildContext context) async {
   }
 }
 
-class SHOToolboxPage extends StatelessWidget {
+class SHOToolboxPage extends ConsumerStatefulWidget {
   const SHOToolboxPage({super.key});
+
+  @override
+  ConsumerState<SHOToolboxPage> createState() => _SHOToolboxPageState();
+}
+
+class _SHOToolboxPageState extends ConsumerState<SHOToolboxPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'toolbox';
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +164,8 @@ class SHOToolboxPage extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           l10n.toolboxTitle,
@@ -207,6 +220,7 @@ class SHOToolboxPage extends StatelessWidget {
           );
         },
       ),
+    ),
     );
   }
 }

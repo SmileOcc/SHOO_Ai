@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/debug/modules/mixin/hos_debug_mixin_demos.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// Mixin 调试页：线性化链、同名方法冲突、业务 Mixin 实现。
-class SHODebugMixinPage extends StatefulWidget {
+class SHODebugMixinPage extends ConsumerStatefulWidget {
   const SHODebugMixinPage({super.key});
 
   @override
-  State<SHODebugMixinPage> createState() => _SHODebugMixinPageState();
+  ConsumerState<SHODebugMixinPage> createState() => _SHODebugMixinPageState();
 }
 
-class _SHODebugMixinPageState extends State<SHODebugMixinPage> {
+class _SHODebugMixinPageState extends ConsumerState<SHODebugMixinPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_mixin';
+
   String _chainResult = '';
   String _collisionResult = '';
   String _bizResult = '';
@@ -71,7 +77,8 @@ class _SHODebugMixinPageState extends State<SHODebugMixinPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: const Text('Mixin 调试')),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -103,6 +110,7 @@ class _SHODebugMixinPageState extends State<SHODebugMixinPage> {
           ),
         ],
       ),
+    ),
     );
   }
 

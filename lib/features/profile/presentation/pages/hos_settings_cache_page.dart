@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/cache/hos_cache_cleanup_service.dart';
 import 'package:shoo/core/logging/hos_log_manager.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -14,9 +16,13 @@ class SHOSettingsCachePage extends ConsumerStatefulWidget {
   ConsumerState<SHOSettingsCachePage> createState() => _SHOSettingsCachePageState();
 }
 
-class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage> {
+class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   Map<SHOCacheCategory, int>? _sizes;
   bool _loading = true;
+
+  @override
+  String get pageName => 'settings_cache';
 
   @override
   void initState() {
@@ -105,7 +111,8 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage> {
     final l10n = AppLocalizations.of(context);
     final total = _sizes?.values.fold<int>(0, (sum, v) => sum + v) ?? 0;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.settingsCacheTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -150,6 +157,8 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage> {
                 ),
               ],
             ),
+      ),
+    onRetry: _reload,
     );
   }
 }

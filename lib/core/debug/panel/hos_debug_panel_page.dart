@@ -6,22 +6,33 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/config/hos_environment.dart';
 import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 
 /// Debug 调试面板：环境切换、Mock 延迟等（Release 包不可进入）。
-class SHODebugPanelPage extends ConsumerWidget {
+class SHODebugPanelPage extends ConsumerStatefulWidget {
   const SHODebugPanelPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHODebugPanelPage> createState() => _SHODebugPanelPageState();
+}
+
+class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_panel';
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final config = ref.watch(effectiveConfigProvider);
     final override = ref.watch(runtimeEnvOverrideProvider);
     final showEnvBadge = ref.watch(showEnvBadgeProvider);
     final consoleLogEnabled = ref.watch(consoleLogEnabledProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugPanelTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -194,6 +205,7 @@ class SHODebugPanelPage extends ConsumerWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

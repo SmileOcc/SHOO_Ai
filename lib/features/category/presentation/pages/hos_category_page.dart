@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
-import 'package:shoo/core/utils/hos_async_value_ui.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
-import 'package:shoo/core/widgets/hos_error_view.dart';
 import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
 import 'package:shoo/l10n/app_localizations.dart';
@@ -29,82 +28,100 @@ bool _hasStaleCategoryCache(List<SHOCategoryItem> items) {
   return false;
 }
 
-class SHOCategoryPage extends ConsumerWidget {
+class SHOCategoryPage extends SHODataPage<List<SHOCategoryItem>> {
   const SHOCategoryPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final categoriesAsync = ref.watch(categoriesProvider);
+  SHODataPageState<List<SHOCategoryItem>, SHOCategoryPage> createState() =>
+      _SHOCategoryPageState();
+}
 
-    return categoriesAsync.whenWidget(
-      loading: Row(
-        children: [
-          SizedBox(
-            width: 96,
-            child: ListView.builder(
-              itemCount: 8,
-              itemBuilder: (_, __) => const Padding(
-                padding: EdgeInsets.all(SHOAppSpacing.md),
-                child: SHOSkeletonBox(height: 36),
-              ),
+class _SHOCategoryPageState
+    extends SHODataPageState<List<SHOCategoryItem>, SHOCategoryPage> {
+  @override
+  ProviderListenable<AsyncValue<List<SHOCategoryItem>>> get dataProvider =>
+      categoriesProvider;
+
+  @override
+  void invalidateData(WidgetRef ref) => ref.invalidate(categoriesProvider);
+
+  @override
+  String get pageName => 'category';
+
+  @override
+  bool isEmptyData(List<SHOCategoryItem> data) => false;
+
+  @override
+  Widget? buildLoading(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 96,
+          child: ListView.builder(
+            itemCount: 8,
+            itemBuilder: (_, __) => const Padding(
+              padding: EdgeInsets.all(SHOAppSpacing.md),
+              child: SHOSkeletonBox(height: 36),
             ),
           ),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(SHOAppSpacing.pagePadding),
-              child: SHOSkeletonBox(height: 320),
-            ),
+        ),
+        const Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(SHOAppSpacing.pagePadding),
+            child: SHOSkeletonBox(height: 320),
           ),
-        ],
-      ),
-      error: (error, _) => SHOAppErrorView(
-        message: error.toString(),
-        onRetry: () => ref.invalidate(categoriesProvider),
-      ),
-      data: (rawCategories) {
-        if (_hasStaleCategoryCache(rawCategories)) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.invalidate(categoriesProvider);
-          });
-        }
+        ),
+      ],
+    );
+  }
 
-        final categories = normalizeCategoryItems(rawCategories);
-        if (categories.isEmpty) {
-          return SHOEmptyState(title: AppLocalizations.of(context).noData);
-        }
+  @override
+  Widget buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    List<SHOCategoryItem> rawCategories,
+  ) {
+    if (_hasStaleCategoryCache(rawCategories)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        invalidateData(ref);
+      });
+    }
 
-        final selectedIndex = ref.watch(selectedCategoryIndexProvider)
-            .clamp(0, categories.length - 1);
-        final selectedCategory = categories[selectedIndex];
+    final categories = normalizeCategoryItems(rawCategories);
+    if (categories.isEmpty) {
+      return SHOEmptyState(title: AppLocalizations.of(context).noData);
+    }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SHOCategorySortBar(),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _PrimaryCategoryRail(
-                    categories: categories,
-                    selectedIndex: selectedIndex,
-                    onSelected: (index) {
-                      ref.read(selectedCategoryIndexProvider.notifier).state =
-                          index;
-                      ref
-                          .read(profileActivityProvider.notifier)
-                          .recordFollowedCategory(categories[index].id);
-                    },
-                  ),
-                  Expanded(
-                    child: _CategoryGroupPanel(category: selectedCategory),
-                  ),
-                ],
+    final selectedIndex =
+        ref.watch(selectedCategoryIndexProvider).clamp(0, categories.length - 1);
+    final selectedCategory = categories[selectedIndex];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SHOCategorySortBar(),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _PrimaryCategoryRail(
+                categories: categories,
+                selectedIndex: selectedIndex,
+                onSelected: (index) {
+                  ref.read(selectedCategoryIndexProvider.notifier).state =
+                      index;
+                  ref
+                      .read(profileActivityProvider.notifier)
+                      .recordFollowedCategory(categories[index].id);
+                },
               ),
-            ),
-          ],
-        );
-      },
+              Expanded(
+                child: _CategoryGroupPanel(category: selectedCategory),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

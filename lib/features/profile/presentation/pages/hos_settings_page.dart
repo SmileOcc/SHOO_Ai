@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/cache/hos_cache_cleanup_service.dart';
@@ -26,9 +28,13 @@ class SHOSettingsPage extends ConsumerStatefulWidget {
   ConsumerState<SHOSettingsPage> createState() => _SHOSettingsPageState();
 }
 
-class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage> {
+class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   int _logBytes = 0;
   int _cacheBytes = 0;
+
+  @override
+  String get pageName => 'settings';
 
   @override
   void initState() {
@@ -132,7 +138,8 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage> {
     final locale = ref.watch(localeProvider);
     final session = ref.watch(sessionProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.only(bottom: SHOAppSpacing.xxxl),
@@ -237,6 +244,7 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage> {
           ),
         ],
       ),
+    ),
     );
   }
 }

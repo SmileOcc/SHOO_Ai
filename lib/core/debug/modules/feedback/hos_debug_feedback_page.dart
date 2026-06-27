@@ -10,6 +10,7 @@ import 'package:shoo/core/feedback/hos_overlay_loading.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/debug/modules/feedback/hos_debug_feedback_async_demo.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// Debug：全局 Loading 遮罩与全局错误处理试玩页。
 class SHODebugFeedbackPage extends ConsumerStatefulWidget {
@@ -20,7 +21,11 @@ class SHODebugFeedbackPage extends ConsumerStatefulWidget {
       _SHODebugFeedbackPageState();
 }
 
-class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
+class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_feedback';
+
   var _lastAction = '';
 
   void _note(String text) => setState(() => _lastAction = text);
@@ -102,7 +107,8 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
     final l10n = AppLocalizations.of(context);
     final overlayCount = ref.watch(overlayLoadingProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugFeedbackTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -176,6 +182,7 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage> {
           SHODebugFeedbackAsyncDemo(onAction: _note),
         ],
       ),
+    ),
     );
   }
 }

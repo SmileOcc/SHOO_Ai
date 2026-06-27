@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:shoo/core/debug/modules/overlap/hos_overlap_hittext_box.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// 重叠视图点击事件调试页。
 ///
@@ -14,11 +17,12 @@ import 'package:shoo/core/debug/modules/overlap/hos_overlap_hittext_box.dart';
 //   _calculateClickableAreas();
 // });
 
-class SHODebugOverlapPage extends StatefulWidget {
+class SHODebugOverlapPage extends ConsumerStatefulWidget {
   const SHODebugOverlapPage({super.key});
 
   @override
-  State<SHODebugOverlapPage> createState() => _SHODebugOverlapPageState();
+  ConsumerState<SHODebugOverlapPage> createState() =>
+      _SHODebugOverlapPageState();
 }
 
 enum _LogKind { detail, header, summary }
@@ -30,7 +34,11 @@ class _LogEntry {
   final _LogKind kind;
 }
 
-class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
+class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_overlap';
+
   final _entries = <_LogEntry>[];
   final _scrollController = ScrollController();
 
@@ -303,7 +311,8 @@ class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: const Text('重叠视图点击事件调试'),
         actions: [
@@ -333,6 +342,7 @@ class _SHODebugOverlapPageState extends State<SHODebugOverlapPage> {
           Expanded(flex: 2, child: _buildLogArea()),
         ],
       ),
+    ),
     );
   }
 

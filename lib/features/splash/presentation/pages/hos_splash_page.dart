@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/constants/hos_constants.dart';
 import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
@@ -20,7 +22,10 @@ class SHOSplashPage extends ConsumerStatefulWidget {
   ConsumerState<SHOSplashPage> createState() => _SHOSplashPageState();
 }
 
-class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
+class _SHOSplashPageState extends ConsumerState<SHOSplashPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'splash';
   @override
   void initState() {
     super.initState();
@@ -45,7 +50,8 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       backgroundColor: SHOAppColors.primary,
       body: Center(
         child: Column(
@@ -69,6 +75,7 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }

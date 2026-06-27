@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
@@ -22,7 +22,7 @@ class SHOCommunityPage extends ConsumerStatefulWidget {
 }
 
 class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _scrollController = ScrollController();
 
   @override
@@ -67,21 +67,28 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
     final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     if (feedState.isInitialLoading) {
-      return RefreshIndicator(
+      return buildTrackedPage(
+        RefreshIndicator(
         color: SHOAppColors.accent,
         onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
         child: _buildLoadingSkeleton(),
-      );
-    }
-
-    if (feedState.isEmpty && feedState.error != null) {
-      return SHOAppErrorView(
-        message: feedState.error.toString(),
+        ),
         onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
       );
     }
 
-    return NotificationListener<ScrollNotification>(
+    if (feedState.isEmpty && feedState.error != null) {
+      return buildTrackedPage(
+        SHOAppErrorView(
+        message: feedState.error.toString(),
+        onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+        ),
+        onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+      );
+    }
+
+    return buildTrackedPage(
+      NotificationListener<ScrollNotification>(
       onNotification: _onScrollNotification,
       child: RefreshIndicator(
         color: SHOAppColors.accent,
@@ -134,6 +141,8 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
           ],
         ),
       ),
+    ),
+    onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
     );
   }
 

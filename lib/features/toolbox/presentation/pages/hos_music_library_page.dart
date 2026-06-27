@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/dialogs/hos_confirm_card_dialog.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -16,10 +18,20 @@ import 'package:shoo/features/toolbox/presentation/music/state/hos_music_library
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_mini_player_controller.dart';
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_player_controller.dart';
 
-class SHOMusicLibraryPage extends ConsumerWidget {
+class SHOMusicLibraryPage extends ConsumerStatefulWidget {
   const SHOMusicLibraryPage({super.key, this.fromDownload = false});
 
   final bool fromDownload;
+
+  @override
+  ConsumerState<SHOMusicLibraryPage> createState() =>
+      _SHOMusicLibraryPageState();
+}
+
+class _SHOMusicLibraryPageState extends ConsumerState<SHOMusicLibraryPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'music_library';
 
   String _formatDuration(Duration? duration) {
     if (duration == null || duration <= Duration.zero) return '';
@@ -34,7 +46,7 @@ class SHOMusicLibraryPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     ref.listen<SHOMusicPlayerState>(musicPlayerProvider, (previous, next) {
       if (previous?.errorMessage == next.errorMessage) return;
@@ -51,7 +63,8 @@ class SHOMusicLibraryPage extends ConsumerWidget {
     final playingTrackId =
         playerState.isPlaying ? currentTrackId : null;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           l10n.musicLibraryTitle,
@@ -311,6 +324,8 @@ class SHOMusicLibraryPage extends ConsumerWidget {
           ),
         ],
       ),
+    ),
+    onRetry: () => ref.invalidate(musicLibraryListProvider),
     );
   }
 }

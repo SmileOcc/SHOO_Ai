@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/dialogs/hos_confirm_card_dialog.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
@@ -60,7 +62,7 @@ class SHOTxtReaderPage extends ConsumerStatefulWidget {
 }
 
 class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   static const _fontSizes = [14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0];
   static const _readerPadding = EdgeInsets.fromLTRB(20, 12, 20, 4);
   static const _settingsRadius = 16.0;
@@ -68,6 +70,12 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   static const _catalogScrimMaxOpacity = 0.54;
   static const _chromeBottomSlideHeight = 148.0;
   static const _chromeAnimDuration = Duration(milliseconds: 260);
+
+  @override
+  String get pageName => 'txt_reader';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {'task_id': widget.task.id};
 
   final _pageController = PageController();
 
@@ -1567,7 +1575,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         .watch(bookshelfEntriesProvider)
         .any((entry) => entry.taskId == widget.task.id);
 
-    return PopScope(
+    return buildTrackedPage(
+      PopScope(
       onPopInvokedWithResult: (_, __) => _saveProgressSync(),
       child: ColoredBox(
         color: _readerTheme.background,
@@ -1597,6 +1606,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
           ],
         ),
       ),
+    ),
+    onRetry: _bootstrap,
     );
   }
 

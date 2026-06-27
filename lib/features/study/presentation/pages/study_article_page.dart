@@ -4,7 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
@@ -21,7 +21,7 @@ class SHOStudyArticlePage extends ConsumerStatefulWidget {
 }
 
 class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   String? _markdown;
   String? _error;
   var _loading = true;
@@ -71,7 +71,8 @@ class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
     final article = SHOStudyCatalog.findById(widget.articleId);
     final theme = Theme.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           article?.title ?? '学习',
@@ -79,6 +80,8 @@ class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
         ),
       ),
       body: _buildBody(theme),
+      ),
+      onRetry: _loadArticle,
     );
   }
 

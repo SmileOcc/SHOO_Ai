@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
@@ -30,9 +32,18 @@ class SHOProfileActivityListPage extends ConsumerStatefulWidget {
 }
 
 class _SHOProfileActivityListPageState
-    extends ConsumerState<SHOProfileActivityListPage> {
+    extends ConsumerState<SHOProfileActivityListPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   var _editing = false;
   final _selected = <String>{};
+
+  @override
+  String get pageName => 'profile_activity_list';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'kind': widget.kind.name,
+      };
 
   bool get _isFootprints => widget.kind == SHOProfileActivityListKind.footprints;
 
@@ -111,7 +122,8 @@ class _SHOProfileActivityListPageState
         ? ref.watch(profileFootprintActivityProductsProvider)
         : ref.watch(profileFavoriteActivityProductsProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           _editing
@@ -201,6 +213,8 @@ class _SHOProfileActivityListPageState
           );
         },
       ),
+    ),
+    onRetry: _invalidateItems,
     );
   }
 }

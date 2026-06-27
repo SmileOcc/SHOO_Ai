@@ -7,6 +7,8 @@ import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_price_formatter.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/core/widgets/hos_paged_scroll_view.dart';
@@ -27,10 +29,18 @@ class SHOOrderListPage extends ConsumerStatefulWidget {
 }
 
 class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   late final TabController _tabController;
 
   static const _tabs = SHOOrderListTab.values;
+
+  @override
+  String get pageName => 'order_list';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        if (widget.statusFilter != null) 'status_filter': widget.statusFilter,
+      };
 
   @override
   void initState() {
@@ -53,7 +63,8 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(l10n.ordersTitle),
         bottom: TabBar(
@@ -78,6 +89,7 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
             .map((tab) => _SHOOrderListTabView(tab: tab))
             .toList(),
       ),
+    ),
     );
   }
 }

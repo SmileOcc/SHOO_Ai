@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/l10n/app_localizations.dart';
@@ -13,7 +14,11 @@ class SHODebugAnalyticsPage extends ConsumerStatefulWidget {
   ConsumerState<SHODebugAnalyticsPage> createState() => _SHODebugAnalyticsPageState();
 }
 
-class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage> {
+class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_analytics';
+
   int _refreshTick = 0;
 
   void _refresh() => setState(() => _refreshTick++);
@@ -39,7 +44,8 @@ class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage> {
     final history = manager.history;
     final mockRemote = manager.mockRemoteBackend;
 
-    return DefaultTabController(
+    return buildTrackedPage(
+      DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
@@ -72,6 +78,7 @@ class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }

@@ -459,12 +459,15 @@ xcrun simctl openurl booted "https://shoo.app/product/p-1"
 | **WebViewPage 基类** | `core/pages/hos_webview_shell_page.dart` | ✅ 已落地 | `/webview` 入口已委托 Shell |
 | 路由参数 Typed 解析 | `core/pages/hos_route_args.dart` | ✅ 已落地 | 全 feature router 已接入 `SHORouteArgs` |
 | 页面级性能计时 | `core/pages/hos_page_load_reporter.dart` | ✅ 已落地 | `page_load_time`（firstFrame + contentReady） |
-| 页面 ErrorBoundary | `core/pages/hos_page_error_boundary.dart` | ✅ 已落地 | `SHOPageErrorBoundary` 接入 DataPage / WebViewShell |
+| 页面 ErrorBoundary | `core/pages/hos_page_error_boundary.dart` | ✅ 已落地 | `SHOPageErrorBoundary` 接入 DataPage / WebViewShell / TrackedPage |
 | Tab 子页 KeepAlive | `core/pages/hos_tab_keep_alive_page.dart` | ✅ 已落地 | `SHOTabKeepAlivePage` + `SHOTabKeepAliveMixin` |
+| **TrackedPage Mixin** | `core/pages/hos_app_tracked_page_mixin.dart` | ✅ 已落地 | 复杂页：`page_load_time` + ErrorBoundary 统一包装 |
 
-**已迁入 `SHODataPage` / `SHOSelectorPage` 的页面**：优惠券列表、地址列表/表单、订单详情/物流、售后列表。
+**已迁入 `SHODataPage` / `SHOSelectorPage` 的页面**：优惠券、地址列表/表单、订单详情/物流、售后列表/申请、首页/类目 Tab/消息/活动详情/类目商品/闪购关注列表。
 
-**已接入 `SHOAppPageMixin`（含 `page_load_time`）的页面**：社区首页/详情、音乐播放器、下载列表、Study 文章等。
+**已接入 `SHOAppTrackedPageMixin` 的页面**：Tab 根（购物车/我的/社区）、交易链（商详/搜索/结算/收银台/订单列表/评价）、Study 首页/文章、音乐/下载/Toolbox 全链路、闪购、登录/注册、设置/关于/缓存/足迹收藏、Splash/Onboarding、404、Activity 辅助页、Debug 全模块。
+
+**已接入 `SHOAppPageMixin`（WebView 专项）**：活动 H5（`SHOWebViewShellPage` 内置 ErrorBoundary + `page_load_time`）；通用 WebView 入口（`/webview`）委托 Shell。
 
 > **说明**：页面「三态 UI + 埋点 + WebView 壳 + 路由参数」已收敛至 `core/pages/`。完整封装方案见 **[七、页面基类封装设计方案](#七页面基类封装设计方案)**。
 
@@ -798,7 +801,7 @@ class SHOWebViewShellPage extends ConsumerStatefulWidget {
 | Tab 切换 | `navigationShell.goBranch` | — | `tab_switch` | ✅ |
 | 业务曝光 | 子类 / Reporter Widget | `product_view` 等 | 按 Registry | ✅ 组合式 |
 | 页面耗时 | `Stopwatch` enter→首帧 | — | `page_load_time` | ✅ |
-| 页面异常 | `FlutterError.onError` 过滤 | ErrorBoundary | 规划 `page_render_error` | ❌ |
+| 页面异常 | `FlutterError.onError` 过滤 | ErrorBoundary | `page_render_error` | ✅ |
 
 详细埋点接入见：`core/analytics/hos_page_analytics_scheme.md`。
 
@@ -827,16 +830,23 @@ Phase A（1～2 天）— 只加不迁 ✅ 已完成
   core/pages/hos_pages.dart              ← 统一 export
   示例页：SHOCouponListPage → SHODataPage
 
-Phase B（按 feature 渐进）— ✅ 核心页已完成
-  详情类：OrderDetail / AddressForm / Logistics → DataPage
-  列表类：Coupon / AfterSale / AddressList → DataPage / SelectorPage
-  埋点：Community / Music / Study / Download → SHOAppPageMixin
-  保持：Home / Category / Cart Tab 根页、MainShell 不迁移
+Phase B（按 feature 渐进）— ✅ 已完成
+  详情类：OrderDetail / AddressForm / Logistics / AfterSaleApply → DataPage
+  列表类：Coupon / AfterSale / AddressList / Message / CategoryProducts / FlashSaleFollows → DataPage / SelectorPage
+  Tab 根：Home / Category → DataPage；Cart / Profile / Community → TrackedPageMixin
+  交易链：ProductDetail / Search / Checkout / Payment / OrderList / Reviews → TrackedPageMixin
+  Study：Home / Article → TrackedPageMixin（移除 SHOPageAnalyticsBinder）
+  其它：FlashSale / Login / Register / Settings / About / ProfileActivityList → TrackedPageMixin 或 DataPage
+  埋点：Music / Download → TrackedPageMixin；Activity H5 → WebViewShell（内置埋点 + ErrorBoundary）
 
-Phase C（WebView 专项）— ✅ 已完成
-  SHOWebViewShellPage 替换 hos_webview_page 入口
-  活动页合并：SHOActivityWebViewBridge + SHOWebViewConfig.activity
-  SHOWebViewContainer 标记 @Deprecated，委托 GenericWebViewContainer
+Phase C（长尾页）— ✅ 已完成
+  Toolbox：百宝箱/音乐库/视频库/书架/下载预览/TXT 阅读/视频播放/通用 Web
+  Splash：闪屏 / 引导页
+  Activity 辅助：三级详情(DataPage) / 图片预览 / Redirect
+  Profile：缓存管理
+  404：NotFoundPage
+  Debug：调试面板 + 全部 Debug 子模块页
+  hos_pages.dart 统一 export SHOPageRouteAnalyticsMixin
 ```
 
 ### 7.7 页面选型决策树
@@ -844,20 +854,20 @@ Phase C（WebView 专项）— ✅ 已完成
 ```
 新页面
   │
-  ├─ 是否 Tab 根页（/、/category、/cart、/profile）？
-  │     └─ 是 → 保持 ConsumerWidget + MainShell 管理 AppBar，仅混 SHOAppPageMixin（可选）
+  ├─ 是否 Tab 根页（/、/category、/cart、/profile、/community）？
+  │     └─ 是 → DataPage（Home/Category）或 TrackedPageMixin（Cart/Profile/Community）；MainShell 管理 AppBar
   │
   ├─ 是否 H5 / 活动 WebView？
-  │     └─ 是 → SHOWebViewShellPage（`/webview`）或现有 Activity 专项页
+  │     └─ 是 → SHOWebViewShellPage（内置埋点 + ErrorBoundary）
   │
   ├─ 是否「选 X 返回结果」选择器？
   │     └─ 是 → SHOSelectorPage + `?select=1` + `pop(result)`
   │
   ├─ 主体是否单一 AsyncValue 数据源？
-  │     └─ 是 → DataPage<T> + AppShellPage
+  │     └─ 是 → SHODataPage<T> + AppShellPage
   │
-  └─ 复杂交互（TabController、动画、多 Provider）
-        └─ AppShellPage + SHOAppPageMixin，局部 whenLoadingState
+  └─ 复杂交互（TabController、动画、多 Provider、表单）
+        └─ SHOAppTrackedPageMixin + AppShellPage / 自建 Scaffold
 ```
 
 ### 7.8 与现有代码的对照示例

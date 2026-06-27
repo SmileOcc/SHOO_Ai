@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/dialogs/hos_download_task_dialog.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -27,7 +27,7 @@ class SHODownloadListPage extends ConsumerStatefulWidget {
 }
 
 class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
-    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   late final TabController _tabController;
 
   static const _tabs = SHODownloadListTab.values;
@@ -65,7 +65,8 @@ class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           l10n.downloadListTitle,
@@ -118,6 +119,7 @@ class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
             .map((tab) => _SHODownloadTabView(tab: tab))
             .toList(),
       ),
+    ),
     );
   }
 }

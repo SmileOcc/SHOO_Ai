@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// Debug：Future.microtask 执行顺序调试演示页。
 class SHODebugMicrotaskPage extends ConsumerStatefulWidget {
@@ -16,7 +17,11 @@ class SHODebugMicrotaskPage extends ConsumerStatefulWidget {
       _SHODebugMicrotaskPageState();
 }
 
-class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage> {
+class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_microtask';
+
   final List<_LogEntry> _logs = [];
   int _runCount = 0;
 
@@ -110,7 +115,8 @@ class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage> {
     final l10n = AppLocalizations.of(context);
     final theme = context.shoTheme;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugMicrotaskTitle)),
       body: Column(
         children: [
@@ -234,6 +240,7 @@ return router;''',
           ),
         ],
       ),
+    ),
     );
   }
 }

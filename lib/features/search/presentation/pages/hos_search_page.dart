@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_debouncer.dart';
@@ -26,11 +28,21 @@ class SHOSearchPage extends ConsumerStatefulWidget {
   ConsumerState<SHOSearchPage> createState() => _SHOSearchPageState();
 }
 
-class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
+class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   late final TextEditingController _controller;
   late final SHODebouncer _debouncer;
   late final ScrollController _scrollController;
   String _query = '';
+
+  @override
+  String get pageName => 'search';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty)
+          'initial_query': widget.initialQuery,
+      };
 
   @override
   void initState() {
@@ -91,7 +103,8 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
         ? null
         : ref.watch(searchPagedProvider(trimmed));
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
         backgroundColor: context.shoSurface,
@@ -164,6 +177,10 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage> {
                 );
               },
             ),
+    ),
+    onRetry: trimmed.isEmpty
+        ? null
+        : () => ref.invalidate(searchPagedProvider(trimmed)),
     );
   }
 }

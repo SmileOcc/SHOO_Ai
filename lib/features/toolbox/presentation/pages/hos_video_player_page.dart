@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/dialogs/hos_confirm_card_dialog.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
@@ -80,7 +82,8 @@ class SHOVideoPlayerPage extends ConsumerStatefulWidget {
   ConsumerState<SHOVideoPlayerPage> createState() => _SHOVideoPlayerPageState();
 }
 
-class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage> {
+class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   VideoPlayerController? _controller;
   final _danmakuController = SHOVideoDanmakuController();
   final _commentController = TextEditingController();
@@ -94,6 +97,15 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage> {
   late final SHOVideoPlaybackStorage _playbackStorage;
 
   String get _entryId => widget.entry.id;
+
+  @override
+  String get pageName => 'video_player';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'entry_id': widget.entry.id,
+        if (widget.entry.isNetwork) 'is_network': true,
+      };
 
   @override
   void initState() {
@@ -419,7 +431,8 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage> {
     final comments = ref.watch(videoCommentsProvider(_entryId));
     final controller = _controller;
 
-    return OrientationBuilder(
+    return buildTrackedPage(
+      OrientationBuilder(
       builder: (context, orientation) {
         final landscapeShell = orientation == Orientation.landscape;
 
@@ -566,6 +579,8 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage> {
           ),
         );
       },
+    ),
+    onRetry: _initPlayer,
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_profile_section_card.dart';
@@ -10,43 +12,51 @@ import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/study/data/datasources/remote/study_catalog.dart';
 import 'package:shoo/features/study/domain/entities/study_article.dart';
 
-class SHOStudyHomePage extends StatelessWidget {
+class SHOStudyHomePage extends ConsumerStatefulWidget {
   const SHOStudyHomePage({super.key});
+
+  @override
+  ConsumerState<SHOStudyHomePage> createState() => _SHOStudyHomePageState();
+}
+
+class _SHOStudyHomePageState extends ConsumerState<SHOStudyHomePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'study_home';
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return SHOPageAnalyticsBinder(
-      pageName: 'SHOStudyHomePage',
-      child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.studyTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+    return buildTrackedPage(
+      Scaffold(
+        appBar: AppBar(
+          title: Text(
+            l10n.studyTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        children: [
-          Text(
-            l10n.studyHomeSubtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.shoTheme.textSecondary,
-                ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          _StudySection(
-            title: l10n.studySectionFlutterMobile,
-            articles: SHOStudyCatalog.articles
-                .where(
-                  (article) =>
-                      article.category == SHOStudyCatalog.flutterMobileCategory,
-                )
-                .toList(),
-          ),
-        ],
-      ),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+          children: [
+            Text(
+              l10n.studyHomeSubtitle,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: context.shoTheme.textSecondary,
+                  ),
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            _StudySection(
+              title: l10n.studySectionFlutterMobile,
+              articles: SHOStudyCatalog.articles
+                  .where(
+                    (article) =>
+                        article.category == SHOStudyCatalog.flutterMobileCategory,
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }

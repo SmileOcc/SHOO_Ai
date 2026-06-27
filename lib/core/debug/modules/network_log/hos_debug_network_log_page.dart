@@ -5,6 +5,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_provider.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 class SHODebugNetworkLogPage extends ConsumerStatefulWidget {
   const SHODebugNetworkLogPage({super.key});
@@ -14,7 +15,11 @@ class SHODebugNetworkLogPage extends ConsumerStatefulWidget {
       _SHODebugNetworkLogPageState();
 }
 
-class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage> {
+class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_network_log';
+
   late final TextEditingController _pathsCtrl;
   bool _enabled = true;
   bool _logRequest = true;
@@ -64,7 +69,8 @@ class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugNetworkLogTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -134,6 +140,7 @@ class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage>
           ),
         ],
       ),
+    ),
     );
   }
 }

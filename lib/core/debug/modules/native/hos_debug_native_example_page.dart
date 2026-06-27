@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
@@ -10,18 +11,25 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_l10n.dart';
 import 'package:shoo/core/debug/modules/native/hos_debug_native_runner.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// 单个原生调试示例：执行调用并展示结果 / 事件流。
-class SHODebugNativeExamplePage extends StatefulWidget {
+class SHODebugNativeExamplePage extends ConsumerStatefulWidget {
   const SHODebugNativeExamplePage({super.key, required this.example});
 
   final SHONativeDebugExample example;
 
   @override
-  State<SHODebugNativeExamplePage> createState() => _SHODebugNativeExamplePageState();
+  ConsumerState<SHODebugNativeExamplePage> createState() =>
+      _SHODebugNativeExamplePageState();
 }
 
-class _SHODebugNativeExamplePageState extends State<SHODebugNativeExamplePage> {
+class _SHODebugNativeExamplePageState
+    extends ConsumerState<SHODebugNativeExamplePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_native_example';
+
   final _messageCtrl = TextEditingController(text: 'hello from flutter');
   final _eventLog = <String>[];
 
@@ -123,7 +131,8 @@ class _SHODebugNativeExamplePageState extends State<SHODebugNativeExamplePage> {
     final l10n = AppLocalizations.of(context);
     final example = widget.example;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.nativeExampleTitle(example.id))),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -207,6 +216,7 @@ class _SHODebugNativeExamplePageState extends State<SHODebugNativeExamplePage> {
             ),
         ],
       ),
+    ),
     );
   }
 }

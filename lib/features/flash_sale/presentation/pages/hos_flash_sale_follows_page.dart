@@ -1,62 +1,79 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
-import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
-import 'package:shoo/core/widgets/hos_error_view.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 
-class SHOFlashSaleFollowsPage extends ConsumerWidget {
+class SHOFlashSaleFollowsPage extends SHODataPage<List<SHOFlashSaleFollow>> {
   const SHOFlashSaleFollowsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
-    final followsAsync = ref.watch(flashSaleFollowControllerProvider);
+  SHODataPageState<List<SHOFlashSaleFollow>, SHOFlashSaleFollowsPage>
+      createState() => _SHOFlashSaleFollowsPageState();
+}
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.profileActivityFlashSale,
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
+class _SHOFlashSaleFollowsPageState
+    extends SHODataPageState<List<SHOFlashSaleFollow>, SHOFlashSaleFollowsPage> {
+  @override
+  ProviderListenable<AsyncValue<List<SHOFlashSaleFollow>>> get dataProvider =>
+      flashSaleFollowControllerProvider;
+
+  @override
+  void invalidateData(WidgetRef ref) =>
+      ref.read(flashSaleFollowControllerProvider.notifier).syncFromServer();
+
+  @override
+  String get pageName => 'flash_sale_follows';
+
+  @override
+  bool isEmptyData(List<SHOFlashSaleFollow> data) => data.isEmpty;
+
+  @override
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    return AppBar(
+      title: Text(
+        l10n.profileActivityFlashSale,
+        style: const TextStyle(fontWeight: FontWeight.w800),
       ),
-      body: followsAsync.when(// 使用 .when() 模式匹配处理三种状态
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => SHOAppErrorView(
-          message: error.toString(),
-          onRetry: () =>
-              ref.read(flashSaleFollowControllerProvider.notifier).syncFromServer(),
-        ),
-        data: (follows) {
-          if (follows.isEmpty) {
-            return SHOEmptyState(
-              title: l10n.flashSaleFollowsEmpty,
-              actionLabel: l10n.flashSaleTitle,
-              onAction: () => context.push(SHOAppRoutes.flashSale),
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () =>
-                ref.read(flashSaleFollowControllerProvider.notifier).syncFromServer(),
-            child: ListView.separated(
-              padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-              itemCount: follows.length,
-              separatorBuilder: (_, __) =>
-                  const SizedBox(height: SHOAppSpacing.md),
-              itemBuilder: (context, index) {
-                final follow = follows[index];
-                return _FollowTile(follow: follow);
-              },
-            ),
-          );
+    );
+  }
+
+  @override
+  Widget buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    List<SHOFlashSaleFollow> follows,
+  ) {
+    final l10n = AppLocalizations.of(context);
+
+    if (follows.isEmpty) {
+      return SHOEmptyState(
+        title: l10n.flashSaleFollowsEmpty,
+        actionLabel: l10n.flashSaleTitle,
+        onAction: () => context.push(SHOAppRoutes.flashSale),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () =>
+          ref.read(flashSaleFollowControllerProvider.notifier).syncFromServer(),
+      child: ListView.separated(
+        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+        itemCount: follows.length,
+        separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
+        itemBuilder: (context, index) {
+          final follow = follows[index];
+          return _FollowTile(follow: follow);
         },
       ),
     );

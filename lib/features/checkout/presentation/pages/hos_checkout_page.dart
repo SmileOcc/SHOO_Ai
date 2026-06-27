@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/core/pricing/hos_price_calculator.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -30,10 +32,14 @@ class SHOCheckoutPage extends ConsumerStatefulWidget {
   ConsumerState<SHOCheckoutPage> createState() => _SHOCheckoutPageState();
 }
 
-class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
+class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   bool _submitting = false;
   bool _checkoutTracked = false;
   String? _pickedCouponId;
+
+  @override
+  String get pageName => 'checkout';
 
   @override
   void initState() {
@@ -173,13 +179,16 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
     );
 
     if (items.isEmpty) {
-      return Scaffold(
+      return buildTrackedPage(
+        Scaffold(
         appBar: AppBar(title: Text(l10n.checkoutTitle)),
         body: const SHOAppLoadingState(state: SHOLoadingState.empty),
+        ),
       );
     }
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.checkoutTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -323,6 +332,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage> {
           ),
         ),
       ),
+    ),
     );
   }
 

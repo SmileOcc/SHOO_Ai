@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/toolbox/data/datasources/local/hos_download_paths.dart';
@@ -10,7 +12,7 @@ import 'package:shoo/features/toolbox/presentation/state/hos_download_controller
 import 'package:shoo/features/toolbox/presentation/pages/hos_video_player_page.dart';
 import 'package:shoo/features/toolbox/presentation/video/state/hos_video_library_controller.dart';
 
-class SHOVideoPlayerRoutePage extends ConsumerWidget {
+class SHOVideoPlayerRoutePage extends ConsumerStatefulWidget {
   const SHOVideoPlayerRoutePage({
     super.key,
     this.entryId = '',
@@ -20,13 +22,29 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
   final String entryId;
   final String taskId;
 
+  @override
+  ConsumerState<SHOVideoPlayerRoutePage> createState() =>
+      _SHOVideoPlayerRoutePageState();
+}
+
+class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'video_player_route';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        if (widget.entryId.isNotEmpty) 'entry_id': widget.entryId,
+        if (widget.taskId.isNotEmpty) 'task_id': widget.taskId,
+      };
+
   SHOVideoLibraryEntry? _findEntry(List<SHOVideoLibraryEntry> entries) {
-    if (entryId.isNotEmpty) {
+    if (widget.entryId.isNotEmpty) {
       for (final item in entries) {
-        if (item.id == entryId) return item;
+        if (item.id == widget.entryId) return item;
       }
 
-      final parsedTaskId = SHOVideoLibraryEntry.taskIdFromEntryId(entryId);
+      final parsedTaskId = SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId);
       if (parsedTaskId != null) {
         for (final item in entries) {
           if (item.taskId == parsedTaskId) return item;
@@ -34,10 +52,10 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
       }
     }
 
-    final lookupTaskId = taskId.isNotEmpty
-        ? taskId
-        : (entryId.isNotEmpty
-            ? SHOVideoLibraryEntry.taskIdFromEntryId(entryId)
+    final lookupTaskId = widget.taskId.isNotEmpty
+        ? widget.taskId
+        : (widget.entryId.isNotEmpty
+            ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
             : null);
     if (lookupTaskId != null) {
       for (final item in entries) {
@@ -57,17 +75,17 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final entries = ref.watch(videoLibraryEntriesProvider);
     final tasks = ref.watch(downloadTasksProvider);
 
     var entry = _findEntry(entries);
 
-    final lookupTaskId = taskId.isNotEmpty
-        ? taskId
-        : (entryId.isNotEmpty
-            ? SHOVideoLibraryEntry.taskIdFromEntryId(entryId)
+    final lookupTaskId = widget.taskId.isNotEmpty
+        ? widget.taskId
+        : (widget.entryId.isNotEmpty
+            ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
             : entry?.taskId);
 
     final task = _findTask(tasks, lookupTaskId);
@@ -80,7 +98,8 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
     }
 
     if (entry == null) {
-      return Scaffold(
+      return buildTrackedPage(
+        Scaffold(
         appBar: AppBar(),
         body: Center(
           child: Padding(
@@ -91,6 +110,11 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
             ),
           ),
         ),
+        ),
+        onRetry: () {
+          ref.invalidate(videoLibraryEntriesProvider);
+          ref.invalidate(downloadTasksProvider);
+        },
       );
     }
 
@@ -106,7 +130,8 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
     }
 
     if (resolvedTask == null) {
-      return Scaffold(
+      return buildTrackedPage(
+        Scaffold(
         appBar: AppBar(),
         body: Center(
           child: Padding(
@@ -117,6 +142,8 @@ class SHOVideoPlayerRoutePage extends ConsumerWidget {
             ),
           ),
         ),
+        ),
+        onRetry: () => ref.invalidate(downloadTasksProvider),
       );
     }
 

@@ -7,16 +7,27 @@ import 'package:shoo/core/brand/hos_brand_config.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_app_loading.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// Debug：预览并选择 SHOO App Icon 风格。
-class SHODebugBrandPage extends ConsumerWidget {
+class SHODebugBrandPage extends ConsumerStatefulWidget {
   const SHODebugBrandPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHODebugBrandPage> createState() => _SHODebugBrandPageState();
+}
+
+class _SHODebugBrandPageState extends ConsumerState<SHODebugBrandPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_brand';
+
+  @override
+  Widget build(BuildContext context) {
     final selected = ref.watch(appIconStyleProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: const Text('SHOO Brand / Icon')),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -91,6 +102,7 @@ class SHODebugBrandPage extends ConsumerWidget {
           }),
         ],
       ),
+    ),
     );
   }
 }

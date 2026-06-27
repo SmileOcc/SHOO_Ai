@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/share/hos_share_panel.dart';
 import 'package:shoo/core/share/hos_share_service.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
@@ -37,7 +39,7 @@ import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.d
 import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
 
-class SHOProductDetailPage extends ConsumerWidget {
+class SHOProductDetailPage extends ConsumerStatefulWidget {
   const SHOProductDetailPage({
     super.key,
     required this.productId,
@@ -48,14 +50,31 @@ class SHOProductDetailPage extends ConsumerWidget {
   final String? sessionId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SHOProductDetailPage> createState() =>
+      _SHOProductDetailPageState();
+}
+
+class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'product_detail';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'product_id': widget.productId,
+        if (widget.sessionId != null && widget.sessionId!.isNotEmpty)
+          'session_id': widget.sessionId,
+      };
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final detailAsync = ref.watch(productDetailProvider(productId));
-    final reviewsAsync = ref.watch(productReviewsProvider(productId));
-    final activityAsync = sessionId != null && sessionId!.isNotEmpty
+    final detailAsync = ref.watch(productDetailProvider(widget.productId));
+    final reviewsAsync = ref.watch(productReviewsProvider(widget.productId));
+    final activityAsync = widget.sessionId != null && widget.sessionId!.isNotEmpty
         ? ref.watch(
             flashSaleProductActivityProvider(
-              (productId: productId, sessionId: sessionId!),
+              (productId: widget.productId, sessionId: widget.sessionId!),
             ),
           )
         : null;
@@ -70,15 +89,16 @@ class SHOProductDetailPage extends ConsumerWidget {
       }
     }
 
-    return Stack(
+    return buildTrackedPage(
+      Stack(
       children: [
-        SHOProductViewReporter(productId: productId),
+        SHOProductViewReporter(productId: widget.productId),
         detailAsync.whenWidget(
       loading: _SHOProductDetailSkeleton(heroHeight: heroHeight),
       error: (error, _) => _SHOProductDetailError(
         message: error.toString(),
         onBack: handleBack,
-        onRetry: () => ref.invalidate(productDetailProvider(productId)),
+        onRetry: () => ref.invalidate(productDetailProvider(widget.productId)),
       ),
       data: (detail) {
         final activity = activityAsync?.maybeWhen(
@@ -245,7 +265,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                               ),
                               TextButton(
                                 onPressed: () => context.push(
-                                  SHOAppRoutes.productReviews(productId),
+                                  SHOAppRoutes.productReviews(widget.productId),
                                 ),
                                 child: Text(l10n.reviewsViewAll),
                               ),
@@ -302,7 +322,7 @@ class SHOProductDetailPage extends ConsumerWidget {
                 if (!SHOAuthGuard.requireAuth(context, ref)) return;
                 final activityLine = activity != null
                     ? buildCheckoutActivityLineFromActivity(
-                        productId: productId,
+                        productId: widget.productId,
                         activity: activity,
                       )
                     : null;
@@ -322,6 +342,8 @@ class SHOProductDetailPage extends ConsumerWidget {
       },
     ),
       ],
+    ),
+    onRetry: () => ref.invalidate(productDetailProvider(widget.productId)),
     );
   }
 }

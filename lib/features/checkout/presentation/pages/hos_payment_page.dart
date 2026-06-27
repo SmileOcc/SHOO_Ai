@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
@@ -36,11 +38,18 @@ class SHOPaymentPage extends ConsumerStatefulWidget {
   ConsumerState<SHOPaymentPage> createState() => _SHOPaymentPageState();
 }
 
-class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
+class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   bool _paid = false;
   bool _paymentTracked = false;
   SHOOrderDetail? _cashierOrder;
   SHOOrderDetail? _successOrder;
+
+  @override
+  String get pageName => 'payment';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {'order_id': widget.orderId};
 
   @override
   void initState() {
@@ -131,12 +140,16 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
     if (_paid) {
       final order = _successOrder ?? orderAsync.valueOrNull ?? _cashierOrder;
       if (order == null) {
-        return Scaffold(
+        return buildTrackedPage(
+          Scaffold(
           appBar: AppBar(title: Text(l10n.paymentTitle)),
           body: const SHOAppLoadingState(state: SHOLoadingState.loading),
+          ),
+          onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
         );
       }
-      return Scaffold(
+      return buildTrackedPage(
+        Scaffold(
         appBar: AppBar(
           title: Text(l10n.paymentTitle),
           automaticallyImplyLeading: false,
@@ -145,6 +158,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
           order: order,
           onViewOrder: _viewOrder,
           onContinueShopping: _continueShopping,
+        ),
         ),
       );
     }
@@ -156,16 +170,19 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
             : null);
 
     if (cashierOrder != null && _shouldShowCashier(cashierOrder)) {
-      return Scaffold(
+      return buildTrackedPage(
+        Scaffold(
         appBar: AppBar(title: Text(l10n.paymentTitle)),
         body: _PaymentCashierView(
           order: cashierOrder,
           onSelectMethod: (method) => _openPaymentDialog(cashierOrder, method),
         ),
+        ),
       );
     }
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.paymentTitle)),
       body: orderAsync.when(
         loading: () =>
@@ -185,6 +202,8 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage> {
           );
         },
       ),
+    ),
+    onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
     );
   }
 }

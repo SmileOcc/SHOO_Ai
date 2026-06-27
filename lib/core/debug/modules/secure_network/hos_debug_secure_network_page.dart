@@ -14,6 +14,7 @@ import 'package:shoo/core/debug/modules/secure_network/hos_debug_network_lab_pro
 import 'package:shoo/core/network/hos_dio_client.dart';
 import 'package:shoo/core/network/security/hos_encryption_policy.dart';
 import 'package:shoo/core/network/security/hos_security_level.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 安全网络 / 加密调试页。
@@ -26,7 +27,11 @@ class SHODebugSecureNetworkPage extends ConsumerStatefulWidget {
 }
 
 class _SHODebugSecureNetworkPageState
-    extends ConsumerState<SHODebugSecureNetworkPage> {
+    extends ConsumerState<SHODebugSecureNetworkPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_secure_network';
+
   final _getPathCtrl = TextEditingController(text: '/auth/profile');
   final _getQueryCtrl = TextEditingController(text: '');
   final _getHeadersCtrl = TextEditingController(text: '');
@@ -365,7 +370,8 @@ class _SHODebugSecureNetworkPageState
     final config = ref.watch(appConfigProvider);
     final labLogs = ref.watch(debugNetworkLabLogProvider);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: const Text('安全网络 / 加密调试')),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -631,6 +637,7 @@ class _SHODebugSecureNetworkPageState
           _labLogPanel(labLogs),
         ],
       ),
+    ),
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart'
@@ -25,8 +27,11 @@ class SHOProfilePage extends ConsumerStatefulWidget {
 }
 
 class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   late final TabController _tabController;
+
+  @override
+  String get pageName => 'profile';
 
   @override
   void initState() {
@@ -75,7 +80,8 @@ class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
         ? (session.user?.email ?? session.user?.phone ?? '')
         : l10n.profileSignInHint;
 
-    return NestedScrollView(
+    return buildTrackedPage(
+      NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverPersistentHeader(
           pinned: true,
@@ -141,6 +147,7 @@ class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
             )
             .toList(),
       ),
+    ),
     );
   }
 }

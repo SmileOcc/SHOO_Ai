@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/features/toolbox/data/datasources/local/hos_download_paths.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_download_task.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_txt_novel_parser.dart';
 
-class SHODownloadPreviewPage extends StatefulWidget {
+class SHODownloadPreviewPage extends ConsumerStatefulWidget {
   const SHODownloadPreviewPage({
     super.key,
     required this.fileName,
@@ -45,16 +48,27 @@ class SHODownloadPreviewPage extends StatefulWidget {
   }
 
   @override
-  State<SHODownloadPreviewPage> createState() => _SHODownloadPreviewPageState();
+  ConsumerState<SHODownloadPreviewPage> createState() =>
+      _SHODownloadPreviewPageState();
 }
 
-class _SHODownloadPreviewPageState extends State<SHODownloadPreviewPage> {
+class _SHODownloadPreviewPageState extends ConsumerState<SHODownloadPreviewPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   VideoPlayerController? _videoController;
   PdfControllerPinch? _pdfController;
   var _videoReady = false;
   var _pdfReady = false;
   String? _textContent;
   String? _error;
+
+  @override
+  String get pageName => 'download_preview';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'file_name': widget.fileName,
+        'kind': widget.kind.name,
+      };
 
   @override
   void initState() {
@@ -110,7 +124,8 @@ class _SHODownloadPreviewPageState extends State<SHODownloadPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           widget.fileName,
@@ -120,6 +135,8 @@ class _SHODownloadPreviewPageState extends State<SHODownloadPreviewPage> {
         ),
       ),
       body: _buildBody(),
+      ),
+      onRetry: _initPreview,
     );
   }
 

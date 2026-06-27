@@ -4,32 +4,49 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
 import 'package:shoo/core/widgets/hos_image_picker_field.dart';
 import 'package:shoo/core/widgets/hos_text_field.dart';
 import 'package:shoo/l10n/app_localizations.dart';
+import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/state/hos_order_controller.dart';
 import 'package:shoo/features/after_sale/domain/entities/hos_after_sale.dart';
 import 'package:shoo/features/after_sale/data/repositories/hos_after_sale_repository_impl.dart';
 import 'package:shoo/features/after_sale/presentation/state/hos_after_sale_controller.dart';
 import 'package:shoo/features/after_sale/presentation/widgets/hos_after_sale_status_label.dart';
 
-class SHOAfterSaleApplyPage extends ConsumerStatefulWidget {
+class SHOAfterSaleApplyPage extends SHODataPage<SHOOrderDetail> {
   const SHOAfterSaleApplyPage({super.key, required this.orderId});
 
   final String orderId;
 
   @override
-  ConsumerState<SHOAfterSaleApplyPage> createState() =>
+  SHODataPageState<SHOOrderDetail, SHOAfterSaleApplyPage> createState() =>
       _SHOAfterSaleApplyPageState();
 }
 
-class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
+class _SHOAfterSaleApplyPageState
+    extends SHODataPageState<SHOOrderDetail, SHOAfterSaleApplyPage> {
   SHOAfterSaleType _type = SHOAfterSaleType.refund;
   final _reasonController = TextEditingController();
   final List<XFile> _evidenceImages = [];
-  bool _submitting = false;
+  var _submitting = false;
+
+  @override
+  ProviderListenable<AsyncValue<SHOOrderDetail>> get dataProvider =>
+      orderDetailProvider(widget.orderId);
+
+  @override
+  void invalidateData(WidgetRef ref) =>
+      ref.invalidate(orderDetailProvider(widget.orderId));
+
+  @override
+  String get pageName => 'after_sale_apply';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {'order_id': widget.orderId};
 
   @override
   void dispose() {
@@ -76,63 +93,21 @@ class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final orderAsync = ref.watch(orderDetailProvider(widget.orderId));
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
+    return AppBar(title: Text(AppLocalizations.of(context).afterSaleApplyTitle));
+  }
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.afterSaleApplyTitle)),
-      body: orderAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(e.toString())),
-        data: (order) => ListView(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          children: [
-            Text(
-              order.orderNo,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-            ),
-            const SizedBox(height: SHOAppSpacing.xl),
-            Text(
-              l10n.afterSaleTypeLabel,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-            ),
-            const SizedBox(height: SHOAppSpacing.md),
-            ...SHOAfterSaleType.values.map(
-              (type) => RadioListTile<SHOAfterSaleType>(
-                title: Text(shoAfterSaleTypeLabel(context, type)),
-                value: type,
-                groupValue: _type,
-                onChanged: (v) => setState(() => _type = v!),
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              ),
-            ),
-            const SizedBox(height: SHOAppSpacing.xl),
-            SHOAppTextField(
-              controller: _reasonController,
-              label: l10n.afterSaleReasonLabel,
-              hint: l10n.afterSaleReasonHint,
-              maxLines: 4,
-            ),
-            const SizedBox(height: SHOAppSpacing.xl),
-            SHOImagePickerField(
-              label: l10n.afterSaleEvidenceLabel,
-              images: _evidenceImages,
-              maxCount: 4,
-              onChanged: (next) => setState(() {
-                _evidenceImages
-                  ..clear()
-                  ..addAll(next);
-              }),
-            ),
-          ],
-        ),
-      ),
+  @override
+  SHOAppShellPage buildShell(
+    BuildContext context,
+    WidgetRef ref, {
+    required PreferredSizeWidget? appBar,
+    required Widget body,
+  }) {
+    final l10n = AppLocalizations.of(context);
+    return SHOAppShellPage(
+      appBar: appBar,
+      body: body,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -144,6 +119,63 @@ class _SHOAfterSaleApplyPageState extends ConsumerState<SHOAfterSaleApplyPage> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    SHOOrderDetail order,
+  ) {
+    final l10n = AppLocalizations.of(context);
+
+    return ListView(
+      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+      children: [
+        Text(
+          order.orderNo,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        const SizedBox(height: SHOAppSpacing.xl),
+        Text(
+          l10n.afterSaleTypeLabel,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        const SizedBox(height: SHOAppSpacing.md),
+        ...SHOAfterSaleType.values.map(
+          (type) => RadioListTile<SHOAfterSaleType>(
+            title: Text(shoAfterSaleTypeLabel(context, type)),
+            value: type,
+            groupValue: _type,
+            onChanged: (v) => setState(() => _type = v!),
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+        ),
+        const SizedBox(height: SHOAppSpacing.xl),
+        SHOAppTextField(
+          controller: _reasonController,
+          label: l10n.afterSaleReasonLabel,
+          hint: l10n.afterSaleReasonHint,
+          maxLines: 4,
+        ),
+        const SizedBox(height: SHOAppSpacing.xl),
+        SHOImagePickerField(
+          label: l10n.afterSaleEvidenceLabel,
+          images: _evidenceImages,
+          maxCount: 4,
+          onChanged: (next) => setState(() {
+            _evidenceImages
+              ..clear()
+              ..addAll(next);
+          }),
+        ),
+      ],
     );
   }
 }

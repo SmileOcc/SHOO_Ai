@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/dialogs/hos_confirm_card_dialog.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -15,8 +17,18 @@ import 'package:shoo/features/toolbox/presentation/state/hos_bookshelf_controlle
 import 'package:shoo/features/toolbox/presentation/state/hos_download_controller.dart';
 import 'package:shoo/features/toolbox/presentation/widgets/hos_download_preview_helper.dart';
 
-class SHOBookshelfListPage extends ConsumerWidget {
+class SHOBookshelfListPage extends ConsumerStatefulWidget {
   const SHOBookshelfListPage({super.key});
+
+  @override
+  ConsumerState<SHOBookshelfListPage> createState() =>
+      _SHOBookshelfListPageState();
+}
+
+class _SHOBookshelfListPageState extends ConsumerState<SHOBookshelfListPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'bookshelf';
 
   bool _hasMeaningfulProgress(SHOTxtReaderProgress? progress) {
     if (progress == null) return false;
@@ -33,7 +45,6 @@ class SHOBookshelfListPage extends ConsumerWidget {
 
   Future<void> _confirmRemove(
     BuildContext context,
-    WidgetRef ref,
     String taskId,
   ) async {
     final l10n = AppLocalizations.of(context);
@@ -49,13 +60,14 @@ class SHOBookshelfListPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final items = ref.watch(bookshelfListItemsProvider);
     final progressStorage = ref.watch(txtReaderProgressStorageProvider);
     final orphanCount = items.where((item) => item.task == null).length;
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           l10n.bookshelfTitle,
@@ -180,7 +192,7 @@ class SHOBookshelfListPage extends ConsumerWidget {
                         color: context.shoTheme.textSecondary,
                         tooltip: l10n.bookshelfRemoveAction,
                         onPressed: () =>
-                            _confirmRemove(context, ref, item.entry.taskId),
+                            _confirmRemove(context, item.entry.taskId),
                       ),
                       onTap: task == null
                           ? null
@@ -190,6 +202,7 @@ class SHOBookshelfListPage extends ConsumerWidget {
                 );
               },
             ),
+    ),
     );
   }
 }

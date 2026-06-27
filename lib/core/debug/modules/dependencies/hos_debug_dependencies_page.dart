@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// 调试 InheritedWidget 依赖变化的 Widget
 /// 监听所有依赖的 InheritedWidget 变化并输出日志
-class DebugAllDependenciesWidget extends StatefulWidget {
+class DebugAllDependenciesWidget extends ConsumerStatefulWidget {
   final Widget child;
   const DebugAllDependenciesWidget({required this.child, super.key});
 
   @override
-  State<DebugAllDependenciesWidget> createState() =>
+  ConsumerState<DebugAllDependenciesWidget> createState() =>
       _DebugAllDependenciesWidgetState();
 }
 
 class _DebugAllDependenciesWidgetState
-    extends State<DebugAllDependenciesWidget> {
+    extends ConsumerState<DebugAllDependenciesWidget>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_dependencies';
+
   int _changeCount = 0;
   final List<String> _logs = [];
 
@@ -188,7 +195,8 @@ class _DebugAllDependenciesWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: const Text('InheritedWidget 依赖监听'),
         actions: [
@@ -257,6 +265,7 @@ class _DebugAllDependenciesWidgetState
           ),
         ],
       ),
+    ),
     );
   }
 }

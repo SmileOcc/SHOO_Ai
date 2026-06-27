@@ -7,6 +7,7 @@ import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/debug/core/hos_debug_flow_status_banner.dart';
 import 'package:shoo/core/debug/modules/update/hos_debug_update_config_provider.dart';
 import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 class SHODebugUpdateConfigPage extends ConsumerStatefulWidget {
   const SHODebugUpdateConfigPage({super.key});
@@ -15,7 +16,11 @@ class SHODebugUpdateConfigPage extends ConsumerStatefulWidget {
   ConsumerState<SHODebugUpdateConfigPage> createState() => _SHODebugUpdateConfigPageState();
 }
 
-class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigPage> {
+class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_update_config';
+
   late final TextEditingController _versionCtrl;
   late final TextEditingController _notesCtrl;
   late final TextEditingController _urlCtrl;
@@ -92,7 +97,8 @@ class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigP
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugUpdateTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -142,6 +148,7 @@ class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigP
           OutlinedButton(onPressed: _preview, child: Text(l10n.debugPreviewPopup)),
         ],
       ),
+    ),
     );
   }
 }

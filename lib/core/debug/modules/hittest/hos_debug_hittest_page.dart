@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:shoo/core/pages/hos_pages.dart';
 
 /// HitTestBehavior 调试页：对比 deferToChild / opaque / translucent 的命中与点击传递。
-class SHODebugHitTestPage extends StatefulWidget {
+class SHODebugHitTestPage extends ConsumerStatefulWidget {
   const SHODebugHitTestPage({super.key});
 
   @override
-  State<SHODebugHitTestPage> createState() => _SHODebugHitTestPageState();
+  ConsumerState<SHODebugHitTestPage> createState() =>
+      _SHODebugHitTestPageState();
 }
 
 enum _LogKind { detail, header, summary }
@@ -41,7 +45,11 @@ class _GestureSession {
   final List<_HitEvent> events = [];
 }
 
-class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
+class _SHODebugHitTestPageState extends ConsumerState<SHODebugHitTestPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_hittest';
+
   final _entries = <_LogEntry>[];
   final _scrollController = ScrollController();
   final _sessions = <String, _GestureSession>{};
@@ -220,7 +228,8 @@ class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: const Text('HitTestBehavior 调试'),
         actions: [
@@ -295,6 +304,7 @@ class _SHODebugHitTestPageState extends State<SHODebugHitTestPage> {
           SizedBox(height: 280, child: _buildLogArea()),
         ],
       ),
+    ),
     );
   }
 

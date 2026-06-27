@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_loading_state.dart';
@@ -19,8 +21,15 @@ class SHOReviewsPage extends ConsumerStatefulWidget {
   ConsumerState<SHOReviewsPage> createState() => _SHOReviewsPageState();
 }
 
-class _SHOReviewsPageState extends ConsumerState<SHOReviewsPage> {
+class _SHOReviewsPageState extends ConsumerState<SHOReviewsPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _scrollController = ScrollController();
+
+  @override
+  String get pageName => 'reviews';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {'product_id': widget.productId};
 
   @override
   void dispose() {
@@ -33,7 +42,8 @@ class _SHOReviewsPageState extends ConsumerState<SHOReviewsPage> {
     final l10n = AppLocalizations.of(context);
     final reviewsAsync = ref.watch(reviewsPagedProvider(widget.productId));
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.reviewsTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => SHOReviewSubmitSheet.show(
@@ -113,6 +123,11 @@ class _SHOReviewsPageState extends ConsumerState<SHOReviewsPage> {
           );
         },
       ),
+    ),
+    onRetry: () =>
+        ref.read(reviewsPagedProvider(widget.productId).notifier).refresh(
+              widget.productId,
+            ),
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_provider.dart';
 import 'package:shoo/core/debug/core/hos_debug_flow_status_banner.dart';
 import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 
 class SHODebugActivityConfigPage extends ConsumerStatefulWidget {
   const SHODebugActivityConfigPage({super.key});
@@ -18,7 +19,11 @@ class SHODebugActivityConfigPage extends ConsumerStatefulWidget {
   ConsumerState<SHODebugActivityConfigPage> createState() => _SHODebugActivityConfigPageState();
 }
 
-class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityConfigPage> {
+class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityConfigPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_activity_config';
+
   late final TextEditingController _idCtrl;
   late final TextEditingController _delayCtrl;
   late final TextEditingController _titleCtrl;
@@ -156,7 +161,8 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: Text(l10n.debugActivityTitle)),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -286,6 +292,7 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
           OutlinedButton(onPressed: _preview, child: Text(l10n.debugPreviewPopup)),
         ],
       ),
+    ),
     );
   }
 }

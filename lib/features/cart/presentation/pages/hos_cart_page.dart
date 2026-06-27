@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
@@ -27,8 +29,12 @@ class SHOCartPage extends ConsumerStatefulWidget {
   ConsumerState<SHOCartPage> createState() => _SHOCartPageState();
 }
 
-class _SHOCartPageState extends ConsumerState<SHOCartPage> {
+class _SHOCartPageState extends ConsumerState<SHOCartPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   bool _reconciling = false;
+
+  @override
+  String get pageName => 'cart';
 
   @override
   void initState() {
@@ -82,7 +88,8 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
     final hasUnavailable = cart.items.any((item) => item.unavailable);
 
     if (!session.isAuthenticated) {
-      return Column(
+      return buildTrackedPage(
+        Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SHOCartMarqueeBanner(),
@@ -100,11 +107,13 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
             ),
           ),
         ],
+        ),
       );
     }
 
     if (cart.items.isEmpty) {
-      return Column(
+      return buildTrackedPage(
+        Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SHOCartMarqueeBanner(),
@@ -124,10 +133,12 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
             ),
           ),
         ],
+        ),
       );
     }
 
-    return Column(
+    return buildTrackedPage(
+      Column(
       children: [
         const SHOCartMarqueeBanner(),
         if (hasUnavailable)
@@ -204,6 +215,7 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage> {
               : null,
         ),
       ],
+      ),
     );
   }
 }

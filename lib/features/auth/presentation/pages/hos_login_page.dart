@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/utils/hos_validators.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
@@ -20,12 +22,16 @@ class SHOLoginPage extends ConsumerStatefulWidget {
   ConsumerState<SHOLoginPage> createState() => _SHOLoginPageState();
 }
 
-class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
+class _SHOLoginPageState extends ConsumerState<SHOLoginPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController(text: '13800138000');
   final _passwordController = TextEditingController(text: '123456');
   bool _isLoading = false;
   String? _error;
+
+  @override
+  String get pageName => 'login';
 
   @override
   void initState() {
@@ -105,7 +111,8 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(l10n.loginTitle),
         leading: IconButton(
@@ -163,6 +170,7 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

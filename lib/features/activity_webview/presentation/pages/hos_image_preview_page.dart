@@ -6,6 +6,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/media/hos_gallery_saver_service.dart';
 import 'package:shoo/features/activity_webview/data/datasources/remote/hos_activity_remote_ds.dart';
@@ -20,9 +22,13 @@ class SHOImagePreviewPage extends ConsumerStatefulWidget {
   ConsumerState<SHOImagePreviewPage> createState() => _SHOImagePreviewPageState();
 }
 
-class _SHOImagePreviewPageState extends ConsumerState<SHOImagePreviewPage> {
+class _SHOImagePreviewPageState extends ConsumerState<SHOImagePreviewPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   late final PageController _pageController;
   bool _immersive = false;
+
+  @override
+  String get pageName => 'image_preview';
 
   @override
   void initState() {
@@ -44,10 +50,13 @@ class _SHOImagePreviewPageState extends ConsumerState<SHOImagePreviewPage> {
     final state = ref.watch(imagePreviewProvider);
     final images = state.images;
     if (images.isEmpty) {
-      return const Scaffold(body: Center(child: Text('暂无图片')));
+      return buildTrackedPage(
+        const Scaffold(body: Center(child: Text('暂无图片'))),
+      );
     }
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       backgroundColor: Colors.black,
       appBar: _immersive
           ? null
@@ -136,6 +145,7 @@ class _SHOImagePreviewPageState extends ConsumerState<SHOImagePreviewPage> {
             ),
         ],
       ),
+    ),
     );
   }
 }

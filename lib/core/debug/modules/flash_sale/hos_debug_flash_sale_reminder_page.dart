@@ -6,6 +6,7 @@ import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 
 /// Debug：抢购活动通知弹窗与延时通知调试。
@@ -18,7 +19,11 @@ class SHODebugFlashSaleReminderPage extends ConsumerStatefulWidget {
 }
 
 class _SHODebugFlashSaleReminderPageState
-    extends ConsumerState<SHODebugFlashSaleReminderPage> {
+    extends ConsumerState<SHODebugFlashSaleReminderPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  @override
+  String get pageName => 'debug_flash_sale_reminder';
+
   late final TextEditingController _activityIdCtrl;
 
   @override
@@ -67,7 +72,8 @@ class _SHODebugFlashSaleReminderPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(title: const Text('抢购活动通知调试')),
       body: ListView(
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
@@ -133,6 +139,7 @@ class _SHODebugFlashSaleReminderPageState
           ),
         ],
       ),
+    ),
     );
   }
 }

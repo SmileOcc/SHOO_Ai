@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
@@ -19,9 +21,13 @@ class SHOOnboardingPage extends ConsumerStatefulWidget {
   ConsumerState<SHOOnboardingPage> createState() => _SHOOnboardingPageState();
 }
 
-class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage> {
+class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _controller = PageController();
   int _index = 0;
+
+  @override
+  String get pageName => 'onboarding';
 
   @override
   void dispose() {
@@ -44,7 +50,8 @@ class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage> {
       (l10n.onboardingTitle3, l10n.onboardingDesc3, Icons.savings_outlined),
     ];
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       body: SafeArea(
         child: Column(
           children: [
@@ -123,6 +130,7 @@ class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
