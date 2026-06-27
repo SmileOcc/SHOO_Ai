@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 
@@ -44,12 +44,11 @@ class SHOPagedScrollView extends StatelessWidget {
         }
         return false;
       },
-      child: RefreshIndicator(
-        color: SHOAppColors.accent,
-        onRefresh: onRefresh ?? () async {},
+      child: SHOAppPullRefresh(
+        onRefresh: onRefresh,
         child: ListView.separated(
           controller: controller,
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: SHOAppPullRefresh.scrollPhysics,
           padding: padding ?? const EdgeInsets.all(SHOAppSpacing.pagePadding),
           itemCount: itemCount + 1,
           separatorBuilder: separatorBuilder ?? (_, __) => const SizedBox.shrink(),
@@ -127,12 +126,11 @@ class SHOPagedGridView extends StatelessWidget {
         }
         return false;
       },
-      child: RefreshIndicator(
-        color: SHOAppColors.accent,
-        onRefresh: onRefresh ?? () async {},
+      child: SHOAppPullRefresh(
+        onRefresh: onRefresh,
         child: CustomScrollView(
           controller: controller,
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: SHOAppPullRefresh.scrollPhysics,
           slivers: [
             SliverPadding(
               padding: padding ?? const EdgeInsets.all(SHOAppSpacing.pagePadding),

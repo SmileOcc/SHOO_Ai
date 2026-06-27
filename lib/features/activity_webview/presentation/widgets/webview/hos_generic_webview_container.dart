@@ -15,6 +15,7 @@ import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
 import 'package:shoo/core/platform/webview/hos_webview_route_mapper.dart';
 import 'package:shoo/core/platform/webview/hos_webview_service.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_error_widget.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_loading_overlay.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_progress_bar.dart';
@@ -362,7 +363,7 @@ class _SHOGenericWebViewContainerState
     Widget webView = WebViewWidget(controller: controller);
 
     if (widget.config.pullToRefresh && !showError) {
-      webView = RefreshIndicator(
+      webView = SHOAppPullRefresh(
         onRefresh: reload,
         displacement: 40,
         notificationPredicate: _scrollY <= 0 ? (_) => true : (_) => false,

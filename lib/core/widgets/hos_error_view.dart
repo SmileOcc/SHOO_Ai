@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:shoo/l10n/app_localizations.dart';
-import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 
@@ -24,26 +23,6 @@ class SHOAppErrorView extends StatelessWidget {
       subtitle: message,
       actionLabel: onRetry != null ? l10n.retry : null,
       onAction: onRetry,
-    );
-  }
-}
-
-class SHOAppRefreshHeader extends StatelessWidget {
-  const SHOAppRefreshHeader({
-    super.key,
-    required this.child,
-    required this.onRefresh,
-  });
-
-  final Widget child;
-  final Future<void> Function() onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      color: SHOAppColors.accent,
-      onRefresh: onRefresh,
-      child: child,
     );
   }
 }

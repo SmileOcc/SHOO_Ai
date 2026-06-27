@@ -7,6 +7,7 @@ import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
@@ -84,13 +85,13 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: RefreshIndicator(
+      body: SHOAppPullRefresh(
         onRefresh: _controller.refresh,
         child: state.calendar == null && state.isRefreshing
             ? const Center(child: CircularProgressIndicator())
             : CustomScrollView(
                 controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: SHOAppPullRefresh.scrollPhysics,
                 slivers: [
                   if (state.calendar != null)
                     SliverToBoxAdapter(

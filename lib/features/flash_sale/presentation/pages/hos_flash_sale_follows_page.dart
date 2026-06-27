@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -64,11 +65,12 @@ class _SHOFlashSaleFollowsPageState
       );
     }
 
-    return RefreshIndicator(
+    return SHOAppPullRefresh(
       onRefresh: () =>
           ref.read(flashSaleFollowControllerProvider.notifier).syncFromServer(),
       child: ListView.separated(
         padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+        physics: SHOAppPullRefresh.scrollPhysics,
         itemCount: follows.length,
         separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
         itemBuilder: (context, index) {

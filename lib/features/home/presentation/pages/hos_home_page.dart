@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
-import 'package:shoo/core/marketing/hos_popup_orchestrator.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
-import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/marketing/hos_popup_orchestrator.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_banner_carousel.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_product_card.dart';
 import 'package:shoo/core/widgets/hos_quick_entry_grid.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
@@ -55,14 +55,13 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
   Widget buildContent(BuildContext context, WidgetRef ref, SHOHomeFeed feed) {
     final categoriesAsync = ref.watch(categoriesProvider);
 
-    return RefreshIndicator(
-      color: SHOAppColors.accent,
+    return SHOAppPullRefresh(
       onRefresh: () async {
         invalidateData(ref);
         await ref.read(homeFeedProvider.future);
       },
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: SHOAppPullRefresh.scrollPhysics,
         slivers: [
           SliverToBoxAdapter(
             child: Column(

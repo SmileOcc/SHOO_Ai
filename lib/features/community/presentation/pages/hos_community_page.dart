@@ -5,6 +5,7 @@ import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 import 'package:shoo/core/widgets/hos_error_view.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
@@ -68,8 +69,7 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
 
     if (feedState.isInitialLoading) {
       return buildTrackedPage(
-        RefreshIndicator(
-        color: SHOAppColors.accent,
+        SHOAppPullRefresh(
         onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
         child: _buildLoadingSkeleton(),
         ),
@@ -90,12 +90,11 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
     return buildTrackedPage(
       NotificationListener<ScrollNotification>(
       onNotification: _onScrollNotification,
-      child: RefreshIndicator(
-        color: SHOAppColors.accent,
+      child: SHOAppPullRefresh(
         onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
         child: CustomScrollView(
           controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: SHOAppPullRefresh.scrollPhysics,
           slivers: [
             SliverToBoxAdapter(
               child: SHOCommunityMenuBar(items: feedState.menuItems),
