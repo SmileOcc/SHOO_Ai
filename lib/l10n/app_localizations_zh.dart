@@ -641,6 +641,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugAnalyticsBackendsUsed => '通道';
 
   @override
+  String get debugAnalyticsBridgeErrorRecent => '最近 bridge_error';
+
+  @override
+  String get debugAnalyticsBridgeErrorHint =>
+      '活动 H5 JS Bridge 解析失败或未知 type 时上报';
+
+  @override
+  String get debugAnalyticsBridgeErrorEmpty => '暂无 bridge_error 记录';
+
+  @override
   String get debugFeedbackEntry => '全局反馈调试';
 
   @override

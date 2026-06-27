@@ -1310,6 +1310,24 @@ abstract class AppLocalizations {
   /// **'Backends'**
   String get debugAnalyticsBackendsUsed;
 
+  /// No description provided for @debugAnalyticsBridgeErrorRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent bridge_error'**
+  String get debugAnalyticsBridgeErrorRecent;
+
+  /// No description provided for @debugAnalyticsBridgeErrorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported when Activity H5 JS bridge JSON parse or dispatch fails'**
+  String get debugAnalyticsBridgeErrorHint;
+
+  /// No description provided for @debugAnalyticsBridgeErrorEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No bridge_error events yet'**
+  String get debugAnalyticsBridgeErrorEmpty;
+
   /// No description provided for @debugFeedbackEntry.
   ///
   /// In en, this message translates to:

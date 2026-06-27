@@ -74,6 +74,8 @@ class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage>
                 manager.clearHistory();
                 _refresh();
               },
+              onFireBridgeErrorSample: () =>
+                  _fireSample(SHOAnalyticsRegistry.bridgeError),
             ),
           ],
         ),
@@ -217,17 +219,33 @@ class _HistoryTab extends StatelessWidget {
   const _HistoryTab({
     required this.history,
     required this.onClear,
+    required this.onFireBridgeErrorSample,
   });
 
   final List<SHOAnalyticsRecord> history;
   final VoidCallback onClear;
+  final VoidCallback onFireBridgeErrorSample;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final bridgeErrors = history
+        .where((r) => r.eventKey == SHOAnalyticsRegistry.bridgeError.key)
+        .take(8)
+        .toList();
 
     if (history.isEmpty) {
-      return Center(child: Text(l10n.debugAnalyticsHistoryEmpty));
+      return Column(
+        children: [
+          _BridgeErrorSection(
+            records: bridgeErrors,
+            onFireSample: onFireBridgeErrorSample,
+          ),
+          Expanded(
+            child: Center(child: Text(l10n.debugAnalyticsHistoryEmpty)),
+          ),
+        ],
+      );
     }
 
     return Column(
@@ -239,6 +257,22 @@ class _HistoryTab extends StatelessWidget {
             child: Text(l10n.debugAnalyticsClearHistory),
           ),
         ),
+        _BridgeErrorSection(
+          records: bridgeErrors,
+          onFireSample: onFireBridgeErrorSample,
+        ),
+        const Divider(height: SHOAppSpacing.xxxl),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.xl),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              l10n.debugAnalyticsTabHistory,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+        ),
+        const SizedBox(height: SHOAppSpacing.sm),
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.xl),
@@ -246,20 +280,140 @@ class _HistoryTab extends StatelessWidget {
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final record = history[index];
-              return ListTile(
-                title: Text(record.eventKey),
-                subtitle: Text(
-                  '${record.timestamp.toIso8601String()}\n'
-                  '${record.params}\n'
-                  '${l10n.debugAnalyticsBackendsUsed}: ${record.backendIds.join(', ')}'
-                  '${record.error != null ? '\n${record.error}' : ''}',
-                ),
-                isThreeLine: true,
-              );
+              return _HistoryRecordTile(record: record, l10n: l10n);
             },
           ),
         ),
       ],
     );
   }
+}
+
+class _BridgeErrorSection extends StatelessWidget {
+  const _BridgeErrorSection({
+    required this.records,
+    required this.onFireSample,
+  });
+
+  final List<SHOAnalyticsRecord> records;
+  final VoidCallback onFireSample;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        SHOAppSpacing.xl,
+        0,
+        SHOAppSpacing.xl,
+        SHOAppSpacing.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.debugAnalyticsBridgeErrorRecent,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              TextButton(
+                onPressed: onFireSample,
+                child: Text(l10n.debugAnalyticsFire),
+              ),
+            ],
+          ),
+          Text(
+            l10n.debugAnalyticsBridgeErrorHint,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: SHOAppSpacing.md),
+          if (records.isEmpty)
+            Text(
+              l10n.debugAnalyticsBridgeErrorEmpty,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: context.shoTheme.textMuted,
+                  ),
+            )
+          else
+            ...records.map(
+              (record) => _BridgeErrorRecordTile(record: record),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BridgeErrorRecordTile extends StatelessWidget {
+  const _BridgeErrorRecordTile({required this.record});
+
+  final SHOAnalyticsRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final pageName = record.params['page_name']?.toString() ?? '-';
+    final error = record.params['error']?.toString() ?? '-';
+    final bridgeType = record.params['bridge_type']?.toString();
+    final bridgeAction = record.params['bridge_action']?.toString();
+    final detail = [
+      error,
+      if (bridgeType != null && bridgeType.isNotEmpty) 'type=$bridgeType',
+      if (bridgeAction != null && bridgeAction.isNotEmpty) 'action=$bridgeAction',
+    ].join(' · ');
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      leading: const Icon(Icons.warning_amber_outlined, size: 20),
+      title: Text(pageName),
+      subtitle: Text(detail),
+      trailing: Text(
+        _formatRecordTime(record.timestamp),
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+    );
+  }
+}
+
+class _HistoryRecordTile extends StatelessWidget {
+  const _HistoryRecordTile({
+    required this.record,
+    required this.l10n,
+  });
+
+  final SHOAnalyticsRecord record;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final isBridgeError =
+        record.eventKey == SHOAnalyticsRegistry.bridgeError.key;
+
+    if (isBridgeError) {
+      return _BridgeErrorRecordTile(record: record);
+    }
+
+    return ListTile(
+      title: Text(record.eventKey),
+      subtitle: Text(
+        '${record.timestamp.toIso8601String()}\n'
+        '${record.params}\n'
+        '${l10n.debugAnalyticsBackendsUsed}: ${record.backendIds.join(', ')}'
+        '${record.error != null ? '\n${record.error}' : ''}',
+      ),
+      isThreeLine: true,
+    );
+  }
+}
+
+String _formatRecordTime(DateTime timestamp) {
+  final local = timestamp.toLocal();
+  final h = local.hour.toString().padLeft(2, '0');
+  final m = local.minute.toString().padLeft(2, '0');
+  final s = local.second.toString().padLeft(2, '0');
+  return '$h:$m:$s';
 }

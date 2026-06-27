@@ -658,6 +658,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugAnalyticsBackendsUsed => 'Backends';
 
   @override
+  String get debugAnalyticsBridgeErrorRecent => 'Recent bridge_error';
+
+  @override
+  String get debugAnalyticsBridgeErrorHint =>
+      'Reported when Activity H5 JS bridge JSON parse or dispatch fails';
+
+  @override
+  String get debugAnalyticsBridgeErrorEmpty => 'No bridge_error events yet';
+
+  @override
   String get debugFeedbackEntry => 'Global feedback';
 
   @override
