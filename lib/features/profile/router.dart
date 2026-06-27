@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_bookshelf_list_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_music_library_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_video_library_page.dart';
@@ -38,9 +39,9 @@ List<RouteBase> shoProfileRoutes({required GlobalKey<NavigatorState> rootKey}) =
         path: SHOAppRoutes.profileMusicLibrary,
         parentNavigatorKey: rootKey,
         builder: (context, state) {
-          final fromDownload =
-              state.uri.queryParameters['fromDownload'] == '1';
-          return SHOMusicLibraryPage(fromDownload: fromDownload);
+          return SHOMusicLibraryPage(
+            fromDownload: state.musicLibraryArgs.fromDownload,
+          );
         },
       ),
     ];

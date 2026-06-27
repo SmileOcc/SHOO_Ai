@@ -3,17 +3,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_webview_shell_page.dart';
+import 'package:shoo/core/platform/webview/hos_webview_config.dart';
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_config.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_activity_config_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_dialog_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_mock_server_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_share_provider.dart';
-import 'package:shoo/features/activity_webview/presentation/state/hos_webview_loading_provider.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/dialogs/hos_activity_dialog_host.dart';
-import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_container.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class SHOActivityPage extends ConsumerStatefulWidget {
   const SHOActivityPage({super.key});
@@ -22,14 +24,18 @@ class SHOActivityPage extends ConsumerStatefulWidget {
   ConsumerState<SHOActivityPage> createState() => _SHOActivityPageState();
 }
 
-class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
+class _SHOActivityPageState extends ConsumerState<SHOActivityPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   WebViewController? _controller;
+
+  @override
+  String get pageName => 'activity';
 
   @override
   Widget build(BuildContext context) {
     final configAsync = ref.watch(activityConfigProvider);
-    final loading = ref.watch(webviewLoadingProvider);
-    final title = loading.pageTitle ?? configAsync.valueOrNull?.title ?? '活动页';
+    final serverAsync = ref.watch(activityMockServerUrlProvider);
+    final fallbackTitle = configAsync.valueOrNull?.title ?? '活动页';
 
     ref.listen(activityConfigProvider, (_, next) {
       if (!mounted) return;
@@ -47,51 +53,61 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
       _syncWebViewInteraction();
     });
 
-    return PopScope(
-      canPop: !loading.canGoBack,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) return;
-        if (_controller != null && await _controller!.canGoBack()) {
-          await _controller!.goBack();
-          if (!mounted) return;
-          final canGoBack = await _controller!.canGoBack();
-          ref.read(webviewLoadingProvider.notifier).setCanGoBack(canGoBack);
-        } else if (context.mounted) {
-          context.pop();
-        }
-      },
-      child: SHOActivityDialogHost(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-            actions: [
-              IconButton(
-                icon: ref.watch(shareProvider).capturing
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.share_outlined),
-                onPressed: ref.watch(shareProvider).capturing
-                    ? null
-                    : () => _onSharePressed(),
-              ),
-            ],
-          ),
-          body: _ActivityWebViewBody(
-            onControllerReady: (controller) {
-              _controller = controller;
-              if (!mounted) return;
-              final config = ref.read(activityConfigProvider).valueOrNull;
-              if (config != null) {
-                unawaited(_injectConfig(controller, config));
-              }
-              _syncWebViewInteraction();
-            },
-          ),
+    return SHOActivityDialogHost(
+      child: serverAsync.when(
+        loading: () => Scaffold(
+          appBar: AppBar(title: Text(fallbackTitle)),
+          body: const Center(child: CircularProgressIndicator()),
         ),
+        error: (_, __) => SHOWebViewShellPage(
+          pageNameOverride: pageName,
+          config: SHOWebViewConfig.activity(
+            loadAsset: 'assets/activity/index.html',
+            title: fallbackTitle,
+          ),
+          additionalAppBarActions: [_buildShareAction()],
+          onControllerReady: _onControllerReady,
+        ),
+        data: (url) {
+          final hasServer = url != null && url.isNotEmpty;
+          final pageUrl = hasServer ? (url.endsWith('/') ? url : '$url/') : '';
+          return SHOWebViewShellPage(
+            pageNameOverride: pageName,
+            config: hasServer
+                ? SHOWebViewConfig.activity(url: pageUrl, title: fallbackTitle)
+                : SHOWebViewConfig.activity(
+                    loadAsset: 'assets/activity/index.html',
+                    title: fallbackTitle,
+                  ),
+            additionalAppBarActions: [_buildShareAction()],
+            onControllerReady: _onControllerReady,
+          );
+        },
       ),
+    );
+  }
+
+  void _onControllerReady(WebViewController controller) {
+    _controller = controller;
+    if (!mounted) return;
+    final config = ref.read(activityConfigProvider).valueOrNull;
+    if (config != null) {
+      unawaited(_injectConfig(controller, config));
+    }
+    _syncWebViewInteraction();
+  }
+
+  Widget _buildShareAction() {
+    final capturing = ref.watch(shareProvider).capturing;
+    return IconButton(
+      icon: capturing
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.share_outlined),
+      onPressed: capturing ? null : () => unawaited(_onSharePressed()),
     );
   }
 
@@ -216,37 +232,5 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage> {
           )
           .toList(),
     };
-  }
-}
-
-class _ActivityWebViewBody extends ConsumerWidget {
-  const _ActivityWebViewBody({required this.onControllerReady});
-
-  final void Function(WebViewController controller) onControllerReady;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final serverAsync = ref.watch(activityMockServerUrlProvider);
-
-    return serverAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => SHOWebViewContainer(
-        loadAsset: 'assets/activity/index.html',
-        onControllerReady: onControllerReady,
-      ),
-      data: (url) {
-        if (url != null && url.isNotEmpty) {
-          final pageUrl = url.endsWith('/') ? url : '$url/';
-          return SHOWebViewContainer(
-            initialUrl: pageUrl,
-            onControllerReady: onControllerReady,
-          );
-        }
-        return SHOWebViewContainer(
-          loadAsset: 'assets/activity/index.html',
-          onControllerReady: onControllerReady,
-        );
-      },
-    );
   }
 }

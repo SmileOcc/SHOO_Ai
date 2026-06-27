@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/study/presentation/pages/study_article_page.dart';
 import 'package:shoo/features/study/presentation/pages/study_home_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_download_list_page.dart';
@@ -27,10 +28,9 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
               GoRoute(
                 path: 'article',
                 parentNavigatorKey: rootKey,
-                builder: (context, state) {
-                  final slug = state.uri.queryParameters['slug'] ?? '';
-                  return SHOStudyArticlePage(articleId: slug);
-                },
+                builder: (context, state) => SHOStudyArticlePage(
+                  articleId: state.studyArticleArgs.articleId,
+                ),
               ),
             ],
           ),
@@ -52,20 +52,18 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
           GoRoute(
             path: 'reader',
             parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final taskId = state.uri.queryParameters['taskId'] ?? '';
-              return SHOTxtReaderRoutePage(taskId: taskId);
-            },
+            builder: (context, state) => SHOTxtReaderRoutePage(
+              taskId: state.toolboxReaderArgs.taskId,
+            ),
           ),
           GoRoute(
             path: 'video',
             parentNavigatorKey: rootKey,
             builder: (context, state) {
-              final entryId = state.uri.queryParameters['entryId'] ?? '';
-              final taskId = state.uri.queryParameters['taskId'] ?? '';
+              final args = state.toolboxVideoArgs;
               return SHOVideoPlayerRoutePage(
-                entryId: entryId,
-                taskId: taskId,
+                entryId: args.entryId,
+                taskId: args.taskId,
               );
             },
           ),
@@ -73,15 +71,11 @@ List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =
             path: 'music',
             parentNavigatorKey: rootKey,
             builder: (context, state) {
-              final trackId = state.uri.queryParameters['trackId'] ?? '';
-              final index =
-                  int.tryParse(state.uri.queryParameters['index'] ?? '') ?? 0;
-              final fromDownloadPack =
-                  state.uri.queryParameters['fromDownloadPack'] == '1';
+              final args = state.musicPlayerArgs;
               return SHOMusicPlayerRoutePage(
-                trackId: trackId,
-                startIndex: index,
-                fromDownloadPack: fromDownloadPack,
+                trackId: args.trackId,
+                startIndex: args.startIndex,
+                fromDownloadPack: args.fromDownloadPack,
               );
             },
           ),

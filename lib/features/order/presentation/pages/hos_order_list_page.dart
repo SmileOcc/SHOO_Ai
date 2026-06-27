@@ -10,6 +10,7 @@ import 'package:shoo/core/utils/hos_price_formatter.dart';
 import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/core/widgets/hos_paged_scroll_view.dart';
+import 'package:shoo/core/pages/hos_tab_keep_alive_page.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_list_tabs.dart';
@@ -92,11 +93,8 @@ class _SHOOrderListTabView extends ConsumerStatefulWidget {
 }
 
 class _SHOOrderListTabViewState extends ConsumerState<_SHOOrderListTabView>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SHOTabKeepAliveMixin {
   final _scrollController = ScrollController();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void dispose() {

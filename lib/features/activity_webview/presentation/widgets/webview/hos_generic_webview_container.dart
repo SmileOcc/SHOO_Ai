@@ -8,8 +8,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
+import 'package:shoo/core/platform/webview/hos_activity_webview_bridge.dart';
 import 'package:shoo/core/platform/webview/hos_webview_bridge_handler.dart';
 import 'package:shoo/core/platform/webview/hos_webview_config.dart';
+import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
 import 'package:shoo/core/platform/webview/hos_webview_route_mapper.dart';
 import 'package:shoo/core/platform/webview/hos_webview_service.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
@@ -27,6 +29,9 @@ class SHOGenericWebViewContainer extends ConsumerStatefulWidget {
     this.onTitleChanged,
     this.onUrlChanged,
     this.onCanGoBackChanged,
+    this.onPageLoadStarted,
+    this.onPageLoadFinished,
+    this.onPageLoadFailed,
     this.onControllerReady,
   });
 
@@ -34,6 +39,9 @@ class SHOGenericWebViewContainer extends ConsumerStatefulWidget {
   final void Function(String title)? onTitleChanged;
   final void Function(String url)? onUrlChanged;
   final void Function(bool canGoBack)? onCanGoBackChanged;
+  final void Function(String url)? onPageLoadStarted;
+  final void Function(String url)? onPageLoadFinished;
+  final void Function(String url, int? errorCode, String? message)? onPageLoadFailed;
   final void Function(WebViewController controller)? onControllerReady;
 
   @override
@@ -51,6 +59,7 @@ class _SHOGenericWebViewContainerState
   String? _errorMessage;
   int? _errorCode;
   double _scrollY = 0;
+  String _lastUrl = '';
   Timer? _timeoutTimer;
   bool _initializing = true;
 
@@ -99,6 +108,8 @@ class _SHOGenericWebViewContainerState
           });
           _startTimeout();
           widget.onUrlChanged?.call(url);
+          widget.onPageLoadStarted?.call(url);
+          _lastUrl = url;
         },
         onProgress: (progress) {
           if (!mounted) return;
@@ -131,6 +142,8 @@ class _SHOGenericWebViewContainerState
           final canGoBack = await controller.canGoBack();
           widget.onCanGoBackChanged?.call(canGoBack);
 
+          widget.onPageLoadFinished?.call(url);
+
           if (widget.config.pullToRefresh) {
             await _injectScrollListener(controller);
           }
@@ -143,6 +156,11 @@ class _SHOGenericWebViewContainerState
             _errorMessage = error.description;
             _errorCode = error.errorCode;
           });
+          widget.onPageLoadFailed?.call(
+            _currentUrl(),
+            error.errorCode,
+            error.description,
+          );
         },
         onNavigationRequest: (request) => _resolveNavigation(request.url),
       ),
@@ -151,14 +169,27 @@ class _SHOGenericWebViewContainerState
     if (widget.config.enableFlutterBridge) {
       controller.addJavaScriptChannel(
         'FlutterBridge',
-        onMessageReceived: (msg) => unawaited(
-          SHOWebViewBridgeHandler.handle(
-            context,
-            ref,
-            controller,
-            msg.message,
-          ),
-        ),
+        onMessageReceived: (msg) {
+          if (widget.config.bridgeMode == SHOWebViewBridgeMode.activity) {
+            unawaited(
+              SHOActivityWebViewBridge.handle(
+                context,
+                ref,
+                controller,
+                msg.message,
+              ),
+            );
+          } else {
+            unawaited(
+              SHOWebViewBridgeHandler.handle(
+                context,
+                ref,
+                controller,
+                msg.message,
+              ),
+            );
+          }
+        },
       );
     }
 
@@ -214,6 +245,15 @@ class _SHOGenericWebViewContainerState
   }
 
   Future<NavigationDecision> _resolveNavigation(String url) async {
+    if (widget.config.navigationPolicy == SHOWebViewNavigationPolicy.whitelist) {
+      return SHOActivityWebViewBridge.resolveNavigation(
+        context,
+        ref,
+        url,
+        policy: widget.config.navigationPolicy,
+      );
+    }
+
     if (SHODeepLinkResolver.isDeepLink(url)) {
       _deferDeepLink(url);
       return NavigationDecision.prevent;
@@ -272,6 +312,9 @@ class _SHOGenericWebViewContainerState
     final headers = _service.buildRequestHeaders(widget.config);
     await controller.loadRequest(Uri.parse(url), headers: headers);
   }
+
+  String _currentUrl() =>
+      _lastUrl.isNotEmpty ? _lastUrl : widget.config.url;
 
   void _startTimeout() {
     _cancelTimeout();

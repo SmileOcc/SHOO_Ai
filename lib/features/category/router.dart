@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/category/presentation/pages/hos_category_products_page.dart';
 
 List<RouteBase> shoCategoryRoutes({required GlobalKey<NavigatorState> rootKey}) =>
@@ -10,11 +11,10 @@ List<RouteBase> shoCategoryRoutes({required GlobalKey<NavigatorState> rootKey}) 
         path: SHOAppRoutes.categoryProducts,
         parentNavigatorKey: rootKey,
         builder: (context, state) {
-          final leafId = state.uri.queryParameters['leafId'] ?? '';
-          final title = state.uri.queryParameters['title'] ?? '';
+          final args = state.categoryProductsArgs;
           return SHOCategoryProductsPage(
-            leafCategoryId: leafId,
-            title: title,
+            leafCategoryId: args.leafCategoryId,
+            title: args.title,
           );
         },
       ),

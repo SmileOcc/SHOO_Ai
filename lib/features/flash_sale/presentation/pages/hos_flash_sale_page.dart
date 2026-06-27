@@ -27,12 +27,14 @@ class SHOFlashSalePage extends ConsumerStatefulWidget {
 class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
   final _scrollController = ScrollController();
 
+  // 获取闪购控制器（通过 ref.read 获取 notifier）
   SHOFlashSaleController get _controller =>
       ref.read(flashSaleControllerProvider(widget.activityId).notifier);
 
   @override
   void initState() {
     super.initState();
+    // 使用 Future.microtask 延迟执行初始化，避免在构建期间修改状态
     Future.microtask(_controller.initialize);
     _scrollController.addListener(_onScroll);
   }
@@ -53,10 +55,14 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    // 监听闪购状态（自动响应状态变化重建 UI）
     final state = ref.watch(flashSaleControllerProvider(widget.activityId));
+    // 监听关注状态（用于更新商品关注按钮）
     ref.watch(flashSaleFollowControllerProvider);
+    // 获取合并后的商品列表
     final products =
         ref.read(flashSaleControllerProvider(widget.activityId).notifier).mergedProducts();
+    // 获取页面数据
     final pageData = state.pageData;
 
     return Scaffold(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/address/presentation/pages/hos_address_form_page.dart';
 import 'package:shoo/features/address/presentation/pages/hos_address_list_page.dart';
 
@@ -10,14 +11,14 @@ List<RouteBase> shoAddressRoutes({required GlobalKey<NavigatorState> rootKey}) =
         path: SHOAppRoutes.addresses,
         parentNavigatorKey: rootKey,
         builder: (context, state) => SHOAddressListPage(
-          selectMode: state.uri.queryParameters['select'] == '1',
+          selectMode: state.selectArgs.selectMode,
         ),
         routes: [
           GoRoute(
             path: 'form',
             parentNavigatorKey: rootKey,
             builder: (context, state) => SHOAddressFormPage(
-              addressId: state.uri.queryParameters['id'],
+              addressId: state.queryIdArgs().id,
             ),
           ),
         ],

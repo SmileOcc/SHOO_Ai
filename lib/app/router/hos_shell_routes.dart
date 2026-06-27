@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/pages/hos_tab_keep_alive_page.dart';
 import 'package:shoo/features/cart/presentation/pages/hos_cart_page.dart';
 import 'package:shoo/features/category/presentation/pages/hos_category_page.dart';
 import 'package:shoo/features/community/presentation/pages/hos_community_page.dart';
@@ -46,8 +47,9 @@ List<RouteBase> shoShellRoutes() => [
             routes: [
               GoRoute(
                 path: SHOAppRoutes.home,
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: SHOHomePage()),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SHOTabKeepAlivePage(child: SHOHomePage()),
+                ),
               ),
             ],
           ),
@@ -56,8 +58,9 @@ List<RouteBase> shoShellRoutes() => [
             routes: [
               GoRoute(
                 path: SHOAppRoutes.category,
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: SHOCategoryPage()),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SHOTabKeepAlivePage(child: SHOCategoryPage()),
+                ),
               ),
             ],
           ),
@@ -66,8 +69,9 @@ List<RouteBase> shoShellRoutes() => [
             routes: [
               GoRoute(
                 path: SHOAppRoutes.community,
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: SHOCommunityPage()),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SHOTabKeepAlivePage(child: SHOCommunityPage()),
+                ),
               ),
             ],
           ),
@@ -76,8 +80,9 @@ List<RouteBase> shoShellRoutes() => [
             routes: [
               GoRoute(
                 path: SHOAppRoutes.cart,
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: SHOCartPage()),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SHOTabKeepAlivePage(child: SHOCartPage()),
+                ),
               ),
             ],
           ),
@@ -86,8 +91,9 @@ List<RouteBase> shoShellRoutes() => [
             routes: [
               GoRoute(
                 path: SHOAppRoutes.profile,
-                pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: SHOProfilePage()),
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: SHOTabKeepAlivePage(child: SHOProfilePage()),
+                ),
               ),
             ],
           ),

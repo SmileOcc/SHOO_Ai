@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz_data;
-import 'package:timezone/timezone.dart' as tz;
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_analytics.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
 /// 在 [runApp] 之前初始化本地通知，确保后台/冷启动点击能收到 payload。
 abstract final class SHOFlashSaleReminderBootstrap {
@@ -14,6 +13,7 @@ abstract final class SHOFlashSaleReminderBootstrap {
       FlutterLocalNotificationsPlugin();
 
   static bool _initialized = false;
+  static bool _testMode = false;
   static String? pendingLaunchPayload;
   static final List<String> pendingTapPayloads = [];
 
@@ -22,8 +22,17 @@ abstract final class SHOFlashSaleReminderBootstrap {
   /// 通知点击后通知 Service 处理 pending payload（可为 null 直到 Service 初始化）。
   static void Function()? onNotificationTapped;
 
+  /// 启用测试模式，跳过原生插件初始化（避免测试环境报错）。
+  static void setTestMode() {
+    _testMode = true;
+    _initialized = true; // 标记为已初始化，跳过原生调用
+  }
+
   static Future<void> ensureInitialized() async {
     if (_initialized || kIsWeb) return;
+
+    // 测试模式：跳过原生插件初始化
+    if (_testMode) return;
 
     tz_data.initializeTimeZones();
     tz.setLocalLocation(tz.local);
@@ -38,14 +47,16 @@ abstract final class SHOFlashSaleReminderBootstrap {
     if (Platform.isAndroid) {
       await plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
     }
 
     if (Platform.isIOS) {
       await plugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin
+          >()
           ?.requestPermissions(alert: true, badge: true, sound: true);
     }
 

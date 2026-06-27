@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_app_page_mixin.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -11,20 +13,21 @@ import 'package:shoo/features/community/domain/entities/hos_community_models.dar
 import 'package:shoo/features/community/presentation/widgets/hos_community_cell_shared.dart';
 import 'package:shoo/features/community/presentation/widgets/hos_community_format.dart';
 
-class SHOCommunityNewsDetailPage extends StatefulWidget {
+class SHOCommunityNewsDetailPage extends ConsumerStatefulWidget {
   const SHOCommunityNewsDetailPage({super.key, required this.item});
 
   final SHOCommunityFeedItem item;
 
   @override
-  State<SHOCommunityNewsDetailPage> createState() =>
+  ConsumerState<SHOCommunityNewsDetailPage> createState() =>
       _SHOCommunityNewsDetailPageState();
 }
 
-class _SHOCommunityNewsDetailPageState extends State<SHOCommunityNewsDetailPage>
-    with SHOPageRouteAnalyticsMixin {
+class _SHOCommunityNewsDetailPageState
+    extends ConsumerState<SHOCommunityNewsDetailPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   @override
-  String get pageAnalyticsName => 'SHOCommunityNewsDetailPage';
+  String get pageName => 'community_news_detail';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
@@ -144,20 +147,21 @@ class _SHOCommunityNewsDetailPageState extends State<SHOCommunityNewsDetailPage>
   }
 }
 
-class SHOCommunityPostDetailPage extends StatefulWidget {
+class SHOCommunityPostDetailPage extends ConsumerStatefulWidget {
   const SHOCommunityPostDetailPage({super.key, required this.item});
 
   final SHOCommunityFeedItem item;
 
   @override
-  State<SHOCommunityPostDetailPage> createState() =>
+  ConsumerState<SHOCommunityPostDetailPage> createState() =>
       _SHOCommunityPostDetailPageState();
 }
 
-class _SHOCommunityPostDetailPageState extends State<SHOCommunityPostDetailPage>
-    with SHOPageRouteAnalyticsMixin {
+class _SHOCommunityPostDetailPageState
+    extends ConsumerState<SHOCommunityPostDetailPage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   @override
-  String get pageAnalyticsName => 'SHOCommunityPostDetailPage';
+  String get pageName => 'community_post_detail';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {

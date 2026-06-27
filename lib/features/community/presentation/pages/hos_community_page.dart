@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_app_page_mixin.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
@@ -21,11 +22,11 @@ class SHOCommunityPage extends ConsumerStatefulWidget {
 }
 
 class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
-    with SHOPageRouteAnalyticsMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   final _scrollController = ScrollController();
 
   @override
-  String get pageAnalyticsName => 'SHOCommunityPage';
+  String get pageName => 'community';
 
   @override
   void dispose() {

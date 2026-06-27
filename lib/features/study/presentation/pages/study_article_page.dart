@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_app_page_mixin.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 import 'package:shoo/features/study/data/datasources/remote/study_catalog.dart';
 
-class SHOStudyArticlePage extends StatefulWidget {
+class SHOStudyArticlePage extends ConsumerStatefulWidget {
   const SHOStudyArticlePage({super.key, required this.articleId});
 
   final String articleId;
 
   @override
-  State<SHOStudyArticlePage> createState() => _SHOStudyArticlePageState();
+  ConsumerState<SHOStudyArticlePage> createState() => _SHOStudyArticlePageState();
 }
 
-class _SHOStudyArticlePageState extends State<SHOStudyArticlePage>
-    with SHOPageRouteAnalyticsMixin {
+class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   String? _markdown;
   String? _error;
   var _loading = true;
 
   @override
-  String get pageAnalyticsName => 'SHOStudyArticlePage';
+  String get pageName => 'study_article';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {

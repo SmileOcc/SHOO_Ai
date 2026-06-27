@@ -678,6 +678,94 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const pageLoadTime = SHOAnalyticsEventDef(
+    key: 'page_load_time',
+    title: 'Page load time',
+    description: 'Page shell or content ready timing',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'coupon_list',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'duration_ms',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 320,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'load_phase',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'first_frame / content_ready / webview_finished',
+        example: 'content_ready',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/coupons',
+      ),
+    ],
+  );
+
+  static const webViewPageLoad = SHOAnalyticsEventDef(
+    key: 'webview_page_load',
+    title: 'WebView page load',
+    description: 'WebView onPageFinished or error timing',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'url',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'https://shoo.app/activity',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'duration_ms',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 850,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'success',
+        type: SHOAnalyticsFieldType.boolValue,
+        required: true,
+        example: true,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'error_code',
+        type: SHOAnalyticsFieldType.intValue,
+        example: -1009,
+      ),
+    ],
+  );
+
+  static const pageRenderError = SHOAnalyticsEventDef(
+    key: 'page_render_error',
+    title: 'Page render error',
+    description: 'Single page build failed and was caught by error boundary',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'order_detail',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'error',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'Null check operator used on a null value',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'route_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/orders/123',
+      ),
+    ],
+  );
+
   static final List<SHOAnalyticsEventDef> all = [
     appLaunch,
     appClose,
@@ -707,6 +795,9 @@ abstract final class SHOAnalyticsRegistry {
     flashSaleNotificationClick,
     flashSaleReminderPopupShow,
     flashSaleReminderPopupAction,
+    pageLoadTime,
+    webViewPageLoad,
+    pageRenderError,
   ];
 
   static SHOAnalyticsEventDef? find(String key) {

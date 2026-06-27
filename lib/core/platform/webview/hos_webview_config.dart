@@ -1,3 +1,5 @@
+import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
+
 /// WebView 打开模式。
 enum SHOWebViewMode {
   /// 始终在应用内 WebView 打开 http/https。
@@ -8,6 +10,15 @@ enum SHOWebViewMode {
 
   /// 由 [SHOWebViewService.shouldUseSystemBrowser] 自动判断。
   auto,
+}
+
+/// WebView JS Bridge 模式。
+enum SHOWebViewBridgeMode {
+  /// 通用调试 / 简单 Bridge（[SHOWebViewBridgeHandler]）。
+  standard,
+
+  /// 活动 H5 专用 Bridge（[SHOActivityWebViewBridge]）。
+  activity,
 }
 
 /// 缓存策略。
@@ -70,6 +81,8 @@ class SHOWebViewConfig {
     this.javascriptEnabled = true,
     this.debuggingEnabled = false,
     this.enableFlutterBridge = false,
+    this.bridgeMode = SHOWebViewBridgeMode.standard,
+    this.navigationPolicy = SHOWebViewNavigationPolicy.inApp,
     this.customHeaders,
     this.injectedJavaScript,
     this.cookies,
@@ -90,6 +103,8 @@ class SHOWebViewConfig {
   final bool javascriptEnabled;
   final bool debuggingEnabled;
   final bool enableFlutterBridge;
+  final SHOWebViewBridgeMode bridgeMode;
+  final SHOWebViewNavigationPolicy navigationPolicy;
   final Map<String, String>? customHeaders;
   final String? injectedJavaScript;
   final List<SHOWebViewCookie>? cookies;
@@ -150,6 +165,25 @@ class SHOWebViewConfig {
           type: SHOWebViewInterceptorType.navigateToNative,
         ),
       ],
+    );
+  }
+
+  /// 活动 H5 页配置（白名单导航 + Activity Bridge）。
+  factory SHOWebViewConfig.activity({
+    String url = '',
+    String? loadAsset,
+    String? title,
+  }) {
+    return SHOWebViewConfig(
+      url: url,
+      loadAsset: loadAsset,
+      title: title,
+      mode: SHOWebViewMode.inApp,
+      enableFlutterBridge: true,
+      bridgeMode: SHOWebViewBridgeMode.activity,
+      navigationPolicy: SHOWebViewNavigationPolicy.whitelist,
+      pullToRefresh: true,
+      showProgressBar: true,
     );
   }
 

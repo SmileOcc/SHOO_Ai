@@ -337,34 +337,6 @@ class _MyWidgetState extends State<MyWidget>
 }
 
 
-**dispose 应该做：**
-
-- 取消 `StreamSubscription` / `Timer`
-- 释放 `AnimationController`、`TextEditingController`
-- 移除监听器
-
-**dispose 不应该做：**
-
-- ❌ 调用 `setState`
-- ❌ 用 `ref` / `context` 触发导航或更新全局 Provider（可能通知已销毁的 Element 重建，触发 `_lifecycleState != defunct` 断言）
-- ❌ 发起新的异步 UI 操作而不检查 `mounted`
-
-**项目踩坑（SHOO 音乐播放）- 已修复：**
-
-❌ 错误做法：在 `dispose()` 里写 `ref.read(musicOnPlayerPageProvider).state = false`
-→ 音乐播放中 Provider 持续推送进度，已销毁页面仍被通知重建 → 崩溃
-
-✅ 正确做法：
-1. 路由 Observer（`SHOMusicNavigatorObserver`）监听路由变化，自动同步页面状态
-2. 所有异步回调里检查 `mounted`，防止页面销毁后继续操作
-
-**相关实现位置：**
-- `lib/features/toolbox/presentation/hos_music_player_page.dart` - 播放器页面（使用 `mounted` 检查）
-- `lib/features/toolbox/presentation/music/hos_music_nav_observer.dart` - 路由观察者（自动同步状态）
-- `lib/features/toolbox/presentation/music/hos_music_route_state.dart` - 状态同步函数
-
----
-
 ## 4. BuildContext 是什么？为什么不能长期持有 context？
 
 **参考答案：**

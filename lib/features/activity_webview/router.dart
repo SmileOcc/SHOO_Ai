@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/core/platform/webview/hos_url_decision.dart';
 import 'package:shoo/core/platform/webview/hos_url_router_service.dart';
 import 'package:shoo/features/activity_webview/presentation/pages/hos_activity_detail_page.dart';
@@ -41,26 +42,25 @@ List<RouteBase> shoActivityWebviewRoutes({
             path: 'webview',
             parentNavigatorKey: rootKey,
             redirect: (context, state) {
-              final url = state.uri.queryParameters['url'];
-              if (url == null || url.isEmpty) return SHOAppRoutes.toolboxWeb;
-              final title = state.uri.queryParameters['title'];
-              return SHOAppRoutes.webviewFor(url, title: title);
+              final args = state.activityUrlArgs;
+              if (args.url == null || args.url!.isEmpty) {
+                return SHOAppRoutes.toolboxWeb;
+              }
+              return SHOAppRoutes.webviewFor(args.url!, title: args.title);
             },
           ),
           GoRoute(
             path: 'image-preview',
             parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final index =
-                  int.tryParse(state.uri.queryParameters['index'] ?? '') ?? 0;
-              return SHOImagePreviewPage(initialIndex: index);
-            },
+            builder: (context, state) => SHOImagePreviewPage(
+              initialIndex: state.imagePreviewArgs.initialIndex,
+            ),
           ),
           GoRoute(
             path: 'payment',
             parentNavigatorKey: rootKey,
             redirect: (context, state) {
-              final url = state.uri.queryParameters['url'];
+              final url = state.activityUrlArgs.url;
               if (url == null || url.isEmpty) return SHOAppRoutes.toolbox;
               final decision = const SHOURLRouterService().resolve(url);
               if (decision.target == SHOURLTarget.inAppWebView) {
@@ -68,19 +68,18 @@ List<RouteBase> shoActivityWebviewRoutes({
               }
               return null;
             },
-            builder: (context, state) {
-              final url = state.uri.queryParameters['url'] ?? '';
-              return SHOActivityRedirectPage(url: url, isPayment: true);
-            },
+            builder: (context, state) => SHOActivityRedirectPage(
+              url: state.activityUrlArgs.decodedUrl(),
+              isPayment: true,
+            ),
           ),
           GoRoute(
             path: 'external',
             parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final encoded = state.uri.queryParameters['url'] ?? '';
-              final url = Uri.decodeComponent(encoded);
-              return SHOActivityRedirectPage(url: url, isPayment: false);
-            },
+            builder: (context, state) => SHOActivityRedirectPage(
+              url: state.activityUrlArgs.decodedUrl(),
+              isPayment: false,
+            ),
           ),
         ],
       ),

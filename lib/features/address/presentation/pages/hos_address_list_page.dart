@@ -3,27 +3,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_dialog.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
-import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/address/domain/entities/hos_address.dart';
 import 'package:shoo/features/address/presentation/state/hos_address_controller.dart';
 
-class SHOAddressListPage extends ConsumerStatefulWidget {
-  const SHOAddressListPage({super.key, this.selectMode = false});
-
-  final bool selectMode;
+class SHOAddressListPage extends SHOSelectorPage<SHOAddress> {
+  const SHOAddressListPage({super.key, required super.selectMode});
 
   @override
-  ConsumerState<SHOAddressListPage> createState() => _SHOAddressListPageState();
+  SHOSelectorPageState<SHOAddress, SHOAddressListPage> createState() =>
+      _SHOAddressListPageState();
 }
 
-class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
+class _SHOAddressListPageState
+    extends SHOSelectorPageState<SHOAddress, SHOAddressListPage> {
+  @override
+  ProviderListenable<AsyncValue<List<SHOAddress>>> get dataProvider =>
+      addressesProvider;
+
+  @override
+  void invalidateData(WidgetRef ref) =>
+      ref.read(addressesProvider.notifier).refresh();
+
+  @override
+  String get pageName => 'address_list';
+
   Future<void> _confirmDelete(SHOAddress address) async {
     final l10n = AppLocalizations.of(context);
     final ok = await SHOAppDialog.confirm(
@@ -46,7 +57,7 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
   Future<void> _selectAddress(SHOAddress address) async {
     await ref.read(selectedAddressIdProvider.notifier).select(address.id);
     if (!mounted) return;
-    context.pop<SHOAddress>(address);
+    popSelectResult(address);
   }
 
   void _openForm({SHOAddress? address}) {
@@ -58,86 +69,50 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final addressesAsync = ref.watch(addressesProvider);
-    final selectedId = ref.watch(selectedAddressIdProvider);
     final deleteMode = ref.watch(addressListDeleteModeProvider);
-    final addressesNotifier = ref.read(addressesProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.selectMode ? l10n.addressSelectTitle : l10n.addressListTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+    return AppBar(
+      title: Text(
+        selectorTitle(
+          selectTitle: l10n.addressSelectTitle,
+          listTitle: l10n.addressListTitle,
         ),
-        leading: deleteMode
-            ? IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () =>
-                    ref.read(addressListDeleteModeProvider.notifier).state =
-                        false,
-              )
-            : null,
-        automaticallyImplyLeading: !deleteMode,
-        actions: [
-          if (!widget.selectMode && !deleteMode)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
+        style: const TextStyle(fontWeight: FontWeight.w800),
+      ),
+      leading: deleteMode
+          ? IconButton(
+              icon: const Icon(Icons.close),
               onPressed: () =>
-                  ref.read(addressListDeleteModeProvider.notifier).state = true,
-            ),
-        ],
-      ),
-      body: addressesAsync.whenLoadingState(
-        onRetry: addressesNotifier.refresh,
-        empty: (list) => list.isEmpty,
-        data: (addresses) {
-          if (addresses.isEmpty) {
-            return SHOEmptyState(title: l10n.addressEmpty);
-          }
+                  ref.read(addressListDeleteModeProvider.notifier).state =
+                      false,
+            )
+          : null,
+      automaticallyImplyLeading: !deleteMode,
+      actions: [
+        if (!widget.selectMode && !deleteMode)
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () =>
+                ref.read(addressListDeleteModeProvider.notifier).state = true,
+          ),
+      ],
+    );
+  }
 
-          final activeId = selectedId ??
-              addresses
-                  .firstWhere(
-                    (item) => item.isDefault,
-                    orElse: () => addresses.first,
-                  )
-                  .id;
+  @override
+  SHOAppShellPage buildShell(
+    BuildContext context,
+    WidgetRef ref, {
+    required PreferredSizeWidget? appBar,
+    required Widget body,
+  }) {
+    final l10n = AppLocalizations.of(context);
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(
-              SHOAppSpacing.pagePadding,
-              SHOAppSpacing.pagePadding,
-              SHOAppSpacing.pagePadding,
-              88,
-            ),
-            itemCount: addresses.length,
-            separatorBuilder: (_, __) =>
-                const SizedBox(height: SHOAppSpacing.lg),
-            itemBuilder: (context, index) {
-              final address = addresses[index];
-              final selected = activeId == address.id;
-
-              return _AddressCard(
-                address: address,
-                selectMode: widget.selectMode,
-                selected: selected,
-                deleteMode: deleteMode,
-                onTap: () {
-                  if (deleteMode) return;
-                  if (widget.selectMode) {
-                    _selectAddress(address);
-                    return;
-                  }
-                  _openForm(address: address);
-                },
-                onDelete: () => _confirmDelete(address),
-              );
-            },
-          );
-        },
-      ),
+    return SHOAppShellPage(
+      appBar: appBar,
+      body: body,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
@@ -175,6 +150,59 @@ class _SHOAddressListPageState extends ConsumerState<SHOAddressListPage> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    List<SHOAddress> addresses,
+  ) {
+    if (addresses.isEmpty) {
+      return SHOEmptyState(title: AppLocalizations.of(context).addressEmpty);
+    }
+
+    final selectedId = ref.watch(selectedAddressIdProvider);
+    final deleteMode = ref.watch(addressListDeleteModeProvider);
+
+    final activeId = selectedId ??
+        addresses
+            .firstWhere(
+              (item) => item.isDefault,
+              orElse: () => addresses.first,
+            )
+            .id;
+
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(
+        SHOAppSpacing.pagePadding,
+        SHOAppSpacing.pagePadding,
+        SHOAppSpacing.pagePadding,
+        88,
+      ),
+      itemCount: addresses.length,
+      separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.lg),
+      itemBuilder: (context, index) {
+        final address = addresses[index];
+        final selected = activeId == address.id;
+
+        return _AddressCard(
+          address: address,
+          selectMode: widget.selectMode,
+          selected: selected,
+          deleteMode: deleteMode,
+          onTap: () {
+            if (deleteMode) return;
+            if (widget.selectMode) {
+              _selectAddress(address);
+              return;
+            }
+            _openForm(address: address);
+          },
+          onDelete: () => _confirmDelete(address),
+        );
+      },
     );
   }
 }

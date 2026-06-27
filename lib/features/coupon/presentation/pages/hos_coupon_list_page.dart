@@ -1,72 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/pricing/hos_price_calculator.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/utils/hos_price_formatter.dart';
-import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_promo_tag.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
 import 'package:shoo/features/coupon/domain/entities/hos_coupon.dart';
 import 'package:shoo/features/coupon/presentation/state/hos_coupon_controller.dart';
 
-class SHOCouponListPage extends ConsumerWidget {
-  const SHOCouponListPage({super.key, this.selectMode = false});
-
-  final bool selectMode;
+class SHOCouponListPage extends SHOSelectorPage<SHOCoupon> {
+  const SHOCouponListPage({super.key, required super.selectMode});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  SHOSelectorPageState<SHOCoupon, SHOCouponListPage> createState() =>
+      _SHOCouponListPageState();
+}
+
+class _SHOCouponListPageState
+    extends SHOSelectorPageState<SHOCoupon, SHOCouponListPage> {
+  @override
+  ProviderListenable<AsyncValue<List<SHOCoupon>>> get dataProvider =>
+      couponsProvider;
+
+  @override
+  void invalidateData(WidgetRef ref) => ref.invalidate(couponsProvider);
+
+  @override
+  String get pageName => 'coupon_list';
+
+  @override
+  bool isEmptyData(List<SHOCoupon> data) => data.isEmpty;
+
+  @override
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final couponsAsync = ref.watch(couponsProvider);
+    return AppBar(
+      title: Text(
+        selectorTitle(
+          selectTitle: l10n.couponSelectTitle,
+          listTitle: l10n.couponListTitle,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    List<SHOCoupon> coupons,
+  ) {
     final selectedId = ref.watch(selectedCouponIdProvider);
     final subtotal = ref.watch(cartProvider).selectedTotalCents;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(selectMode ? l10n.couponSelectTitle : l10n.couponListTitle),
-      ),
-      body: couponsAsync.whenLoadingState(
-        onRetry: () => ref.invalidate(couponsProvider),
-        empty: (list) => list.isEmpty,
-        data: (coupons) => ListView.separated(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          itemCount: coupons.length + (selectMode ? 1 : 0),
-          separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
-          itemBuilder: (context, index) {
-            if (selectMode && index == 0) {
-              return _SHONoCouponTile(
-                selected: selectedId == null,
-                onTap: () {
-                  ref.read(selectedCouponIdProvider.notifier).state = null;
-                  context.pop<String>('');
-                },
-              );
-            }
-            final coupon = coupons[selectMode ? index - 1 : index];
-            final ineligible = SHOPriceCalculator.couponIneligibleReason(
-              subtotalCents: subtotal,
-              coupon: coupon,
-            );
-            final selected = selectedId == coupon.id;
+    return ListView.separated(
+      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+      itemCount: coupons.length + (widget.selectMode ? 1 : 0),
+      separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
+      itemBuilder: (context, index) {
+        if (widget.selectMode && index == 0) {
+          return _SHONoCouponTile(
+            selected: selectedId == null,
+            onTap: () {
+              ref.read(selectedCouponIdProvider.notifier).state = null;
+              popSelectResult('');
+            },
+          );
+        }
+        final coupon = coupons[widget.selectMode ? index - 1 : index];
+        final ineligible = SHOPriceCalculator.couponIneligibleReason(
+          subtotalCents: subtotal,
+          coupon: coupon,
+        );
+        final selected = selectedId == coupon.id;
 
-            return _SHOCouponTile(
-              coupon: coupon,
-              selected: selected,
-              ineligible: ineligible,
-              onTap: selectMode && ineligible == null
-                  ? () {
-                      ref.read(selectedCouponIdProvider.notifier).state = coupon.id;
-                      context.pop<String>(coupon.id);
-                    }
-                  : null,
-            );
-          },
-        ),
-      ),
+        return _SHOCouponTile(
+          coupon: coupon,
+          selected: selected,
+          ineligible: ineligible,
+          onTap: widget.selectMode && ineligible == null
+              ? () {
+                  ref.read(selectedCouponIdProvider.notifier).state = coupon.id;
+                  popSelectResult(coupon.id);
+                }
+              : null,
+        );
+      },
     );
   }
 }

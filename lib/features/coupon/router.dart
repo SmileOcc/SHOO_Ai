@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/coupon/presentation/pages/hos_coupon_list_page.dart';
 
 List<RouteBase> shoCouponRoutes({required GlobalKey<NavigatorState> rootKey}) => [
@@ -9,7 +10,7 @@ List<RouteBase> shoCouponRoutes({required GlobalKey<NavigatorState> rootKey}) =>
         path: SHOAppRoutes.coupons,
         parentNavigatorKey: rootKey,
         builder: (context, state) => SHOCouponListPage(
-          selectMode: state.uri.queryParameters['select'] == '1',
+          selectMode: state.selectArgs.selectMode,
         ),
       ),
     ];

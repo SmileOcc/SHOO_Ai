@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
+import 'package:shoo/core/pages/hos_app_page_mixin.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/share/hos_share_service.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
@@ -45,14 +46,14 @@ class SHOMusicPlayerPage extends ConsumerStatefulWidget {
 }
 
 class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
-    with SHOPageRouteAnalyticsMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
   var _showLyrics = true;
   var _initialized = false;
   var _bootstrapping = true;
   String? _lastSyncedTrackId;
 
   @override
-  String get pageAnalyticsName => 'SHOMusicPlayerPage';
+  String get pageName => 'music_player';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
