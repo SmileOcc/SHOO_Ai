@@ -10,6 +10,7 @@ List<RouteBase> shoProductRoutes({required GlobalKey<NavigatorState> rootKey}) =
         parentNavigatorKey: rootKey,
         builder: (context, state) => SHOProductDetailPage(
           productId: state.pathParameters['id']!,
+          sessionId: state.uri.queryParameters['sessionId'],
         ),
         routes: [
           GoRoute(

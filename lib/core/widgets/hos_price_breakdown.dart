@@ -25,6 +25,22 @@ class SHOPriceBreakdownView extends StatelessWidget {
           label: l10n.priceSubtotal,
           value: priceFormatter.formatCents(breakdown.subtotalCents),
         ),
+        if (breakdown.activitySavedCents > 0) ...[
+          const SizedBox(height: SHOAppSpacing.sm),
+          _SHOPriceRow(
+            label: l10n.priceActivitySaved,
+            value: '-${priceFormatter.formatCents(breakdown.activitySavedCents)}',
+            valueColor: SHOAppColors.sale,
+          ),
+        ],
+        if (breakdown.fullReductionCents > 0) ...[
+          const SizedBox(height: SHOAppSpacing.sm),
+          _SHOPriceRow(
+            label: breakdown.fullReductionLabel ?? l10n.priceFullReduction,
+            value: '-${priceFormatter.formatCents(breakdown.fullReductionCents)}',
+            valueColor: SHOAppColors.sale,
+          ),
+        ],
         if (breakdown.discountCents > 0) ...[
           const SizedBox(height: SHOAppSpacing.sm),
           _SHOPriceRow(

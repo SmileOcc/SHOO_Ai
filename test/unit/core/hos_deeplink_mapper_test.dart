@@ -39,16 +39,16 @@ void main() {
       );
     });
 
-    test('maps flash-sale to search', () {
+    test('maps flash-sale to flash sale page', () {
       final path = SHODeepLinkMapper.toAppPath(
         Uri.parse('https://shoo.app/flash-sale'),
       );
-      expect(path, '${SHOAppRoutes.search}?q=flash%20sale');
+      expect(path, SHOAppRoutes.flashSale);
     });
 
     test('linkToAppPath maps in-app flash-sale path', () {
       final path = SHODeepLinkMapper.linkToAppPath('/flash-sale');
-      expect(path, '${SHOAppRoutes.search}?q=flash%20sale');
+      expect(path, SHOAppRoutes.flashSale);
     });
   });
 

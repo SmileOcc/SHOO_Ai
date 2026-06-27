@@ -11,6 +11,7 @@ import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart'
     show SHOSessionState, sessionProvider;
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/profile/presentation/state/hos_profile_controller.dart';
+import 'package:shoo/features/profile/presentation/widgets/hos_profile_activity_notification_hub.dart';
 import 'package:shoo/features/profile/presentation/widgets/hos_profile_discovery_section.dart';
 import 'package:shoo/features/profile/presentation/widgets/hos_profile_order_hub.dart';
 
@@ -101,6 +102,8 @@ class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               const SHOProfileOrderHub(),
+              const SizedBox(height: SHOAppSpacing.lg),
+              const SHOProfileActivityNotificationHub(),
               const SizedBox(height: SHOAppSpacing.lg),
               const SHOProfileServiceHub(),
               const SizedBox(height: SHOAppSpacing.lg),

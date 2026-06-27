@@ -10,6 +10,7 @@ import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_installer.dart';
 import 'package:shoo/core/theme/hos_theme.dart';
 import 'package:shoo/core/theme/hos_theme_mode_provider.dart';
 import 'package:shoo/core/widgets/hos_offline_banner.dart' show SHOAppShell;
+import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_reminder_host.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/app/router/hos_router.dart';
 
@@ -58,8 +59,9 @@ class SHOApp extends ConsumerWidget {
       ],
       routerConfig: router,   // ← 路由配置（动态）
       builder: (context, child) {
-        // 所有页面外层包裹离线提示条 监听网络状态，显示离线提示
-        return SHOAppShell(child: child ?? const SizedBox.shrink());
+        return SHOFlashSaleReminderHost(
+          child: SHOAppShell(child: child ?? const SizedBox.shrink()),
+        );
       },
       ),
       ),

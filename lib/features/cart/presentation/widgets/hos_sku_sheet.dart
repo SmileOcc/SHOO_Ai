@@ -14,6 +14,8 @@ import 'package:shoo/core/widgets/hos_price_text.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
 import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
+import 'package:shoo/core/pricing/hos_full_reduction.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
 
 enum SHOSkuSheetIntent { addToCart, buyNow }
 
@@ -23,15 +25,18 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
     super.key,
     required this.product,
     this.intent = SHOSkuSheetIntent.addToCart,
+    this.checkoutActivityLine,
   });
 
   final SHOProductDetail product;
   final SHOSkuSheetIntent intent;
+  final SHOCheckoutActivityLine? checkoutActivityLine;
 
   static Future<void> show(
     BuildContext context,
     SHOProductDetail product, {
     SHOSkuSheetIntent intent = SHOSkuSheetIntent.addToCart,
+    SHOCheckoutActivityLine? checkoutActivityLine,
     required WidgetRef ref,
   }) {
     if (!SHOAuthGuard.requireAuth(context, ref)) {
@@ -40,7 +45,11 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
 
     return SHOAppDialog.showBottomSheet(
       context,
-      child: SHOSkuSheet(product: product, intent: intent),
+      child: SHOSkuSheet(
+        product: product,
+        intent: intent,
+        checkoutActivityLine: checkoutActivityLine,
+      ),
     );
   }
 
@@ -70,6 +79,10 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
     Navigator.pop(context);
 
     if (widget.intent == SHOSkuSheetIntent.buyNow) {
+      final line = widget.checkoutActivityLine;
+      if (line != null) {
+        setCheckoutActivityLine(ref, line);
+      }
       context.push(SHOAppRoutes.checkout);
       return;
     }

@@ -12,6 +12,7 @@ import 'package:shoo/features/category/router.dart';
 import 'package:shoo/features/checkout/router.dart';
 import 'package:shoo/features/community/router.dart';
 import 'package:shoo/features/coupon/router.dart';
+import 'package:shoo/features/flash_sale/router.dart';
 import 'package:shoo/features/order/router.dart';
 import 'package:shoo/features/product/router.dart';
 import 'package:shoo/features/profile/router.dart';
@@ -61,6 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...shoAddressRoutes(rootKey: rootNavigatorKey),
       ...shoOrderRoutes(rootKey: rootNavigatorKey),
       ...shoProductRoutes(rootKey: rootNavigatorKey),
+      ...shoFlashSaleRoutes(rootKey: rootNavigatorKey),
       ...shoToolboxRoutes(rootKey: rootNavigatorKey),
       ...shoActivityWebviewRoutes(rootKey: rootNavigatorKey),
       ...shoDebugRoutes(rootKey: rootNavigatorKey),

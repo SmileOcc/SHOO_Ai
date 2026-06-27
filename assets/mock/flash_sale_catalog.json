@@ -1,0 +1,290 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "promoEntries": [
+      {
+        "id": "pe1",
+        "title": "新人专享",
+        "iconUrl": "https://picsum.photos/seed/fs-pe1/80/80",
+        "deeplink": "/coupons"
+      },
+      {
+        "id": "pe2",
+        "title": "满减专区",
+        "iconUrl": "https://picsum.photos/seed/fs-pe2/80/80",
+        "deeplink": "/search?q=满减"
+      },
+      {
+        "id": "pe3",
+        "title": "品牌闪购",
+        "iconUrl": "https://picsum.photos/seed/fs-pe3/80/80",
+        "deeplink": "/category/products?leafId=c1-g1-l1&title=Brand"
+      },
+      {
+        "id": "pe4",
+        "title": "WebView活动",
+        "iconUrl": "https://picsum.photos/seed/fs-pe4/80/80",
+        "deeplink": "/activity"
+      }
+    ],
+    "sessionTemplates": [
+      {
+        "idSuffix": "10",
+        "label": "10:00场",
+        "startHour": 10,
+        "startMinute": 0,
+        "durationMinutes": 120,
+        "claimLeadMinutes": 30,
+        "claimTrailMinutes": 10
+      },
+      {
+        "idSuffix": "14",
+        "label": "14:00场",
+        "startHour": 14,
+        "startMinute": 0,
+        "durationMinutes": 120,
+        "claimLeadMinutes": 30,
+        "claimTrailMinutes": 10
+      },
+      {
+        "idSuffix": "20",
+        "label": "20:00场",
+        "startHour": 20,
+        "startMinute": 0,
+        "durationMinutes": 120,
+        "claimLeadMinutes": 30,
+        "claimTrailMinutes": 10
+      }
+    ],
+    "couponsBySessionSuffix": {
+      "10": [
+        {
+          "id": "fc-10-1",
+          "title": "满200减30",
+          "description": "全场通用",
+          "status": "claimable"
+        },
+        {
+          "id": "fc-10-2",
+          "title": "满500减80",
+          "description": "限抢购商品",
+          "status": "not_started"
+        },
+        {
+          "id": "fc-10-3",
+          "title": "9折券",
+          "description": "会员专享",
+          "status": "sold_out"
+        }
+      ],
+      "14": [
+        {
+          "id": "fc-14-1",
+          "title": "满300减50",
+          "description": "品类满减",
+          "status": "claimable"
+        },
+        {
+          "id": "fc-14-2",
+          "title": "满100减15",
+          "description": "跨店满减",
+          "status": "claimable"
+        }
+      ],
+      "20": [
+        {
+          "id": "fc-20-1",
+          "title": "满400减60",
+          "description": "限时满减",
+          "status": "not_started"
+        },
+        {
+          "id": "fc-20-2",
+          "title": "8.5折",
+          "description": "限时折扣",
+          "status": "not_started"
+        }
+      ]
+    },
+    "products": [
+      {
+        "id": "fs-p1",
+        "title": "Classic Flash Tee — Limited Drop",
+        "imageUrl": "https://picsum.photos/seed/fs-p1/400/500",
+        "originalPrice": 19900,
+        "activityPrice": 9900,
+        "skuAttributes": ["White", "M", "Cotton", "Summer"],
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "5折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "5折", "enabled": true },
+          { "type": "discount_flash", "label": "限时闪购", "enabled": true },
+          { "type": "full_reduction_tier", "label": "满200减30", "enabled": true },
+          { "type": "full_reduction_cross", "label": "跨店满减", "enabled": true },
+          { "type": "discount_member", "label": "会员95折", "enabled": true },
+          { "type": "discount_bundle", "label": "2件8折", "enabled": true }
+        ],
+        "stock": 42,
+        "soldCount": 158,
+        "createdAt": "2025-06-20T08:00:00Z"
+      },
+      {
+        "id": "fs-p2",
+        "title": "Urban Runner Sneakers Pro",
+        "imageUrl": "https://picsum.photos/seed/fs-p2/400/500",
+        "originalPrice": 45900,
+        "activityPrice": 29900,
+        "skuAttributes": ["Black", "42", "Mesh"],
+        "primaryPromoType": "full_reduction_tier",
+        "primaryPromoLabel": "满300减50",
+        "promoTags": [
+          { "type": "full_reduction_tier", "label": "满300减50", "enabled": true },
+          { "type": "full_reduction_single", "label": "单件减20", "enabled": true },
+          { "type": "full_reduction_category", "label": "鞋类满减", "enabled": true },
+          { "type": "discount_fixed", "label": "减¥160", "enabled": true }
+        ],
+        "stock": 0,
+        "soldCount": 500,
+        "createdAt": "2025-06-19T10:00:00Z"
+      },
+      {
+        "id": "fs-p3",
+        "title": "Minimal Crossbody Bag",
+        "imageUrl": "https://picsum.photos/seed/fs-p3/400/500",
+        "originalPrice": 12900,
+        "activityPrice": 7900,
+        "skuAttributes": ["Brown", "One Size", "PU Leather", "Adjustable Strap"],
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "6.1折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "6.1折", "enabled": true },
+          { "type": "discount_member", "label": "会员专享", "enabled": true },
+          { "type": "full_reduction_tier", "label": "满100减15", "enabled": true }
+        ],
+        "stock": 88,
+        "soldCount": 67,
+        "createdAt": "2025-06-22T14:00:00Z"
+      },
+      {
+        "id": "fs-p4",
+        "title": "Wireless Earbuds X200",
+        "imageUrl": "https://picsum.photos/seed/fs-p4/400/500",
+        "originalPrice": 29900,
+        "activityPrice": 15900,
+        "skuAttributes": ["White", "Bluetooth 5.3", "ANC"],
+        "primaryPromoType": "discount_flash",
+        "primaryPromoLabel": "闪购价",
+        "promoTags": [
+          { "type": "discount_flash", "label": "限时闪购", "enabled": true },
+          { "type": "discount_fixed", "label": "减¥140", "enabled": true },
+          { "type": "full_reduction_cross", "label": "跨店满减", "enabled": true }
+        ],
+        "stock": 15,
+        "soldCount": 285,
+        "createdAt": "2025-06-21T09:00:00Z"
+      },
+      {
+        "id": "fs-p5",
+        "title": "Linen Summer Dress",
+        "imageUrl": "https://picsum.photos/seed/fs-p5/400/500",
+        "originalPrice": 18900,
+        "activityPrice": 11900,
+        "skuAttributes": ["Floral", "S", "Linen"],
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "6.3折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "6.3折", "enabled": true },
+          { "type": "full_reduction_category", "label": "女装满减", "enabled": true }
+        ],
+        "stock": 56,
+        "soldCount": 34,
+        "createdAt": "2025-06-23T06:00:00Z"
+      },
+      {
+        "id": "fs-p6",
+        "title": "Sport Water Bottle 750ml",
+        "imageUrl": "https://picsum.photos/seed/fs-p6/400/500",
+        "originalPrice": 5900,
+        "activityPrice": 2900,
+        "skuAttributes": ["Blue", "750ml", "BPA Free"],
+        "primaryPromoType": "full_reduction_single",
+        "primaryPromoLabel": "单件减30",
+        "promoTags": [
+          { "type": "full_reduction_single", "label": "单件减30", "enabled": true },
+          { "type": "discount_bundle", "label": "3件7折", "enabled": true }
+        ],
+        "stock": 200,
+        "soldCount": 12,
+        "createdAt": "2025-06-24T11:00:00Z"
+      },
+      {
+        "id": "fs-p7",
+        "title": "Premium Hoodie Oversized",
+        "imageUrl": "https://picsum.photos/seed/fs-p7/400/500",
+        "originalPrice": 24900,
+        "activityPrice": 14900,
+        "skuAttributes": ["Gray", "XL", "Fleece"],
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "6折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "6折", "enabled": true },
+          { "type": "full_reduction_tier", "label": "满200减30", "enabled": true }
+        ],
+        "stock": 33,
+        "soldCount": 91,
+        "createdAt": "2025-06-18T16:00:00Z"
+      },
+      {
+        "id": "fs-p8",
+        "title": "Smart Watch Band Set",
+        "imageUrl": "https://picsum.photos/seed/fs-p8/400/500",
+        "originalPrice": 8900,
+        "activityPrice": 4900,
+        "skuAttributes": ["Mixed Colors", "3-Pack"],
+        "primaryPromoType": "discount_fixed",
+        "primaryPromoLabel": "减¥40",
+        "promoTags": [
+          { "type": "discount_fixed", "label": "减¥40", "enabled": true },
+          { "type": "discount_bundle", "label": "套装优惠", "enabled": true }
+        ],
+        "stock": 120,
+        "soldCount": 45,
+        "createdAt": "2025-06-25T07:00:00Z"
+      }
+    ],
+    "productActivities": {
+      "fs-p1": {
+        "originalPrice": 19900,
+        "activityPrice": 9900,
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "5折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "5折", "enabled": true },
+          { "type": "full_reduction_tier", "label": "满200减30", "enabled": true }
+        ],
+        "stock": 42
+      },
+      "fs-p2": {
+        "originalPrice": 45900,
+        "activityPrice": 29900,
+        "primaryPromoType": "full_reduction_tier",
+        "primaryPromoLabel": "满300减50",
+        "promoTags": [
+          { "type": "full_reduction_tier", "label": "满300减50", "enabled": true }
+        ],
+        "stock": 0
+      },
+      "fs-p3": {
+        "originalPrice": 12900,
+        "activityPrice": 7900,
+        "primaryPromoType": "discount_percent",
+        "primaryPromoLabel": "6.1折",
+        "promoTags": [
+          { "type": "discount_percent", "label": "6.1折", "enabled": true }
+        ],
+        "stock": 88
+      }
+    }
+  }
+}

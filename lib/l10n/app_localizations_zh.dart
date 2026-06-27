@@ -2001,4 +2001,108 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get afterSaleStatusCompleted => '已完成';
+
+  @override
+  String get flashSaleTitle => '限时抢购';
+
+  @override
+  String get flashSaleStatusNotStarted => '未开始';
+
+  @override
+  String get flashSaleStatusOngoing => '进行中';
+
+  @override
+  String get flashSaleStatusEnded => '已结束';
+
+  @override
+  String get flashSaleSortHot => '热门';
+
+  @override
+  String get flashSaleSortPrice => '价格';
+
+  @override
+  String get flashSaleSortNewest => '最新';
+
+  @override
+  String get flashSaleFollow => '关注';
+
+  @override
+  String get flashSaleFollowed => '已关注';
+
+  @override
+  String get flashSaleBuyNow => '立即购买';
+
+  @override
+  String get flashSaleSoldOut => '已抢完';
+
+  @override
+  String flashSaleStockLeft(int count) {
+    return '库存 $count';
+  }
+
+  @override
+  String get flashSaleNotStartedHint => '活动未开始，请先关注开抢提醒';
+
+  @override
+  String get flashSaleEndedHint => '活动已结束';
+
+  @override
+  String get flashSaleSoldOutHint => '商品已抢完';
+
+  @override
+  String get flashSaleCouponNotStarted => '领券未开始';
+
+  @override
+  String get flashSaleCouponClaiming => '领券进行中';
+
+  @override
+  String get flashSaleCouponExpired => '领券已结束，未领取券已失效';
+
+  @override
+  String get flashSaleCouponCountdownPrefix => '距领券结束';
+
+  @override
+  String get flashSaleCouponStatusNotStarted => '未开始';
+
+  @override
+  String get flashSaleCouponStatusClaimable => '立即领取';
+
+  @override
+  String get flashSaleCouponStatusClaimed => '已领取';
+
+  @override
+  String get flashSaleCouponStatusSoldOut => '已抢光';
+
+  @override
+  String get flashSaleCouponStatusExpired => '已失效';
+
+  @override
+  String get toolboxFlashSale => '限时抢购';
+
+  @override
+  String get profileActivityNotifications => '活动通知';
+
+  @override
+  String get profileActivityFlashSale => '抢购通知';
+
+  @override
+  String get profileActivityFlashSaleDesc => '查看已关注的开抢提醒';
+
+  @override
+  String get flashSaleFollowsEmpty => '还没有关注抢购商品';
+
+  @override
+  String get flashSaleReminderTitle => '即将开抢';
+
+  @override
+  String get flashSaleReminderAction => '去抢购';
+
+  @override
+  String get flashSaleFollowSuccess => '已关注，开抢前 5 分钟将提醒您';
+
+  @override
+  String get priceActivitySaved => '活动已省';
+
+  @override
+  String get priceFullReduction => '满减优惠';
 }

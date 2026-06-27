@@ -18,6 +18,7 @@ import 'package:shoo/core/widgets/hos_button.dart';
 import 'package:shoo/core/widgets/hos_circle_overlay_button.dart';
 import 'package:shoo/core/widgets/hos_error_view.dart';
 import 'package:shoo/core/widgets/hos_price_text.dart';
+import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:shoo/core/widgets/hos_promo_tag.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
 import 'package:shoo/l10n/app_localizations.dart';
@@ -32,17 +33,32 @@ import 'package:shoo/features/product/presentation/state/hos_product_controller.
 import 'package:shoo/features/product/presentation/state/hos_product_footprint_recorder.dart';
 import 'package:shoo/features/product/presentation/state/hos_product_view_reporter.dart';
 import 'package:shoo/features/profile/domain/entities/hos_profile_activity_product.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
 
 class SHOProductDetailPage extends ConsumerWidget {
-  const SHOProductDetailPage({super.key, required this.productId});
+  const SHOProductDetailPage({
+    super.key,
+    required this.productId,
+    this.sessionId,
+  });
 
   final String productId;
+  final String? sessionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final detailAsync = ref.watch(productDetailProvider(productId));
     final reviewsAsync = ref.watch(productReviewsProvider(productId));
+    final activityAsync = sessionId != null && sessionId!.isNotEmpty
+        ? ref.watch(
+            flashSaleProductActivityProvider(
+              (productId: productId, sessionId: sessionId!),
+            ),
+          )
+        : null;
     final topInset = MediaQuery.paddingOf(context).top;
     final heroHeight = 360.0 + topInset;
 
@@ -65,6 +81,16 @@ class SHOProductDetailPage extends ConsumerWidget {
         onRetry: () => ref.invalidate(productDetailProvider(productId)),
       ),
       data: (detail) {
+        final activity = activityAsync?.maybeWhen(
+          data: (value) => value,
+          orElse: () => null,
+        );
+        final displayPrice = activity?.displayPrice ?? detail.price;
+        final showActivityPrice = activity?.showActivityPrice ?? false;
+        final originalPrice = showActivityPrice
+            ? activity!.originalPrice
+            : detail.originalPrice;
+
         final banners = detail.images
             .map(
               (url) => SHOBannerItem(
@@ -88,23 +114,65 @@ class SHOProductDetailPage extends ConsumerWidget {
                 CustomScrollView(
                   slivers: [
                     SliverToBoxAdapter(
-                      child: SHOBannerCarousel(
-                        banners: banners,
-                        height: heroHeight,
-                        edgeToEdge: true,
-                        showTitleOverlay: false,
-                        showIndicators: banners.length > 1,
-                        autoPlay: false,
+                      child: Stack(
+                        children: [
+                          SHOBannerCarousel(
+                            banners: banners,
+                            height: heroHeight,
+                            edgeToEdge: true,
+                            showTitleOverlay: false,
+                            showIndicators: banners.length > 1,
+                            autoPlay: false,
+                          ),
+                          if (activity?.overlayLabel != null)
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: SHOPromoBadge(
+                                type: SHOPromoBadgeType.status,
+                                label: activity!.overlayLabel!,
+                                preset: SHOPromoBadgePreset.overlayBanner,
+                                enabled: activity.status ==
+                                    SHOFlashSaleProductStatus.ongoing,
+                              ),
+                            ),
+                          if (activity?.primaryBadgeType != null &&
+                              activity?.primaryPromoLabel != null)
+                            Positioned(
+                              left: SHOAppSpacing.pagePadding,
+                              top: topInset + SHOAppSpacing.sm,
+                              child: SHOPromoBadge(
+                                type: activity!.primaryBadgeType!,
+                                label: activity.primaryPromoLabel!,
+                                preset: SHOPromoBadgePreset.cornerOnImage,
+                                enabled: activity.status ==
+                                        SHOFlashSaleProductStatus.ongoing ||
+                                    activity.status ==
+                                        SHOFlashSaleProductStatus.notStarted,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     SliverPadding(
                       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
                       sliver: SliverList(
                         delegate: SliverChildListDelegate([
-                          if (detail.discountLabel.isNotEmpty)
+                          if (detail.discountLabel.isNotEmpty && activity == null)
                             SHOPromoTag(label: detail.discountLabel),
-                          if (detail.discountLabel.isNotEmpty)
+                          if (detail.discountLabel.isNotEmpty && activity == null)
                             const SizedBox(height: SHOAppSpacing.sm),
+                          if (activity != null && activity.promoTags.isNotEmpty) ...[
+                            SHOPromoBadgeWrap(
+                              tags: activity.promoTags
+                                  .map((t) => t.toBadgeData())
+                                  .toList(),
+                              enabled: activity.status ==
+                                  SHOFlashSaleProductStatus.ongoing,
+                            ),
+                            const SizedBox(height: SHOAppSpacing.sm),
+                          ],
                           Text(
                             detail.title,
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -112,9 +180,28 @@ class SHOProductDetailPage extends ConsumerWidget {
                                 ),
                           ),
                           const SizedBox(height: SHOAppSpacing.md),
-                          SHOAppPriceText(
-                            priceCents: detail.price,
-                            originalCents: detail.originalPrice,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: SHOAppPriceText(
+                                  priceCents: displayPrice,
+                                  originalCents: showActivityPrice ? originalPrice : detail.originalPrice,
+                                  showOriginal: showActivityPrice ||
+                                      detail.originalPrice > detail.price,
+                                ),
+                              ),
+                              if (activity != null &&
+                                  activity.primaryBadgeType != null &&
+                                  activity.primaryPromoLabel != null)
+                                SHOPromoBadge(
+                                  type: activity.primaryBadgeType!,
+                                  label: activity.primaryPromoLabel!,
+                                  preset: SHOPromoBadgePreset.priceInline,
+                                  enabled: activity.status ==
+                                      SHOFlashSaleProductStatus.ongoing,
+                                ),
+                            ],
                           ),
                           const SizedBox(height: SHOAppSpacing.sm),
                           Row(
@@ -213,11 +300,18 @@ class SHOProductDetailPage extends ConsumerWidget {
               },
               onBuyNow: () {
                 if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                final activityLine = activity != null
+                    ? buildCheckoutActivityLineFromActivity(
+                        productId: productId,
+                        activity: activity,
+                      )
+                    : null;
                 SHOSkuSheet.show(
                   context,
                   detail,
                   ref: ref,
                   intent: SHOSkuSheetIntent.buyNow,
+                  checkoutActivityLine: activityLine,
                 );
               },
             ),

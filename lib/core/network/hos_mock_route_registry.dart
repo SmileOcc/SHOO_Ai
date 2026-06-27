@@ -52,6 +52,16 @@ abstract final class SHOMockRouteRegistry {
     const SHOMockRouteEntry(method: 'GET', path: '/activity/detail/level3', asset: 'assets/mock/activity_level3_detail.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/activity/user/check', asset: 'assets/mock/activity_user_check.json'),
     const SHOMockRouteEntry(method: 'GET', path: '/activity/config/url-rules', asset: 'assets/mock/activity_url_rules.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/flash-sale/calendar', asset: 'assets/mock/flash_sale_catalog.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/flash-sale/page', asset: 'assets/mock/flash_sale_catalog.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/flash-sale/product-activity', asset: 'assets/mock/flash_sale_catalog.json'),
+    const SHOMockRouteEntry(method: 'GET', path: '/flash-sale/follows', asset: 'assets/mock/flash_sale_follows.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/flash-sale/follow', asset: 'assets/mock/flash_sale_follow_ok.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/flash-sale/coupons/{id}/claim', asset: 'assets/mock/flash_sale_claim_ok.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/flash-sale/unfollow', asset: 'assets/mock/flash_sale_follow_ok.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/push/register', asset: 'assets/mock/push_register_ok.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/push/flash-sale/reminder', asset: 'assets/mock/push_register_ok.json'),
+    const SHOMockRouteEntry(method: 'POST', path: '/push/flash-sale/cancel', asset: 'assets/mock/push_register_ok.json'),
   ];
 
   static void register(SHOMockRouteEntry entry) => _routes.add(entry);

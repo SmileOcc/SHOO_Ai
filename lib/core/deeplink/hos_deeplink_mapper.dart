@@ -76,7 +76,7 @@ abstract final class SHODeepLinkMapper {
         }
         return SHOAppRoutes.login;
       case 'flash-sale':
-        return '${SHOAppRoutes.search}?q=flash%20sale';
+        return SHOAppRoutes.flashSale;
       case 'new-arrivals':
         return '${SHOAppRoutes.search}?q=new%20arrivals';
       case 'trending':

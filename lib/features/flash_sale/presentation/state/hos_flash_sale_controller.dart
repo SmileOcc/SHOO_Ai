@@ -1,0 +1,227 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
+import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
+
+class SHOFlashSalePageState {
+  const SHOFlashSalePageState({
+    this.calendar,
+    this.pageData,
+    this.selectedDate = '',
+    this.selectedSessionId = '',
+    this.sort = SHOFlashSaleSort.hot,
+    this.isRefreshing = false,
+    this.isLoadingMore = false,
+    this.claimedCouponIds = const {},
+    this.error,
+  });
+
+  final SHOFlashSaleCalendar? calendar;
+  final SHOFlashSalePageData? pageData;
+  final String selectedDate;
+  final String selectedSessionId;
+  final SHOFlashSaleSort sort;
+  final bool isRefreshing;
+  final bool isLoadingMore;
+  final Set<String> claimedCouponIds;
+  final String? error;
+
+  SHOFlashSalePageState copyWith({
+    SHOFlashSaleCalendar? calendar,
+    SHOFlashSalePageData? pageData,
+    String? selectedDate,
+    String? selectedSessionId,
+    SHOFlashSaleSort? sort,
+    bool? isRefreshing,
+    bool? isLoadingMore,
+    Set<String>? claimedCouponIds,
+    String? error,
+    bool clearError = false,
+  }) {
+    return SHOFlashSalePageState(
+      calendar: calendar ?? this.calendar,
+      selectedDate: selectedDate ?? this.selectedDate,
+      selectedSessionId: selectedSessionId ?? this.selectedSessionId,
+      sort: sort ?? this.sort,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      claimedCouponIds: claimedCouponIds ?? this.claimedCouponIds,
+      error: clearError ? null : (error ?? this.error),
+      pageData: pageData ?? this.pageData,
+    );
+  }
+
+  List<SHOFlashSaleCoupon> get mergedCoupons {
+    final data = pageData;
+    if (data == null) return const [];
+    return data.coupons.map((c) {
+      if (claimedCouponIds.contains(c.id)) {
+        return c.copyWith(status: SHOFlashSaleCouponStatus.claimed);
+      }
+      return c;
+    }).toList();
+  }
+
+  String? sessionStartAtFor(String sessionId) {
+    final sessions = pageData?.sessions ?? const [];
+    for (final session in sessions) {
+      if (session.id == sessionId) return session.startAt;
+    }
+    return null;
+  }
+}
+
+final flashSaleControllerProvider =
+    StateNotifierProvider<SHOFlashSaleController, SHOFlashSalePageState>(
+  (ref) => SHOFlashSaleController(ref),
+);
+
+class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
+  SHOFlashSaleController(this._ref) : super(const SHOFlashSalePageState());
+
+  final Ref _ref;
+
+  SHOFlashSaleRepository get _repo => _ref.read(flashSaleRepositoryProvider);
+
+  List<SHOFlashSaleProduct> mergedProducts() {
+    final data = state.pageData;
+    if (data == null) return const [];
+    final follows = _ref.read(flashSaleFollowControllerProvider).valueOrNull ?? const [];
+    return data.products.map((p) {
+      final followed = follows.any(
+        (f) => f.sessionId == p.sessionId && f.productId == p.id,
+      );
+      return p.copyWith(isFollowed: followed);
+    }).toList();
+  }
+
+  Future<void> initialize() async {
+    state = state.copyWith(isRefreshing: true, clearError: true);
+    try {
+      final calendar = await _repo.getCalendar();
+      final defaultDay = calendar.days.firstWhere(
+        (d) => d.status == SHOFlashSaleDayStatus.ongoing,
+        orElse: () => calendar.days.firstWhere(
+          (d) => d.status == SHOFlashSaleDayStatus.notStarted,
+          orElse: () => calendar.days[1],
+        ),
+      );
+      state = state.copyWith(
+        calendar: calendar,
+        selectedDate: defaultDay.date,
+        isRefreshing: false,
+      );
+      await _loadPage(reset: true);
+    } catch (e) {
+      state = state.copyWith(isRefreshing: false, error: e.toString());
+    }
+  }
+
+  Future<void> selectDate(String date) async {
+    if (date == state.selectedDate) return;
+    state = state.copyWith(selectedDate: date, selectedSessionId: '');
+    await _loadPage(reset: true);
+  }
+
+  Future<void> selectSession(String sessionId) async {
+    if (sessionId == state.selectedSessionId) return;
+    state = state.copyWith(selectedSessionId: sessionId);
+    await _loadPage(reset: true);
+  }
+
+  Future<void> selectSort(SHOFlashSaleSort sort) async {
+    if (sort == state.sort) return;
+    state = state.copyWith(sort: sort);
+    await _loadPage(reset: true);
+  }
+
+  Future<void> refresh() async {
+    state = state.copyWith(isRefreshing: true, clearError: true);
+    try {
+      final calendar = await _repo.getCalendar();
+      state = state.copyWith(calendar: calendar, isRefreshing: false);
+      await _loadPage(reset: true);
+    } catch (e) {
+      state = state.copyWith(isRefreshing: false, error: e.toString());
+    }
+  }
+
+  Future<void> loadMore() async {
+    final data = state.pageData;
+    if (data == null || !data.hasMore || state.isLoadingMore) return;
+
+    state = state.copyWith(isLoadingMore: true, clearError: true);
+    try {
+      final next = await _repo.getPage(
+        date: state.selectedDate,
+        sessionId: state.selectedSessionId,
+        sort: state.sort,
+        page: data.page + 1,
+      );
+      state = state.copyWith(
+        isLoadingMore: false,
+        pageData: data.copyWith(
+          products: [...data.products, ...next.products],
+          page: next.page,
+          hasMore: next.hasMore,
+          total: next.total,
+        ),
+      );
+    } catch (e) {
+      state = state.copyWith(isLoadingMore: false, error: e.toString());
+    }
+  }
+
+  Future<void> claimCoupon(String couponId) async {
+    await _repo.claimCoupon(couponId);
+    state = state.copyWith(
+      claimedCouponIds: {...state.claimedCouponIds, couponId},
+    );
+  }
+
+  Future<bool> toggleFollow(SHOFlashSaleProduct product) async {
+    if (!_ref.read(sessionProvider).isAuthenticated) {
+      return false;
+    }
+    final sessionStartAt =
+        state.sessionStartAtFor(product.sessionId) ?? product.createdAt ?? '';
+    return _ref.read(flashSaleFollowControllerProvider.notifier).toggleFollow(
+          product: product,
+          sessionStartAt: sessionStartAt,
+        );
+  }
+
+  Future<void> _loadPage({required bool reset}) async {
+    if (state.selectedDate.isEmpty) return;
+    if (!reset) return;
+
+    state = state.copyWith(isRefreshing: true, clearError: true);
+    try {
+      final page = await _repo.getPage(
+        date: state.selectedDate,
+        sessionId: state.selectedSessionId,
+        sort: state.sort,
+        page: 1,
+      );
+      state = state.copyWith(
+        pageData: page,
+        selectedSessionId: page.sessionId,
+        isRefreshing: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isRefreshing: false, error: e.toString());
+    }
+  }
+}
+
+final flashSaleProductActivityProvider = FutureProvider.family<
+    SHOFlashSaleProductActivity,
+    ({String productId, String sessionId})>((ref, params) async {
+  final repo = ref.watch(flashSaleRepositoryProvider);
+  return repo.getProductActivity(
+    productId: params.productId,
+    sessionId: params.sessionId,
+  );
+});

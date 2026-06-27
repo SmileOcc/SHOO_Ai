@@ -1,3 +1,4 @@
+import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/features/coupon/domain/entities/hos_coupon.dart';
 
 /// 订单价格明细（纯数据，无副作用）。
@@ -9,6 +10,9 @@ class SHOPriceBreakdown {
     required this.totalCents,
     this.couponApplied = false,
     this.couponIneligibleReason,
+    this.fullReductionCents = 0,
+    this.fullReductionLabel,
+    this.activitySavedCents = 0,
   });
 
   final int subtotalCents;
@@ -17,6 +21,9 @@ class SHOPriceBreakdown {
   final int totalCents;
   final bool couponApplied;
   final String? couponIneligibleReason;
+  final int fullReductionCents;
+  final String? fullReductionLabel;
+  final int activitySavedCents;
 }
 
 /// 价格计算纯函数 — 结算页 / 优惠券校验共用。
@@ -56,6 +63,8 @@ abstract final class SHOPriceCalculator {
     required int subtotalCents,
     SHOCoupon? coupon,
     int shippingCents = defaultShippingCents,
+    List<SHOFullReductionTier> fullReductionTiers = const [],
+    int activitySavedCents = 0,
   }) {
     var discountCents = 0;
     String? ineligible;
@@ -75,7 +84,13 @@ abstract final class SHOPriceCalculator {
       }
     }
 
-    final total = (subtotalCents - discountCents + shippingCents).clamp(0, 1 << 31);
+    final afterCoupon = (subtotalCents - discountCents).clamp(0, 1 << 31);
+    final fullReductionCents =
+        fullReductionTiers.bestReductionFor(afterCoupon);
+    final bestTier = fullReductionTiers.bestTierFor(afterCoupon);
+
+    final total = (afterCoupon - fullReductionCents + shippingCents)
+        .clamp(0, 1 << 31);
 
     return SHOPriceBreakdown(
       subtotalCents: subtotalCents,
@@ -84,6 +99,9 @@ abstract final class SHOPriceCalculator {
       totalCents: total,
       couponApplied: applied,
       couponIneligibleReason: ineligible,
+      fullReductionCents: fullReductionCents,
+      fullReductionLabel: bestTier?.label,
+      activitySavedCents: activitySavedCents,
     );
   }
 }

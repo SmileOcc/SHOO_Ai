@@ -2055,4 +2055,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get afterSaleStatusCompleted => 'Completed';
+
+  @override
+  String get flashSaleTitle => 'Flash Sale';
+
+  @override
+  String get flashSaleStatusNotStarted => 'Upcoming';
+
+  @override
+  String get flashSaleStatusOngoing => 'Live';
+
+  @override
+  String get flashSaleStatusEnded => 'Ended';
+
+  @override
+  String get flashSaleSortHot => 'Hot';
+
+  @override
+  String get flashSaleSortPrice => 'Price';
+
+  @override
+  String get flashSaleSortNewest => 'Newest';
+
+  @override
+  String get flashSaleFollow => 'Follow';
+
+  @override
+  String get flashSaleFollowed => 'Following';
+
+  @override
+  String get flashSaleBuyNow => 'Buy Now';
+
+  @override
+  String get flashSaleSoldOut => 'Sold Out';
+
+  @override
+  String flashSaleStockLeft(int count) {
+    return '$count left';
+  }
+
+  @override
+  String get flashSaleNotStartedHint => 'Sale has not started yet';
+
+  @override
+  String get flashSaleEndedHint => 'Sale has ended';
+
+  @override
+  String get flashSaleSoldOutHint => 'This item is sold out';
+
+  @override
+  String get flashSaleCouponNotStarted => 'Coupons not available yet';
+
+  @override
+  String get flashSaleCouponClaiming => 'Claim coupons now';
+
+  @override
+  String get flashSaleCouponExpired => 'Claim window closed';
+
+  @override
+  String get flashSaleCouponCountdownPrefix => 'Claim ends in';
+
+  @override
+  String get flashSaleCouponStatusNotStarted => 'Upcoming';
+
+  @override
+  String get flashSaleCouponStatusClaimable => 'Claim';
+
+  @override
+  String get flashSaleCouponStatusClaimed => 'Claimed';
+
+  @override
+  String get flashSaleCouponStatusSoldOut => 'Sold out';
+
+  @override
+  String get flashSaleCouponStatusExpired => 'Expired';
+
+  @override
+  String get toolboxFlashSale => 'Flash Sale';
+
+  @override
+  String get profileActivityNotifications => 'Activity Alerts';
+
+  @override
+  String get profileActivityFlashSale => 'Flash Sale Alerts';
+
+  @override
+  String get profileActivityFlashSaleDesc =>
+      'Items you follow for sale reminders';
+
+  @override
+  String get flashSaleFollowsEmpty => 'No flash sale follows yet';
+
+  @override
+  String get flashSaleReminderTitle => 'Starting Soon';
+
+  @override
+  String get flashSaleReminderAction => 'Shop Now';
+
+  @override
+  String get flashSaleFollowSuccess =>
+      'Followed — we\'ll remind you 5 minutes before';
+
+  @override
+  String get priceActivitySaved => 'Activity savings';
+
+  @override
+  String get priceFullReduction => 'Spend & save';
 }

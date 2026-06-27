@@ -136,6 +136,8 @@ abstract final class SHOAppRoutes {
   static const settingsCache = '/settings/cache';
   static const messages = '/messages';
   static const search = '/search';
+  static const flashSale = '/flash-sale';
+  static const profileFlashSaleFollows = '/profile/flash-sale-follows';
   static const checkout = '/checkout';
 
   static String checkoutWithContext({bool fromCartStack = false}) {

@@ -3917,6 +3917,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Completed'**
   String get afterSaleStatusCompleted;
+
+  /// No description provided for @flashSaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash Sale'**
+  String get flashSaleTitle;
+
+  /// No description provided for @flashSaleStatusNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get flashSaleStatusNotStarted;
+
+  /// No description provided for @flashSaleStatusOngoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get flashSaleStatusOngoing;
+
+  /// No description provided for @flashSaleStatusEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get flashSaleStatusEnded;
+
+  /// No description provided for @flashSaleSortHot.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get flashSaleSortHot;
+
+  /// No description provided for @flashSaleSortPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get flashSaleSortPrice;
+
+  /// No description provided for @flashSaleSortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get flashSaleSortNewest;
+
+  /// No description provided for @flashSaleFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get flashSaleFollow;
+
+  /// No description provided for @flashSaleFollowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get flashSaleFollowed;
+
+  /// No description provided for @flashSaleBuyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Now'**
+  String get flashSaleBuyNow;
+
+  /// No description provided for @flashSaleSoldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold Out'**
+  String get flashSaleSoldOut;
+
+  /// No description provided for @flashSaleStockLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} left'**
+  String flashSaleStockLeft(int count);
+
+  /// No description provided for @flashSaleNotStartedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale has not started yet'**
+  String get flashSaleNotStartedHint;
+
+  /// No description provided for @flashSaleEndedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale has ended'**
+  String get flashSaleEndedHint;
+
+  /// No description provided for @flashSaleSoldOutHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This item is sold out'**
+  String get flashSaleSoldOutHint;
+
+  /// No description provided for @flashSaleCouponNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons not available yet'**
+  String get flashSaleCouponNotStarted;
+
+  /// No description provided for @flashSaleCouponClaiming.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim coupons now'**
+  String get flashSaleCouponClaiming;
+
+  /// No description provided for @flashSaleCouponExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim window closed'**
+  String get flashSaleCouponExpired;
+
+  /// No description provided for @flashSaleCouponCountdownPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim ends in'**
+  String get flashSaleCouponCountdownPrefix;
+
+  /// No description provided for @flashSaleCouponStatusNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get flashSaleCouponStatusNotStarted;
+
+  /// No description provided for @flashSaleCouponStatusClaimable.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim'**
+  String get flashSaleCouponStatusClaimable;
+
+  /// No description provided for @flashSaleCouponStatusClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed'**
+  String get flashSaleCouponStatusClaimed;
+
+  /// No description provided for @flashSaleCouponStatusSoldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold out'**
+  String get flashSaleCouponStatusSoldOut;
+
+  /// No description provided for @flashSaleCouponStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get flashSaleCouponStatusExpired;
+
+  /// No description provided for @toolboxFlashSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash Sale'**
+  String get toolboxFlashSale;
+
+  /// No description provided for @profileActivityNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Alerts'**
+  String get profileActivityNotifications;
+
+  /// No description provided for @profileActivityFlashSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash Sale Alerts'**
+  String get profileActivityFlashSale;
+
+  /// No description provided for @profileActivityFlashSaleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Items you follow for sale reminders'**
+  String get profileActivityFlashSaleDesc;
+
+  /// No description provided for @flashSaleFollowsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No flash sale follows yet'**
+  String get flashSaleFollowsEmpty;
+
+  /// No description provided for @flashSaleReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting Soon'**
+  String get flashSaleReminderTitle;
+
+  /// No description provided for @flashSaleReminderAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop Now'**
+  String get flashSaleReminderAction;
+
+  /// No description provided for @flashSaleFollowSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Followed — we\'ll remind you 5 minutes before'**
+  String get flashSaleFollowSuccess;
+
+  /// No description provided for @priceActivitySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity savings'**
+  String get priceActivitySaved;
+
+  /// No description provided for @priceFullReduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend & save'**
+  String get priceFullReduction;
 }
 
 class _AppLocalizationsDelegate

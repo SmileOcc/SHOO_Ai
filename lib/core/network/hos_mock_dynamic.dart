@@ -1,3 +1,5 @@
+import 'package:shoo/core/network/hos_mock_flash_sale_follow_store.dart';
+import 'package:shoo/core/network/hos_flash_sale_mock_dynamic.dart';
 import 'package:shoo/core/network/hos_mock_pagination.dart';
 
 /// 从路由 pattern 提取路径参数，如 `/products/{id}` + `/products/c1-p1` → `c1-p1`。
@@ -96,6 +98,7 @@ Map<String, dynamic> applyMockDynamic(
   required Map<String, dynamic> query,
   Map<String, dynamic>? catalogEnvelope,
   Map<String, dynamic>? reviewsCatalogEnvelope,
+  Map<String, dynamic>? flashSaleCatalogEnvelope,
 }) {
   if (routePath == '/products') {
     final categoryId = query['categoryId']?.toString();
@@ -113,17 +116,57 @@ Map<String, dynamic> applyMockDynamic(
   if (routePath == '/products/{id}' && catalogEnvelope != null) {
     final productId = mockPathParam(routePath, requestPath, 'id');
     if (productId == null) return _productNotFound('');
-    return lookupProductDetail(catalogEnvelope, productId);
+    final result = lookupProductDetail(catalogEnvelope, productId);
+    if ((result['code'] as int?) == 404 && flashSaleCatalogEnvelope != null) {
+      return lookupFlashSaleProductDetail(
+        flashSaleCatalogEnvelope,
+        productId,
+        sessionId: query['sessionId']?.toString(),
+      );
+    }
+    return result;
   }
 
   if (routePath == '/products/{id}/reviews' && reviewsCatalogEnvelope != null) {
     final productId = mockPathParam(routePath, requestPath, 'id');
     if (productId == null) return _reviewsNotFound('');
-    return lookupProductReviews(reviewsCatalogEnvelope, productId);
+    final result = lookupProductReviews(reviewsCatalogEnvelope, productId);
+    if ((result['code'] as int?) == 404 &&
+        flashSaleCatalogEnvelope != null &&
+        _isFlashSaleProductId(productId, flashSaleCatalogEnvelope)) {
+      return emptyFlashSaleProductReviews();
+    }
+    return result;
   }
 
   if (routePath == '/community/feed') {
     return sortCommunityFeedEnvelope(envelope, query: query);
+  }
+
+  if (routePath == '/flash-sale/calendar') {
+    return resolveFlashSaleCalendar(envelope);
+  }
+
+  if (routePath == '/flash-sale/page') {
+    return resolveFlashSalePage(envelope, query: query);
+  }
+
+  if (routePath == '/flash-sale/follows') {
+    return {
+      'code': envelope['code'] ?? 0,
+      'message': envelope['message'] ?? 'ok',
+      'data': SHOMockFlashSaleFollowStore.list(),
+    };
+  }
+
+  if (routePath == '/flash-sale/product-activity') {
+    final productId = query['productId']?.toString() ?? '';
+    final sessionId = query['sessionId']?.toString() ?? '';
+    return resolveFlashSaleProductActivity(
+      envelope,
+      productId: productId,
+      sessionId: sessionId,
+    );
   }
 
   final page = mockQueryInt(query, 'page', 0);
@@ -192,4 +235,17 @@ Map<String, dynamic> _reviewsNotFound(String productId) {
     'message': 'Reviews not found: $productId',
     'data': null,
   };
+}
+
+bool _isFlashSaleProductId(
+  String productId,
+  Map<String, dynamic> flashSaleCatalogEnvelope,
+) {
+  final data = flashSaleCatalogEnvelope['data'];
+  if (data is! Map<String, dynamic>) return productId.startsWith('fs-');
+  final products = data['products'] as List<dynamic>?;
+  if (products == null) return productId.startsWith('fs-');
+  return products.any(
+    (p) => p is Map<String, dynamic> && p['id'] == productId,
+  );
 }

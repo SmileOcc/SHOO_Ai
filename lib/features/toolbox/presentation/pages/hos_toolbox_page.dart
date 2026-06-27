@@ -95,6 +95,12 @@ class SHOToolboxPage extends StatelessWidget {
         title: l10n.toolboxGroupTools,
         items: [
           _ToolboxMenuItem(
+            icon: Icons.bolt_outlined,
+            color: const Color(0xFFFF4657),
+            label: l10n.toolboxFlashSale,
+            onTap: () => context.push(SHOAppRoutes.flashSale),
+          ),
+          _ToolboxMenuItem(
             icon: Icons.download_outlined,
             color: const Color(0xFF4A90E2),
             label: l10n.toolboxFileDownload,
