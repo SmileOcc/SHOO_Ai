@@ -138,6 +138,11 @@ abstract final class SHOAppRoutes {
   static const search = '/search';
   static const flashSale = '/flash-sale';
   static const profileFlashSaleFollows = '/profile/flash-sale-follows';
+
+  static String flashSaleFor({String? activityId}) {
+    if (activityId == null || activityId.isEmpty) return flashSale;
+    return '$flashSale?activityId=${Uri.encodeComponent(activityId)}';
+  }
   static const checkout = '/checkout';
 
   static String checkoutWithContext({bool fromCartStack = false}) {
@@ -173,6 +178,7 @@ abstract final class SHOAppRoutes {
   static String afterSaleApply(String orderId) => '/after-sales/apply/$orderId';
   static const debugUpdate = '/debug/update';
   static const debugActivity = '/debug/activity';
+  static const debugFlashSaleReminder = '/debug/flash-sale-reminder';
   static const debugNative = '/debug/native';
   static const debugBrand = '/debug/brand';
   static const debugAnalytics = '/debug/analytics';

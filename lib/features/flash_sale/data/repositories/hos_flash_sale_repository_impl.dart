@@ -12,9 +12,11 @@ class SHOFlashSaleRepository {
 
   final SHOFlashSaleApi _api;
 
-  Future<SHOFlashSaleCalendar> getCalendar() => _api.fetchCalendar();
+  Future<SHOFlashSaleCalendar> getCalendar({String activityId = ''}) =>
+      _api.fetchCalendar(activityId: activityId);
 
   Future<SHOFlashSalePageData> getPage({
+    required String activityId,
     required String date,
     required String sessionId,
     required SHOFlashSaleSort sort,
@@ -22,6 +24,7 @@ class SHOFlashSaleRepository {
     int pageSize = 4,
   }) =>
       _api.fetchPage(
+        activityId: activityId,
         date: date,
         sessionId: sessionId,
         sort: sort,

@@ -28,6 +28,23 @@
         "deeplink": "/activity"
       }
     ],
+    "activities": [
+      {
+        "id": "activity_flash_001",
+        "title": "抢购活动",
+        "kinds": ["flash"]
+      },
+      {
+        "id": "activity_discount_001",
+        "title": "折扣活动",
+        "kinds": ["discount"]
+      },
+      {
+        "id": "activity_common_000",
+        "title": "活动专区",
+        "kinds": ["flash", "discount"]
+      }
+    ],
     "sessionTemplates": [
       {
         "idSuffix": "10",
@@ -117,6 +134,7 @@
         "skuAttributes": ["White", "M", "Cotton", "Summer"],
         "primaryPromoType": "discount_percent",
         "primaryPromoLabel": "5折",
+        "activityKinds": ["flash", "discount"],
         "promoTags": [
           { "type": "discount_percent", "label": "5折", "enabled": true },
           { "type": "discount_flash", "label": "限时闪购", "enabled": true },
@@ -138,6 +156,7 @@
         "skuAttributes": ["Black", "42", "Mesh"],
         "primaryPromoType": "full_reduction_tier",
         "primaryPromoLabel": "满300减50",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "full_reduction_tier", "label": "满300减50", "enabled": true },
           { "type": "full_reduction_single", "label": "单件减20", "enabled": true },
@@ -157,6 +176,7 @@
         "skuAttributes": ["Brown", "One Size", "PU Leather", "Adjustable Strap"],
         "primaryPromoType": "discount_percent",
         "primaryPromoLabel": "6.1折",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "discount_percent", "label": "6.1折", "enabled": true },
           { "type": "discount_member", "label": "会员专享", "enabled": true },
@@ -175,6 +195,7 @@
         "skuAttributes": ["White", "Bluetooth 5.3", "ANC"],
         "primaryPromoType": "discount_flash",
         "primaryPromoLabel": "闪购价",
+        "activityKinds": ["flash"],
         "promoTags": [
           { "type": "discount_flash", "label": "限时闪购", "enabled": true },
           { "type": "discount_fixed", "label": "减¥140", "enabled": true },
@@ -193,6 +214,7 @@
         "skuAttributes": ["Floral", "S", "Linen"],
         "primaryPromoType": "discount_percent",
         "primaryPromoLabel": "6.3折",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "discount_percent", "label": "6.3折", "enabled": true },
           { "type": "full_reduction_category", "label": "女装满减", "enabled": true }
@@ -210,6 +232,7 @@
         "skuAttributes": ["Blue", "750ml", "BPA Free"],
         "primaryPromoType": "full_reduction_single",
         "primaryPromoLabel": "单件减30",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "full_reduction_single", "label": "单件减30", "enabled": true },
           { "type": "discount_bundle", "label": "3件7折", "enabled": true }
@@ -227,6 +250,7 @@
         "skuAttributes": ["Gray", "XL", "Fleece"],
         "primaryPromoType": "discount_percent",
         "primaryPromoLabel": "6折",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "discount_percent", "label": "6折", "enabled": true },
           { "type": "full_reduction_tier", "label": "满200减30", "enabled": true }
@@ -244,6 +268,7 @@
         "skuAttributes": ["Mixed Colors", "3-Pack"],
         "primaryPromoType": "discount_fixed",
         "primaryPromoLabel": "减¥40",
+        "activityKinds": ["discount"],
         "promoTags": [
           { "type": "discount_fixed", "label": "减¥40", "enabled": true },
           { "type": "discount_bundle", "label": "套装优惠", "enabled": true }

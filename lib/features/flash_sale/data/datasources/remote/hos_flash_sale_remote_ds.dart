@@ -13,15 +13,19 @@ class SHOFlashSaleApi {
 
   final Dio _dio;
 
-  Future<SHOFlashSaleCalendar> fetchCalendar() {
+  Future<SHOFlashSaleCalendar> fetchCalendar({String activityId = ''}) {
     return _dio.getData<SHOFlashSaleCalendar>(
       '/flash-sale/calendar',
+      queryParameters: {
+        if (activityId.isNotEmpty) 'activityId': activityId,
+      },
       parser: (data) =>
           SHOFlashSaleCalendar.fromJson(data as Map<String, dynamic>),
     );
   }
 
   Future<SHOFlashSalePageData> fetchPage({
+    required String activityId,
     required String date,
     required String sessionId,
     required SHOFlashSaleSort sort,
@@ -31,6 +35,7 @@ class SHOFlashSaleApi {
     return _dio.getData<SHOFlashSalePageData>(
       '/flash-sale/page',
       queryParameters: {
+        if (activityId.isNotEmpty) 'activityId': activityId,
         'date': date,
         if (sessionId.isNotEmpty) 'sessionId': sessionId,
         'sort': _sortParam(sort),

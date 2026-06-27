@@ -1,10 +1,15 @@
 import 'package:shoo/core/network/hos_mock_pagination.dart';
 
 /// 抢购活动 Mock 动态数据：按当前时间生成 7 天日历、场次状态、商品排序分页。
-Map<String, dynamic> resolveFlashSaleCalendar(Map<String, dynamic> catalogEnvelope) {
+Map<String, dynamic> resolveFlashSaleCalendar(
+  Map<String, dynamic> catalogEnvelope, {
+  Map<String, dynamic> query = const {},
+}) {
   final now = DateTime.now();
   final data = catalogEnvelope['data'] as Map<String, dynamic>? ?? {};
   final templates = (data['sessionTemplates'] as List<dynamic>?) ?? [];
+  final activityId = query['activityId']?.toString() ?? '';
+  final activity = _resolveActivity(data, activityId);
 
   final days = <Map<String, dynamic>>[];
   for (var offset = -1; offset < 6; offset++) {
@@ -28,6 +33,10 @@ Map<String, dynamic> resolveFlashSaleCalendar(Map<String, dynamic> catalogEnvelo
     'data': {
       'serverTime': now.toUtc().toIso8601String(),
       'days': days,
+      if (activity != null) ...{
+        'activityId': activity['id'],
+        'activityTitle': activity['title'],
+      },
     },
   };
 }
@@ -42,6 +51,9 @@ Map<String, dynamic> resolveFlashSalePage(
   final allProducts = (data['products'] as List<dynamic>?) ?? [];
   final promoEntries = data['promoEntries'] ?? [];
   final couponsBySuffix = data['couponsBySessionSuffix'] as Map<String, dynamic>? ?? {};
+  final activityId = query['activityId']?.toString() ?? '';
+  final activity = _resolveActivity(data, activityId);
+  final filteredProducts = _filterProductsForActivity(allProducts, activity);
 
   final dateStr = query['date']?.toString() ?? _formatDate(now);
   final day = _parseDate(dateStr) ?? DateTime(now.year, now.month, now.day);
@@ -63,8 +75,7 @@ Map<String, dynamic> resolveFlashSalePage(
   final claimPhase = _resolveClaimPhase(session, now);
   final claimTarget = _claimCountdownTarget(session, claimPhase, now);
 
-  var products = allProducts
-      .whereType<Map<String, dynamic>>()
+  var products = filteredProducts
       .map((p) => _hydrateProduct(p, sessionId!, session, now))
       .toList();
 
@@ -85,6 +96,10 @@ Map<String, dynamic> resolveFlashSalePage(
       'serverTime': now.toUtc().toIso8601String(),
       'date': dateStr,
       'sessionId': sessionId,
+      if (activity != null) ...{
+        'activityId': activity['id'],
+        'activityTitle': activity['title'],
+      },
       'claimPhase': claimPhase,
       if (claimTarget != null) 'claimCountdownTarget': claimTarget,
       'sessions': sessions,
@@ -165,7 +180,7 @@ List<Map<String, dynamic>> _buildSessionsForDay(
   DateTime now,
 ) {
   final dateStr = _formatDate(day);
-  return templates.whereType<Map<String, dynamic>>().map((t) {
+  final raw = templates.whereType<Map<String, dynamic>>().map((t) {
     final suffix = t['idSuffix'] as String? ?? '00';
     final start = DateTime(
       day.year,
@@ -193,6 +208,8 @@ List<Map<String, dynamic>> _buildSessionsForDay(
       'status': status,
     };
   }).toList();
+
+  return raw;
 }
 
 String _aggregateDayStatus(List<Map<String, dynamic>> sessions) {
@@ -245,12 +262,35 @@ Map<String, dynamic> _hydrateCoupon(
   String claimPhase,
 ) {
   var status = coupon['status'] as String? ?? 'not_started';
-  if (claimPhase == 'before_claim') {
-    status = 'not_started';
-  } else if (claimPhase == 'after_claim' && status != 'claimed' && status != 'sold_out') {
-    status = 'expired';
+  // 当天任意时间均可领券（已领取 / 已抢光的除外）
+  final today = _formatDate(DateTime.now());
+  if (claimPhase == 'after_claim') {
+    // 检查是否为当天；当天即使 claimPhase=after_claim 仍可领
+    final startAt = session?['startAt'] as String?;
+    if (startAt != null && startAt.length >= 10) {
+      final sessionDate = startAt.substring(0, 10);
+      if (sessionDate == today && status != 'claimed' && status != 'sold_out') {
+        status = 'claimable';
+      } else {
+        status = 'expired';
+      }
+    } else {
+      status = 'expired';
+    }
   } else if (claimPhase == 'claiming' && status == 'not_started') {
     status = 'claimable';
+  } else if (claimPhase == 'before_claim') {
+    final startAt = session?['startAt'] as String?;
+    if (startAt != null && startAt.length >= 10) {
+      final sessionDate = startAt.substring(0, 10);
+      if (sessionDate == today && status != 'claimed' && status != 'sold_out') {
+        status = 'claimable';
+      } else {
+        status = 'not_started';
+      }
+    } else {
+      status = 'not_started';
+    }
   }
   return {...coupon, 'status': status};
 }
@@ -422,6 +462,42 @@ Map<String, dynamic> emptyFlashSaleProductReviews() {
       'items': <Map<String, dynamic>>[],
     },
   };
+}
+
+Map<String, dynamic>? _resolveActivity(
+  Map<String, dynamic> data,
+  String activityId,
+) {
+  if (activityId.isEmpty) return null;
+  final activities = (data['activities'] as List<dynamic>?) ?? [];
+  for (final raw in activities) {
+    if (raw is Map<String, dynamic> && raw['id'] == activityId) {
+      return raw;
+    }
+  }
+  return null;
+}
+
+List<Map<String, dynamic>> _filterProductsForActivity(
+  List<dynamic> allProducts,
+  Map<String, dynamic>? activity,
+) {
+  final typed = allProducts.whereType<Map<String, dynamic>>().toList();
+  if (activity == null) return typed;
+
+  final kinds = (activity['kinds'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+      const [];
+  if (kinds.isEmpty) return typed;
+
+  return typed.where((product) {
+    final productKinds = (product['activityKinds'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        const [];
+    return productKinds.any(kinds.contains);
+  }).toList();
 }
 
 Map<String, dynamic> _flashSaleProductNotFound(String productId) {

@@ -10,11 +10,15 @@ class SHOFlashSaleCountdown extends StatefulWidget {
     required this.targetIso,
     required this.prefix,
     this.onComplete,
+    this.accentColor,
+    this.prefixColor,
   });
 
   final String targetIso;
   final String prefix;
   final VoidCallback? onComplete;
+  final Color? accentColor;
+  final Color? prefixColor;
 
   @override
   State<SHOFlashSaleCountdown> createState() => _SHOFlashSaleCountdownState();
@@ -59,10 +63,13 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = widget.accentColor ?? SHOAppColors.accent;
+    final prefixClr = widget.prefixColor ?? SHOAppColors.textSecondary;
+
     if (_remaining <= Duration.zero) {
       return Text(
         widget.prefix,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: SHOAppColors.textMuted,
@@ -76,14 +83,15 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
 
     return RichText(
       text: TextSpan(
-        style: const TextStyle(fontSize: 12, color: SHOAppColors.textSecondary),
+        style: TextStyle(fontSize: 12, color: prefixClr),
         children: [
           TextSpan(text: '${widget.prefix} '),
           TextSpan(
             text: '$h:$m:$s',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w800,
-              color: SHOAppColors.accent,
+              color: accent,
+              fontSize: 13,
             ),
           ),
         ],

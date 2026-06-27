@@ -89,6 +89,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onTap: () => context.push(SHOAppRoutes.debugActivity),
           ),
           ListTile(
+            leading: const Icon(Icons.notifications_active_outlined),
+            title: const Text('抢购活动通知调试'),
+            subtitle: const Text('弹窗预览、延时 5 秒通知、活动 ID'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugFlashSaleReminder),
+          ),
+          ListTile(
             leading: const Icon(Icons.article_outlined),
             title: Text(l10n.debugNetworkLogEntry),
             subtitle: Text(l10n.debugNetworkLogEntryHint),

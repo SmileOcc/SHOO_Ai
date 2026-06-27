@@ -8,6 +8,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_countdown.dart';
@@ -15,7 +16,9 @@ import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_pro
 import 'package:shoo/l10n/app_localizations.dart';
 
 class SHOFlashSalePage extends ConsumerStatefulWidget {
-  const SHOFlashSalePage({super.key});
+  const SHOFlashSalePage({super.key, required this.activityId});
+
+  final String activityId;
 
   @override
   ConsumerState<SHOFlashSalePage> createState() => _SHOFlashSalePageState();
@@ -24,17 +27,20 @@ class SHOFlashSalePage extends ConsumerStatefulWidget {
 class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
   final _scrollController = ScrollController();
 
+  SHOFlashSaleController get _controller =>
+      ref.read(flashSaleControllerProvider(widget.activityId).notifier);
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(flashSaleControllerProvider.notifier).initialize());
+    Future.microtask(_controller.initialize);
     _scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      ref.read(flashSaleControllerProvider.notifier).loadMore();
+      _controller.loadMore();
     }
   }
 
@@ -47,21 +53,21 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final state = ref.watch(flashSaleControllerProvider);
+    final state = ref.watch(flashSaleControllerProvider(widget.activityId));
     ref.watch(flashSaleFollowControllerProvider);
     final products =
-        ref.read(flashSaleControllerProvider.notifier).mergedProducts();
+        ref.read(flashSaleControllerProvider(widget.activityId).notifier).mergedProducts();
     final pageData = state.pageData;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          l10n.flashSaleTitle,
+          SHOFlashSaleActivities.titleFor(widget.activityId),
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(flashSaleControllerProvider.notifier).refresh(),
+        onRefresh: _controller.refresh,
         child: state.calendar == null && state.isRefreshing
             ? const Center(child: CircularProgressIndicator())
             : CustomScrollView(
@@ -69,34 +75,62 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
                   if (state.calendar != null)
-                    SliverToBoxAdapter(child: _DayTabs(state: state)),
+                    SliverToBoxAdapter(
+                      child: _DayTabs(state: state, activityId: widget.activityId),
+                    ),
                   if (pageData != null)
-                    SliverToBoxAdapter(child: _SessionBar(state: state)),
+                    SliverToBoxAdapter(
+                      child: _SessionBar(state: state, activityId: widget.activityId),
+                    ),
+                  if (pageData != null)
+                    SliverToBoxAdapter(
+                      child: _SessionCountdown(
+                        sessions: pageData.sessions,
+                        selectedSessionId: state.selectedSessionId,
+                      ),
+                    ),
                   if (pageData != null && pageData.promoEntries.isNotEmpty)
                     SliverToBoxAdapter(child: _PromoEntries(entries: pageData.promoEntries)),
                   if (pageData != null)
-                    SliverToBoxAdapter(child: _CouponSection(state: state)),
-                  SliverToBoxAdapter(child: _SortBar(state: state)),
+                    SliverToBoxAdapter(
+                      child: _CouponSection(
+                        state: state,
+                        activityId: widget.activityId,
+                      ),
+                    ),
+                  SliverToBoxAdapter(
+                    child: _SortBar(state: state, activityId: widget.activityId),
+                  ),
                   if (products.isEmpty && !state.isRefreshing)
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(child: Text(l10n.noData)),
                     )
                   else
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          if (index >= products.length) {
-                            return state.isLoadingMore
-                                ? const Padding(
-                                    padding: EdgeInsets.all(SHOAppSpacing.xl),
-                                    child: Center(child: CircularProgressIndicator()),
-                                  )
-                                : const SizedBox.shrink();
-                          }
-                          return SHOFlashSaleProductCard(product: products[index]);
-                        },
-                        childCount: products.length + (state.isLoadingMore ? 1 : 0),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index >= products.length) {
+                              return state.isLoadingMore
+                                  ? const Padding(
+                                      padding: EdgeInsets.all(SHOAppSpacing.xl),
+                                      child: Center(child: CircularProgressIndicator()),
+                                    )
+                                  : const SizedBox.shrink();
+                            }
+                            final isLast = index >= products.length - 1;
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: isLast ? 0 : 8),
+                              child: SHOFlashSaleProductCard(
+                                product: products[index],
+                                activityId: widget.activityId,
+                              ),
+                            );
+                          },
+                          childCount: products.length + (state.isLoadingMore ? 1 : 0),
+                        ),
                       ),
                     ),
                 ],
@@ -107,9 +141,10 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage> {
 }
 
 class _DayTabs extends ConsumerWidget {
-  const _DayTabs({required this.state});
+  const _DayTabs({required this.state, required this.activityId});
 
   final SHOFlashSalePageState state;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -127,7 +162,9 @@ class _DayTabs extends ConsumerWidget {
           final day = days[index];
           final selected = day.date == state.selectedDate;
           return GestureDetector(
-            onTap: () => ref.read(flashSaleControllerProvider.notifier).selectDate(day.date),
+            onTap: () => ref
+                .read(flashSaleControllerProvider(activityId).notifier)
+                .selectDate(day.date),
             child: Container(
               width: 64,
               padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
@@ -178,6 +215,8 @@ class _DayTabs extends ConsumerWidget {
         return l10n.flashSaleStatusNotStarted;
       case SHOFlashSaleDayStatus.ongoing:
         return l10n.flashSaleStatusOngoing;
+      case SHOFlashSaleDayStatus.ending:
+        return l10n.flashSaleSessionEnding;
       case SHOFlashSaleDayStatus.ended:
         return l10n.flashSaleStatusEnded;
     }
@@ -185,9 +224,10 @@ class _DayTabs extends ConsumerWidget {
 }
 
 class _SessionBar extends ConsumerWidget {
-  const _SessionBar({required this.state});
+  const _SessionBar({required this.state, required this.activityId});
 
   final SHOFlashSalePageState state;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -195,7 +235,7 @@ class _SessionBar extends ConsumerWidget {
     if (sessions.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
-      height: 40,
+      height: 42,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.fromLTRB(
@@ -209,13 +249,200 @@ class _SessionBar extends ConsumerWidget {
         itemBuilder: (context, index) {
           final session = sessions[index];
           final selected = session.id == state.selectedSessionId;
-          return ChoiceChip(
-            label: Text(session.label),
-            selected: selected,
-            onSelected: (_) =>
-                ref.read(flashSaleControllerProvider.notifier).selectSession(session.id),
+          final isEnded = session.status == SHOFlashSaleDayStatus.ended;
+          final isOngoing = session.status == SHOFlashSaleDayStatus.ongoing;
+
+          final bgColor = selected
+              ? SHOAppColors.primary
+              : isOngoing
+                  ? SHOAppColors.accent.withValues(alpha: 0.08)
+                  : SHOAppColors.surfaceMuted;
+          final textColor = selected
+              ? Colors.white
+              : isEnded
+                  ? SHOAppColors.textMuted
+                  : isOngoing
+                      ? SHOAppColors.accent
+                      : SHOAppColors.textPrimary;
+          final borderColor = selected
+              ? SHOAppColors.primary
+              : isOngoing
+                  ? SHOAppColors.accent.withValues(alpha: 0.4)
+                  : SHOAppColors.border;
+
+          return GestureDetector(
+            onTap: () => ref
+                .read(flashSaleControllerProvider(activityId).notifier)
+                .selectSession(session.id),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SHOAppSpacing.md,
+                vertical: SHOAppSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: borderColor),
+              ),
+              child: Text(
+                session.label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+            ),
           );
         },
+      ),
+    );
+  }
+}
+
+String _formatSessionClock(String iso) {
+  final dt = DateTime.tryParse(iso)?.toLocal();
+  if (dt == null) return '--:--';
+  final h = dt.hour.toString().padLeft(2, '0');
+  final m = dt.minute.toString().padLeft(2, '0');
+  return '$h:$m';
+}
+
+/// 场次倒计时独立行：展示开始/结束时间 + 倒计时；已结束则在下方提示。
+class _SessionCountdown extends StatelessWidget {
+  const _SessionCountdown({
+    required this.sessions,
+    required this.selectedSessionId,
+  });
+
+  final List<SHOFlashSaleSession> sessions;
+  final String selectedSessionId;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final session = sessions.cast<SHOFlashSaleSession?>().firstWhere(
+          (s) => s!.id == selectedSessionId,
+          orElse: () => null,
+        );
+    if (session == null) return const SizedBox.shrink();
+
+    final status = session.status;
+    final startLabel = l10n.flashSaleSessionStartAt(_formatSessionClock(session.startAt));
+    final endLabel = l10n.flashSaleSessionEndAt(_formatSessionClock(session.endAt));
+    final isEnded = status == SHOFlashSaleDayStatus.ended;
+
+    String? targetIso;
+    String countdownPrefix;
+    Color accentColor;
+
+    switch (status) {
+      case SHOFlashSaleDayStatus.notStarted:
+        targetIso = session.startAt;
+        countdownPrefix = l10n.flashSaleCountdownStartsIn;
+        accentColor = const Color(0xFF1565C0);
+      case SHOFlashSaleDayStatus.ongoing:
+        targetIso = session.endAt;
+        countdownPrefix = l10n.flashSaleCountdownEndsIn;
+        accentColor = SHOAppColors.accent;
+      case SHOFlashSaleDayStatus.ending:
+        targetIso = session.endAt;
+        countdownPrefix = l10n.flashSaleCountdownEndsIn;
+        accentColor = const Color(0xFFE65100);
+      case SHOFlashSaleDayStatus.ended:
+        targetIso = null;
+        countdownPrefix = l10n.flashSaleCountdownEnded;
+        accentColor = SHOAppColors.textMuted;
+    }
+
+    final bgColor = switch (status) {
+      SHOFlashSaleDayStatus.notStarted => const Color(0xFFE3F2FD),
+      SHOFlashSaleDayStatus.ongoing => SHOAppColors.accent.withValues(alpha: 0.08),
+      SHOFlashSaleDayStatus.ending => const Color(0xFFFFF3E0),
+      SHOFlashSaleDayStatus.ended => const Color(0xFFF0F0F0),
+    };
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        SHOAppSpacing.pagePadding,
+        0,
+        SHOAppSpacing.pagePadding,
+        SHOAppSpacing.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(
+              horizontal: SHOAppSpacing.xl,
+              vertical: SHOAppSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      startLabel,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: status == SHOFlashSaleDayStatus.notStarted
+                            ? const Color(0xFF1565C0)
+                            : SHOAppColors.textSecondary,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.sm),
+                      child: Text(
+                        '—',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: SHOAppColors.textMuted,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      endLabel,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: status == SHOFlashSaleDayStatus.ended
+                            ? SHOAppColors.textMuted
+                            : SHOAppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+                if (targetIso != null) ...[
+                  const SizedBox(height: SHOAppSpacing.sm),
+                  SHOFlashSaleCountdown(
+                    targetIso: targetIso,
+                    prefix: countdownPrefix,
+                    accentColor: accentColor,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (isEnded) ...[
+            const SizedBox(height: SHOAppSpacing.xs),
+            Text(
+              l10n.flashSaleSessionActivityEnded,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: SHOAppColors.textMuted,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -277,9 +504,10 @@ class _PromoEntries extends ConsumerWidget {
 }
 
 class _CouponSection extends ConsumerWidget {
-  const _CouponSection({required this.state});
+  const _CouponSection({required this.state, required this.activityId});
 
   final SHOFlashSalePageState state;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -297,7 +525,7 @@ class _CouponSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CouponHeader(pageData: pageData, l10n: l10n),
+          _CouponHeader(pageData: pageData, coupons: coupons, l10n: l10n),
           const SizedBox(height: SHOAppSpacing.sm),
           SizedBox(
             height: 88,
@@ -313,7 +541,7 @@ class _CouponSection extends ConsumerWidget {
                   onClaim: () async {
                     if (coupon.status == SHOFlashSaleCouponStatus.claimable) {
                       await ref
-                          .read(flashSaleControllerProvider.notifier)
+                          .read(flashSaleControllerProvider(activityId).notifier)
                           .claimCoupon(coupon.id);
                     }
                   },
@@ -328,15 +556,26 @@ class _CouponSection extends ConsumerWidget {
 }
 
 class _CouponHeader extends StatelessWidget {
-  const _CouponHeader({required this.pageData, required this.l10n});
+  const _CouponHeader({required this.pageData, required this.coupons, required this.l10n});
 
   final SHOFlashSalePageData pageData;
+  final List<SHOFlashSaleCoupon> coupons;
   final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
+    final hasClaimable = coupons.any(
+      (c) => c.status == SHOFlashSaleCouponStatus.claimable,
+    );
+
     switch (pageData.claimPhase) {
       case SHOFlashSaleClaimPhase.beforeClaim:
+        if (hasClaimable) {
+          return Text(
+            l10n.flashSaleCouponClaiming,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          );
+        }
         return Text(
           l10n.flashSaleCouponNotStarted,
           style: const TextStyle(fontWeight: FontWeight.w700),
@@ -350,6 +589,12 @@ class _CouponHeader extends StatelessWidget {
         }
         return Text(l10n.flashSaleCouponClaiming);
       case SHOFlashSaleClaimPhase.afterClaim:
+        if (hasClaimable) {
+          return Text(
+            l10n.flashSaleCouponClaiming,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          );
+        }
         return Text(
           l10n.flashSaleCouponExpired,
           style: const TextStyle(fontWeight: FontWeight.w700, color: SHOAppColors.textMuted),
@@ -376,7 +621,7 @@ class _CouponTile extends StatelessWidget {
     final canTap = coupon.status == SHOFlashSaleCouponStatus.claimable;
 
     return Opacity(
-      opacity: highlight ? 1 : 0.55,
+      opacity: highlight ? 1 : 0.7,
       child: GestureDetector(
         onTap: canTap ? onClaim : null,
         child: Container(
@@ -385,10 +630,12 @@ class _CouponTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: highlight
                 ? SHOAppColors.accent.withValues(alpha: 0.08)
-                : SHOAppColors.surfaceMuted,
+                : const Color(0xFFE8E8E8),
             borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
             border: Border.all(
-              color: highlight ? SHOAppColors.accent : SHOAppColors.border,
+              color: highlight
+                  ? SHOAppColors.accent
+                  : const Color(0xFFD5D5D5),
             ),
           ),
           child: Column(
@@ -407,7 +654,10 @@ class _CouponTile extends StatelessWidget {
                 coupon.description,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 10, color: SHOAppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: highlight ? SHOAppColors.textSecondary : SHOAppColors.textMuted,
+                ),
               ),
               const Spacer(),
               Text(
@@ -442,9 +692,10 @@ class _CouponTile extends StatelessWidget {
 }
 
 class _SortBar extends ConsumerWidget {
-  const _SortBar({required this.state});
+  const _SortBar({required this.state, required this.activityId});
 
   final SHOFlashSalePageState state;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -473,9 +724,9 @@ class _SortBar extends ConsumerWidget {
                   final next = state.sort == SHOFlashSaleSort.priceAsc
                       ? SHOFlashSaleSort.priceDesc
                       : SHOFlashSaleSort.priceAsc;
-                  ref.read(flashSaleControllerProvider.notifier).selectSort(next);
+                  ref.read(flashSaleControllerProvider(activityId).notifier).selectSort(next);
                 } else {
-                  ref.read(flashSaleControllerProvider.notifier).selectSort(item.$1);
+                  ref.read(flashSaleControllerProvider(activityId).notifier).selectSort(item.$1);
                 }
               },
             ),

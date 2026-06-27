@@ -63,6 +63,7 @@ Map<String, dynamic> _$$SHOFlashSaleDayImplToJson(
 const _$SHOFlashSaleDayStatusEnumMap = {
   SHOFlashSaleDayStatus.notStarted: 'not_started',
   SHOFlashSaleDayStatus.ongoing: 'ongoing',
+  SHOFlashSaleDayStatus.ending: 'ending',
   SHOFlashSaleDayStatus.ended: 'ended',
 };
 

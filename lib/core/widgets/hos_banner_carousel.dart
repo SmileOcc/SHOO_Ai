@@ -34,14 +34,25 @@ class SHOBannerCarousel extends StatefulWidget {
 }
 
 class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
+  static const _loopCycles = 1000;
+
   late final PageController _controller;
+  late final int _initialPage;
   Timer? _autoPlayTimer;
   int _index = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = PageController();
+    final len = widget.banners.length;
+    if (len <= 1) {
+      _initialPage = 0;
+      _controller = PageController();
+    } else {
+      _initialPage = _loopCycles * len;
+      _controller = PageController(initialPage: _initialPage);
+      _index = 0;
+    }
     _scheduleAutoPlay();
   }
 
@@ -75,15 +86,21 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
     }
   }
 
+  int _realIndex(int page) {
+    final len = widget.banners.length;
+    if (len == 0) return 0;
+    return page % len;
+  }
+
   void _scheduleAutoPlay() {
     _autoPlayTimer?.cancel();
     if (!_autoPlayEnabled || widget.banners.length <= 1) return;
 
     _autoPlayTimer = Timer.periodic(_resolvedAutoPlayInterval, (_) {
       if (!mounted || !_controller.hasClients) return;
-      final next = (_index + 1) % widget.banners.length;
+      final current = _controller.page?.round() ?? _initialPage;
       _controller.animateToPage(
-        next,
+        current + 1,
         duration: const Duration(milliseconds: 450),
         curve: Curves.easeInOut,
       );
@@ -95,15 +112,17 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
     if (widget.banners.isEmpty) return const SizedBox.shrink();
 
     final theme = context.shoTheme;
+    final len = widget.banners.length;
+    final looped = len > 1;
 
     final pageView = SizedBox(
       height: widget.height,
       child: PageView.builder(
         controller: _controller,
-        itemCount: widget.banners.length,
-        onPageChanged: (i) => setState(() => _index = i),
+        itemCount: looped ? _loopCycles * len * 2 : len,
+        onPageChanged: (i) => setState(() => _index = _realIndex(i)),
         itemBuilder: (context, index) {
-          final banner = widget.banners[index];
+          final banner = widget.banners[_realIndex(index)];
           final hasLink = banner.link.trim().isNotEmpty;
 
           final radius = widget.edgeToEdge
@@ -165,7 +184,7 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
         const SizedBox(height: SHOAppSpacing.xs),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.banners.length, (i) {
+          children: List.generate(len, (i) {
             final active = i == _index;
             return AnimatedContainer(
               duration: const Duration(milliseconds: 200),

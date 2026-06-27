@@ -6,12 +6,14 @@ import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_reposi
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 
+// 用户关注本地存储状态
 final flashSaleFollowStorageProvider =
     FutureProvider<SHOFlashSaleFollowStorage>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   return SHOFlashSaleFollowStorage(prefs);
 });
 
+// 用户关注的闪购商品列表
 final flashSaleFollowControllerProvider =
     StateNotifierProvider<SHOFlashSaleFollowController, AsyncValue<List<SHOFlashSaleFollow>>>(
   (ref) => SHOFlashSaleFollowController(ref),
@@ -104,6 +106,7 @@ class SHOFlashSaleFollowController
         false;
   }
 
+  // 关注/取消
   Future<bool> toggleFollow({
     required SHOFlashSaleProduct product,
     required String sessionStartAt,
@@ -154,7 +157,7 @@ class SHOFlashSaleFollowController
     await storage.writeAll(next);
     return true;
   }
-
+  // 本地数据推送到服务器
   Future<void> pushLocalToServer() async {
     final storage = await _ref.read(flashSaleFollowStorageProvider.future);
     final local = storage.readAll();

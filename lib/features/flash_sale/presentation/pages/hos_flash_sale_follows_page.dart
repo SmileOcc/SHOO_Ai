@@ -28,7 +28,7 @@ class SHOFlashSaleFollowsPage extends ConsumerWidget {
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
-      body: followsAsync.when(
+      body: followsAsync.when(// 使用 .when() 模式匹配处理三种状态
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => SHOAppErrorView(
           message: error.toString(),

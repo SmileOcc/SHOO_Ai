@@ -5,6 +5,7 @@ import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_page.
 import 'package:shoo/core/debug/modules/analytics/hos_debug_analytics_page.dart';
 import 'package:shoo/core/debug/modules/brand/hos_debug_brand_page.dart';
 import 'package:shoo/core/debug/modules/dependencies/hos_debug_dependencies_page.dart';
+import 'package:shoo/core/debug/modules/flash_sale/hos_debug_flash_sale_reminder_page.dart';
 import 'package:shoo/core/debug/modules/feedback/hos_debug_feedback_page.dart';
 import 'package:shoo/core/debug/modules/hittest/hos_debug_hittest_page.dart';
 import 'package:shoo/core/debug/modules/microtask/hos_debug_microtask_page.dart';
@@ -32,6 +33,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) =>
           GoRoute(
             path: 'activity',
             builder: (context, state) => const SHODebugActivityConfigPage(),
+          ),
+          GoRoute(
+            path: 'flash-sale-reminder',
+            builder: (context, state) => const SHODebugFlashSaleReminderPage(),
           ),
           GoRoute(
             path: 'brand',

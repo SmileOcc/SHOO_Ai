@@ -808,5 +808,22 @@
   "flashSaleReminderAction": "去抢购",
   "flashSaleFollowSuccess": "已关注，开抢前 5 分钟将提醒您",
   "priceActivitySaved": "活动已省",
-  "priceFullReduction": "满减优惠"
+  "priceFullReduction": "满减优惠",
+  "flashSaleSessionEnding": "即将结束",
+  "flashSaleCountdownStartsIn": "距开始",
+  "flashSaleCountdownEndsIn": "距结束",
+  "flashSaleCountdownEnded": "已结束",
+  "flashSaleSessionStartAt": "开始 {time}",
+  "@flashSaleSessionStartAt": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "flashSaleSessionEndAt": "结束 {time}",
+  "@flashSaleSessionEndAt": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "flashSaleSessionActivityEnded": "活动已结束"
 }

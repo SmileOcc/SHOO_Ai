@@ -2161,4 +2161,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get priceFullReduction => 'Spend & save';
+
+  @override
+  String get flashSaleSessionEnding => 'Ending soon';
+
+  @override
+  String get flashSaleCountdownStartsIn => 'Starts in';
+
+  @override
+  String get flashSaleCountdownEndsIn => 'Ends in';
+
+  @override
+  String get flashSaleCountdownEnded => 'Ended';
+
+  @override
+  String flashSaleSessionStartAt(String time) {
+    return 'Start $time';
+  }
+
+  @override
+  String flashSaleSessionEndAt(String time) {
+    return 'End $time';
+  }
+
+  @override
+  String get flashSaleSessionActivityEnded => 'This session has ended';
 }

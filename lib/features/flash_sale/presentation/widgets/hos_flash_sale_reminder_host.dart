@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:shoo/app/router/hos_router.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -60,7 +59,9 @@ class _SHOFlashSaleReminderHostState
   Widget build(BuildContext context) {
     ref.listen(sessionProvider, (prev, next) {
       if (!prev!.isAuthenticated && next.isAuthenticated) {
-        ref.read(flashSaleFollowControllerProvider.notifier).pushLocalToServer();
+        ref
+            .read(flashSaleFollowControllerProvider.notifier)
+            .pushLocalToServer();
       }
     });
 
@@ -118,9 +119,9 @@ class _ReminderOverlay extends ConsumerWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 l10n.flashSaleReminderTitle,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
@@ -136,9 +137,11 @@ class _ReminderOverlay extends ConsumerWidget {
                 onPressed: () {
                   ref.read(flashSaleReminderPopupProvider.notifier).state =
                       null;
-                  context.push(
-                    '${SHOAppRoutes.product(payload.productId)}?sessionId=${Uri.encodeComponent(payload.sessionId)}',
-                  );
+                  final activityId = payload.activityId;
+                  final route = activityId != null && activityId.isNotEmpty
+                      ? SHOAppRoutes.flashSaleFor(activityId: activityId)
+                      : '${SHOAppRoutes.product(payload.productId)}?sessionId=${Uri.encodeComponent(payload.sessionId)}';
+                  ref.read(routerProvider).push(route);
                 },
               ),
             ],

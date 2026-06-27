@@ -76,6 +76,10 @@ abstract final class SHODeepLinkMapper {
         }
         return SHOAppRoutes.login;
       case 'flash-sale':
+        final activityId = uri.queryParameters['activityId'];
+        if (activityId != null && activityId.isNotEmpty) {
+          return SHOAppRoutes.flashSaleFor(activityId: activityId);
+        }
         return SHOAppRoutes.flashSale;
       case 'new-arrivals':
         return '${SHOAppRoutes.search}?q=new%20arrivals';

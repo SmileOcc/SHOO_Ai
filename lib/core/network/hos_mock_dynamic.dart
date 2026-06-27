@@ -144,7 +144,7 @@ Map<String, dynamic> applyMockDynamic(
   }
 
   if (routePath == '/flash-sale/calendar') {
-    return resolveFlashSaleCalendar(envelope);
+    return resolveFlashSaleCalendar(envelope, query: query);
   }
 
   if (routePath == '/flash-sale/page') {

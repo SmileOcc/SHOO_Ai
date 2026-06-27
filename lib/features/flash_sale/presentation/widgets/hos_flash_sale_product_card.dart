@@ -7,6 +7,8 @@ import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
 import 'package:shoo/core/widgets/hos_price_text.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
@@ -21,89 +23,106 @@ class SHOFlashSaleProductCard extends ConsumerWidget {
   const SHOFlashSaleProductCard({
     super.key,
     required this.product,
+    required this.activityId,
   });
 
   final SHOFlashSaleProduct product;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final controller = ref.read(flashSaleControllerProvider.notifier);
+    final controller =
+        ref.read(flashSaleControllerProvider(activityId).notifier);
 
-    return InkWell(
-      onTap: () => context.push(
-        '${SHOAppRoutes.product(product.id)}?sessionId=${Uri.encodeComponent(product.sessionId)}',
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: SHOAppSpacing.pagePadding,
-          vertical: SHOAppSpacing.md,
+    return Material(
+      color: context.shoSurface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SHOProfileSectionCard.radius),
+        side: BorderSide(
+          color: context.shoTheme.border,
+          width: SHOProfileSectionCard.borderWidth,
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ProductImage(product: product),
-            const SizedBox(width: SHOAppSpacing.lg),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      height: 1.3,
+      ),
+      child: InkWell(
+        onTap: () => context.push(
+          '${SHOAppRoutes.product(product.id)}?sessionId=${Uri.encodeComponent(product.sessionId)}',
+        ),
+        borderRadius: BorderRadius.circular(SHOProfileSectionCard.radius),
+        child: Padding(
+          padding: const EdgeInsets.all(SHOAppSpacing.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ProductImage(product: product),
+              const SizedBox(width: SHOAppSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        height: 1.3,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: SHOAppSpacing.xs),
-                  SHOSkuChipRow(attributes: product.skuAttributes),
-                  const SizedBox(height: SHOAppSpacing.xs),
-                  SHOPromoBadgeWrap(
-                    tags: product.badgeTags,
-                    enabled: product.status == SHOFlashSaleProductStatus.ongoing,
-                  ),
-                  const SizedBox(height: SHOAppSpacing.sm),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SHOAppPriceText(
-                          priceCents: product.displayPrice,
-                          originalCents: product.status == SHOFlashSaleProductStatus.ongoing
-                              ? product.originalPrice
-                              : null,
-                          size: SHOAppPriceSize.small,
-                          showOriginal: product.status == SHOFlashSaleProductStatus.ongoing,
+                    const SizedBox(height: SHOAppSpacing.xs),
+                    SHOSkuChipRow(
+                      attributes: product.skuAttributes,
+                      initialMaxLines: 1,
+                    ),
+                    const SizedBox(height: SHOAppSpacing.xs),
+                    SHOPromoBadgeWrap(
+                      tags: product.badgeTags,
+                      enabled: product.status == SHOFlashSaleProductStatus.ongoing,
+                    ),
+                    const SizedBox(height: SHOAppSpacing.sm),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SHOAppPriceText(
+                            priceCents: product.displayPrice,
+                            originalCents:
+                                product.status == SHOFlashSaleProductStatus.ongoing
+                                    ? product.originalPrice
+                                    : null,
+                            size: SHOAppPriceSize.small,
+                            showOriginal:
+                                product.status == SHOFlashSaleProductStatus.ongoing,
+                          ),
                         ),
-                      ),
-                      Text(
-                        product.stock <= 0
-                            ? l10n.flashSaleSoldOut
-                            : l10n.flashSaleStockLeft(product.stock),
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: product.stock <= 0
-                              ? SHOAppColors.textMuted
-                              : SHOAppColors.textSecondary,
+                        Text(
+                          product.stock <= 0
+                              ? l10n.flashSaleSoldOut
+                              : l10n.flashSaleStockLeft(product.stock),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: product.stock <= 0
+                                ? SHOAppColors.textMuted
+                                : SHOAppColors.textSecondary,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: SHOAppSpacing.sm),
-                  _ActionRow(
-                    product: product,
-                    onFollow: () async {
-                      if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                      await controller.toggleFollow(product);
-                    },
-                    onBuy: () => _handleBuy(context, ref, product, l10n),
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: SHOAppSpacing.sm),
+                    _ActionRow(
+                      product: product,
+                      onFollow: () async {
+                        if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                        await controller.toggleFollow(product);
+                      },
+                      onBuy: () => _handleBuy(context, ref, product, l10n),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -215,14 +234,13 @@ class _ActionRow extends StatelessWidget {
 
     return Row(
       children: [
-        if (product.status == SHOFlashSaleProductStatus.ongoing)
-          Padding(
-            padding: const EdgeInsets.only(right: SHOAppSpacing.sm),
-            child: Text(
-              l10n.flashSaleStockLeft(product.stock),
-              style: const TextStyle(fontSize: 11, color: SHOAppColors.textSecondary),
-            ),
-          ),
+        SHOAppButton(
+          label: product.isFollowed ? l10n.flashSaleFollowed : l10n.flashSaleFollow,
+          variant: SHOAppButtonVariant.outline,
+          size: SHOAppButtonSize.sm,
+          onPressed: (product.canFollow || product.isFollowed) ? onFollow : null,
+        ),
+        const SizedBox(width: SHOAppSpacing.sm),
         Expanded(
           child: SHOAppButton(
             label: l10n.flashSaleBuyNow,

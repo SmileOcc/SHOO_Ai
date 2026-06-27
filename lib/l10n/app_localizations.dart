@@ -4121,6 +4121,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Spend & save'**
   String get priceFullReduction;
+
+  /// No description provided for @flashSaleSessionEnding.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending soon'**
+  String get flashSaleSessionEnding;
+
+  /// No description provided for @flashSaleCountdownStartsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts in'**
+  String get flashSaleCountdownStartsIn;
+
+  /// No description provided for @flashSaleCountdownEndsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends in'**
+  String get flashSaleCountdownEndsIn;
+
+  /// No description provided for @flashSaleCountdownEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get flashSaleCountdownEnded;
+
+  /// No description provided for @flashSaleSessionStartAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Start {time}'**
+  String flashSaleSessionStartAt(String time);
+
+  /// No description provided for @flashSaleSessionEndAt.
+  ///
+  /// In en, this message translates to:
+  /// **'End {time}'**
+  String flashSaleSessionEndAt(String time);
+
+  /// No description provided for @flashSaleSessionActivityEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This session has ended'**
+  String get flashSaleSessionActivityEnded;
 }
 
 class _AppLocalizationsDelegate

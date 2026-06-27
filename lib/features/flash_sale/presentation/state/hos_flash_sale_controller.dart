@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 
 class SHOFlashSalePageState {
@@ -73,21 +74,27 @@ class SHOFlashSalePageState {
   }
 }
 
-final flashSaleControllerProvider =
-    StateNotifierProvider<SHOFlashSaleController, SHOFlashSalePageState>(
-  (ref) => SHOFlashSaleController(ref),
+final flashSaleControllerProvider = StateNotifierProvider.family<
+    SHOFlashSaleController, SHOFlashSalePageState, String>(
+  (ref, activityId) => SHOFlashSaleController(ref, activityId),
 );
 
 class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
-  SHOFlashSaleController(this._ref) : super(const SHOFlashSalePageState());
+  SHOFlashSaleController(this._ref, this._activityId)
+      : super(const SHOFlashSalePageState());
 
   final Ref _ref;
+  final String _activityId;
+
+  String get activityId =>
+      _activityId.isEmpty ? SHOFlashSaleActivities.defaults : _activityId;
 
   SHOFlashSaleRepository get _repo => _ref.read(flashSaleRepositoryProvider);
 
   List<SHOFlashSaleProduct> mergedProducts() {
     final data = state.pageData;
     if (data == null) return const [];
+    //如果状态是 loading 或 error ，返回空列表
     final follows = _ref.read(flashSaleFollowControllerProvider).valueOrNull ?? const [];
     return data.products.map((p) {
       final followed = follows.any(
@@ -100,7 +107,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
   Future<void> initialize() async {
     state = state.copyWith(isRefreshing: true, clearError: true);
     try {
-      final calendar = await _repo.getCalendar();
+      final calendar = await _repo.getCalendar(activityId: activityId);
       final defaultDay = calendar.days.firstWhere(
         (d) => d.status == SHOFlashSaleDayStatus.ongoing,
         orElse: () => calendar.days.firstWhere(
@@ -140,7 +147,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
   Future<void> refresh() async {
     state = state.copyWith(isRefreshing: true, clearError: true);
     try {
-      final calendar = await _repo.getCalendar();
+      final calendar = await _repo.getCalendar(activityId: activityId);
       state = state.copyWith(calendar: calendar, isRefreshing: false);
       await _loadPage(reset: true);
     } catch (e) {
@@ -155,6 +162,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
     state = state.copyWith(isLoadingMore: true, clearError: true);
     try {
       final next = await _repo.getPage(
+        activityId: activityId,
         date: state.selectedDate,
         sessionId: state.selectedSessionId,
         sort: state.sort,
@@ -200,6 +208,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
     state = state.copyWith(isRefreshing: true, clearError: true);
     try {
       final page = await _repo.getPage(
+        activityId: activityId,
         date: state.selectedDate,
         sessionId: state.selectedSessionId,
         sort: state.sort,

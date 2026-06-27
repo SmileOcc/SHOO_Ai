@@ -2105,4 +2105,29 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get priceFullReduction => '满减优惠';
+
+  @override
+  String get flashSaleSessionEnding => '即将结束';
+
+  @override
+  String get flashSaleCountdownStartsIn => '距开始';
+
+  @override
+  String get flashSaleCountdownEndsIn => '距结束';
+
+  @override
+  String get flashSaleCountdownEnded => '已结束';
+
+  @override
+  String flashSaleSessionStartAt(String time) {
+    return '开始 $time';
+  }
+
+  @override
+  String flashSaleSessionEndAt(String time) {
+    return '结束 $time';
+  }
+
+  @override
+  String get flashSaleSessionActivityEnded => '活动已结束';
 }

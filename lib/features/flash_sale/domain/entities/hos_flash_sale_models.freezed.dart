@@ -19,6 +19,7 @@ SHOFlashSalePromoTag _$SHOFlashSalePromoTagFromJson(Map<String, dynamic> json) {
   return _SHOFlashSalePromoTag.fromJson(json);
 }
 
+// mixin 限制 Dart mixin 不能定义抽象方法（abstract）
 /// @nodoc
 mixin _$SHOFlashSalePromoTag {
   String get type => throw _privateConstructorUsedError;

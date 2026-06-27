@@ -844,5 +844,22 @@
   "flashSaleReminderAction": "Shop Now",
   "flashSaleFollowSuccess": "Followed — we'll remind you 5 minutes before",
   "priceActivitySaved": "Activity savings",
-  "priceFullReduction": "Spend & save"
+  "priceFullReduction": "Spend & save",
+  "flashSaleSessionEnding": "Ending soon",
+  "flashSaleCountdownStartsIn": "Starts in",
+  "flashSaleCountdownEndsIn": "Ends in",
+  "flashSaleCountdownEnded": "Ended",
+  "flashSaleSessionStartAt": "Start {time}",
+  "@flashSaleSessionStartAt": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "flashSaleSessionEndAt": "End {time}",
+  "@flashSaleSessionEndAt": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "flashSaleSessionActivityEnded": "This session has ended"
 }

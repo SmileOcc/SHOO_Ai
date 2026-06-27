@@ -15,7 +15,9 @@ import 'package:shoo/core/widgets/hos_banner_carousel.dart';
 import 'package:shoo/core/widgets/hos_product_card.dart';
 import 'package:shoo/core/widgets/hos_quick_entry_grid.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
+import 'package:shoo/features/category/domain/entities/hos_category.dart';
 import 'package:shoo/features/category/presentation/state/hos_category_controller.dart';
+import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/home/presentation/state/hos_home_controller.dart';
 
 class SHOHomePage extends ConsumerStatefulWidget {
@@ -67,7 +69,10 @@ class _SHOHomePageState extends ConsumerState<SHOHomePage> {
                     SHOBannerCarousel(banners: feed.banners),
                     const SizedBox(height: SHOAppSpacing.sm),
                     categoriesAsync.when(
-                      data: (categories) => SHOQuickEntryGrid(items: categories),
+                      data: (categories) => SHOQuickEntryGrid(
+                        items: _homeQuickEntries(categories),
+                        onTap: (item) => _onQuickEntryTap(context, item),
+                      ),
                       loading: () => const Padding(
                         padding: EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
                         child: SHOSkeletonBox(height: 90),
@@ -116,6 +121,30 @@ class _SHOHomePageState extends ConsumerState<SHOHomePage> {
         );
       },
     );
+  }
+}
+
+List<SHOCategoryItem> _homeQuickEntries(List<SHOCategoryItem> categories) {
+  final rest = categories.length > 2 ? categories.sublist(2) : const <SHOCategoryItem>[];
+  return [
+    const SHOCategoryItem(id: 'home-flash', name: '抢购活动', icon: '⚡'),
+    const SHOCategoryItem(id: 'home-discount', name: '折扣活动', icon: '🏷️'),
+    ...rest,
+  ];
+}
+
+void _onQuickEntryTap(BuildContext context, SHOCategoryItem item) {
+  switch (item.id) {
+    case 'home-flash':
+      context.push(
+        SHOAppRoutes.flashSaleFor(activityId: SHOFlashSaleActivities.flash),
+      );
+    case 'home-discount':
+      context.push(
+        SHOAppRoutes.flashSaleFor(activityId: SHOFlashSaleActivities.discount),
+      );
+    default:
+      context.go(SHOAppRoutes.category);
   }
 }
 

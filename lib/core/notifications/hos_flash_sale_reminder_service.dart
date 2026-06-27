@@ -17,6 +17,7 @@ class SHOFlashSaleReminderPayload {
     required this.title,
     required this.imageUrl,
     required this.sessionStartAt,
+    this.activityId,
   });
 
   final String sessionId;
@@ -24,6 +25,7 @@ class SHOFlashSaleReminderPayload {
   final String title;
   final String imageUrl;
   final String sessionStartAt;
+  final String? activityId;
 }
 
 final flashSaleReminderPopupProvider =
@@ -84,6 +86,7 @@ class SHOFlashSaleReminderService {
       title: parts.length > 2 ? parts[2] : '',
       imageUrl: parts.length > 3 ? parts[3] : '',
       sessionStartAt: parts.length > 4 ? parts[4] : '',
+      activityId: parts.length > 5 && parts[5].isNotEmpty ? parts[5] : null,
     );
   }
 
@@ -111,7 +114,7 @@ class SHOFlashSaleReminderService {
     if (fireAt.isBefore(DateTime.now())) return;
 
     final payload =
-        '${follow.sessionId}|${follow.productId}|${follow.title}|${follow.imageUrl}|${follow.sessionStartAt}';
+        '${follow.sessionId}|${follow.productId}|${follow.title}|${follow.imageUrl}|${follow.sessionStartAt}|';
 
     await _local.zonedSchedule(
       _notificationId(follow.sessionId, follow.productId),
@@ -184,5 +187,45 @@ class SHOFlashSaleReminderService {
 
   void dispose() {
     _foregroundTimer?.cancel();
+  }
+
+  /// Debug：立即展示抢购提醒弹窗。
+  void showDebugPopup(SHOFlashSaleReminderPayload payload) {
+    _ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+  }
+
+  /// Debug：延时后展示本地通知与前台弹窗。
+  Future<void> scheduleDebugReminder({
+    required SHOFlashSaleReminderPayload payload,
+    required Duration delay,
+  }) async {
+    await initialize();
+    final fireAt = DateTime.now().add(delay);
+    final notificationPayload =
+        '${payload.sessionId}|${payload.productId}|${payload.title}|${payload.imageUrl}|${payload.sessionStartAt}|${payload.activityId ?? ''}';
+
+    await _local.zonedSchedule(
+      _notificationId('debug', payload.productId),
+      '即将开抢',
+      payload.title,
+      tz.TZDateTime.from(fireAt, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          '抢购提醒',
+          channelDescription: '开抢前 5 分钟提醒',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: notificationPayload,
+    );
+
+    Future.delayed(delay, () {
+      if (!_ref.exists(flashSaleReminderPopupProvider)) return;
+      _ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+    });
   }
 }

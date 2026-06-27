@@ -9,6 +9,8 @@ enum SHOFlashSaleDayStatus {
   notStarted,
   @JsonValue('ongoing')
   ongoing,
+  @JsonValue('ending')
+  ending,
   @JsonValue('ended')
   ended,
 }
@@ -182,9 +184,11 @@ class SHOFlashSaleProduct with _$SHOFlashSaleProduct {
     return originalPrice;
   }
 
+  /// 场次进行中且有库存时可购买。
   bool get canPurchase =>
       status == SHOFlashSaleProductStatus.ongoing && stock > 0;
 
+  /// 仅未开始活动可关注。
   bool get canFollow => status == SHOFlashSaleProductStatus.notStarted;
 }
 
