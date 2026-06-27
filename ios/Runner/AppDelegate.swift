@@ -1,5 +1,7 @@
 import Flutter
 import UIKit
+import UserNotifications
+import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -15,6 +17,8 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+
     _ = flutterEngine
 
     let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -29,5 +33,13 @@ import UIKit
     )
     HybridBridgeCoordinator.shared.attach(flutterViewController: flutterVC)
     return result
+  }
+
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
   }
 }

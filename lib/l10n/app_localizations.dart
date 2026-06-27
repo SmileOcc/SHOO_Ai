@@ -710,6 +710,18 @@ abstract class AppLocalizations {
   /// **'Display current env at top-right (9pt red text)'**
   String get debugShowEnvBadgeHint;
 
+  /// No description provided for @debugConsoleLog.
+  ///
+  /// In en, this message translates to:
+  /// **'SHOAppLogger console output'**
+  String get debugConsoleLog;
+
+  /// No description provided for @debugConsoleLogHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When off, suppress console debug logs (file logs unchanged)'**
+  String get debugConsoleLogHint;
+
   /// No description provided for @envBadgeLabel.
   ///
   /// In en, this message translates to:

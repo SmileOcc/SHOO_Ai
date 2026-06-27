@@ -28,4 +28,10 @@ class SHODebugPrefs {
 
   Future<void> writeShowEnvBadge(bool value) =>
       _prefs.setBool(SHOAppConstants.debugShowEnvBadgeKey, value);
+
+  bool readConsoleLogEnabled() =>
+      _prefs.getBool(SHOAppConstants.debugConsoleLogEnabledKey) ?? true;
+
+  Future<void> writeConsoleLogEnabled(bool value) =>
+      _prefs.setBool(SHOAppConstants.debugConsoleLogEnabledKey, value);
 }

@@ -19,6 +19,7 @@ class SHODebugPanelPage extends ConsumerWidget {
     final config = ref.watch(effectiveConfigProvider);
     final override = ref.watch(runtimeEnvOverrideProvider);
     final showEnvBadge = ref.watch(showEnvBadgeProvider);
+    final consoleLogEnabled = ref.watch(consoleLogEnabledProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.debugPanelTitle)),
@@ -68,6 +69,13 @@ class SHODebugPanelPage extends ConsumerWidget {
             onChanged: (v) =>
                 ref.read(showEnvBadgeProvider.notifier).setEnabled(v),
           ),
+          SwitchListTile(
+            title: Text(l10n.debugConsoleLog),
+            subtitle: Text(l10n.debugConsoleLogHint),
+            value: consoleLogEnabled,
+            onChanged: (v) =>
+                ref.read(consoleLogEnabledProvider.notifier).setEnabled(v),
+          ),
           const Divider(height: SHOAppSpacing.xxxl),
           Text(
             l10n.debugToolsSection,
@@ -91,7 +99,7 @@ class SHODebugPanelPage extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.notifications_active_outlined),
             title: const Text('抢购活动通知调试'),
-            subtitle: const Text('弹窗预览、延时 5 秒通知、活动 ID'),
+            subtitle: const Text('弹窗预览、延时 8 秒通知、活动 ID'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(SHOAppRoutes.debugFlashSaleReminder),
           ),

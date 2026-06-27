@@ -102,6 +102,8 @@
   "debugEnvRestarting": "正在切换环境并重启应用…",
   "debugShowEnvBadge": "显示环境角标",
   "debugShowEnvBadgeHint": "在应用窗口右上角显示当前环境（9号红字）",
+  "debugConsoleLog": "SHOAppLogger 控制台日志",
+  "debugConsoleLogHint": "关闭后不再向控制台输出调试日志（文件日志不受影响）",
   "envBadgeLabel": "环境：{env}",
   "@envBadgeLabel": {
     "placeholders": { "env": { "type": "String" } }

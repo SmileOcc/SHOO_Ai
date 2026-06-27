@@ -1,12 +1,17 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:shoo/app/router/hos_router.dart';
+import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_analytics.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_bootstrap.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_nav.dart';
 import 'package:shoo/core/notifications/hos_push_notification_service.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
 
@@ -31,6 +36,12 @@ class SHOFlashSaleReminderPayload {
 final flashSaleReminderPopupProvider =
     StateProvider<SHOFlashSaleReminderPayload?>((ref) => null);
 
+/// App 是否处于前台（resumed）。
+final appInForegroundProvider = StateProvider<bool>((ref) {
+  final state = WidgetsBinding.instance.lifecycleState;
+  return state == null || state == AppLifecycleState.resumed;
+});
+
 final flashSaleReminderServiceProvider = Provider<SHOFlashSaleReminderService>(
   (ref) => SHOFlashSaleReminderService(ref),
 );
@@ -40,54 +51,130 @@ class SHOFlashSaleReminderService {
   SHOFlashSaleReminderService(this._ref);
 
   final Ref _ref;
-  final _local = FlutterLocalNotificationsPlugin();
   var _initialized = false;
   Timer? _foregroundTimer;
   final _firedKeys = <String>{};
+  SHOFlashSaleReminderPayload? _pendingNotificationPayload;
+  var _navigationAttempts = 0;
 
   static const _channelId = 'flash_sale_reminder';
   static const _lead = Duration(minutes: 5);
+  static const _maxNavigationAttempts = 150;
+
+  FlutterLocalNotificationsPlugin get _local =>
+      SHOFlashSaleReminderBootstrap.plugin;
 
   Future<void> initialize() async {
     if (_initialized) return;
     if (kIsWeb) return;
 
-    tz_data.initializeTimeZones();
-    tz.setLocalLocation(tz.local);
-
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const ios = DarwinInitializationSettings();
-    await _local.initialize(
-      const InitializationSettings(android: android, iOS: ios),
-      onDidReceiveNotificationResponse: _onNotificationTap,
-    );
-
-    if (Platform.isAndroid) {
-      await _local
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestNotificationsPermission();
-    }
+    await SHOFlashSaleReminderBootstrap.ensureInitialized();
+    SHOFlashSaleReminderBootstrap.tapHandler = _handleNotificationPayload;
+    SHOFlashSaleReminderBootstrap.onNotificationTapped = _onNotificationTapped;
 
     _initialized = true;
     _startForegroundWatcher();
     await _ref.read(pushNotificationServiceProvider).initialize();
+    _drainBootstrapPendingPayloads();
   }
 
-  void _onNotificationTap(NotificationResponse response) {
-    final payload = response.payload;
-    if (payload == null || payload.isEmpty) return;
-    final parts = payload.split('|');
-    if (parts.length < 2) return;
-    _ref.read(flashSaleReminderPopupProvider.notifier).state =
-        SHOFlashSaleReminderPayload(
-      sessionId: parts[0],
-      productId: parts[1],
-      title: parts.length > 2 ? parts[2] : '',
-      imageUrl: parts.length > 3 ? parts[3] : '',
-      sessionStartAt: parts.length > 4 ? parts[4] : '',
-      activityId: parts.length > 5 && parts[5].isNotEmpty ? parts[5] : null,
+  void _handleNotificationPayload(String raw) {
+    final payload = SHOFlashSaleReminderNav.parsePayload(raw);
+    if (payload == null) {
+      SHOAppLogger.w('[FlashSaleReminder] invalid payload: $raw');
+      return;
+    }
+    openFromNotification(payload);
+  }
+
+  void _onNotificationTapped() {
+    _drainBootstrapPendingPayloads();
+    _tryNavigatePending();
+  }
+
+  void _drainBootstrapPendingPayloads() {
+    for (final raw in SHOFlashSaleReminderBootstrap.drainPendingPayloads()) {
+      _handleNotificationPayload(raw);
+    }
+  }
+
+  /// 点击/冷启动通知：直接进入活动页，不弹窗。
+  void openFromNotification(SHOFlashSaleReminderPayload payload) {
+    SHOAppLogger.i(
+      '[FlashSaleReminder] openFromNotification '
+      'activity=${payload.activityId ?? '(default)'} product=${payload.productId}',
     );
+    _ref.read(flashSaleReminderPopupProvider.notifier).state = null;
+    _pendingNotificationPayload = payload;
+    _navigationAttempts = 0;
+    _tryNavigatePending();
+  }
+
+  /// 前台 T-5min 轮询：展示弹窗。
+  void showForegroundPopup(
+    SHOFlashSaleReminderPayload payload, {
+    String trigger = 'foreground_poll',
+  }) {
+    SHOFlashSaleReminderAnalytics.trackPopupShow(
+      payload: payload,
+      trigger: trigger,
+    );
+    _ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+  }
+
+  void flushPendingNavigation() {
+    _drainBootstrapPendingPayloads();
+    _tryNavigatePending();
+  }
+
+  void processPendingNotificationTaps() {
+    _drainBootstrapPendingPayloads();
+    _tryNavigatePending();
+  }
+
+  void _tryNavigatePending() {
+    final payload = _pendingNotificationPayload;
+    if (payload == null) return;
+
+    final lifecycle = WidgetsBinding.instance.lifecycleState;
+    if (lifecycle != null && lifecycle != AppLifecycleState.resumed) {
+      SHOAppLogger.d(
+        '[FlashSaleReminder] defer navigation until resumed (state=$lifecycle)',
+      );
+      return;
+    }
+
+    if (!_ref.exists(routerProvider)) {
+      _retryNavigate();
+      return;
+    }
+
+    final router = _ref.read(routerProvider);
+    if (router.state.matchedLocation == SHOAppRoutes.splash) {
+      _retryNavigate();
+      return;
+    }
+
+    _pendingNotificationPayload = null;
+    _navigationAttempts = 0;
+    final route = SHOFlashSaleReminderNav.routeFor(payload);
+    SHOAppLogger.i('[FlashSaleReminder] navigating to $route');
+    SHOFlashSaleReminderNav.openActivity(router, payload);
+  }
+
+  void _retryNavigate() {
+    if (_pendingNotificationPayload == null) return;
+    _navigationAttempts++;
+    if (_navigationAttempts > _maxNavigationAttempts) {
+      final payload = _pendingNotificationPayload;
+      _pendingNotificationPayload = null;
+      _navigationAttempts = 0;
+      if (payload != null && _ref.exists(routerProvider)) {
+        SHOFlashSaleReminderNav.openActivity(_ref.read(routerProvider), payload);
+      }
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _tryNavigatePending());
   }
 
   void _startForegroundWatcher() {
@@ -165,6 +252,8 @@ class SHOFlashSaleReminderService {
 
   /// 前台轮询：若到达 T-5min 且未弹过，返回 payload。
   SHOFlashSaleReminderPayload? pollForegroundPopup(SHOFlashSaleFollow follow) {
+    if (!_ref.read(appInForegroundProvider)) return null;
+
     final start = DateTime.tryParse(follow.sessionStartAt)?.toLocal();
     if (start == null) return null;
     final now = DateTime.now();
@@ -187,11 +276,17 @@ class SHOFlashSaleReminderService {
 
   void dispose() {
     _foregroundTimer?.cancel();
+    if (SHOFlashSaleReminderBootstrap.tapHandler == _handleNotificationPayload) {
+      SHOFlashSaleReminderBootstrap.tapHandler = null;
+    }
+    if (SHOFlashSaleReminderBootstrap.onNotificationTapped == _onNotificationTapped) {
+      SHOFlashSaleReminderBootstrap.onNotificationTapped = null;
+    }
   }
 
   /// Debug：立即展示抢购提醒弹窗。
   void showDebugPopup(SHOFlashSaleReminderPayload payload) {
-    _ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+    showForegroundPopup(payload, trigger: 'debug');
   }
 
   /// Debug：延时后展示本地通知与前台弹窗。
@@ -225,7 +320,8 @@ class SHOFlashSaleReminderService {
 
     Future.delayed(delay, () {
       if (!_ref.exists(flashSaleReminderPopupProvider)) return;
-      _ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+      if (!_ref.read(appInForegroundProvider)) return;
+      showForegroundPopup(payload);
     });
   }
 }

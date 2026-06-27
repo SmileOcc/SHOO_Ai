@@ -118,6 +118,8 @@
   "debugEnvRestarting": "Switching environment, restarting app…",
   "debugShowEnvBadge": "Show environment badge",
   "debugShowEnvBadgeHint": "Display current env at top-right (9pt red text)",
+  "debugConsoleLog": "SHOAppLogger console output",
+  "debugConsoleLogHint": "When off, suppress console debug logs (file logs unchanged)",
   "envBadgeLabel": "Env: {env}",
   "@envBadgeLabel": {
     "placeholders": { "env": { "type": "String" } }

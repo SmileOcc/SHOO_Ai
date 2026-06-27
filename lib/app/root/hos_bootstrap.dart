@@ -12,6 +12,7 @@ import 'package:shoo/core/feedback/hos_global_error.dart';
 import 'package:shoo/core/logging/hos_log_manager.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/cache/hos_image_cache_manager.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_bootstrap.dart';
 
 Future<void> bootstrap() async {
   // 运行 Zone 捕获未处理的异步错误
@@ -24,6 +25,7 @@ Future<void> bootstrap() async {
     await SHOImageCacheManager.ensureReady();
     CachedNetworkImageProvider.defaultCacheManager =
         SHOImageCacheManager.instance;
+    await SHOFlashSaleReminderBootstrap.ensureInitialized();
 
     final previousPlatformErrorHandler = PlatformDispatcher.instance.onError;
     PlatformDispatcher.instance.onError = (error, stack) {

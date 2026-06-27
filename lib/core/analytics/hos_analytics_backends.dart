@@ -26,8 +26,7 @@ class SHOAnalyticsConsoleBackend extends SHOAnalyticsBackend {
 
   @override
   Future<void> report(SHOAnalyticsEventDef event, Map<String, Object?> params) async {
-    // ignore: avoid_print
-    print('[SHOO][ANALYTICS] ${event.key} $params');
+    SHOAppLogger.i('[ANALYTICS] ${event.key} $params');
   }
 }
 

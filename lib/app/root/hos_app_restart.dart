@@ -11,6 +11,7 @@ import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
 import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
 import 'package:shoo/core/debug/core/hos_debug_prefs.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 
 /// Debug 环境切换后重建 [ProviderScope]，使 Dio / 路由等依赖新配置重新初始化。
 /// SHOAppRestart 是一个 应用重启管理器，专门用于 Debug 模式下的环境热切换。
@@ -131,6 +132,9 @@ Future<void> prepareRuntimeAfterEnvChange(SharedPreferences prefs) async {
   }
   // 2. 读取环境覆盖配置
   final envOverride = SHODebugPrefs(prefs).readEnvOverride();
+  SHOAppLogger.setConsolePrintEnabled(
+    SHODebugPrefs(prefs).readConsoleLogEnabled(),
+  );
   SHOStartupConfigLog.printEffective(
     base: SHOAppConfig.instance,
     envOverride: envOverride,

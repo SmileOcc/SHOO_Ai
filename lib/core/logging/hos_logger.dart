@@ -21,6 +21,9 @@ import 'package:shoo/core/logging/hos_logger_service.dart';
 /// // 运行时只显示 warn 以上
 /// SHOAppLogger.setMinLevel(SHOLogLevel.warn);
 ///
+/// // 关闭控制台调试输出（Debug 面板可切换，默认开启）
+/// SHOAppLogger.setConsolePrintEnabled(false);
+///
 /// // 接入 Sentry / Crashlytics（实现 [SHOLogCrashReporter]）
 /// SHOAppLogger.setCrashReporter(MySentryReporter());
 ///
@@ -38,6 +41,11 @@ abstract final class SHOAppLogger {
   // ── 配置 ──────────────────────────────────────────────
 
   static void setMinLevel(SHOLogLevel level) => _engine.setMinLevel(level);
+
+  static bool get consolePrintEnabled => _engine.consolePrintEnabled;
+
+  static void setConsolePrintEnabled(bool enabled) =>
+      _engine.setConsolePrintEnabled(enabled);
 
   static void setCrashReporter(SHOLogCrashReporter reporter) =>
       _engine.setCrashReporter(reporter);

@@ -328,6 +328,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Display current env at top-right (9pt red text)';
 
   @override
+  String get debugConsoleLog => 'SHOAppLogger console output';
+
+  @override
+  String get debugConsoleLogHint =>
+      'When off, suppress console debug logs (file logs unchanged)';
+
+  @override
   String envBadgeLabel(String env) {
     return 'Env: $env';
   }

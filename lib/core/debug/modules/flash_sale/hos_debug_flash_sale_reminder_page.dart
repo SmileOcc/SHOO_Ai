@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
@@ -25,8 +24,7 @@ class _SHODebugFlashSaleReminderPageState
   @override
   void initState() {
     super.initState();
-    _activityIdCtrl =
-        TextEditingController(text: SHOFlashSaleActivities.flash);
+    _activityIdCtrl = TextEditingController(text: SHOFlashSaleActivities.flash);
   }
 
   @override
@@ -43,7 +41,7 @@ class _SHODebugFlashSaleReminderPageState
       title: 'Wireless Earbuds X200 — 限时闪购',
       imageUrl: 'https://picsum.photos/seed/fs-p4/400/500',
       sessionStartAt: DateTime.now()
-          .add(const Duration(minutes: 5))
+          .add(const Duration(minutes: 8))
           .toUtc()
           .toIso8601String(),
       activityId: activityId.isEmpty ? null : activityId,
@@ -56,12 +54,14 @@ class _SHODebugFlashSaleReminderPageState
   }
 
   Future<void> _scheduleDelayed() async {
-    await ref.read(flashSaleReminderServiceProvider).scheduleDebugReminder(
+    await ref
+        .read(flashSaleReminderServiceProvider)
+        .scheduleDebugReminder(
           payload: _samplePayload(),
-          delay: const Duration(seconds: 5),
+          delay: const Duration(seconds: 8),
         );
     if (mounted) {
-      context.showToast('5 秒后将触发抢购活动通知');
+      context.showToast('8 秒后将触发抢购活动通知');
     }
   }
 
@@ -73,7 +73,7 @@ class _SHODebugFlashSaleReminderPageState
         padding: const EdgeInsets.all(SHOAppSpacing.xl),
         children: [
           Text(
-            '预览抢购提醒弹窗，或延时 5 秒触发本地通知与前台弹窗。',
+            '预览抢购提醒弹窗，或延时 8 秒触发本地通知与前台弹窗。',
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: SHOAppSpacing.xl),
@@ -92,18 +92,18 @@ class _SHODebugFlashSaleReminderPageState
             children: [
               ActionChip(
                 label: const Text('抢购 activity_flash_001'),
-                onPressed: () => _activityIdCtrl.text =
-                    SHOFlashSaleActivities.flash,
+                onPressed: () =>
+                    _activityIdCtrl.text = SHOFlashSaleActivities.flash,
               ),
               ActionChip(
                 label: const Text('折扣 activity_discount_001'),
-                onPressed: () => _activityIdCtrl.text =
-                    SHOFlashSaleActivities.discount,
+                onPressed: () =>
+                    _activityIdCtrl.text = SHOFlashSaleActivities.discount,
               ),
               ActionChip(
                 label: const Text('通用 activity_common_000'),
-                onPressed: () => _activityIdCtrl.text =
-                    SHOFlashSaleActivities.common,
+                onPressed: () =>
+                    _activityIdCtrl.text = SHOFlashSaleActivities.common,
               ),
             ],
           ),
@@ -115,7 +115,7 @@ class _SHODebugFlashSaleReminderPageState
           ),
           const SizedBox(height: SHOAppSpacing.md),
           SHOAppButton(
-            label: '延时 5 秒通知',
+            label: '延时 8 秒通知',
             variant: SHOAppButtonVariant.outline,
             isExpanded: true,
             onPressed: _scheduleDelayed,

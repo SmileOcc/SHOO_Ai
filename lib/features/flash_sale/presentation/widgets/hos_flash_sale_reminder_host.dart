@@ -4,7 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/app/router/hos_router.dart';
-import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_analytics.dart';
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_nav.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
@@ -24,35 +25,61 @@ class SHOFlashSaleReminderHost extends ConsumerStatefulWidget {
 }
 
 class _SHOFlashSaleReminderHostState
-    extends ConsumerState<SHOFlashSaleReminderHost> {
+    extends ConsumerState<SHOFlashSaleReminderHost> with WidgetsBindingObserver {
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _syncForegroundFlag();
+
     Future.microtask(() async {
-      await ref.read(flashSaleReminderServiceProvider).initialize();
+      final reminder = ref.read(flashSaleReminderServiceProvider);
+      await reminder.initialize();
+      reminder.flushPendingNavigation();
     });
+
     _timer = Timer.periodic(const Duration(seconds: 15), (_) => _poll());
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    ref.read(appInForegroundProvider.notifier).state =
+        state == AppLifecycleState.resumed;
+    if (state == AppLifecycleState.resumed) {
+      final reminder = ref.read(flashSaleReminderServiceProvider);
+      reminder.processPendingNotificationTaps();
+      reminder.flushPendingNavigation();
+    }
+  }
+
+  void _syncForegroundFlag() {
+    final state = WidgetsBinding.instance.lifecycleState;
+    ref.read(appInForegroundProvider.notifier).state =
+        state == null || state == AppLifecycleState.resumed;
+  }
+
   void _poll() {
+    if (!ref.read(appInForegroundProvider)) return;
+
     final follows = ref.read(flashSaleFollowControllerProvider).valueOrNull;
     if (follows == null || follows.isEmpty) return;
     final reminder = ref.read(flashSaleReminderServiceProvider);
     for (final follow in follows) {
       final payload = reminder.pollForegroundPopup(follow);
       if (payload != null) {
-        ref.read(flashSaleReminderPopupProvider.notifier).state = payload;
+        reminder.showForegroundPopup(payload);
         break;
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   @override
@@ -83,6 +110,7 @@ class _ReminderOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final router = ref.read(routerProvider);
 
     return Material(
       color: Colors.black54,
@@ -102,9 +130,14 @@ class _ReminderOverlay extends ConsumerWidget {
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () =>
-                      ref.read(flashSaleReminderPopupProvider.notifier).state =
-                          null,
+                  onPressed: () {
+                    SHOFlashSaleReminderAnalytics.trackPopupAction(
+                      payload: payload,
+                      action: 'dismiss',
+                    );
+                    ref.read(flashSaleReminderPopupProvider.notifier).state =
+                        null;
+                  },
                 ),
               ),
               ClipRRect(
@@ -135,13 +168,16 @@ class _ReminderOverlay extends ConsumerWidget {
                 label: l10n.flashSaleReminderAction,
                 isExpanded: true,
                 onPressed: () {
+                  SHOFlashSaleReminderAnalytics.trackPopupAction(
+                    payload: payload,
+                    action: 'go_flash_sale',
+                  );
                   ref.read(flashSaleReminderPopupProvider.notifier).state =
                       null;
-                  final activityId = payload.activityId;
-                  final route = activityId != null && activityId.isNotEmpty
-                      ? SHOAppRoutes.flashSaleFor(activityId: activityId)
-                      : '${SHOAppRoutes.product(payload.productId)}?sessionId=${Uri.encodeComponent(payload.sessionId)}';
-                  ref.read(routerProvider).push(route);
+                  if (SHOFlashSaleReminderNav.isOnSameActivity(router, payload)) {
+                    return;
+                  }
+                  SHOFlashSaleReminderNav.openActivity(router, payload);
                 },
               ),
             ],

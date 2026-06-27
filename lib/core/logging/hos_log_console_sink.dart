@@ -1,12 +1,12 @@
 import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
-
 import 'package:shoo/core/logging/hos_log_level.dart';
 import 'package:shoo/core/logging/hos_log_record.dart';
 import 'package:shoo/core/logging/hos_log_sink.dart';
+import 'package:shoo/core/logging/hos_logger_service.dart';
 
-/// 基于 `dart:developer.log()` 的控制台输出器（原生平台友好）。
+/// 基于 `debugPrint`（Debug/Profile 终端可见）与 `dart:developer.log`（Release）的控制台输出器。
 class SHOLogConsoleSink implements SHOLogSink {
   SHOLogConsoleSink({this.id = 'console'});
 
@@ -16,7 +16,8 @@ class SHOLogConsoleSink implements SHOLogSink {
   @override
   bool accepts(SHOLogRecord record) {
     if (kReleaseMode &&
-        (record.level == SHOLogLevel.debug || record.level == SHOLogLevel.info)) {
+        (record.level == SHOLogLevel.debug ||
+            record.level == SHOLogLevel.info)) {
       return false;
     }
     return true;
@@ -24,6 +25,16 @@ class SHOLogConsoleSink implements SHOLogSink {
 
   @override
   void write(SHOLogRecord record) {
+    // debugPrint 会出现在 `flutter run` 终端；developer.log 主要供 DevTools 使用。
+    if (!kReleaseMode && SHOLoggerService.instance.consolePrintEnabled) {
+      debugPrint(record.fullLine);
+      final stack = record.stackTrace;
+      if (stack != null) {
+        debugPrint(stack.toString());
+      }
+      return;
+    }
+
     developer.log(
       record.body,
       name: record.prefix,
@@ -35,9 +46,9 @@ class SHOLogConsoleSink implements SHOLogSink {
   }
 
   int _developerLevel(SHOLogLevel level) => switch (level) {
-        SHOLogLevel.debug => 500,
-        SHOLogLevel.info => 800,
-        SHOLogLevel.warn => 900,
-        SHOLogLevel.error => 1000,
-      };
+    SHOLogLevel.debug => 500,
+    SHOLogLevel.info => 800,
+    SHOLogLevel.warn => 900,
+    SHOLogLevel.error => 1000,
+  };
 }

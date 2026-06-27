@@ -39,6 +39,7 @@ abstract final class SHOAppConstants {
   static const String addressesStorageKey = 'addresses_v1';
   static const String debugEnvOverrideKey = 'debug_env_override';
   static const String debugShowEnvBadgeKey = 'debug_show_env_badge';
+  static const String debugConsoleLogEnabledKey = 'debug_console_log_enabled';
 
   static const List<String> defaultSkuSizes = ['S', 'M', 'L', 'XL'];
 }

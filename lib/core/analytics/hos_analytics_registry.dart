@@ -502,6 +502,182 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const deeplinkReceive = SHOAnalyticsEventDef(
+    key: 'deeplink_receive',
+    title: 'Deep link receive',
+    description: 'App received a deep link URI from system or app_links',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'uri',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'shoo://flash-sale?activityId=activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'app_path',
+        type: SHOAnalyticsFieldType.string,
+        example: '/flash-sale?activityId=activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'action_type',
+        type: SHOAnalyticsFieldType.string,
+        example: 'flashSale',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'source',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'initial_link / stream',
+        example: 'stream',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'supported',
+        type: SHOAnalyticsFieldType.boolValue,
+        example: true,
+      ),
+    ],
+  );
+
+  static const flashSaleNotificationReceive = SHOAnalyticsEventDef(
+    key: 'flash_sale_notification_receive',
+    title: 'Flash sale notification receive',
+    description: 'App received flash sale reminder notification payload',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'raw_payload',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'session_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'product_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'p_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'title',
+        type: SHOAnalyticsFieldType.string,
+        example: '限量抢购商品',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'source',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'cold_start / notification_tap / pending_queue',
+        example: 'notification_tap',
+      ),
+    ],
+  );
+
+  static const flashSaleNotificationClick = SHOAnalyticsEventDef(
+    key: 'flash_sale_notification_click',
+    title: 'Flash sale notification click',
+    description: 'User tapped flash sale reminder notification',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'raw_payload',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'session_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'product_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'p_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'source',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'cold_start / notification_tap',
+        example: 'notification_tap',
+      ),
+    ],
+  );
+
+  static const flashSaleReminderPopupShow = SHOAnalyticsEventDef(
+    key: 'flash_sale_reminder_popup_show',
+    title: 'Flash sale reminder popup show',
+    description: 'Foreground flash sale reminder popup displayed',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'session_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'product_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'p_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'activity_flash_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'trigger',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'foreground_poll / debug',
+        example: 'foreground_poll',
+      ),
+    ],
+  );
+
+  static const flashSaleReminderPopupAction = SHOAnalyticsEventDef(
+    key: 'flash_sale_reminder_popup_action',
+    title: 'Flash sale reminder popup action',
+    description: 'User interacted with flash sale reminder popup',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'session_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'session_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'product_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'p_1',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'action',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        description: 'go_flash_sale / dismiss',
+        example: 'go_flash_sale',
+      ),
+    ],
+  );
+
   static final List<SHOAnalyticsEventDef> all = [
     appLaunch,
     appClose,
@@ -526,6 +702,11 @@ abstract final class SHOAnalyticsRegistry {
     downloadItemClick,
     musicPackExtract,
     musicPackAlreadyExtracted,
+    deeplinkReceive,
+    flashSaleNotificationReceive,
+    flashSaleNotificationClick,
+    flashSaleReminderPopupShow,
+    flashSaleReminderPopupAction,
   ];
 
   static SHOAnalyticsEventDef? find(String key) {

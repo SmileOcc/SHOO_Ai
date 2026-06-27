@@ -16,6 +16,7 @@ class SHOLoggerService {
   static const _defaultBrand = 'SHOO';
 
   SHOLogLevel _minLevel = SHOLogLevel.debug;
+  bool _consolePrintEnabled = true;
   SHOLogCrashReporter _crashReporter = const SHONoopCrashReporter();
   final List<SHOLogSink> _sinks = [
     SHOLogConsoleSink(),
@@ -23,11 +24,15 @@ class SHOLoggerService {
   ];
 
   SHOLogLevel get minLevel => _minLevel;
+  bool get consolePrintEnabled => _consolePrintEnabled;
   List<SHOLogSink> get sinks => List.unmodifiable(_sinks);
   SHOLogCrashReporter get crashReporter => _crashReporter;
 
   /// 运行时调整最低输出级别（如测试环境设为 [SHOLogLevel.warn]）。
   void setMinLevel(SHOLogLevel level) => _minLevel = level;
+
+  /// 是否向控制台输出调试日志（可通过 Debug 面板开关）。
+  void setConsolePrintEnabled(bool enabled) => _consolePrintEnabled = enabled;
 
   void setCrashReporter(SHOLogCrashReporter reporter) {
     _crashReporter = reporter;

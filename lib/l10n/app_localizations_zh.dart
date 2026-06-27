@@ -323,6 +323,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugShowEnvBadgeHint => '在应用窗口右上角显示当前环境（9号红字）';
 
   @override
+  String get debugConsoleLog => 'SHOAppLogger 控制台日志';
+
+  @override
+  String get debugConsoleLogHint => '关闭后不再向控制台输出调试日志（文件日志不受影响）';
+
+  @override
   String envBadgeLabel(String env) {
     return '环境：$env';
   }
