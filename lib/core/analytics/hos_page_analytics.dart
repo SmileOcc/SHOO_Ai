@@ -8,9 +8,9 @@
 ///   ├── SHOPageAnalyticsNavigatorObserver  ← 栈级 push/pop/replace/remove
 ///   └── SHOMusicNavigatorObserver   ← 业务专用（音乐路由同步）
 ///
-/// 页面接入（二选一）
-///   ├── SHOPageRouteAnalyticsMixin  ← StatefulWidget / ConsumerStatefulWidget
-///   └── SHOPageAnalyticsBinder      ← StatelessWidget 包裹
+/// 页面接入
+///   └── SHOPageRouteAnalyticsMixin  ← StatefulWidget / ConsumerStatefulWidget
+///       （复杂页配合 SHOAppPageMixin / SHOAppTrackedPageMixin）
 /// ```
 ///
 /// ## 事件
@@ -30,8 +30,9 @@
 /// ## 接入步骤
 ///
 /// 1. 路由已注册 `shoPageRouteObserver`（见 [hos_router.dart]）
-/// 2. 在页面 State 上 mixin [SHOPageRouteAnalyticsMixin]，或外层包 [SHOPageAnalyticsBinder]
-/// 3. 可选：覆写 [SHOPageRouteAnalyticsMixin.pageAnalyticsName] 与 [pageAnalyticsExtra]
+/// 2. 在页面 State 上 mixin [SHOPageRouteAnalyticsMixin]（推荐配合 [SHOAppPageMixin]）
+/// 3. 复杂页使用 [SHOAppTrackedPageMixin.buildTrackedPage] 统一 ErrorBoundary
+/// 4. 可选：覆写 [SHOPageRouteAnalyticsMixin.pageAnalyticsName] 与 [pageAnalyticsExtra]
 ///
 /// ## 与 App 生命周期埋点的关系
 ///
@@ -46,7 +47,6 @@ library;
 
 export 'hos_page_analytics_action.dart';
 export 'hos_tab_analytics.dart';
-export 'hos_page_analytics_binder.dart';
 export 'hos_page_analytics_nav_observer.dart';
 export 'hos_page_analytics_reporter.dart';
 export 'hos_page_route_analytics_mixin.dart';

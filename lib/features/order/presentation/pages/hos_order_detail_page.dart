@@ -54,6 +54,12 @@ class _SHOOrderDetailPageState
         if (widget.skipPaymentFlowOnPop) 'skip_payment_flow_on_pop': true,
       };
 
+  @override
+  void onPageResumeVisible(WidgetRef ref) {
+    super.onPageResumeVisible(ref);
+    ref.invalidate(orderDetailProvider(widget.orderId));
+  }
+
   void _handleBack(BuildContext context) {
     if (widget.skipPaymentFlowOnPop) {
       popOrderDetailPastPaymentFlow(GoRouter.of(context));

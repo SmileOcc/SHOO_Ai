@@ -6,6 +6,7 @@ export 'hos_app_page_mixin.dart';
 export 'hos_app_shell_page.dart';
 export 'hos_app_tracked_page_mixin.dart';
 export 'hos_data_page.dart';
+export 'hos_paged_data_page.dart';
 export 'hos_page_error_boundary.dart';
 export 'hos_page_load_reporter.dart';
 export 'hos_route_args.dart';

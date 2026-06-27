@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -25,7 +25,7 @@ class SHOCommunityNewsDetailPage extends ConsumerStatefulWidget {
 
 class _SHOCommunityNewsDetailPageState
     extends ConsumerState<SHOCommunityNewsDetailPage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'community_news_detail';
 
@@ -39,7 +39,8 @@ class _SHOCommunityNewsDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           item.source.isNotEmpty ? item.source : '资讯',
@@ -143,6 +144,7 @@ class _SHOCommunityNewsDetailPageState
           ),
         ),
       ),
+    ),
     );
   }
 }
@@ -159,7 +161,7 @@ class SHOCommunityPostDetailPage extends ConsumerStatefulWidget {
 
 class _SHOCommunityPostDetailPageState
     extends ConsumerState<SHOCommunityPostDetailPage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'community_post_detail';
 
@@ -177,7 +179,8 @@ class _SHOCommunityPostDetailPageState
         ? item.imageUrls
         : (item.coverUrl.isNotEmpty ? [item.coverUrl] : <String>[]);
 
-    return Scaffold(
+    return buildTrackedPage(
+      Scaffold(
       appBar: AppBar(
         title: Text(
           item.author.name.isNotEmpty ? item.author.name : '帖子',
@@ -286,6 +289,7 @@ class _SHOCommunityPostDetailPageState
           ),
         ),
       ),
+    ),
     );
   }
 }

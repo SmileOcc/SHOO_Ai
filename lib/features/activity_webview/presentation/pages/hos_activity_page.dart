@@ -7,8 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
-import 'package:shoo/core/pages/hos_app_page_mixin.dart';
-import 'package:shoo/core/pages/hos_webview_shell_page.dart';
+import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/platform/webview/hos_webview_config.dart';
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_config.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_activity_config_provider.dart';
@@ -25,7 +24,7 @@ class SHOActivityPage extends ConsumerStatefulWidget {
 }
 
 class _SHOActivityPageState extends ConsumerState<SHOActivityPage>
-    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   WebViewController? _controller;
 
   @override
@@ -55,9 +54,11 @@ class _SHOActivityPageState extends ConsumerState<SHOActivityPage>
 
     return SHOActivityDialogHost(
       child: serverAsync.when(
-        loading: () => Scaffold(
-          appBar: AppBar(title: Text(fallbackTitle)),
-          body: const Center(child: CircularProgressIndicator()),
+        loading: () => buildTrackedPage(
+          Scaffold(
+            appBar: AppBar(title: Text(fallbackTitle)),
+            body: const Center(child: CircularProgressIndicator()),
+          ),
         ),
         error: (_, __) => SHOWebViewShellPage(
           pageNameOverride: pageName,

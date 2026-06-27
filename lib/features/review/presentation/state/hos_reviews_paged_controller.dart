@@ -4,7 +4,9 @@ import 'package:shoo/core/constants/hos_constants.dart';
 import 'package:shoo/features/review/data/repositories/hos_review_repository_impl.dart';
 import 'package:shoo/features/review/domain/entities/hos_review.dart';
 
-class SHOReviewsPagedState {
+import 'package:shoo/core/pagination/hos_paged_container.dart';
+
+class SHOReviewsPagedState implements SHOPagedContainer<SHOProductReview> {
   const SHOReviewsPagedState({
     this.summary,
     this.items = const [],
@@ -18,6 +20,15 @@ class SHOReviewsPagedState {
   final int page;
   final bool hasMore;
   final bool isLoadingMore;
+
+  @override
+  List<SHOProductReview> get pagedItems => items;
+
+  @override
+  bool get pagedHasMore => hasMore;
+
+  @override
+  bool get pagedIsLoadingMore => isLoadingMore;
 }
 
 final reviewsPagedProvider = AutoDisposeAsyncNotifierProviderFamily<

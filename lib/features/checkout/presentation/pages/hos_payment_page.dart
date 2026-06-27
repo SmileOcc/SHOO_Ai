@@ -52,6 +52,12 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
   Map<String, Object?> get pageAnalyticsExtra => {'order_id': widget.orderId};
 
   @override
+  void onPageResumeVisible(WidgetRef ref) {
+    super.onPageResumeVisible(ref);
+    ref.invalidate(orderDetailProvider(widget.orderId));
+  }
+
+  @override
   void initState() {
     super.initState();
     _cashierOrder = widget.initialOrder;

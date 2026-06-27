@@ -444,7 +444,6 @@ xcrun simctl openurl booted "https://shoo.app/product/p-1"
 | AsyncValue 扩展 | 同上 + `core/utils/hos_async_value_ui.dart` | ✅ 已落地 | `whenLoadingState` / `whenWidget`；业务页已迁入 `SHODataPage` |
 | 错误 / 空态 | `hos_error_view.dart` / `hos_empty_state.dart` | ✅ 已落地 | 统一重试按钮、文案走 l10n |
 | 页面可见性埋点 | `core/analytics/hos_page_route_analytics_mixin.dart` | ✅ 已落地 | `SHOPageRouteAnalyticsMixin` → enter/exit/cover/resume |
-| Stateless 埋点包裹 | `core/analytics/hos_page_analytics_binder.dart` | ✅ 已落地 | `SHOPageAnalyticsBinder` 免改 StatefulWidget |
 | 栈级路由埋点 | `core/analytics/hos_page_analytics_nav_observer.dart` | ✅ 已落地 | 已挂 `GoRouter.observers`，上报 route_push/pop |
 | Tab 切换埋点 | `core/analytics/hos_tab_analytics.dart` | ✅ 已落地 | `SHOMainShell.onTap` → `tab_switch` |
 | 业务曝光 Reporter | 如 `hos_product_view_reporter.dart` | ✅ 组合模式 | 页面内嵌 Widget，非基类继承 |
@@ -462,6 +461,7 @@ xcrun simctl openurl booted "https://shoo.app/product/p-1"
 | 页面 ErrorBoundary | `core/pages/hos_page_error_boundary.dart` | ✅ 已落地 | `SHOPageErrorBoundary` 接入 DataPage / WebViewShell / TrackedPage |
 | Tab 子页 KeepAlive | `core/pages/hos_tab_keep_alive_page.dart` | ✅ 已落地 | `SHOTabKeepAlivePage` + `SHOTabKeepAliveMixin` |
 | **TrackedPage Mixin** | `core/pages/hos_app_tracked_page_mixin.dart` | ✅ 已落地 | 复杂页：`page_load_time` + ErrorBoundary 统一包装 |
+| **PagedDataPage\<T\>** | `core/pages/hos_paged_data_page.dart` | ✅ 已落地 | 分页列表：Reviews / Search / OrderList Tab |
 
 **已迁入 `SHODataPage` / `SHOSelectorPage` 的页面**：优惠券、地址列表/表单、订单详情/物流、售后列表/申请、首页/类目 Tab/消息/活动详情/类目商品/闪购关注列表。
 
@@ -643,7 +643,7 @@ xcrun simctl openurl booted "https://shoo.app/product/p-1"
 ┌────────────────────────────▼────────────────────────────────────┐
 │  已有基建（✅ 已存在，基类内部复用）                              │
 │  SHOAppLoadingState · whenLoadingState · SHOAppErrorView         │
-│  SHOPageRouteAnalyticsMixin · SHOPageAnalyticsBinder             │
+│  SHOPageRouteAnalyticsMixin · SHOAppPageMixin · SHOAppTrackedPageMixin │
 │  SHOAnalyticsManager · SHOAppLogger · SHOGlobalError             │
 │  GoRouterState · Riverpod Provider / AsyncNotifier               │
 └─────────────────────────────────────────────────────────────────┘
@@ -657,13 +657,13 @@ xcrun simctl openurl booted "https://shoo.app/product/p-1"
 
 | 能力 | API 草案 | 现状 |
 |------|----------|------|
-| 页面名 | `String get pageName` | ✅ `SHOPageRouteAnalyticsMixin.pageAnalyticsName` |
+| 页面名 | `String get pageName` | ✅ `SHOAppPageMixin.pageName` |
 | 路由信息 | `SHOPageRouteInfo? routeInfo` | ✅ `SHOPageRouteInfo.tryFromContext` |
 | 附加埋点 | `Map<String, Object?> get pageAnalyticsExtra` | ✅ mixin 已支持 |
-| 可见性回调 | `onPageEnter/Exit/Cover/Resume` | ⚠️ 仅有埋点上报，无业务 hook |
-| 路由参数 | `parseRoute(GoRouterState state)` | ❌ 各页构造函数手动接参 |
-| 预加载 | `preload(WidgetRef ref)` | ❌ 各页 `initState` 自行 invalidate |
-| 异常边界 | `Widget buildPage(BuildContext context)` 外包 ErrorWidget | ❌ 未实现 |
+| 可见性回调 | `onPageEnter/Exit/Cover/Resume` | ✅ 埋点 + `onPagePreload` / `onPageResumeVisible` hook |
+| 路由参数 | `SHORouteArgs` / `state.*Args` | ✅ 全 feature router 已接入 |
+| 预加载 | `onPagePreload(WidgetRef ref)` | ✅ Home 等已用；其余按需覆写 |
+| 异常边界 | `SHOPageErrorBoundary` | ✅ DataPage / TrackedPage / WebViewShell / PagedDataPage |
 
 ```dart
 /// 规划路径：core/pages/hos_app_page_mixin.dart
@@ -689,8 +689,8 @@ mixin SHOAppPageMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
 
 | 能力 | 说明 | 现状 |
 |------|------|------|
-| AppBar 标题 | `title` / `actions` | 各页手写 `Scaffold(appBar: AppBar(...))` |
-| 返回拦截 | `PopScope` + 未保存提示 | 支付页等单独实现 |
+| AppBar 标题 | `title` / `actions` | ✅ `SHOAppShellPage` 或各页 `Scaffold` |
+| 返回拦截 | `PopScope` + 未保存提示 | ✅ 支付页等通过 `onPopInvoked` |
 | Debug 入口 | `SHODebugTapAppBar` 包裹 | ✅ 仅 MainShell 使用 |
 | 离线条 | 由外层 `SHOAppShell` 承担 | ✅ 不在单页重复 |
 
@@ -716,11 +716,11 @@ class SHOAppShellPage extends StatelessWidget {
 
 | 能力 | 说明 | 现状 |
 |------|------|------|
-| 自动 loading/error/empty | 内部 `whenLoadingState` | ✅ 扩展已有，缺基类封装 |
-| 重试 | `onRetry` → `ref.invalidate(provider)` | 各页重复写 |
-| 空数据判定 | `bool isEmpty(T data)` | 各页 inline `items.isEmpty` |
-| 下拉刷新 | 可选 `RefreshIndicator` | 分页页用 `SHOPagedScrollView` |
-| 骨架屏 | `loadingWidget: SHOAppListSkeleton()` | 部分列表页已用 |
+| 自动 loading/error/empty | 内部 `when` + `SHOAppLoadingState` | ✅ `SHODataPage` 基类 |
+| 重试 | `onRetry` → `invalidateData` | ✅ 基类统一 |
+| 空数据判定 | `bool isEmpty(T data)` | ✅ 子类覆写 |
+| 下拉刷新 | `RefreshIndicator` | ✅ 分页页用 `SHOPagedDataPage` / `SHOPagedScrollView` |
+| 骨架屏 | `loadingWidget: SHOAppListSkeleton()` | ✅ DataPage / PagedDataPage 可覆写 |
 
 ```dart
 /// 规划：core/pages/hos_data_page.dart
@@ -746,7 +746,7 @@ abstract class SHODataPage<T> extends ConsumerStatefulWidget {
 
 - 列表页：`AsyncNotifierProvider` / `FutureProvider` → `DataPage<List<Item>>`
 - 详情页：`family` + path 参数 → `DataPage<Detail>`，`build` 前 `ref.watch(detailProvider(id))`
-- 分页页：**不强行继承 DataPage**；继续用 `SHOPagedScrollView` + `SHOPagedListState`，仅复用 `AppPage` mixin 做埋点
+- 分页页：`SHOPagedDataPage<T>` + `SHOPagedContainer`（Reviews / Search / OrderList Tab）
 
 **路由衔接示例**：
 
@@ -771,12 +771,12 @@ ProviderListenable<AsyncValue<OrderDetail>> dataProvider(WidgetRef ref) =>
 
 | 能力 | 路径 | 状态 |
 |------|------|------|
-| 通用 WebView | `hos_webview_page.dart` | ✅ |
-| Bridge / 路由映射 | `core/platform/webview/hos_webview_bridge_handler.dart` | ✅ |
+| 通用 WebView | `hos_webview_page.dart` → `SHOWebViewShellPage` | ✅ |
+| Bridge / 路由映射 | `hos_webview_bridge_handler.dart` / `hos_activity_webview_bridge.dart` | ✅ |
 | 活动页编排 | `hos_activity_page.dart` | ✅ |
-| RouteAware 埋点 | — | ❌ WebView 页未接入 |
-| 加载失败 / 空白 URL | WebView 页内简单 Scaffold | ⚠️ 未复用 `SHOAppLoadingState` |
-| 性能（TTFP、白屏） | — | ❌ 规划 `webview_page_load` 事件 |
+| RouteAware 埋点 | `SHOWebViewShellPage` 内置 | ✅ |
+| 加载失败 / 空白 URL | `SHOWebViewShellPage` + ErrorBoundary | ✅ |
+| 性能（TTFP） | `webview_page_load` 事件 | ✅ |
 
 ```dart
 /// 规划：core/pages/hos_webview_shell_page.dart
@@ -793,10 +793,10 @@ class SHOWebViewShellPage extends ConsumerStatefulWidget {
 
 | 生命周期 | Flutter 机制 | 业务 hook（规划） | 埋点 event key | 现状 |
 |----------|--------------|-------------------|----------------|------|
-| 首次可见 | `RouteAware.didPush` | `onPagePreload` | `page_enter` | ✅ 埋点；❌ hook |
-| 离开栈 | `RouteAware.didPop` | `onPageDispose` | `page_exit` | ✅ 埋点 |
+| 首次可见 | `RouteAware.didPush` | `onPagePreload` | `page_enter` | ✅ |
+| 离开栈 | `RouteAware.didPop` | — | `page_exit` | ✅ |
 | 被覆盖 | `RouteAware.didPushNext` | — | `page_cover` | ✅ |
-| 恢复可见 | `RouteAware.didPopNext` | `onPageResumeVisible` | `page_resume` | ✅ 埋点；❌ 刷新 hook |
+| 恢复可见 | `RouteAware.didPopNext` | `onPageResumeVisible` | `page_resume` | ✅ |
 | 栈 push/pop | `NavigatorObserver` | — | `route_push` / `route_pop` | ✅ |
 | Tab 切换 | `navigationShell.goBranch` | — | `tab_switch` | ✅ |
 | 业务曝光 | 子类 / Reporter Widget | `product_view` 等 | 按 Registry | ✅ 组合式 |
@@ -819,6 +819,14 @@ class SHOWebViewShellPage extends ConsumerStatefulWidget {
 | **P2** | 页面 ErrorBoundary | ✅ | `SHOPageErrorBoundary` + `page_render_error` 埋点 |
 | **P2** | `AutomaticKeepAliveClientMixin` 封装 | ✅ | `SHOTabKeepAlivePage` / `SHOTabKeepAliveMixin` |
 | **P2** | Activity H5 容器合并 | ✅ | 活动页接入 `SHOWebViewShellPage` + `SHOActivityWebViewBridge` |
+| **P3** | 社区详情 / 活动 loading 页 | ✅ | `SHOAppTrackedPageMixin` + `buildTrackedPage` |
+| **P3** | `onPageResumeVisible` 业务刷新 | ✅ | Payment / OrderDetail 返回时 invalidate 订单 |
+| **P4** | `SHOPagedDataPage<T>` | ✅ | Reviews / Search 结果 / OrderList Tab |
+| **P4** | `bridge_error` 埋点 | ✅ | Activity JS Bridge 解析/未知类型上报 |
+| **P4** | Debug 面板 `page_load_time` | ✅ | 最近 8 条耗时记录 |
+| **P5** | 移除 `SHOPageAnalyticsBinder` | ✅ | 全量 TrackedPageMixin，删除 binder 文件 |
+| **P5** | 移除 `SHOWebViewContainer` | ✅ | 活动页统一 `SHOWebViewShellPage` |
+| **P5** | §7.3 文档状态同步 | ✅ | 与 Phase A～D 落地现状对齐 |
 
 ### 7.6 迁移路线
 
@@ -847,6 +855,17 @@ Phase C（长尾页）— ✅ 已完成
   404：NotFoundPage
   Debug：调试面板 + 全部 Debug 子模块页
   hos_pages.dart 统一 export SHOPageRouteAnalyticsMixin
+
+Phase D（P3/P4 收尾）— ✅ 已完成
+  P3：Community 资讯/帖子详情 → TrackedPageMixin；Activity loading → buildTrackedPage
+  P3：Payment / OrderDetail → onPageResumeVisible 刷新订单
+  P4：SHOPagedDataPage + SHOPagedContainer → Reviews / Search / OrderList Tab
+  P4：bridge_error 埋点；Debug 面板 page_load_time 预览
+
+Phase E（P5 收尾）— ✅ 已完成
+  删除 SHOPageAnalyticsBinder（Study 等已迁 TrackedPageMixin）
+  删除废弃 SHOWebViewContainer（活动页仅保留 Shell + GenericWebView）
+  同步 §4.11 / §7.3 / §7.4 文档状态表
 ```
 
 ### 7.7 页面选型决策树
@@ -865,6 +884,9 @@ Phase C（长尾页）— ✅ 已完成
   │
   ├─ 主体是否单一 AsyncValue 数据源？
   │     └─ 是 → SHODataPage<T> + AppShellPage
+  │
+  ├─ 是否分页列表（下拉刷新 + 加载更多）？
+  │     └─ 是 → SHOPagedDataPage<T>（Tab 内嵌设 embedInParentShell: true）
   │
   └─ 复杂交互（TabController、动画、多 Provider、表单）
         └─ SHOAppTrackedPageMixin + AppShellPage / 自建 Scaffold

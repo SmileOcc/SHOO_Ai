@@ -7,13 +7,14 @@ import 'package:shoo/core/analytics/hos_analytics.dart';
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
+import 'package:shoo/core/pagination/hos_paged_list_state.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_debouncer.dart';
 import 'package:shoo/core/widgets/hos_loading_state.dart';
-import 'package:shoo/core/widgets/hos_paged_scroll_view.dart';
 import 'package:shoo/core/widgets/hos_product_card.dart';
 import 'package:shoo/core/widgets/hos_text_field.dart';
+import 'package:shoo/features/home/domain/entities/hos_product.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/search/presentation/state/hos_search_controller.dart';
 import 'package:shoo/features/search/presentation/state/hos_search_history_provider.dart';
@@ -99,9 +100,6 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
     final hotAsync = ref.watch(searchHotKeywordsProvider);
     final historyAsync = ref.watch(searchHistoryProvider);
     final trimmed = _query.trim();
-    final resultsAsync = trimmed.isEmpty
-        ? null
-        : ref.watch(searchPagedProvider(trimmed));
 
     return buildTrackedPage(
       Scaffold(
@@ -135,47 +133,9 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
                 SHOAppToast.info(l10n.searchHistoryCleared);
               },
             )
-          : resultsAsync!.when(
-              loading: () => const SHOAppLoadingState(
-                state: SHOLoadingState.loading,
-                loadingWidget: SHOAppListSkeleton(itemCount: 4, itemHeight: 200),
-              ),
-              error: (error, _) => SHOAppLoadingState(
-                state: SHOLoadingState.error,
-                message: error.toString(),
-                onRetry: () => ref.invalidate(searchPagedProvider(trimmed)),
-              ),
-              data: (paged) {
-                if (paged.items.isEmpty) {
-                  return SHOAppLoadingState(
-                    state: SHOLoadingState.empty,
-                    message: l10n.searchNoResults,
-                  );
-                }
-                return SHOPagedGridView(
-                  controller: _scrollController,
-                  itemCount: paged.items.length,
-                  onRefresh: () =>
-                      ref.read(searchPagedProvider(trimmed).notifier).refresh(trimmed),
-                  onLoadMore: () =>
-                      ref.read(searchPagedProvider(trimmed).notifier).loadMore(trimmed),
-                  isLoadingMore: paged.isLoadingMore,
-                  hasMore: paged.hasMore,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: SHOAppSpacing.lg,
-                    crossAxisSpacing: SHOAppSpacing.lg,
-                    childAspectRatio: SHOProductCard.gridChildAspectRatio,
-                  ),
-                  itemBuilder: (context, index) {
-                    final product = paged.items[index];
-                    return SHOProductCard(
-                      product: product,
-                      onTap: () => context.push(SHOAppRoutes.product(product.id)),
-                    );
-                  },
-                );
-              },
+          : SHOSearchResultsPane(
+              query: trimmed,
+              scrollController: _scrollController,
             ),
     ),
     onRetry: trimmed.isEmpty
@@ -281,6 +241,82 @@ class _SHOSearchSuggestions extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class SHOSearchResultsPane extends SHOPagedDataPage<SHOProduct> {
+  const SHOSearchResultsPane({
+    super.key,
+    required this.query,
+    required this.scrollController,
+  });
+
+  final String query;
+  final ScrollController scrollController;
+
+  @override
+  SHOPagedDataPageState<SHOProduct, SHOPagedListState<SHOProduct>,
+      SHOSearchResultsPane> createState() => _SHOSearchResultsPaneState();
+}
+
+class _SHOSearchResultsPaneState extends SHOPagedDataPageState<SHOProduct,
+    SHOPagedListState<SHOProduct>, SHOSearchResultsPane> {
+  @override
+  bool get embedInParentShell => true;
+
+  @override
+  bool get reportContentReadyLoadTime => false;
+
+  @override
+  String get pageName => 'search_results';
+
+  @override
+  ProviderListenable<AsyncValue<SHOPagedListState<SHOProduct>>> get pagedProvider =>
+      searchPagedProvider(widget.query);
+
+  @override
+  ScrollController? get scrollController => widget.scrollController;
+
+  @override
+  SliverGridDelegate get gridDelegate =>
+      const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: SHOAppSpacing.lg,
+        crossAxisSpacing: SHOAppSpacing.lg,
+        childAspectRatio: SHOProductCard.gridChildAspectRatio,
+      );
+
+  @override
+  void refreshPaged(WidgetRef ref) =>
+      ref.read(searchPagedProvider(widget.query).notifier).refresh(widget.query);
+
+  @override
+  void loadMorePaged(WidgetRef ref) =>
+      ref.read(searchPagedProvider(widget.query).notifier).loadMore(widget.query);
+
+  @override
+  String? emptyMessage(BuildContext context) =>
+      AppLocalizations.of(context).searchNoResults;
+
+  @override
+  Widget? buildLoading(BuildContext context) {
+    return const SHOAppLoadingState(
+      state: SHOLoadingState.loading,
+      loadingWidget: SHOAppListSkeleton(itemCount: 4, itemHeight: 200),
+    );
+  }
+
+  @override
+  Widget buildPagedItem(
+    BuildContext context,
+    WidgetRef ref,
+    SHOProduct item,
+    int index,
+  ) {
+    return SHOProductCard(
+      product: item,
+      onTap: () => context.push(SHOAppRoutes.product(item.id)),
     );
   }
 }

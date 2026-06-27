@@ -35,9 +35,9 @@ MaterialApp.router
         ├── SHOPageAnalyticsNavigatorObserver # 栈级 push/pop
         └── SHOMusicNavigatorObserver         # 音乐业务路由同步（并存）
 
-页面接入（任选其一）
-  ├── SHOPageRouteAnalyticsMixin            # StatefulWidget / ConsumerStatefulWidget
-  └── SHOPageAnalyticsBinder                # StatelessWidget 包裹
+页面接入
+  └── SHOPageRouteAnalyticsMixin            # ConsumerStatefulWidget State
+        └── 可选 SHOAppPageMixin / SHOAppTrackedPageMixin（预加载、ErrorBoundary）
 ```
 
 与 **App 生命周期**（`SHOAppLifecycleBinder` → `app_launch` / `app_close`）互补，不重复。
@@ -49,7 +49,6 @@ MaterialApp.router
 | `hos_page_analytics.dart` | 库入口与方案说明 |
 | `hos_page_route_observer.dart` | 全局 `RouteObserver` |
 | `hos_page_route_analytics_mixin.dart` | 单页 `RouteAware` mixin |
-| `hos_page_analytics_binder.dart` | Stateless 页面包裹 |
 | `hos_page_analytics_nav_observer.dart` | 栈级 `NavigatorObserver` |
 | `hos_page_analytics_reporter.dart` | 统一上报 `SHOAnalyticsManager` |
 | `hos_page_route_info.dart` | 路由 path / uri / pageName 解析 |
@@ -70,41 +69,31 @@ observers: [
 ],
 ```
 
-### 2. StatefulWidget 页面
+### 2. 数据页 / 复杂页（推荐）
 
 ```dart
 class _MyPageState extends ConsumerState<MyPage>
-    with SHOPageRouteAnalyticsMixin {
+    with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
 
   @override
-  String get pageAnalyticsName => 'MyPage';
+  String get pageName => 'my_page';
 
   @override
-  Map<String, Object?> get pageAnalyticsExtra => {
-    'product_id': widget.productId,
-  };
+  Widget build(BuildContext context) {
+    return buildTrackedPage(Scaffold(...));
+  }
 }
 ```
 
-### 3. StatelessWidget 页面
-
-```dart
-return SHOPageAnalyticsBinder(
-  pageName: 'SHOStudyHomePage',
-  child: Scaffold(...),
-);
-```
-
-### 4. 调试
+### 3. 调试
 
 Debug 面板 → Analytics 可查看 `page_enter` / `route_push` 等历史记录。
 
 ## 已接入示例
 
 - `SHOMusicPlayerPage` — mixin + `track_id` 附加字段
-- `SHODownloadListPage` — mixin
-- `SHOStudyHomePage` — `SHOPageAnalyticsBinder`
-- `SHOStudyArticlePage` — mixin + `article_id`
+- `SHODownloadListPage` — TrackedPageMixin
+- `SHOStudyHomePage` / `SHOStudyArticlePage` — TrackedPageMixin
 
 ## 注意事项
 
@@ -114,5 +103,5 @@ Debug 面板 → Analytics 可查看 `page_enter` / `route_push` 等历史记录
 
 ## 扩展
 
-- 新业务页：mixin 或 Binder 即可，无需改 Reporter。
+- 新业务页：mixin + `SHOAppPageMixin` 即可，无需改 Reporter。
 - 新事件字段：在 `SHOAnalyticsRegistry` 对应事件下增字段，并在 `pageAnalyticsExtra` 传入。

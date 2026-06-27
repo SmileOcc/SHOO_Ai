@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'package:shoo/core/pages/hos_page_load_reporter.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
 import 'package:shoo/core/platform/webview/hos_activity_native_dispatcher.dart';
 import 'package:shoo/core/platform/webview/hos_payment_handler.dart';
@@ -29,10 +30,23 @@ abstract final class SHOActivityWebViewBridge {
     BuildContext context,
     WidgetRef ref,
     WebViewController controller,
-    String raw,
-  ) async {
+    String raw, {
+    String pageName = 'activity',
+  }) async {
     final message = parseBridgeMessage(raw);
-    if (message == null || !context.mounted) return;
+    if (message == null) {
+      if (context.mounted) {
+        unawaited(
+          SHOPageLoadReporter.reportBridgeError(
+            pageName: pageName,
+            error: 'invalid_json',
+            extra: {'raw_length': raw.length},
+          ),
+        );
+      }
+      return;
+    }
+    if (!context.mounted) return;
 
     final type = message['type']?.toString() ?? '';
     final action = message['action']?.toString() ?? '';
@@ -68,6 +82,15 @@ abstract final class SHOActivityWebViewBridge {
         }
       case 'pageReady':
         if (context.mounted) context.showToast('页面已就绪');
+      default:
+        unawaited(
+          SHOPageLoadReporter.reportBridgeError(
+            pageName: pageName,
+            error: 'unknown_bridge_type',
+            bridgeType: type,
+            bridgeAction: action,
+          ),
+        );
     }
   }
 

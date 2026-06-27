@@ -3,16 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/pagination/hos_paged_list_state.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_price_formatter.dart';
-import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
-import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
-import 'package:shoo/core/widgets/hos_paged_scroll_view.dart';
-import 'package:shoo/core/pages/hos_tab_keep_alive_page.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_list_tabs.dart';
@@ -86,7 +83,11 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
       body: TabBarView(
         controller: _tabController,
         children: _tabs
-            .map((tab) => _SHOOrderListTabView(tab: tab))
+            .map(
+              (tab) => SHOTabKeepAlivePage(
+                child: SHOOrderListTabPage(tab: tab),
+              ),
+            )
             .toList(),
       ),
     ),
@@ -94,19 +95,43 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
   }
 }
 
-class _SHOOrderListTabView extends ConsumerStatefulWidget {
-  const _SHOOrderListTabView({required this.tab});
+class SHOOrderListTabPage extends SHOPagedDataPage<SHOOrderSummary> {
+  const SHOOrderListTabPage({super.key, required this.tab});
 
   final SHOOrderListTab tab;
 
   @override
-  ConsumerState<_SHOOrderListTabView> createState() =>
-      _SHOOrderListTabViewState();
+  SHOPagedDataPageState<SHOOrderSummary, SHOPagedListState<SHOOrderSummary>,
+      SHOOrderListTabPage> createState() => _SHOOrderListTabPageState();
 }
 
-class _SHOOrderListTabViewState extends ConsumerState<_SHOOrderListTabView>
-    with AutomaticKeepAliveClientMixin, SHOTabKeepAliveMixin {
+class _SHOOrderListTabPageState extends SHOPagedDataPageState<SHOOrderSummary,
+    SHOPagedListState<SHOOrderSummary>, SHOOrderListTabPage> {
   final _scrollController = ScrollController();
+
+  @override
+  bool get embedInParentShell => true;
+
+  @override
+  bool get reportContentReadyLoadTime => false;
+
+  @override
+  String get pageName => 'order_list_tab';
+
+  @override
+  Map<String, Object?> get pageAnalyticsExtra => {
+        'tab': widget.tab.name,
+      };
+
+  @override
+  ProviderListenable<AsyncValue<SHOPagedListState<SHOOrderSummary>>>
+      get pagedProvider => ordersPagedProvider;
+
+  @override
+  ScrollController? get scrollController => _scrollController;
+
+  @override
+  bool get enableLoadMore => widget.tab == SHOOrderListTab.all;
 
   @override
   void dispose() {
@@ -115,47 +140,41 @@ class _SHOOrderListTabViewState extends ConsumerState<_SHOOrderListTabView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    final l10n = AppLocalizations.of(context);
-    final ordersAsync = ref.watch(ordersPagedProvider);
-    final isAllTab = widget.tab == SHOOrderListTab.all;
+  void refreshPaged(WidgetRef ref) =>
+      ref.read(ordersPagedProvider.notifier).refresh();
 
-    return ordersAsync.when(
-      loading: () => const SHOAppLoadingState(
-        state: SHOLoadingState.loading,
-        loadingWidget: SHOAppListSkeleton(itemCount: 5, itemHeight: 120),
-      ),
-      error: (error, _) => SHOAppLoadingState(
-        state: SHOLoadingState.error,
-        message: error.toString(),
-        onRetry: () => ref.invalidate(ordersPagedProvider),
-      ),
-      data: (paged) {
-        final filtered = filterOrdersByTab(paged.items, widget.tab);
-        if (filtered.isEmpty) {
-          return SHOAppLoadingState(
-            state: SHOLoadingState.empty,
-            message: l10n.ordersEmpty,
-            emptyIcon: Icons.receipt_long_outlined,
-          );
-        }
+  @override
+  void loadMorePaged(WidgetRef ref) =>
+      ref.read(ordersPagedProvider.notifier).loadMore();
 
-        return SHOPagedScrollView(
-          controller: _scrollController,
-          itemCount: filtered.length,
-          onRefresh: () => ref.read(ordersPagedProvider.notifier).refresh(),
-          onLoadMore: isAllTab
-              ? () => ref.read(ordersPagedProvider.notifier).loadMore()
-              : null,
-          isLoadingMore: paged.isLoadingMore,
-          hasMore: isAllTab && paged.hasMore,
-          separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
-          itemBuilder: (context, index) =>
-              _SHOOrderCard(order: filtered[index]),
-        );
-      },
+  @override
+  SHOPagedListState<SHOOrderSummary> transformPaged(
+    SHOPagedListState<SHOOrderSummary> paged,
+  ) {
+    return paged.copyWith(
+      items: filterOrdersByTab(paged.items, widget.tab),
     );
+  }
+
+  @override
+  String? emptyMessage(BuildContext context) =>
+      AppLocalizations.of(context).ordersEmpty;
+
+  @override
+  IconData? get emptyIcon => Icons.receipt_long_outlined;
+
+  @override
+  IndexedWidgetBuilder? get separatorBuilder =>
+      (_, __) => const SizedBox(height: SHOAppSpacing.md);
+
+  @override
+  Widget buildPagedItem(
+    BuildContext context,
+    WidgetRef ref,
+    SHOOrderSummary item,
+    int index,
+  ) {
+    return _SHOOrderCard(order: item);
   }
 }
 

@@ -88,4 +88,26 @@ abstract final class SHOPageLoadReporter {
       },
     );
   }
+
+  static Future<void> reportBridgeError({
+    required String pageName,
+    required String error,
+    String? bridgeType,
+    String? bridgeAction,
+    Map<String, Object?> extra = const {},
+  }) async {
+    SHOAppLogger.w('[BridgeError] $pageName $error');
+
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.bridgeError,
+      {
+        'page_name': pageName,
+        'error': error,
+        if (bridgeType != null && bridgeType.isNotEmpty) 'bridge_type': bridgeType,
+        if (bridgeAction != null && bridgeAction.isNotEmpty)
+          'bridge_action': bridgeAction,
+        ...extra,
+      },
+    );
+  }
 }

@@ -386,17 +386,17 @@ weixin:// → canLaunchUrl → launchUrl
 
 ```
 AppBar: 标题(activityConfig.title) + 分享按钮(shareProvider)
-Body: SHOWebViewContainer(initialUrl: mockH5Url)
+Body: SHOWebViewShellPage(config: SHOWebViewConfig.activity(...))
 Overlay: DialogHost(dialogProvider) — 监听并展示 8 类弹窗
 ```
 
-### 10.2 SHOWebViewContainer 结构
+### 10.2 WebView 壳层结构（`SHOWebViewShellPage` + `SHOGenericWebViewContainer`）
 
 与需求一致，自上而下：
 
 1. `SHOWebViewProgressBar` ← `webviewLoadingProvider.progress`
 2. `RefreshIndicator` → `controller.reload()`
-3. `Stack`：ErrorWidget | WebViewWidget | LoadingOverlay | WhiteScreenOverlay
+3. `Stack`：ErrorWidget | WebViewWidget | LoadingOverlay
 
 ### 10.3 弹窗（8 个）
 
@@ -454,7 +454,7 @@ Overlay: DialogHost(dialogProvider) — 监听并展示 8 类弹窗
 - [ ] 新增 `webview_flutter`、`photo_view` 依赖
 - [ ] 创建 `features/activity_webview/` 骨架 + `router.dart`
 - [ ] Mock：`SHOMockRouteRegistry` 注册 activity API + `assets/activity/index.html`
-- [ ] `SHOWebViewContainer` + Loading + Error + Progress
+- [x] `SHOWebViewShellPage` + Loading + Error + Progress（原 `SHOWebViewContainer` 已移除）
 - [ ] `SHOURLRouter` + `SHOURLNavigator` + payment redirect
 - [ ] JS Bridge 基础（`onFlutterEvent`、`pageReady`）
 - [ ] `dialogProvider` + coupon/rules 弹窗（至少 2 个）

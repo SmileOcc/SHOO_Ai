@@ -766,6 +766,36 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const bridgeError = SHOAnalyticsEventDef(
+    key: 'bridge_error',
+    title: 'WebView bridge error',
+    description: 'Activity H5 JS bridge parse or dispatch failure',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'page_name',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'activity',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'error',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'invalid_json',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'bridge_type',
+        type: SHOAnalyticsFieldType.string,
+        example: 'navigate',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'bridge_action',
+        type: SHOAnalyticsFieldType.string,
+        example: 'openRoute',
+      ),
+    ],
+  );
+
   static final List<SHOAnalyticsEventDef> all = [
     appLaunch,
     appClose,
@@ -798,6 +828,7 @@ abstract final class SHOAnalyticsRegistry {
     pageLoadTime,
     webViewPageLoad,
     pageRenderError,
+    bridgeError,
   ];
 
   static SHOAnalyticsEventDef? find(String key) {

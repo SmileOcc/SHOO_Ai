@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shoo/app/root/hos_runtime_env_provider.dart';
 import 'package:shoo/app/router/hos_routes.dart';
+import 'package:shoo/core/analytics/hos_analytics_provider.dart';
+import 'package:shoo/core/analytics/hos_analytics_registry.dart';
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/config/hos_environment.dart';
 import 'package:shoo/core/constants/hos_constants.dart';
@@ -30,6 +32,12 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
     final override = ref.watch(runtimeEnvOverrideProvider);
     final showEnvBadge = ref.watch(showEnvBadgeProvider);
     final consoleLogEnabled = ref.watch(consoleLogEnabledProvider);
+    final pageLoadRecords = ref
+        .watch(analyticsManagerProvider)
+        .history
+        .where((r) => r.eventKey == SHOAnalyticsRegistry.pageLoadTime.key)
+        .take(8)
+        .toList();
 
     return buildTrackedPage(
       Scaffold(
@@ -192,6 +200,34 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
             onTap: () => context.push(SHOAppRoutes.debugNative),
           ),
           const Divider(height: SHOAppSpacing.xxxl),
+          Text(
+            'Recent page_load_time',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: SHOAppSpacing.md),
+          if (pageLoadRecords.isEmpty)
+            Text(
+              'No page_load_time events yet',
+              style: Theme.of(context).textTheme.bodySmall,
+            )
+          else
+            ...pageLoadRecords.map(
+              (record) {
+                final pageName = record.params['page_name']?.toString() ?? '-';
+                final phase = record.params['load_phase']?.toString() ?? '-';
+                final durationMs = record.params['duration_ms']?.toString() ?? '-';
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(pageName),
+                  subtitle: Text('$phase · ${durationMs}ms'),
+                  trailing: Text(
+                    _formatRecordTime(record.timestamp),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                );
+              },
+            ),
+          const Divider(height: SHOAppSpacing.xxxl),
           _SHOInfoTile(label: 'Build', value: SHOAppConstants.appVersion),
           _SHOInfoTile(label: 'API', value: config.apiBaseUrl),
           _SHOInfoTile(label: 'Mock API', value: '${config.useMockApi}'),
@@ -208,6 +244,14 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
     ),
     );
   }
+}
+
+String _formatRecordTime(DateTime timestamp) {
+  final local = timestamp.toLocal();
+  final h = local.hour.toString().padLeft(2, '0');
+  final m = local.minute.toString().padLeft(2, '0');
+  final s = local.second.toString().padLeft(2, '0');
+  return '$h:$m:$s';
 }
 
 class _SHOInfoTile extends StatelessWidget {
