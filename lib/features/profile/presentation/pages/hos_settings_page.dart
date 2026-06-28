@@ -56,9 +56,9 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
   Future<void> _reportLogs(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     if (_logBytes == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsReportLogsEmpty)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsReportLogsEmpty)));
       return;
     }
     final ok = await SHOAppDialog.confirm(
@@ -72,9 +72,9 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
     final shared = await ref.read(logReportServiceProvider).reportLogs();
     if (!mounted) return;
     if (shared) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsReportLogsSuccess)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsReportLogsSuccess)));
     }
   }
 
@@ -140,111 +140,123 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: SHOAppSpacing.xxxl),
-        children: [
-          SHOSettingsGroup(
-            title: l10n.settingsGroupGeneral,
-            children: [
-              SHOSettingsTile(
-                title: l10n.settingsTheme,
-                subtitle: _themeLabel(l10n, themeMode),
-                leading: const Icon(Icons.palette_outlined, size: 20),
-                onTap: () => _showThemePicker(context, ref),
+        appBar: AppBar(title: Text(l10n.settingsTitle)),
+        body: ListView(
+          padding: const EdgeInsets.only(bottom: SHOAppSpacing.xxxl),
+          children: [
+            SHOSettingsGroup(
+              title: l10n.settingsGroupGeneral,
+              children: [
+                SHOSettingsTile(
+                  title: l10n.settingsTheme,
+                  subtitle: _themeLabel(l10n, themeMode),
+                  leading: const Icon(Icons.palette_outlined, size: 20),
+                  onTap: () => _showThemePicker(context, ref),
+                ),
+                SHOSettingsTile(
+                  title: l10n.settingsLanguage,
+                  subtitle: _localeLabel(l10n, locale),
+                  leading: const Icon(Icons.language_outlined, size: 20),
+                  onTap: () => _showLocalePicker(context, ref),
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SHOSettingsGroup(
+              title: l10n.settingsGroupAccount,
+              children: [
+                SHOSettingsTile(
+                  title: l10n.profileAddresses,
+                  leading: const Icon(Icons.location_on_outlined, size: 20),
+                  onTap: () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) {
+                      return;
+                    }
+                    context.push(SHOAppRoutes.addresses);
+                  },
+                ),
+                SHOSettingsTile(
+                  title: l10n.profileCameraPermission,
+                  leading: const Icon(Icons.camera_alt_outlined, size: 20),
+                  trailing: const SizedBox.shrink(),
+                  onTap: () =>
+                      ref.read(permissionServiceProvider).requestCamera(),
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SHOSettingsGroup(
+              title: l10n.settingsGroupDiagnostics,
+              children: [
+                SHOSettingsTile(
+                  title: l10n.settingsReportLogs,
+                  subtitle:
+                      '${l10n.settingsReportLogsHint} · ${SHOAppLogManager.formatSize(_logBytes)}',
+                  leading: const Icon(Icons.upload_file_outlined, size: 20),
+                  onTap: () => _reportLogs(context),
+                ),
+                SHOSettingsTile(
+                  title: l10n.settingsClearCache,
+                  subtitle:
+                      '${l10n.settingsClearCacheHint} · ${SHOAppLogManager.formatSize(_cacheBytes)}',
+                  leading: const Icon(
+                    Icons.cleaning_services_outlined,
+                    size: 20,
+                  ),
+                  onTap: () async {
+                    await context.push(SHOAppRoutes.settingsCache);
+                    await _reloadSizes();
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SHOSettingsGroup(
+              title: l10n.settingsGroupAbout,
+              children: [
+                SHOSettingsTile(
+                  title: l10n.settingsAbout,
+                  leading: const Icon(Icons.info_outline, size: 20),
+                  onTap: () => context.push(SHOAppRoutes.settingsAbout),
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SHOAppSpacing.pagePadding,
               ),
-              SHOSettingsTile(
-                title: l10n.settingsLanguage,
-                subtitle: _localeLabel(l10n, locale),
-                leading: const Icon(Icons.language_outlined, size: 20),
-                onTap: () => _showLocalePicker(context, ref),
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SHOSettingsGroup(
-            title: l10n.settingsGroupAccount,
-            children: [
-              SHOSettingsTile(
-                title: l10n.profileAddresses,
-                leading: const Icon(Icons.location_on_outlined, size: 20),
-                onTap: () {
-                  if (!SHOAuthGuard.requireAuth(context, ref)) {
-                    return;
-                  }
-                  context.push(SHOAppRoutes.addresses);
-                },
-              ),
-              SHOSettingsTile(
-                title: l10n.profileCameraPermission,
-                leading: const Icon(Icons.camera_alt_outlined, size: 20),
-                trailing: const SizedBox.shrink(),
-                onTap: () => ref.read(permissionServiceProvider).requestCamera(),
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SHOSettingsGroup(
-            title: l10n.settingsGroupDiagnostics,
-            children: [
-              SHOSettingsTile(
-                title: l10n.settingsReportLogs,
-                subtitle: '${l10n.settingsReportLogsHint} · ${SHOAppLogManager.formatSize(_logBytes)}',
-                leading: const Icon(Icons.upload_file_outlined, size: 20),
-                onTap: () => _reportLogs(context),
-              ),
-              SHOSettingsTile(
-                title: l10n.settingsClearCache,
-                subtitle: '${l10n.settingsClearCacheHint} · ${SHOAppLogManager.formatSize(_cacheBytes)}',
-                leading: const Icon(Icons.cleaning_services_outlined, size: 20),
-                onTap: () async {
-                  await context.push(SHOAppRoutes.settingsCache);
-                  await _reloadSizes();
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SHOSettingsGroup(
-            title: l10n.settingsGroupAbout,
-            children: [
-              SHOSettingsTile(
-                title: l10n.settingsAbout,
-                leading: const Icon(Icons.info_outline, size: 20),
-                onTap: () => context.push(SHOAppRoutes.settingsAbout),
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: context.shoSurface,
-                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                border: Border.all(color: context.shoTheme.border),
-              ),
-              child: SHOSettingsTile(
-                title: session.isAuthenticated ? l10n.logout : l10n.loginSubmit,
-                titleColor: session.isAuthenticated
-                    ? Theme.of(context).colorScheme.error
-                    : SHOAppColors.accent,
-                trailing: const SizedBox.shrink(),
-                onTap: () {
-                  if (session.isAuthenticated) {
-                    SHOAuthGuard.logout(context, ref);
-                  } else {
-                    context.push(
-                      SHOAuthGuard.loginPath(redirectTo: SHOAppRoutes.settings),
-                    );
-                  }
-                },
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: context.shoSurface,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  border: Border.all(color: context.shoTheme.border),
+                ),
+                child: SHOSettingsTile(
+                  title: session.isAuthenticated
+                      ? l10n.logout
+                      : l10n.loginSubmit,
+                  titleColor: session.isAuthenticated
+                      ? Theme.of(context).colorScheme.error
+                      : SHOAppColors.accent,
+                  trailing: const SizedBox.shrink(),
+                  onTap: () {
+                    if (session.isAuthenticated) {
+                      SHOAuthGuard.logout(context, ref);
+                    } else {
+                      context.push(
+                        SHOAuthGuard.loginPath(
+                          redirectTo: SHOAppRoutes.settings,
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }

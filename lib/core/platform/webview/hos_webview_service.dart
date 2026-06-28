@@ -120,10 +120,7 @@ class SHOWebViewService {
       SHOWebViewCachePolicy.cacheOnly => 'only-if-cached',
       SHOWebViewCachePolicy.defaultPolicy => 'max-age=0',
     };
-    return {
-      'Cache-Control': cacheControl,
-      ...?config.customHeaders,
-    };
+    return {'Cache-Control': cacheControl, ...?config.customHeaders};
   }
 }
 

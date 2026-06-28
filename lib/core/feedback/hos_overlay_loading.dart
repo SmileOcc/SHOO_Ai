@@ -30,8 +30,8 @@ class SHOOverlayLoadingController extends Notifier<int> {
 
 final overlayLoadingProvider =
     NotifierProvider<SHOOverlayLoadingController, int>(
-  SHOOverlayLoadingController.new,
-);
+      SHOOverlayLoadingController.new,
+    );
 
 final overlayLoadingMessageProvider = StateProvider<String?>((ref) => null);
 
@@ -55,9 +55,7 @@ class SHOGlobalLoadingOverlay extends ConsumerWidget {
             child: AbsorbPointer(
               child: ColoredBox(
                 color: Colors.black.withValues(alpha: 0.25),
-                child: Center(
-                  child: _LoadingCard(message: message),
-                ),
+                child: Center(child: _LoadingCard(message: message)),
               ),
             ),
           ),

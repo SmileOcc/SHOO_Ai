@@ -12,11 +12,11 @@ class SHONovelChapterMeta {
   final int endByte;
 
   Map<String, dynamic> toJson() => {
-        'index': index,
-        'title': title,
-        'startByte': startByte,
-        'endByte': endByte,
-      };
+    'index': index,
+    'title': title,
+    'startByte': startByte,
+    'endByte': endByte,
+  };
 
   factory SHONovelChapterMeta.fromJson(Map<String, dynamic> json) {
     return SHONovelChapterMeta(
@@ -74,13 +74,13 @@ class SHOTxtReaderProgress {
   final int backgroundColorArgb;
 
   Map<String, dynamic> toJson() => {
-        'chapterIndex': chapterIndex,
-        'pageIndexInChapter': pageIndexInChapter,
-        'fontSize': fontSize,
-        'darkMode': darkMode,
-        'textColorArgb': textColorArgb,
-        'backgroundColorArgb': backgroundColorArgb,
-      };
+    'chapterIndex': chapterIndex,
+    'pageIndexInChapter': pageIndexInChapter,
+    'fontSize': fontSize,
+    'darkMode': darkMode,
+    'textColorArgb': textColorArgb,
+    'backgroundColorArgb': backgroundColorArgb,
+  };
 
   factory SHOTxtReaderProgress.fromJson(Map<String, dynamic> json) {
     return SHOTxtReaderProgress(
@@ -89,18 +89,12 @@ class SHOTxtReaderProgress {
       fontSize: (json['fontSize'] as num?)?.toDouble() ?? 18,
       darkMode: json['darkMode'] as bool? ?? false,
       textColorArgb: json['textColorArgb'] as int? ?? 0xFF3D3024,
-      backgroundColorArgb:
-          json['backgroundColorArgb'] as int? ?? 0xFFE8E3D3,
+      backgroundColorArgb: json['backgroundColorArgb'] as int? ?? 0xFFE8E3D3,
     );
   }
 }
 
-enum SHOTxtReaderLoadPhase {
-  indexing,
-  paginating,
-  ready,
-  failed,
-}
+enum SHOTxtReaderLoadPhase { indexing, paginating, ready, failed }
 
 /// 列表下标安全钳制；length 为 0 时返回 0，避免 `clamp(0, -1)` 抛 RangeError。
 int clampListIndex(int index, int length) {

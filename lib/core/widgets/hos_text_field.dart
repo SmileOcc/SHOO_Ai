@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
+
 /// 统一输入框组件。
 ///
 /// 参考文章第三步：统一边框、错误提示、字数统计、前缀/后缀图标。
@@ -107,10 +108,7 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label != null) ...[
-          Text(
-            widget.label!,
-            style: textTheme.labelLarge,
-          ),
+          Text(widget.label!, style: textTheme.labelLarge),
           const SizedBox(height: SHOAppSpacing.xs),
         ],
         TextFormField(
@@ -160,7 +158,10 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: const BorderSide(color: SHOAppColors.error, width: 1.5),
+              borderSide: const BorderSide(
+                color: SHOAppColors.error,
+                width: 1.5,
+              ),
             ),
           ),
         ),

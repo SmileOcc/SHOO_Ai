@@ -38,10 +38,7 @@ List<SHOProduct> applyCategoryProductFilters(
   }
 }
 
-bool isCategoryProductPriceRangeValid({
-  int? minPrice,
-  int? maxPrice,
-}) {
+bool isCategoryProductPriceRangeValid({int? minPrice, int? maxPrice}) {
   if (minPrice == null || maxPrice == null) return true;
   return maxPrice > minPrice;
 }
@@ -84,11 +81,11 @@ class SHOCategoryFilterButton extends ConsumerWidget {
               Text(
                 l10n.categoryFilter,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight:
-                          highlighted ? FontWeight.w700 : FontWeight.w500,
-                      color:
-                          highlighted ? SHOAppColors.accent : theme.textSecondary,
-                    ),
+                  fontWeight: highlighted ? FontWeight.w700 : FontWeight.w500,
+                  color: highlighted
+                      ? SHOAppColors.accent
+                      : theme.textSecondary,
+                ),
               ),
             ],
           ),
@@ -116,12 +113,8 @@ class _SHOCategoryProductFilterPanelState
   void initState() {
     super.initState();
     final filter = ref.read(categoryProductFilterProvider);
-    _minCtrl = TextEditingController(
-      text: filter.minPrice?.toString() ?? '',
-    );
-    _maxCtrl = TextEditingController(
-      text: filter.maxPrice?.toString() ?? '',
-    );
+    _minCtrl = TextEditingController(text: filter.minPrice?.toString() ?? '');
+    _maxCtrl = TextEditingController(text: filter.maxPrice?.toString() ?? '');
     _minCtrl.addListener(_onPriceChanged);
     _maxCtrl.addListener(_onPriceChanged);
   }
@@ -156,11 +149,9 @@ class _SHOCategoryProductFilterPanelState
     }
 
     setState(() => _priceError = null);
-    ref.read(categoryProductFilterProvider.notifier).state =
-        ref.read(categoryProductFilterProvider).copyWith(
-              minPrice: () => min,
-              maxPrice: () => max,
-            );
+    ref.read(categoryProductFilterProvider.notifier).state = ref
+        .read(categoryProductFilterProvider)
+        .copyWith(minPrice: () => min, maxPrice: () => max);
   }
 
   @override
@@ -193,9 +184,9 @@ class _SHOCategoryProductFilterPanelState
           children: [
             Text(
               l10n.categoryFilterPriceRange,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: SHOAppSpacing.sm),
             Row(
@@ -214,8 +205,8 @@ class _SHOCategoryProductFilterPanelState
                   child: Text(
                     '—',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: theme.textSecondary,
-                        ),
+                      color: theme.textSecondary,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -231,17 +222,17 @@ class _SHOCategoryProductFilterPanelState
               const SizedBox(height: SHOAppSpacing.xs),
               Text(
                 _priceError!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: SHOAppColors.error,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: SHOAppColors.error),
               ),
             ],
             const SizedBox(height: SHOAppSpacing.lg),
             Text(
               l10n.categoryFilterSort,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: SHOAppSpacing.sm),
             Wrap(
@@ -273,8 +264,9 @@ class _SHOCategoryProductFilterPanelState
   }
 
   void _setPriceSort(SHOCategoryPriceSort sort) {
-    ref.read(categoryProductFilterProvider.notifier).state =
-        ref.read(categoryProductFilterProvider).copyWith(priceSort: sort);
+    ref.read(categoryProductFilterProvider.notifier).state = ref
+        .read(categoryProductFilterProvider)
+        .copyWith(priceSort: sort);
   }
 }
 
@@ -358,9 +350,9 @@ class _FilterSortChip extends StatelessWidget {
           child: Text(
             label,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected ? SHOAppColors.accent : theme.textSecondary,
-                ),
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              color: selected ? SHOAppColors.accent : theme.textSecondary,
+            ),
           ),
         ),
       ),
@@ -388,9 +380,7 @@ class SHOCategoryProductFilterOverlay extends ConsumerWidget {
         children: [
           Stack(
             children: [
-              Positioned.fill(
-                child: ColoredBox(color: dimColor),
-              ),
+              Positioned.fill(child: ColoredBox(color: dimColor)),
               GestureDetector(
                 onTap: () {},
                 child: const SHOCategoryProductFilterPanel(),

@@ -16,7 +16,8 @@ String? shoAuthRedirect({
   }
 
   final loggingIn =
-      matchedLocation == SHOAppRoutes.login || matchedLocation == SHOAppRoutes.register;
+      matchedLocation == SHOAppRoutes.login ||
+      matchedLocation == SHOAppRoutes.register;
 
   if (!isAuthenticated && SHOAppRoutes.requiresAuth(matchedLocation)) {
     final redirectUri = Uri.encodeComponent(fullUri);

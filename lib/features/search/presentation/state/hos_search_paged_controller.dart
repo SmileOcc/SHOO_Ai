@@ -5,13 +5,16 @@ import 'package:shoo/core/pagination/hos_paged_list_state.dart';
 import 'package:shoo/features/home/domain/entities/hos_product.dart';
 import 'package:shoo/features/search/data/repositories/hos_search_repository_impl.dart';
 
-final searchPagedProvider = AutoDisposeAsyncNotifierProviderFamily<
-    SearchPagedNotifier, SHOPagedListState<SHOProduct>, String>(
-  SearchPagedNotifier.new,
-);
+final searchPagedProvider =
+    AutoDisposeAsyncNotifierProviderFamily<
+      SearchPagedNotifier,
+      SHOPagedListState<SHOProduct>,
+      String
+    >(SearchPagedNotifier.new);
 
 class SearchPagedNotifier
-    extends AutoDisposeFamilyAsyncNotifier<SHOPagedListState<SHOProduct>, String> {
+    extends
+        AutoDisposeFamilyAsyncNotifier<SHOPagedListState<SHOProduct>, String> {
   @override
   Future<SHOPagedListState<SHOProduct>> build(String arg) {
     if (arg.trim().isEmpty) {

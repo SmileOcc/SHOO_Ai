@@ -36,11 +36,14 @@ class SHOWebViewShellPage extends ConsumerStatefulWidget {
   final String? pageNameOverride;
 
   @override
-  ConsumerState<SHOWebViewShellPage> createState() => _SHOWebViewShellPageState();
+  ConsumerState<SHOWebViewShellPage> createState() =>
+      _SHOWebViewShellPageState();
 }
 
 class _SHOWebViewShellPageState extends ConsumerState<SHOWebViewShellPage>
-    with SHOPageRouteAnalyticsMixin<SHOWebViewShellPage>, SHOAppPageMixin<SHOWebViewShellPage> {
+    with
+        SHOPageRouteAnalyticsMixin<SHOWebViewShellPage>,
+        SHOAppPageMixin<SHOWebViewShellPage> {
   final _service = SHOWebViewService.instance;
 
   WebViewController? _controller;
@@ -65,9 +68,9 @@ class _SHOWebViewShellPageState extends ConsumerState<SHOWebViewShellPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'url': _config.url,
-        'webview_mode': _config.mode.name,
-      };
+    'url': _config.url,
+    'webview_mode': _config.mode.name,
+  };
 
   Future<void> _reload() async {
     await _controller?.reload();
@@ -114,10 +117,7 @@ class _SHOWebViewShellPageState extends ConsumerState<SHOWebViewShellPage>
       pageName: pageName,
       durationMs: _webLoadStopwatch!.elapsedMilliseconds,
       phase: SHOPageLoadPhase.webViewFinished,
-      extra: {
-        ...pageAnalyticsExtra,
-        'loaded_url': url,
-      },
+      extra: {...pageAnalyticsExtra, 'loaded_url': url},
     );
   }
 
@@ -149,19 +149,19 @@ class _SHOWebViewShellPageState extends ConsumerState<SHOWebViewShellPage>
           _controller = controller;
           widget.onControllerReady?.call(controller);
         },
-      onTitleChanged: (title) {
-        if (mounted) setState(() => _dynamicTitle = title);
-      },
-      onUrlChanged: (url) {
-        if (mounted) setState(() => _currentUrl = url);
-      },
-      onCanGoBackChanged: (canGoBack) {
-        if (mounted) setState(() => _webCanGoBack = canGoBack);
-      },
-      onPageLoadStarted: _onWebLoadStarted,
-      onPageLoadFinished: (url) => unawaited(_onWebLoadFinished(url)),
-      onPageLoadFailed: (url, code, message) =>
-          unawaited(_onWebLoadFailed(url, code, message)),
+        onTitleChanged: (title) {
+          if (mounted) setState(() => _dynamicTitle = title);
+        },
+        onUrlChanged: (url) {
+          if (mounted) setState(() => _currentUrl = url);
+        },
+        onCanGoBackChanged: (canGoBack) {
+          if (mounted) setState(() => _webCanGoBack = canGoBack);
+        },
+        onPageLoadStarted: _onWebLoadStarted,
+        onPageLoadFinished: (url) => unawaited(_onWebLoadFinished(url)),
+        onPageLoadFailed: (url, code, message) =>
+            unawaited(_onWebLoadFailed(url, code, message)),
       ),
     );
   }

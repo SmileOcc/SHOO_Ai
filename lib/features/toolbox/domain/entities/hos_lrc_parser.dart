@@ -1,8 +1,5 @@
 class SHOLrcLine {
-  const SHOLrcLine({
-    required this.time,
-    required this.text,
-  });
+  const SHOLrcLine({required this.time, required this.text});
 
   final Duration time;
   final String text;
@@ -24,7 +21,8 @@ List<SHOLrcLine> parseLrc(String? raw) {
     final minutes = int.tryParse(match.group(1) ?? '') ?? 0;
     final seconds = int.tryParse(match.group(2) ?? '') ?? 0;
     final fractionRaw = match.group(3) ?? '0';
-    final fraction = int.tryParse(fractionRaw.padRight(3, '0').substring(0, 3)) ?? 0;
+    final fraction =
+        int.tryParse(fractionRaw.padRight(3, '0').substring(0, 3)) ?? 0;
     final text = (match.group(4) ?? '').trim();
     if (text.isEmpty) continue;
 

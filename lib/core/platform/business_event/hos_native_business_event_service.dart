@@ -8,8 +8,8 @@ import 'package:shoo/core/platform/business_event/hos_native_event_kinds.dart';
 
 final nativeBusinessEventServiceProvider =
     Provider<SHONativeBusinessEventService>((ref) {
-  return const SHONativeBusinessEventService();
-});
+      return const SHONativeBusinessEventService();
+    });
 
 /// 订阅原生业务 EventChannel（支付结果 / 下载进度 / 物流推送）。
 class SHONativeBusinessEventService {

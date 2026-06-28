@@ -32,8 +32,9 @@ class SHOFlashSaleProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final controller =
-        ref.read(flashSaleControllerProvider(activityId).notifier);
+    final controller = ref.read(
+      flashSaleControllerProvider(activityId).notifier,
+    );
 
     return Material(
       color: context.shoSurface,
@@ -79,7 +80,8 @@ class SHOFlashSaleProductCard extends ConsumerWidget {
                     const SizedBox(height: SHOAppSpacing.xs),
                     SHOPromoBadgeWrap(
                       tags: product.badgeTags,
-                      enabled: product.status == SHOFlashSaleProductStatus.ongoing,
+                      enabled:
+                          product.status == SHOFlashSaleProductStatus.ongoing,
                     ),
                     const SizedBox(height: SHOAppSpacing.sm),
                     Row(
@@ -88,12 +90,14 @@ class SHOFlashSaleProductCard extends ConsumerWidget {
                           child: SHOAppPriceText(
                             priceCents: product.displayPrice,
                             originalCents:
-                                product.status == SHOFlashSaleProductStatus.ongoing
-                                    ? product.originalPrice
-                                    : null,
+                                product.status ==
+                                    SHOFlashSaleProductStatus.ongoing
+                                ? product.originalPrice
+                                : null,
                             size: SHOAppPriceSize.small,
                             showOriginal:
-                                product.status == SHOFlashSaleProductStatus.ongoing,
+                                product.status ==
+                                SHOFlashSaleProductStatus.ongoing,
                           ),
                         ),
                         Text(
@@ -140,7 +144,9 @@ class SHOFlashSaleProductCard extends ConsumerWidget {
     }
     if (!product.canPurchase) {
       context.showToast(
-        product.stock <= 0 ? l10n.flashSaleSoldOutHint : l10n.flashSaleEndedHint,
+        product.stock <= 0
+            ? l10n.flashSaleSoldOutHint
+            : l10n.flashSaleEndedHint,
       );
       return;
     }
@@ -184,7 +190,8 @@ class _ProductImage extends StatelessWidget {
                 type: product.primaryBadgeType!,
                 label: product.primaryPromoLabel!,
                 preset: SHOPromoBadgePreset.cornerOnImage,
-                enabled: product.status == SHOFlashSaleProductStatus.ongoing ||
+                enabled:
+                    product.status == SHOFlashSaleProductStatus.ongoing ||
                     product.status == SHOFlashSaleProductStatus.notStarted,
               ),
             ),
@@ -214,7 +221,9 @@ class _ActionRow extends StatelessWidget {
         children: [
           Expanded(
             child: SHOAppButton(
-              label: product.isFollowed ? l10n.flashSaleFollowed : l10n.flashSaleFollow,
+              label: product.isFollowed
+                  ? l10n.flashSaleFollowed
+                  : l10n.flashSaleFollow,
               variant: SHOAppButtonVariant.outline,
               size: SHOAppButtonSize.sm,
               onPressed: onFollow,
@@ -235,10 +244,14 @@ class _ActionRow extends StatelessWidget {
     return Row(
       children: [
         SHOAppButton(
-          label: product.isFollowed ? l10n.flashSaleFollowed : l10n.flashSaleFollow,
+          label: product.isFollowed
+              ? l10n.flashSaleFollowed
+              : l10n.flashSaleFollow,
           variant: SHOAppButtonVariant.outline,
           size: SHOAppButtonSize.sm,
-          onPressed: (product.canFollow || product.isFollowed) ? onFollow : null,
+          onPressed: (product.canFollow || product.isFollowed)
+              ? onFollow
+              : null,
         ),
         const SizedBox(width: SHOAppSpacing.sm),
         Expanded(

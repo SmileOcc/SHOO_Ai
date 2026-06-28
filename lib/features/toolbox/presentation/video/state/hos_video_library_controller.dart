@@ -64,13 +64,14 @@ SHODownloadTask? resolveDownloadTaskForEntry(
 
 final videoLibraryEntriesProvider =
     NotifierProvider<SHOVideoLibraryNotifier, List<SHOVideoLibraryEntry>>(
-  SHOVideoLibraryNotifier.new,
-);
+      SHOVideoLibraryNotifier.new,
+    );
 
 final videoPlaybackRevisionProvider = StateProvider<int>((ref) => 0);
 
-final videoLibraryListItemsProvider =
-    Provider<List<SHOVideoLibraryListItem>>((ref) {
+final videoLibraryListItemsProvider = Provider<List<SHOVideoLibraryListItem>>((
+  ref,
+) {
   ref.watch(videoPlaybackRevisionProvider);
   final entries = ref.watch(videoLibraryEntriesProvider);
   final tasks = ref.watch(downloadTasksProvider);
@@ -170,18 +171,15 @@ class SHOVideoLibraryNotifier extends Notifier<List<SHOVideoLibraryEntry>> {
       final displayName = lower.endsWith('.txt')
           ? task.fileName
           : lower.endsWith('.mp4') ||
-                  lower.endsWith('.mov') ||
-                  lower.endsWith('.mkv') ||
-                  lower.endsWith('.webm') ||
-                  lower.endsWith('.avi')
-              ? _stripVideoExtension(task.fileName)
-              : task.fileName;
+                lower.endsWith('.mov') ||
+                lower.endsWith('.mkv') ||
+                lower.endsWith('.webm') ||
+                lower.endsWith('.avi')
+          ? _stripVideoExtension(task.fileName)
+          : task.fileName;
 
       next.add(
-        SHOVideoLibraryEntry.local(
-          taskId: task.id,
-          displayName: displayName,
-        ),
+        SHOVideoLibraryEntry.local(taskId: task.id, displayName: displayName),
       );
       changed = true;
     }

@@ -14,8 +14,8 @@ final debugPrefsProvider = Provider<SHODebugPrefs>((ref) {
 
 final runtimeEnvOverrideProvider =
     NotifierProvider<SHORuntimeEnvOverrideNotifier, SHOAppEnvironment?>(
-  SHORuntimeEnvOverrideNotifier.new,
-);
+      SHORuntimeEnvOverrideNotifier.new,
+    );
 
 final showEnvBadgeProvider = NotifierProvider<SHOShowEnvBadgeNotifier, bool>(
   SHOShowEnvBadgeNotifier.new,
@@ -23,8 +23,8 @@ final showEnvBadgeProvider = NotifierProvider<SHOShowEnvBadgeNotifier, bool>(
 
 final consoleLogEnabledProvider =
     NotifierProvider<SHOConsoleLogEnabledNotifier, bool>(
-  SHOConsoleLogEnabledNotifier.new,
-);
+      SHOConsoleLogEnabledNotifier.new,
+    );
 
 class SHORuntimeEnvOverrideNotifier extends Notifier<SHOAppEnvironment?> {
   late final SHODebugPrefs _prefs;
@@ -91,7 +91,9 @@ class SHOConsoleLogEnabledNotifier extends Notifier<bool> {
 }
 
 bool get _debugPanelActive {
-  const forceDisable =
-      bool.fromEnvironment('DISABLE_DEBUG_PANEL', defaultValue: false);
+  const forceDisable = bool.fromEnvironment(
+    'DISABLE_DEBUG_PANEL',
+    defaultValue: false,
+  );
   return !kReleaseMode && !forceDisable;
 }

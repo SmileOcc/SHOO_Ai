@@ -17,7 +17,8 @@ class SHOActivityApi {
   Future<SHOActivityConfig> fetchActivityConfig() {
     return _dio.getData(
       '/activity/data',
-      parser: (json) => SHOActivityConfig.fromJson(json as Map<String, dynamic>),
+      parser: (json) =>
+          SHOActivityConfig.fromJson(json as Map<String, dynamic>),
     );
   }
 
@@ -32,7 +33,8 @@ class SHOActivityApi {
   Future<SHOActivityDetail> fetchActivityDetail() {
     return _dio.getData(
       '/activity/detail',
-      parser: (json) => SHOActivityDetail.fromJson(json as Map<String, dynamic>),
+      parser: (json) =>
+          SHOActivityDetail.fromJson(json as Map<String, dynamic>),
     );
   }
 

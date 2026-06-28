@@ -16,13 +16,7 @@ const _videoAssetPrefix = 'assets/video/';
 const _bundledUrlPrefix = bundledDownloadUrlPrefix;
 
 const _bookExtensions = {'.txt', '.pdf'};
-const _videoExtensions = {
-  '.mp4',
-  '.mov',
-  '.avi',
-  '.mkv',
-  '.webm',
-};
+const _videoExtensions = {'.mp4', '.mov', '.avi', '.mkv', '.webm'};
 
 final bundledLibraryServiceProvider = Provider<SHOBundledLibraryService>((ref) {
   return SHOBundledLibraryService(ref.watch(bookshelfStorageProvider));
@@ -63,8 +57,7 @@ class SHOBundledLibraryService {
         if (task == null) continue;
         tasks = _upsertTask(tasks, task);
         final fileName = task.fileName;
-        if (_isBookshelfAsset(assetPath) &&
-            isBookshelfReadableFile(fileName)) {
+        if (_isBookshelfAsset(assetPath) && isBookshelfReadableFile(fileName)) {
           if (isTxtNovelFile(fileName)) {
             final readable = await isLocalTxtReadable(File(task.localPath));
             if (!readable) continue;

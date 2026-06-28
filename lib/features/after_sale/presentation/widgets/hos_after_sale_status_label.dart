@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/after_sale/domain/entities/hos_after_sale.dart';
 
-String shoAfterSaleStatusLabel(BuildContext context, SHOAfterSaleStatus status) {
+String shoAfterSaleStatusLabel(
+  BuildContext context,
+  SHOAfterSaleStatus status,
+) {
   final l10n = AppLocalizations.of(context);
   return switch (status) {
     SHOAfterSaleStatus.pending => l10n.afterSaleStatusPending,

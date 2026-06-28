@@ -63,7 +63,9 @@ abstract final class SHOAppDialog {
           ),
           SHOAppButton(
             label: confirmLabel,
-            variant: isDestructive ? SHOAppButtonVariant.accent : SHOAppButtonVariant.primary,
+            variant: isDestructive
+                ? SHOAppButtonVariant.accent
+                : SHOAppButtonVariant.primary,
             size: SHOAppButtonSize.sm,
             onPressed: () => Navigator.pop(ctx, true),
           ),
@@ -110,7 +112,9 @@ abstract final class SHOAppDialog {
       isScrollControlled: isScrollControlled,
       backgroundColor: context.shoSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(SHOAppSpacing.xl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(SHOAppSpacing.xl),
+        ),
       ),
       builder: (_) => SafeArea(child: child),
     );

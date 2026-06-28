@@ -43,13 +43,13 @@ class SHODebugNetworkLogConfig {
   }
 
   Map<String, dynamic> toJson() => {
-        'enabled': enabled,
-        'logRequestParams': logRequestParams,
-        'logResponseParams': logResponseParams,
-        'filterPathsEnabled': filterPathsEnabled,
-        'pathFilters': pathFilters,
-        'useMockRemoteLog': useMockRemoteLog,
-      };
+    'enabled': enabled,
+    'logRequestParams': logRequestParams,
+    'logResponseParams': logResponseParams,
+    'filterPathsEnabled': filterPathsEnabled,
+    'pathFilters': pathFilters,
+    'useMockRemoteLog': useMockRemoteLog,
+  };
 
   factory SHODebugNetworkLogConfig.fromJson(Map<String, dynamic> json) {
     return SHODebugNetworkLogConfig(

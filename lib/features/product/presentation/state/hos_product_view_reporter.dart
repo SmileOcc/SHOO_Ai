@@ -15,7 +15,8 @@ class SHOProductViewReporter extends ConsumerStatefulWidget {
       _SHOProductViewReporterState();
 }
 
-class _SHOProductViewReporterState extends ConsumerState<SHOProductViewReporter> {
+class _SHOProductViewReporterState
+    extends ConsumerState<SHOProductViewReporter> {
   static final Set<String> _reported = {};
 
   @override
@@ -33,10 +34,7 @@ class _SHOProductViewReporterState extends ConsumerState<SHOProductViewReporter>
 
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.productView,
-      {
-        'product_id': widget.productId,
-        'source': source,
-      },
+      {'product_id': widget.productId, 'source': source},
     );
   }
 

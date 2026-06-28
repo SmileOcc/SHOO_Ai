@@ -9,18 +9,14 @@ import 'package:shoo/features/home/domain/entities/hos_product.dart';
 import 'package:shoo/features/category/domain/entities/hos_category.dart';
 import 'package:shoo/features/category/presentation/state/hos_category_controller.dart';
 
-enum SHOCategorySort {
-  all,
-  hot,
-  newest,
-}
+enum SHOCategorySort { all, hot, newest }
 
 extension SHOCategorySortX on SHOCategorySort {
   String label(AppLocalizations l10n) => switch (this) {
-        SHOCategorySort.all => l10n.categorySortAll,
-        SHOCategorySort.hot => l10n.categorySortHot,
-        SHOCategorySort.newest => l10n.categorySortNewest,
-      };
+    SHOCategorySort.all => l10n.categorySortAll,
+    SHOCategorySort.hot => l10n.categorySortHot,
+    SHOCategorySort.newest => l10n.categorySortNewest,
+  };
 }
 
 List<SHOCategoryLeaf> sortCategoryLeaves(
@@ -84,17 +80,16 @@ class SHOCategorySortBar extends ConsumerWidget {
                 selected: selected == sort,
                 onTap: () {
                   ref.read(categorySortProvider.notifier).state = sort;
-                  ref.read(categoryProductFilterPanelOpenProvider.notifier).state =
+                  ref
+                          .read(categoryProductFilterPanelOpenProvider.notifier)
+                          .state =
                       false;
                 },
               ),
               if (sort != SHOCategorySort.values.last)
                 const SizedBox(width: SHOAppSpacing.sm),
             ],
-            if (trailing != null) ...[
-              const Spacer(),
-              trailing!,
-            ],
+            if (trailing != null) ...[const Spacer(), trailing!],
           ],
         ),
       ),
@@ -118,7 +113,9 @@ class _SortChip extends StatelessWidget {
     final theme = context.shoTheme;
 
     return Material(
-      color: selected ? SHOAppColors.accent.withValues(alpha: 0.12) : theme.surfaceMuted,
+      color: selected
+          ? SHOAppColors.accent.withValues(alpha: 0.12)
+          : theme.surfaceMuted,
       borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
       child: InkWell(
         onTap: onTap,
@@ -131,9 +128,9 @@ class _SortChip extends StatelessWidget {
           child: Text(
             label,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected ? SHOAppColors.accent : theme.textSecondary,
-                ),
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              color: selected ? SHOAppColors.accent : theme.textSecondary,
+            ),
           ),
         ),
       ),

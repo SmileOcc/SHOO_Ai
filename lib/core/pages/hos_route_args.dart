@@ -81,7 +81,8 @@ class SHOFlashSaleRouteArgs implements SHORouteArgs {
 
   factory SHOFlashSaleRouteArgs.fromState(GoRouterState state) {
     return SHOFlashSaleRouteArgs(
-      activityId: state.uri.queryParameters['activityId'] ??
+      activityId:
+          state.uri.queryParameters['activityId'] ??
           SHOFlashSaleActivities.defaults,
     );
   }
@@ -196,7 +197,9 @@ class SHOMusicLibraryRouteArgs implements SHORouteArgs {
   final bool fromDownload;
 
   factory SHOMusicLibraryRouteArgs.fromState(GoRouterState state) {
-    return SHOMusicLibraryRouteArgs(fromDownload: state.queryFlag('fromDownload'));
+    return SHOMusicLibraryRouteArgs(
+      fromDownload: state.queryFlag('fromDownload'),
+    );
   }
 }
 
@@ -224,10 +227,7 @@ class SHOToolboxReaderRouteArgs implements SHORouteArgs {
 
 /// 工具箱视频播放 `?entryId=&taskId=`。
 class SHOToolboxVideoRouteArgs implements SHORouteArgs {
-  const SHOToolboxVideoRouteArgs({
-    required this.entryId,
-    required this.taskId,
-  });
+  const SHOToolboxVideoRouteArgs({required this.entryId, required this.taskId});
 
   final String entryId;
   final String taskId;
@@ -354,7 +354,8 @@ extension SHORouteStateArgs on GoRouterState {
   SHOActivityUrlRouteArgs get activityUrlArgs =>
       SHOActivityUrlRouteArgs.fromState(this);
 
-  SHOFlashSaleRouteArgs get flashSaleArgs => SHOFlashSaleRouteArgs.fromState(this);
+  SHOFlashSaleRouteArgs get flashSaleArgs =>
+      SHOFlashSaleRouteArgs.fromState(this);
 
   SHOWebViewRouteArgs get webViewArgs => SHOWebViewRouteArgs.fromState(this);
 

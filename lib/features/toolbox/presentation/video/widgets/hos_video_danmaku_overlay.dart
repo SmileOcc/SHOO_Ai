@@ -70,11 +70,7 @@ class _SHOVideoDanmakuOverlayState extends State<SHOVideoDanmakuOverlay>
       vsync: this,
       duration: Duration(milliseconds: durationMs),
     );
-    final item = _DanmakuItem(
-      text: text,
-      track: track,
-      controller: controller,
-    );
+    final item = _DanmakuItem(text: text, track: track, controller: controller);
 
     setState(() => _items.add(item));
     _activeTracks.add(track);
@@ -115,14 +111,12 @@ class _SHOVideoDanmakuOverlayState extends State<SHOVideoDanmakuOverlay>
                 AnimatedBuilder(
                   animation: item.controller,
                   builder: (context, child) {
-                    final progress = Curves.linear.transform(item.controller.value);
+                    final progress = Curves.linear.transform(
+                      item.controller.value,
+                    );
                     final x = width - progress * (width + 240);
                     final top = height * (0.08 + item.track * 0.1);
-                    return Positioned(
-                      left: x,
-                      top: top,
-                      child: child!,
-                    );
+                    return Positioned(left: x, top: top, child: child!);
                   },
                   child: _DanmakuText(text: item.text),
                 ),

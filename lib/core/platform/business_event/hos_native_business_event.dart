@@ -1,9 +1,6 @@
 /// 原生 EventChannel 业务事件模型。
 class SHONativeBusinessEvent {
-  const SHONativeBusinessEvent({
-    required this.kind,
-    required this.payload,
-  });
+  const SHONativeBusinessEvent({required this.kind, required this.payload});
 
   final String kind;
   final Map<String, dynamic> payload;

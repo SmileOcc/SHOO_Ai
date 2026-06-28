@@ -12,14 +12,11 @@ final categoriesProvider = FutureProvider<List<SHOCategoryItem>>((ref) async {
 
 final selectedCategoryIndexProvider = StateProvider<int>((ref) => 0);
 
-final categorySortProvider =
-    StateProvider<SHOCategorySort>((ref) => SHOCategorySort.all);
+final categorySortProvider = StateProvider<SHOCategorySort>(
+  (ref) => SHOCategorySort.all,
+);
 
-enum SHOCategoryPriceSort {
-  defaultSort,
-  highToLow,
-  lowToHigh,
-}
+enum SHOCategoryPriceSort { defaultSort, highToLow, lowToHigh }
 
 class SHOCategoryProductFilter {
   const SHOCategoryProductFilter({
@@ -54,7 +51,9 @@ final categoryProductFilterProvider = StateProvider<SHOCategoryProductFilter>(
   (ref) => const SHOCategoryProductFilter(),
 );
 
-final categoryProductFilterPanelOpenProvider = StateProvider<bool>((ref) => false);
+final categoryProductFilterPanelOpenProvider = StateProvider<bool>(
+  (ref) => false,
+);
 
 final categoryAppBarTitleProvider = Provider<String>((ref) {
   final categoriesAsync = ref.watch(categoriesProvider);
@@ -72,11 +71,11 @@ final categoryAppBarTitleProvider = Provider<String>((ref) {
 
 final categoryProductsProvider =
     FutureProvider.family<List<SHOProduct>, String>((ref, categoryId) async {
-  final repo = ref.watch(categoryRepositoryProvider);
-  final page = await repo.getProductsByCategory(
-    categoryId: categoryId,
-    page: 1,
-    pageSize: 100,
-  );
-  return page.items;
-});
+      final repo = ref.watch(categoryRepositoryProvider);
+      final page = await repo.getProductsByCategory(
+        categoryId: categoryId,
+        page: 1,
+        pageSize: 100,
+      );
+      return page.items;
+    });

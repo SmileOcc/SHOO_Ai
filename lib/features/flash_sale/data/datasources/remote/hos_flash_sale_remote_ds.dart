@@ -16,9 +16,7 @@ class SHOFlashSaleApi {
   Future<SHOFlashSaleCalendar> fetchCalendar({String activityId = ''}) {
     return _dio.getData<SHOFlashSaleCalendar>(
       '/flash-sale/calendar',
-      queryParameters: {
-        if (activityId.isNotEmpty) 'activityId': activityId,
-      },
+      queryParameters: {if (activityId.isNotEmpty) 'activityId': activityId},
       parser: (data) =>
           SHOFlashSaleCalendar.fromJson(data as Map<String, dynamic>),
     );
@@ -53,10 +51,7 @@ class SHOFlashSaleApi {
   }) {
     return _dio.getData<SHOFlashSaleProductActivity>(
       '/flash-sale/product-activity',
-      queryParameters: {
-        'productId': productId,
-        'sessionId': sessionId,
-      },
+      queryParameters: {'productId': productId, 'sessionId': sessionId},
       parser: (data) =>
           SHOFlashSaleProductActivity.fromJson(data as Map<String, dynamic>),
     );
@@ -72,10 +67,7 @@ class SHOFlashSaleApi {
   }
 
   Future<void> follow({required SHOFlashSaleFollow follow}) {
-    return _dio.post<void>(
-      '/flash-sale/follow',
-      data: follow.toJson(),
-    );
+    return _dio.post<void>('/flash-sale/follow', data: follow.toJson());
   }
 
   Future<void> unfollow({

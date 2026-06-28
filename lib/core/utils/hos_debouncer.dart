@@ -4,7 +4,7 @@ import 'package:shoo/core/constants/hos_constants.dart';
 
 class SHODebouncer {
   SHODebouncer({Duration? duration})
-      : _duration = duration ?? SHOAppConstants.debounceDuration;
+    : _duration = duration ?? SHOAppConstants.debounceDuration;
 
   final Duration _duration;
   Timer? _timer;

@@ -79,8 +79,8 @@ class _SHODownloadTaskDialogState extends State<SHODownloadTaskDialog> {
                   l10n.downloadTaskDialogTitle,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),

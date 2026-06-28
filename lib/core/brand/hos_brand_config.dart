@@ -22,8 +22,8 @@ abstract final class SHOAppBrandConfig {
 
 final appIconStyleProvider =
     NotifierProvider<SHOAppIconStyleNotifier, SHOAppIconStyle>(
-  SHOAppIconStyleNotifier.new,
-);
+      SHOAppIconStyleNotifier.new,
+    );
 
 class SHOAppIconStyleNotifier extends Notifier<SHOAppIconStyle> {
   late final SHOLocalStorage _storage;

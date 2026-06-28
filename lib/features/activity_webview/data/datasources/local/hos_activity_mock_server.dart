@@ -6,7 +6,8 @@ import 'package:shoo/features/activity_webview/data/datasources/local/hos_activi
 
 /// 活动页本地 Mock Server（:8888）门面；Web 平台为 stub。
 abstract final class SHOActivityMockServer {
-  static Future<String?> ensureStarted() => impl.ensureActivityMockServerStarted();
+  static Future<String?> ensureStarted() =>
+      impl.ensureActivityMockServerStarted();
 
   static Future<void> stop() => impl.stopActivityMockServer();
 

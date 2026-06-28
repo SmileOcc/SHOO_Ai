@@ -23,10 +23,7 @@ abstract final class SHOAppBreakpoints {
 /// )
 /// ```
 class SHOAppResponsive extends StatelessWidget {
-  const SHOAppResponsive({
-    super.key,
-    required this.builder,
-  });
+  const SHOAppResponsive({super.key, required this.builder});
 
   final Widget Function(BuildContext context, SHOResponsiveInfo info) builder;
 

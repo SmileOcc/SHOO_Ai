@@ -78,7 +78,10 @@ Future<void> handleDownloadTaskTap(
     return;
   }
 
-  final opened = await SHODownloadPreviewPage.open(context: context, task: task);
+  final opened = await SHODownloadPreviewPage.open(
+    context: context,
+    task: task,
+  );
   if (!opened && context.mounted) {
     await SHOConfirmCardDialog.show(
       context,
@@ -109,11 +112,7 @@ Future<void> _handleMusicPackTap(
 
   if (inList && !hasCache) {
     await _runMusicPackExtract(ref, task, l10n, () async {
-      return ensurePackCached(
-        ref,
-        packTask: task,
-        packService: packService,
-      );
+      return ensurePackCached(ref, packTask: task, packService: packService);
     });
     if (!context.mounted) return;
     libraryItems = await ref.read(musicLibraryListProvider.future);
@@ -128,7 +127,12 @@ Future<void> _handleMusicPackTap(
   if (!inList && hasCache) {
     await _reportMusicAlreadyExtracted(task, packService);
     if (!context.mounted) return;
-    final opened = await _playCachedPackTracks(ref, task, allTasks, packService);
+    final opened = await _playCachedPackTracks(
+      ref,
+      task,
+      allTasks,
+      packService,
+    );
     if (!opened && context.mounted) {
       await SHOConfirmCardDialog.show(
         context,
@@ -140,11 +144,7 @@ Future<void> _handleMusicPackTap(
     }
     if (!context.mounted) return;
     unawaited(
-      ensurePackInLibrary(
-        ref,
-        packTask: task,
-        packService: packService,
-      ),
+      ensurePackInLibrary(ref, packTask: task, packService: packService),
     );
     return;
   }
@@ -268,9 +268,9 @@ Future<void> addDownloadTaskToBookshelf(
   await ref.read(bookshelfEntriesProvider.notifier).add(task.id);
   if (!context.mounted) return;
   final l10n = AppLocalizations.of(context);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(l10n.txtReaderAddedBookshelf)),
-  );
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(l10n.txtReaderAddedBookshelf)));
 }
 
 Future<void> addDownloadMusicPackToLibrary(
@@ -297,17 +297,13 @@ Future<void> addDownloadMusicPackToLibrary(
       return result.extractedPaths;
     });
   } else {
-    await ensurePackInLibrary(
-      ref,
-      packTask: task,
-      packService: packService,
-    );
+    await ensurePackInLibrary(ref, packTask: task, packService: packService);
   }
 
   if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(l10n.downloadAddedToMusicLibrary)),
-  );
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(l10n.downloadAddedToMusicLibrary)));
 }
 
 Future<void> _runMusicPackLoading(

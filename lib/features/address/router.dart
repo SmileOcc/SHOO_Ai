@@ -6,21 +6,21 @@ import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/address/presentation/pages/hos_address_form_page.dart';
 import 'package:shoo/features/address/presentation/pages/hos_address_list_page.dart';
 
-List<RouteBase> shoAddressRoutes({required GlobalKey<NavigatorState> rootKey}) => [
+List<RouteBase> shoAddressRoutes({
+  required GlobalKey<NavigatorState> rootKey,
+}) => [
+  GoRoute(
+    path: SHOAppRoutes.addresses,
+    parentNavigatorKey: rootKey,
+    builder: (context, state) =>
+        SHOAddressListPage(selectMode: state.selectArgs.selectMode),
+    routes: [
       GoRoute(
-        path: SHOAppRoutes.addresses,
+        path: 'form',
         parentNavigatorKey: rootKey,
-        builder: (context, state) => SHOAddressListPage(
-          selectMode: state.selectArgs.selectMode,
-        ),
-        routes: [
-          GoRoute(
-            path: 'form',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) => SHOAddressFormPage(
-              addressId: state.queryIdArgs().id,
-            ),
-          ),
-        ],
+        builder: (context, state) =>
+            SHOAddressFormPage(addressId: state.queryIdArgs().id),
       ),
-    ];
+    ],
+  ),
+];

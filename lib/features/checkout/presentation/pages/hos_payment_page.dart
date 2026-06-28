@@ -72,10 +72,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
     _paymentTracked = true;
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.paymentSuccess,
-      {
-        'order_id': widget.orderId,
-        'amount': detail.totalCents / 100.0,
-      },
+      {'order_id': widget.orderId, 'amount': detail.totalCents / 100.0},
     );
   }
 
@@ -132,9 +129,9 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
       await _trackPaymentSuccess(_successOrder!);
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
     }
   }
 
@@ -148,28 +145,29 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
       if (order == null) {
         return buildTrackedPage(
           Scaffold(
-          appBar: AppBar(title: Text(l10n.paymentTitle)),
-          body: const SHOAppLoadingState(state: SHOLoadingState.loading),
+            appBar: AppBar(title: Text(l10n.paymentTitle)),
+            body: const SHOAppLoadingState(state: SHOLoadingState.loading),
           ),
           onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
         );
       }
       return buildTrackedPage(
         Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.paymentTitle),
-          automaticallyImplyLeading: false,
-        ),
-        body: _PaymentSuccessView(
-          order: order,
-          onViewOrder: _viewOrder,
-          onContinueShopping: _continueShopping,
-        ),
+          appBar: AppBar(
+            title: Text(l10n.paymentTitle),
+            automaticallyImplyLeading: false,
+          ),
+          body: _PaymentSuccessView(
+            order: order,
+            onViewOrder: _viewOrder,
+            onContinueShopping: _continueShopping,
+          ),
         ),
       );
     }
 
-    final cashierOrder = _cashierOrder ??
+    final cashierOrder =
+        _cashierOrder ??
         (orderAsync.valueOrNull != null &&
                 orderAsync.valueOrNull!.status == SHOOrderStatus.pendingPayment
             ? orderAsync.valueOrNull
@@ -178,38 +176,39 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
     if (cashierOrder != null && _shouldShowCashier(cashierOrder)) {
       return buildTrackedPage(
         Scaffold(
-        appBar: AppBar(title: Text(l10n.paymentTitle)),
-        body: _PaymentCashierView(
-          order: cashierOrder,
-          onSelectMethod: (method) => _openPaymentDialog(cashierOrder, method),
-        ),
+          appBar: AppBar(title: Text(l10n.paymentTitle)),
+          body: _PaymentCashierView(
+            order: cashierOrder,
+            onSelectMethod: (method) =>
+                _openPaymentDialog(cashierOrder, method),
+          ),
         ),
       );
     }
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.paymentTitle)),
-      body: orderAsync.when(
-        loading: () =>
-            const SHOAppLoadingState(state: SHOLoadingState.loading),
-        error: (error, _) => Center(child: Text(error.toString())),
-        data: (order) {
-          if (_shouldShowCashier(order)) {
-            return _PaymentCashierView(
+        appBar: AppBar(title: Text(l10n.paymentTitle)),
+        body: orderAsync.when(
+          loading: () =>
+              const SHOAppLoadingState(state: SHOLoadingState.loading),
+          error: (error, _) => Center(child: Text(error.toString())),
+          data: (order) {
+            if (_shouldShowCashier(order)) {
+              return _PaymentCashierView(
+                order: order,
+                onSelectMethod: (method) => _openPaymentDialog(order, method),
+              );
+            }
+            return _PaymentSuccessView(
               order: order,
-              onSelectMethod: (method) => _openPaymentDialog(order, method),
+              onViewOrder: _viewOrder,
+              onContinueShopping: _continueShopping,
             );
-          }
-          return _PaymentSuccessView(
-            order: order,
-            onViewOrder: _viewOrder,
-            onContinueShopping: _continueShopping,
-          );
-        },
+          },
+        ),
       ),
-    ),
-    onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
+      onRetry: () => ref.invalidate(orderDetailProvider(widget.orderId)),
     );
   }
 }
@@ -246,16 +245,16 @@ class _PaymentCashierView extends StatelessWidget {
               Text(
                 l10n.paymentAmountDue,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: context.shoTheme.textSecondary,
-                    ),
+                  color: context.shoTheme.textSecondary,
+                ),
               ),
               const SizedBox(height: SHOAppSpacing.xs),
               Text(
                 priceFormatter.formatCents(order.totalCents),
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: SHOAppColors.sale,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: SHOAppColors.sale,
+                ),
               ),
             ],
           ),
@@ -263,9 +262,9 @@ class _PaymentCashierView extends StatelessWidget {
         const SizedBox(height: SHOAppSpacing.xl),
         Text(
           l10n.paymentMethodsTitle,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.md),
         ...kPaymentMethods.map(
@@ -303,9 +302,9 @@ class _OrderSummaryCard extends StatelessWidget {
         children: [
           Text(
             l10n.paymentOrderInfo,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: SHOAppSpacing.sm),
           Text(
@@ -317,16 +316,16 @@ class _OrderSummaryCard extends StatelessWidget {
             Text(
               order.shippingAddress,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.shoTheme.textSecondary,
-                  ),
+                color: context.shoTheme.textSecondary,
+              ),
             ),
           ],
           const SizedBox(height: SHOAppSpacing.md),
           Text(
             l10n.orderItemsTitle,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: SHOAppSpacing.sm),
           ...order.items.map(
@@ -335,8 +334,9 @@ class _OrderSummaryCard extends StatelessWidget {
               child: Row(
                 children: [
                   ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    borderRadius: BorderRadius.circular(
+                      SHOAppSpacing.cardRadius,
+                    ),
                     child: SizedBox(
                       width: 48,
                       height: 48,
@@ -359,9 +359,8 @@ class _OrderSummaryCard extends StatelessWidget {
                         ),
                         Text(
                           'x${item.quantity}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: context.shoTheme.textMuted,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: context.shoTheme.textMuted),
                         ),
                       ],
                     ),
@@ -369,8 +368,8 @@ class _OrderSummaryCard extends StatelessWidget {
                   Text(
                     priceFormatter.formatCents(item.price * item.quantity),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -383,10 +382,7 @@ class _OrderSummaryCard extends StatelessWidget {
 }
 
 class _PaymentMethodTile extends StatelessWidget {
-  const _PaymentMethodTile({
-    required this.method,
-    required this.onTap,
-  });
+  const _PaymentMethodTile({required this.method, required this.onTap});
 
   final SHOPaymentMethod method;
   final VoidCallback onTap;
@@ -421,9 +417,9 @@ class _PaymentMethodTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   method.label(l10n),
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               Icon(
@@ -466,9 +462,9 @@ class _PaymentSuccessView extends StatelessWidget {
           const SizedBox(height: SHOAppSpacing.xl),
           Text(
             l10n.paymentSuccessTitle,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: SHOAppSpacing.md),
@@ -481,9 +477,9 @@ class _PaymentSuccessView extends StatelessWidget {
           Text(
             priceFormatter.formatCents(order.totalCents),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: SHOAppColors.sale,
-                ),
+              fontWeight: FontWeight.w900,
+              color: SHOAppColors.sale,
+            ),
           ),
           const Spacer(),
           SHOAppButton(

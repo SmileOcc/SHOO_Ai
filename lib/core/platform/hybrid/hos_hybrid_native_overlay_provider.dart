@@ -18,9 +18,7 @@ final hybridOverlayRouteListenerProvider = Provider<void>((ref) {
         router.go(restore);
       }
     }
-    unawaited(
-      SHOHybridNativeOverlayCoordinator.onEmbeddedRouteLeft(location),
-    );
+    unawaited(SHOHybridNativeOverlayCoordinator.onEmbeddedRouteLeft(location));
   }
 
   router.routerDelegate.addListener(onRouteChanged);

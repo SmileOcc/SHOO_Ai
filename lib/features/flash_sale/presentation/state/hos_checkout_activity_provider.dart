@@ -2,30 +2,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+
 final checkoutActivityLinesProvider =
     StateProvider<Map<String, SHOCheckoutActivityLine>>((ref) => {});
 
-void setCheckoutActivityLine(
-  WidgetRef ref,
-  SHOCheckoutActivityLine line,
-) {
-  ref.read(checkoutActivityLinesProvider.notifier).update(
-        (state) => {...state, line.productId: line},
-      );
+void setCheckoutActivityLine(WidgetRef ref, SHOCheckoutActivityLine line) {
+  ref
+      .read(checkoutActivityLinesProvider.notifier)
+      .update((state) => {...state, line.productId: line});
 }
 
 void clearCheckoutActivityLines(WidgetRef ref) {
   ref.read(checkoutActivityLinesProvider.notifier).state = {};
 }
 
-SHOCheckoutActivityLine? buildCheckoutActivityLine(SHOFlashSaleProduct product) {
+SHOCheckoutActivityLine? buildCheckoutActivityLine(
+  SHOFlashSaleProduct product,
+) {
   if (product.status != SHOFlashSaleProductStatus.ongoing) return null;
 
   final tiers = <SHOFullReductionTier>[];
   for (final tag in product.promoTags) {
     if (!tag.type.startsWith('full_reduction')) continue;
-    final digits =
-        RegExp(r'\d+').allMatches(tag.label).map((m) => m.group(0)).toList();
+    final digits = RegExp(
+      r'\d+',
+    ).allMatches(tag.label).map((m) => m.group(0)).toList();
     if (digits.length >= 2) {
       tiers.add(
         SHOFullReductionTier(
@@ -55,8 +56,9 @@ SHOCheckoutActivityLine? buildCheckoutActivityLineFromActivity({
   final tiers = <SHOFullReductionTier>[];
   for (final tag in activity.promoTags) {
     if (!tag.type.startsWith('full_reduction')) continue;
-    final digits =
-        RegExp(r'\d+').allMatches(tag.label).map((m) => m.group(0)).toList();
+    final digits = RegExp(
+      r'\d+',
+    ).allMatches(tag.label).map((m) => m.group(0)).toList();
     if (digits.length >= 2) {
       tiers.add(
         SHOFullReductionTier(
@@ -94,7 +96,8 @@ int checkoutActivitySavedCents({
   var saved = 0;
   for (final line in lines.values) {
     if (line.originalUnitPriceCents <= line.unitPriceCents) continue;
-    saved += (line.originalUnitPriceCents - line.unitPriceCents) *
+    saved +=
+        (line.originalUnitPriceCents - line.unitPriceCents) *
         quantityByProductId;
   }
   return saved;

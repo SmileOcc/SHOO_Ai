@@ -46,7 +46,9 @@ mixin SHOAppPageMixin<T extends ConsumerStatefulWidget>
     super.didPush();
     onPagePreload(ref);
     if (reportFirstFrameLoadTime) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _reportFirstFrameLoad());
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _reportFirstFrameLoad(),
+      );
     }
   }
 

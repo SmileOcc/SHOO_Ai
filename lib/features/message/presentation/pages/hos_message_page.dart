@@ -64,7 +64,10 @@ class _SHOMessagePageState
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing: Text(msg.type, style: Theme.of(context).textTheme.bodySmall),
+          trailing: Text(
+            msg.type,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         );
       },
     );

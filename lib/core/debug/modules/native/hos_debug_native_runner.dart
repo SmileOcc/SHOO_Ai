@@ -9,26 +9,29 @@ import 'package:shoo/core/debug/modules/native/hos_debug_native_examples.dart';
 
 /// 执行原生调试示例，返回可展示的文本结果。
 abstract final class SHONativeDebugRunner {
-  static Future<String> run(SHONativeDebugExampleId id, {String? messageInput}) async {
+  static Future<String> run(
+    SHONativeDebugExampleId id, {
+    String? messageInput,
+  }) async {
     return switch (id) {
       SHONativeDebugExampleId.ping => _formatJson(
-          await SHONativeBridge.call<Map<String, dynamic>>(method: 'ping'),
-        ),
-      SHONativeDebugExampleId.platformVersion => await SHONativeBridge.call<String>(
-          method: 'getPlatformVersion',
-        ),
+        await SHONativeBridge.call<Map<String, dynamic>>(method: 'ping'),
+      ),
+      SHONativeDebugExampleId.platformVersion =>
+        await SHONativeBridge.call<String>(method: 'getPlatformVersion'),
       SHONativeDebugExampleId.messageEcho => _formatJson(
-          await SHONativeMessageBridge.send<Map<String, dynamic>>(
-            message: {
-              'text': messageInput?.trim().isNotEmpty == true
-                  ? messageInput!.trim()
-                  : 'hello from flutter',
-              'ts': DateTime.now().millisecondsSinceEpoch,
-            },
-          ),
+        await SHONativeMessageBridge.send<Map<String, dynamic>>(
+          message: {
+            'text': messageInput?.trim().isNotEmpty == true
+                ? messageInput!.trim()
+                : 'hello from flutter',
+            'ts': DateTime.now().millisecondsSinceEpoch,
+          },
         ),
-      SHONativeDebugExampleId.eventTick =>
-        throw UnsupportedError('Use debugEventStream() for event examples'),
+      ),
+      SHONativeDebugExampleId.eventTick => throw UnsupportedError(
+        'Use debugEventStream() for event examples',
+      ),
     };
   }
 

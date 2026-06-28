@@ -102,10 +102,26 @@ class SHOAppThemeColors extends ThemeExtension<SHOAppThemeColors> {
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textMuted: Color.lerp(textMuted, other.textMuted, t)!,
       skeletonBase: Color.lerp(skeletonBase, other.skeletonBase, t)!,
-      skeletonHighlight: Color.lerp(skeletonHighlight, other.skeletonHighlight, t)!,
-      profileHeaderStart: Color.lerp(profileHeaderStart, other.profileHeaderStart, t)!,
-      profileHeaderEnd: Color.lerp(profileHeaderEnd, other.profileHeaderEnd, t)!,
-      tabBarBackground: Color.lerp(tabBarBackground, other.tabBarBackground, t)!,
+      skeletonHighlight: Color.lerp(
+        skeletonHighlight,
+        other.skeletonHighlight,
+        t,
+      )!,
+      profileHeaderStart: Color.lerp(
+        profileHeaderStart,
+        other.profileHeaderStart,
+        t,
+      )!,
+      profileHeaderEnd: Color.lerp(
+        profileHeaderEnd,
+        other.profileHeaderEnd,
+        t,
+      )!,
+      tabBarBackground: Color.lerp(
+        tabBarBackground,
+        other.tabBarBackground,
+        t,
+      )!,
       tabBarInactive: Color.lerp(tabBarInactive, other.tabBarInactive, t)!,
     );
   }

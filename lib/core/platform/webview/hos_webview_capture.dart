@@ -3,7 +3,8 @@ import 'dart:typed_data';
 
 /// WebView / H5 截图数据解析。
 abstract final class SHOWebViewCapture {
-  static const captureScript = 'window.requestActivityScreenshot && window.requestActivityScreenshot()';
+  static const captureScript =
+      'window.requestActivityScreenshot && window.requestActivityScreenshot()';
 
   static Uint8List? decodeDataUrl(String dataUrl) {
     if (dataUrl.isEmpty) return null;

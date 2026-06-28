@@ -33,5 +33,6 @@ class SHOCartStorage {
     );
   }
 
-  Future<void> clear() => _storage.write<String>(SHOAppConstants.cartStorageKey, '');
+  Future<void> clear() =>
+      _storage.write<String>(SHOAppConstants.cartStorageKey, '');
 }

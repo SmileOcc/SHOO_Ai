@@ -85,7 +85,8 @@ class SHOShareNotifier extends Notifier<SHOShareState> {
     String channel,
     SHOActivityConfig config,
   ) async {
-    final text = '${config.shareTitle}\n${config.shareDesc}\n${config.shareUrl}';
+    final text =
+        '${config.shareTitle}\n${config.shareDesc}\n${config.shareUrl}';
     final bytes = state.imageBytes;
     final saver = ref.read(gallerySaverProvider);
 
@@ -93,12 +94,12 @@ class SHOShareNotifier extends Notifier<SHOShareState> {
       case 'wechat':
       case 'moments':
         if (bytes != null) {
-          final file = await saver.writeTempPng(bytes, prefix: 'activity_share');
+          final file = await saver.writeTempPng(
+            bytes,
+            prefix: 'activity_share',
+          );
           if (file != null) {
-            await Share.shareXFiles(
-              [XFile(file.path)],
-              text: text,
-            );
+            await Share.shareXFiles([XFile(file.path)], text: text);
             return;
           }
         }

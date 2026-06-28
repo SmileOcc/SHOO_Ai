@@ -26,7 +26,8 @@ abstract final class SHOValidators {
     return (value) {
       if (value == null || value.isEmpty) return null;
       final phone = value.trim();
-      final ok = RegExp(r'^1[3-9]\d{9}$').hasMatch(phone) ||
+      final ok =
+          RegExp(r'^1[3-9]\d{9}$').hasMatch(phone) ||
           RegExp(r'^\+\d{8,15}$').hasMatch(phone);
       return ok ? null : l10n.validationPhone;
     };

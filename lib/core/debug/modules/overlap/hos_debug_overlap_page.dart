@@ -216,36 +216,39 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: const Text('重叠视图点击事件调试'),
-        actions: [
-          IconButton(icon: const Icon(Icons.clear_all), onPressed: _clearLogs),
-        ],
-      ),
-      body: Column(
-        children: [
-          _buildLegend(),
-          Expanded(
-            flex: 3,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  _buildCase7(),
-                  const SizedBox(height: 16),
-                  _buildCase8(),
-                  const SizedBox(height: 16),
-                  _buildCase9(),
-                ],
+        appBar: AppBar(
+          title: const Text('重叠视图点击事件调试'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.clear_all),
+              onPressed: _clearLogs,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            _buildLegend(),
+            Expanded(
+              flex: 3,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    _buildCase7(),
+                    const SizedBox(height: 16),
+                    _buildCase8(),
+                    const SizedBox(height: 16),
+                    _buildCase9(),
+                  ],
+                ),
               ),
             ),
-          ),
-          const Divider(height: 1),
-          Expanded(flex: 2, child: _buildLogArea()),
-        ],
+            const Divider(height: 1),
+            Expanded(flex: 2, child: _buildLogArea()),
+          ],
+        ),
       ),
-    ),
     );
   }
 

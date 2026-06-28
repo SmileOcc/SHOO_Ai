@@ -13,10 +13,7 @@ void main() {
     test('order and logistics routes', () {
       expect(SHOAppRoutes.order('o1'), '/orders/o1');
       expect(SHOAppRoutes.orderLogistics('o1'), '/orders/o1/logistics');
-      expect(
-        SHOAppRoutes.ordersFiltered('shipped'),
-        '/orders?status=shipped',
-      );
+      expect(SHOAppRoutes.ordersFiltered('shipped'), '/orders?status=shipped');
     });
 
     test('search route constant', () {

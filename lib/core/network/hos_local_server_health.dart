@@ -23,7 +23,9 @@ abstract final class SHOLocalServerHealth {
           receiveTimeout: const Duration(seconds: 2),
         ),
       );
-      final response = await client.get<dynamic>(healthUri(apiBaseUrl).toString());
+      final response = await client.get<dynamic>(
+        healthUri(apiBaseUrl).toString(),
+      );
       return response.statusCode == 200;
     } catch (_) {
       return false;

@@ -16,8 +16,7 @@ class SHOProductApi {
   Future<SHOProductDetail> fetchProductDetail(String id) {
     return _dio.getData<SHOProductDetail>(
       '/products/$id',
-      parser: (data) =>
-          SHOProductDetail.fromJson(data as Map<String, dynamic>),
+      parser: (data) => SHOProductDetail.fromJson(data as Map<String, dynamic>),
     );
   }
 }

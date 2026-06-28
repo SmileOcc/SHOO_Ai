@@ -70,8 +70,9 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
     if (feedState.isInitialLoading) {
       return buildTrackedPage(
         SHOAppPullRefresh(
-        onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
-        child: _buildLoadingSkeleton(),
+          onRefresh: () =>
+              ref.read(communityFeedListProvider.notifier).refresh(),
+          child: _buildLoadingSkeleton(),
         ),
         onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
       );
@@ -80,8 +81,8 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
     if (feedState.isEmpty && feedState.error != null) {
       return buildTrackedPage(
         SHOAppErrorView(
-        message: feedState.error.toString(),
-        onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+          message: feedState.error.toString(),
+          onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
         ),
         onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
       );
@@ -89,59 +90,58 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
 
     return buildTrackedPage(
       NotificationListener<ScrollNotification>(
-      onNotification: _onScrollNotification,
-      child: SHOAppPullRefresh(
-        onRefresh: () => ref.read(communityFeedListProvider.notifier).refresh(),
-        child: CustomScrollView(
-          controller: _scrollController,
-          physics: SHOAppPullRefresh.scrollPhysics,
-          slivers: [
-            SliverToBoxAdapter(
-              child: SHOCommunityMenuBar(items: feedState.menuItems),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: SHOCommunityFilterTabsDelegate(
-                backgroundColor: backgroundColor,
-                selected: selectedSort,
-                l10n: l10n,
-                onSortChanged: (sort) {
-                  if (sort == selectedSort) return;
-                  ref.read(communitySortProvider.notifier).state = sort;
-                },
-              ),
-            ),
-            if (feedState.error != null && feedState.items.isNotEmpty)
+        onNotification: _onScrollNotification,
+        child: SHOAppPullRefresh(
+          onRefresh: () =>
+              ref.read(communityFeedListProvider.notifier).refresh(),
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: SHOAppPullRefresh.scrollPhysics,
+            slivers: [
               SliverToBoxAdapter(
-                child: _RefreshErrorBanner(
-                  message: feedState.error.toString(),
-                  onRetry: () =>
-                      ref.read(communityFeedListProvider.notifier).refresh(),
+                child: SHOCommunityMenuBar(items: feedState.menuItems),
+              ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: SHOCommunityFilterTabsDelegate(
+                  backgroundColor: backgroundColor,
+                  selected: selectedSort,
+                  l10n: l10n,
+                  onSortChanged: (sort) {
+                    if (sort == selectedSort) return;
+                    ref.read(communitySortProvider.notifier).state = sort;
+                  },
                 ),
               ),
-            if (feedState.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: SHOEmptyState(title: l10n.noData),
-              )
-            else ...[
-              SliverList.separated(
-                itemCount: feedState.items.length,
-                separatorBuilder: (_, __) => const Divider(
-                  height: 1,
-                  color: SHOAppColors.divider,
+              if (feedState.error != null && feedState.items.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: _RefreshErrorBanner(
+                    message: feedState.error.toString(),
+                    onRetry: () =>
+                        ref.read(communityFeedListProvider.notifier).refresh(),
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  return SHOCommunityFeedCell(item: feedState.items[index]);
-                },
-              ),
-              SliverToBoxAdapter(child: _buildListFooter(context, feedState)),
+              if (feedState.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: SHOEmptyState(title: l10n.noData),
+                )
+              else ...[
+                SliverList.separated(
+                  itemCount: feedState.items.length,
+                  separatorBuilder: (_, __) =>
+                      const Divider(height: 1, color: SHOAppColors.divider),
+                  itemBuilder: (context, index) {
+                    return SHOCommunityFeedCell(item: feedState.items[index]);
+                  },
+                ),
+                SliverToBoxAdapter(child: _buildListFooter(context, feedState)),
+              ],
             ],
-          ],
+          ),
         ),
       ),
-    ),
-    onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
+      onRetry: () => ref.read(communityFeedListProvider.notifier).refresh(),
     );
   }
 
@@ -184,9 +184,9 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
         child: Center(
           child: Text(
             l10n.pagedListNoMore,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: SHOAppColors.textMuted,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: SHOAppColors.textMuted),
           ),
         ),
       );
@@ -213,10 +213,7 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
 }
 
 class SHOCommunityPageError extends ConsumerWidget {
-  const SHOCommunityPageError({
-    super.key,
-    required this.message,
-  });
+  const SHOCommunityPageError({super.key, required this.message});
 
   final String message;
 
@@ -230,10 +227,7 @@ class SHOCommunityPageError extends ConsumerWidget {
 }
 
 class _RefreshErrorBanner extends StatelessWidget {
-  const _RefreshErrorBanner({
-    required this.message,
-    required this.onRetry,
-  });
+  const _RefreshErrorBanner({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
@@ -250,23 +244,21 @@ class _RefreshErrorBanner extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.error_outline, size: 16, color: SHOAppColors.error),
+            const Icon(
+              Icons.error_outline,
+              size: 16,
+              color: SHOAppColors.error,
+            ),
             const SizedBox(width: SHOAppSpacing.sm),
             Expanded(
               child: Text(
                 message,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: SHOAppColors.error,
-                ),
+                style: const TextStyle(fontSize: 12, color: SHOAppColors.error),
               ),
             ),
-            TextButton(
-              onPressed: onRetry,
-              child: Text(l10n.retry),
-            ),
+            TextButton(onPressed: onRetry, child: Text(l10n.retry)),
           ],
         ),
       ),

@@ -70,18 +70,18 @@ class SHOActivityPopup {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'imageUrl': imageUrl,
-        'link': link,
-        'buttonText': buttonText,
-        'delaySeconds': delaySeconds,
-        'startAt': startAt?.toIso8601String(),
-        'endAt': endAt?.toIso8601String(),
-        'prefetchEnabled': prefetchEnabled,
-        'maxDailyShows': maxDailyShows,
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'imageUrl': imageUrl,
+    'link': link,
+    'buttonText': buttonText,
+    'delaySeconds': delaySeconds,
+    'startAt': startAt?.toIso8601String(),
+    'endAt': endAt?.toIso8601String(),
+    'prefetchEnabled': prefetchEnabled,
+    'maxDailyShows': maxDailyShows,
+  };
 
   factory SHOActivityPopup.fromJson(Map<String, dynamic> json) {
     return SHOActivityPopup(

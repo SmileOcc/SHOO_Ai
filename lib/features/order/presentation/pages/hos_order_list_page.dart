@@ -26,7 +26,11 @@ class SHOOrderListPage extends ConsumerStatefulWidget {
 }
 
 class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
-    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+    with
+        SingleTickerProviderStateMixin,
+        SHOPageRouteAnalyticsMixin,
+        SHOAppPageMixin,
+        SHOAppTrackedPageMixin {
   late final TabController _tabController;
 
   static const _tabs = SHOOrderListTab.values;
@@ -36,8 +40,8 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.statusFilter != null) 'status_filter': widget.statusFilter,
-      };
+    if (widget.statusFilter != null) 'status_filter': widget.statusFilter,
+  };
 
   @override
   void initState() {
@@ -62,35 +66,39 @@ class _SHOOrderListPageState extends ConsumerState<SHOOrderListPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.ordersTitle),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          dividerHeight: 0,
-          labelColor: Theme.of(context).colorScheme.onSurface,
-          unselectedLabelColor: context.shoTheme.textSecondary,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          unselectedLabelStyle:
-              const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(color: SHOAppColors.accent, width: 3),
+        appBar: AppBar(
+          title: Text(l10n.ordersTitle),
+          bottom: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            dividerHeight: 0,
+            labelColor: Theme.of(context).colorScheme.onSurface,
+            unselectedLabelColor: context.shoTheme.textSecondary,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+            ),
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(color: SHOAppColors.accent, width: 3),
+            ),
+            tabs: _tabs.map((tab) => Tab(text: tab.label(l10n))).toList(),
           ),
-          tabs: _tabs.map((tab) => Tab(text: tab.label(l10n))).toList(),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: _tabs
+              .map(
+                (tab) =>
+                    SHOTabKeepAlivePage(child: SHOOrderListTabPage(tab: tab)),
+              )
+              .toList(),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabs
-            .map(
-              (tab) => SHOTabKeepAlivePage(
-                child: SHOOrderListTabPage(tab: tab),
-              ),
-            )
-            .toList(),
-      ),
-    ),
     );
   }
 }
@@ -101,12 +109,21 @@ class SHOOrderListTabPage extends SHOPagedDataPage<SHOOrderSummary> {
   final SHOOrderListTab tab;
 
   @override
-  SHOPagedDataPageState<SHOOrderSummary, SHOPagedListState<SHOOrderSummary>,
-      SHOOrderListTabPage> createState() => _SHOOrderListTabPageState();
+  SHOPagedDataPageState<
+    SHOOrderSummary,
+    SHOPagedListState<SHOOrderSummary>,
+    SHOOrderListTabPage
+  >
+  createState() => _SHOOrderListTabPageState();
 }
 
-class _SHOOrderListTabPageState extends SHOPagedDataPageState<SHOOrderSummary,
-    SHOPagedListState<SHOOrderSummary>, SHOOrderListTabPage> {
+class _SHOOrderListTabPageState
+    extends
+        SHOPagedDataPageState<
+          SHOOrderSummary,
+          SHOPagedListState<SHOOrderSummary>,
+          SHOOrderListTabPage
+        > {
   final _scrollController = ScrollController();
 
   @override
@@ -119,13 +136,11 @@ class _SHOOrderListTabPageState extends SHOPagedDataPageState<SHOOrderSummary,
   String get pageName => 'order_list_tab';
 
   @override
-  Map<String, Object?> get pageAnalyticsExtra => {
-        'tab': widget.tab.name,
-      };
+  Map<String, Object?> get pageAnalyticsExtra => {'tab': widget.tab.name};
 
   @override
   ProviderListenable<AsyncValue<SHOPagedListState<SHOOrderSummary>>>
-      get pagedProvider => ordersPagedProvider;
+  get pagedProvider => ordersPagedProvider;
 
   @override
   ScrollController? get scrollController => _scrollController;
@@ -151,9 +166,7 @@ class _SHOOrderListTabPageState extends SHOPagedDataPageState<SHOOrderSummary,
   SHOPagedListState<SHOOrderSummary> transformPaged(
     SHOPagedListState<SHOOrderSummary> paged,
   ) {
-    return paged.copyWith(
-      items: filterOrdersByTab(paged.items, widget.tab),
-    );
+    return paged.copyWith(items: filterOrdersByTab(paged.items, widget.tab));
   }
 
   @override
@@ -204,13 +217,16 @@ class _SHOOrderCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(order.orderNo, style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  order.orderNo,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
                 Text(
                   shoOrderStatusLabel(context, order.status),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: SHOAppColors.primary,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: SHOAppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -219,7 +235,9 @@ class _SHOOrderCard extends StatelessWidget {
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    borderRadius: BorderRadius.circular(
+                      SHOAppSpacing.cardRadius,
+                    ),
                     child: SizedBox(
                       width: 64,
                       height: 64,
@@ -239,9 +257,9 @@ class _SHOOrderCard extends StatelessWidget {
                           firstItem.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: 13,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(fontSize: 13),
                         ),
                         if (order.items.length > 1)
                           Text(
@@ -254,8 +272,8 @@ class _SHOOrderCard extends StatelessWidget {
                   Text(
                     priceFormatter.formatCents(order.totalCents),
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ],
               ),

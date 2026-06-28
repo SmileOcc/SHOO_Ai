@@ -109,7 +109,7 @@ class SHOAppConfig {
     final environment = envRaw.isEmpty
         ? (kReleaseMode ? SHOAppEnvironment.prod : SHOAppEnvironment.dev)
         : SHOAppEnvironment.fromString(envRaw);
-    
+
     // 3. 确定是否使用 Mock（local 环境强制使用真实接口）
     final useMockApi = environment.usesLocalServer
         ? false

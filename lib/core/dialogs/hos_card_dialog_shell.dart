@@ -33,8 +33,7 @@ class SHOCardDialogShell extends StatelessWidget {
           DecoratedBox(
             decoration: BoxDecoration(
               color: context.shoSurface,
-              borderRadius:
-                  BorderRadius.circular(SHOProfileSectionCard.radius),
+              borderRadius: BorderRadius.circular(SHOProfileSectionCard.radius),
               border: Border.all(
                 color: context.shoTheme.border,
                 width: SHOProfileSectionCard.borderWidth,

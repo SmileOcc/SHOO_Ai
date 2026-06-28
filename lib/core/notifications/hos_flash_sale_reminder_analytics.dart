@@ -17,7 +17,8 @@ abstract final class SHOFlashSaleReminderAnalytics {
         payload.activityId,
       ),
       'title': payload.title,
-      if (rawPayload != null && rawPayload.isNotEmpty) 'raw_payload': rawPayload,
+      if (rawPayload != null && rawPayload.isNotEmpty)
+        'raw_payload': rawPayload,
     };
   }
 
@@ -33,13 +34,12 @@ abstract final class SHOFlashSaleReminderAnalytics {
       return;
     }
 
-    SHOAppLogger.d('[ANALYTICS] flash_sale_notification_receive source=$source');
+    SHOAppLogger.d(
+      '[ANALYTICS] flash_sale_notification_receive source=$source',
+    );
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.flashSaleNotificationReceive,
-      {
-        ...payloadParams(parsed, rawPayload: rawPayload),
-        'source': source,
-      },
+      {...payloadParams(parsed, rawPayload: rawPayload), 'source': source},
     );
   }
 
@@ -58,10 +58,7 @@ abstract final class SHOFlashSaleReminderAnalytics {
     SHOAppLogger.d('[ANALYTICS] flash_sale_notification_click source=$source');
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.flashSaleNotificationClick,
-      {
-        ...payloadParams(parsed, rawPayload: rawPayload),
-        'source': source,
-      },
+      {...payloadParams(parsed, rawPayload: rawPayload), 'source': source},
     );
   }
 
@@ -71,10 +68,7 @@ abstract final class SHOFlashSaleReminderAnalytics {
   }) async {
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.flashSaleReminderPopupShow,
-      {
-        ...payloadParams(payload),
-        'trigger': trigger,
-      },
+      {...payloadParams(payload), 'trigger': trigger},
     );
   }
 
@@ -84,10 +78,7 @@ abstract final class SHOFlashSaleReminderAnalytics {
   }) async {
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.flashSaleReminderPopupAction,
-      {
-        ...payloadParams(payload),
-        'action': action,
-      },
+      {...payloadParams(payload), 'action': action},
     );
   }
 }

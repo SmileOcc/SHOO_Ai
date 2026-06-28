@@ -14,8 +14,8 @@ import 'package:shoo/features/toolbox/presentation/state/hos_bookshelf_controlle
 
 final downloadTasksProvider =
     NotifierProvider<SHODownloadTasksNotifier, List<SHODownloadTask>>(
-  SHODownloadTasksNotifier.new,
-);
+      SHODownloadTasksNotifier.new,
+    );
 
 /// 用户主动下载的任务（排除内置 book/video）。
 final userDownloadTasksProvider = Provider<List<SHODownloadTask>>((ref) {
@@ -98,14 +98,14 @@ class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
     ];
     return switch (tab) {
       SHODownloadListTab.all => visible,
-      SHODownloadListTab.downloading => visible
-          .where((t) => t.status == SHODownloadStatus.downloading)
-          .toList(),
+      SHODownloadListTab.downloading =>
+        visible
+            .where((t) => t.status == SHODownloadStatus.downloading)
+            .toList(),
       SHODownloadListTab.paused =>
         visible.where((t) => t.status == SHODownloadStatus.paused).toList(),
-      SHODownloadListTab.completed => visible
-          .where((t) => t.status == SHODownloadStatus.completed)
-          .toList(),
+      SHODownloadListTab.completed =>
+        visible.where((t) => t.status == SHODownloadStatus.completed).toList(),
     };
   }
 
@@ -179,9 +179,4 @@ class SHODownloadTasksNotifier extends Notifier<List<SHODownloadTask>> {
   }
 }
 
-enum SHODownloadListTab {
-  all,
-  downloading,
-  paused,
-  completed,
-}
+enum SHODownloadListTab { all, downloading, paused, completed }

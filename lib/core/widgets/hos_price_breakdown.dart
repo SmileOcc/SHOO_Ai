@@ -8,10 +8,7 @@ import 'package:shoo/l10n/app_localizations.dart';
 
 /// 结算价格明细行。
 class SHOPriceBreakdownView extends StatelessWidget {
-  const SHOPriceBreakdownView({
-    super.key,
-    required this.breakdown,
-  });
+  const SHOPriceBreakdownView({super.key, required this.breakdown});
 
   final SHOPriceBreakdown breakdown;
 
@@ -29,7 +26,8 @@ class SHOPriceBreakdownView extends StatelessWidget {
           const SizedBox(height: SHOAppSpacing.sm),
           _SHOPriceRow(
             label: l10n.priceActivitySaved,
-            value: '-${priceFormatter.formatCents(breakdown.activitySavedCents)}',
+            value:
+                '-${priceFormatter.formatCents(breakdown.activitySavedCents)}',
             valueColor: SHOAppColors.sale,
           ),
         ],
@@ -37,7 +35,8 @@ class SHOPriceBreakdownView extends StatelessWidget {
           const SizedBox(height: SHOAppSpacing.sm),
           _SHOPriceRow(
             label: breakdown.fullReductionLabel ?? l10n.priceFullReduction,
-            value: '-${priceFormatter.formatCents(breakdown.fullReductionCents)}',
+            value:
+                '-${priceFormatter.formatCents(breakdown.fullReductionCents)}',
             valueColor: SHOAppColors.sale,
           ),
         ],
@@ -86,9 +85,9 @@ class _SHOPriceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = isTotal
         ? Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: SHOAppColors.primary,
-            )
+            fontWeight: FontWeight.w900,
+            color: SHOAppColors.primary,
+          )
         : Theme.of(context).textTheme.bodyMedium;
 
     return Row(
@@ -100,10 +99,7 @@ class _SHOPriceRow extends StatelessWidget {
               ? Theme.of(context).textTheme.titleSmall
               : Theme.of(context).textTheme.bodyMedium,
         ),
-        Text(
-          value,
-          style: style?.copyWith(color: valueColor),
-        ),
+        Text(value, style: style?.copyWith(color: valueColor)),
       ],
     );
   }

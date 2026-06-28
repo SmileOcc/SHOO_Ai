@@ -72,10 +72,7 @@ abstract final class SHOAppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
           ),
-          textStyle: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -87,16 +84,16 @@ abstract final class SHOAppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
           ),
-          textStyle: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: SHOAppColors.surfaceMuted,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
           borderSide: BorderSide.none,
@@ -109,7 +106,10 @@ abstract final class SHOAppTheme {
         unselectedItemColor: SHOAppColors.tabBarInactive,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
-        selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+        selectedLabelStyle: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
       extensions: const [SHOAppThemeColors.light],
@@ -166,7 +166,10 @@ abstract final class SHOAppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFF222222),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
           borderSide: BorderSide.none,
@@ -181,7 +184,10 @@ abstract final class SHOAppTheme {
         unselectedItemColor: Color(0xFF888888),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
-        selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+        selectedLabelStyle: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
       radioTheme: RadioThemeData(

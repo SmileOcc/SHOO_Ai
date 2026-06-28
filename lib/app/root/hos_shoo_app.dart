@@ -43,32 +43,32 @@ class SHOApp extends ConsumerWidget {
     return SHOAppLifecycleBinder(
       child: SHOHybridBridgeInstaller(
         child: MaterialApp.router(
-      scaffoldMessengerKey: scaffoldMessengerKey,     // ← 全局 Toast Key 全局访问 ScaffoldMessenger，显示 Toast
-      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
-      debugShowCheckedModeBanner: false,
-      theme: SHOAppTheme.light,
-      darkTheme: SHOAppTheme.dark,
-      themeMode: themeMode,
-      locale: locale,
-      supportedLocales: AppLocalizations.supportedLocales, // ← 支持的语言列表
-      localizationsDelegates: const [
-        AppLocalizations.delegate,   // ← 应用国际化
-        GlobalMaterialLocalizations.delegate, // ← Material 国际化
-        GlobalWidgetsLocalizations.delegate,  // ← Widget 国际化
-        GlobalCupertinoLocalizations.delegate, // ← Cupertino 国际化
-      ],
-      routerConfig: router,   // ← 路由配置（动态）
-      builder: (context, child) {
-        return SHOFlashSaleReminderHost(
-          child: SHOAppShell(child: child ?? const SizedBox.shrink()),
-        );
-      },
-      ),
+          scaffoldMessengerKey:
+              scaffoldMessengerKey, // ← 全局 Toast Key 全局访问 ScaffoldMessenger，显示 Toast
+          onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+          debugShowCheckedModeBanner: false,
+          theme: SHOAppTheme.light,
+          darkTheme: SHOAppTheme.dark,
+          themeMode: themeMode,
+          locale: locale,
+          supportedLocales: AppLocalizations.supportedLocales, // ← 支持的语言列表
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // ← 应用国际化
+            GlobalMaterialLocalizations.delegate, // ← Material 国际化
+            GlobalWidgetsLocalizations.delegate, // ← Widget 国际化
+            GlobalCupertinoLocalizations.delegate, // ← Cupertino 国际化
+          ],
+          routerConfig: router, // ← 路由配置（动态）
+          builder: (context, child) {
+            return SHOFlashSaleReminderHost(
+              child: SHOAppShell(child: child ?? const SizedBox.shrink()),
+            );
+          },
+        ),
       ),
     );
   }
 }
-
 
 /*
 ┌─────────────────────────────────────────────────────────────┐
@@ -102,7 +102,6 @@ const SHOApp() 实例不重建（编译时创建）
 SHOApp.build() 都会执行（响应式机制）
 内部 Widget 都会重建（参数变化）
 */
-
 
 /*
 关键理解:
@@ -185,7 +184,6 @@ bootstrap() (启动引导)
 └─────────────────────────────────────────────────────────────┘
 
  */
-
 
 /*
 ┌─────────────────────────────────────────────────────────────┐

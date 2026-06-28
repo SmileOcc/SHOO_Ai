@@ -172,7 +172,10 @@ class SHOFlashSaleReminderService {
       _pendingNotificationPayload = null;
       _navigationAttempts = 0;
       if (payload != null && _ref.exists(routerProvider)) {
-        SHOFlashSaleReminderNav.openActivity(_ref.read(routerProvider), payload);
+        SHOFlashSaleReminderNav.openActivity(
+          _ref.read(routerProvider),
+          payload,
+        );
       }
       return;
     }
@@ -224,10 +227,9 @@ class SHOFlashSaleReminderService {
       payload: payload,
     );
 
-    await _ref.read(pushNotificationServiceProvider).scheduleRemoteReminder(
-          follow: follow,
-          fireAt: fireAt,
-        );
+    await _ref
+        .read(pushNotificationServiceProvider)
+        .scheduleRemoteReminder(follow: follow, fireAt: fireAt);
   }
 
   Future<void> cancelReminder({
@@ -237,10 +239,9 @@ class SHOFlashSaleReminderService {
     await initialize();
     await _local.cancel(_notificationId(sessionId, productId));
     _firedKeys.remove(_key(sessionId, productId));
-    await _ref.read(pushNotificationServiceProvider).cancelRemoteReminder(
-          sessionId: sessionId,
-          productId: productId,
-        );
+    await _ref
+        .read(pushNotificationServiceProvider)
+        .cancelRemoteReminder(sessionId: sessionId, productId: productId);
   }
 
   Future<void> rescheduleAll(List<SHOFlashSaleFollow> follows) async {
@@ -278,10 +279,12 @@ class SHOFlashSaleReminderService {
 
   void dispose() {
     _foregroundTimer?.cancel();
-    if (SHOFlashSaleReminderBootstrap.tapHandler == _handleNotificationPayload) {
+    if (SHOFlashSaleReminderBootstrap.tapHandler ==
+        _handleNotificationPayload) {
       SHOFlashSaleReminderBootstrap.tapHandler = null;
     }
-    if (SHOFlashSaleReminderBootstrap.onNotificationTapped == _onNotificationTapped) {
+    if (SHOFlashSaleReminderBootstrap.onNotificationTapped ==
+        _onNotificationTapped) {
       SHOFlashSaleReminderBootstrap.onNotificationTapped = null;
     }
   }

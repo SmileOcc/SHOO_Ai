@@ -9,10 +9,7 @@ import 'package:shoo/features/toolbox/presentation/video/widgets/hos_video_danma
 /// 控制条相对底部的额外下移量（像素）。
 const kVideoPlayerControlsBottomOffset = 15.0;
 
-enum SHOVideoPlayerMoreAction {
-  share,
-  download,
-}
+enum SHOVideoPlayerMoreAction { share, download }
 
 String formatVideoDuration(Duration duration) {
   final totalSeconds = duration.inSeconds;
@@ -181,8 +178,7 @@ class _SHOVideoPlayerWidgetState extends State<SHOVideoPlayerWidget> {
     final token = _seekToken;
     try {
       if (_isControllerReady) {
-        await widget.controller
-            .seekTo(Duration(milliseconds: value.round()));
+        await widget.controller.seekTo(Duration(milliseconds: value.round()));
       }
       if (!mounted || token != _seekToken || !_isControllerReady) return;
       if (_wasPlayingBeforeDrag) {
@@ -220,7 +216,8 @@ class _SHOVideoPlayerWidgetState extends State<SHOVideoPlayerWidget> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final initialized = widget.controller.value.isInitialized;
-    final ratio = widget.aspectRatio ??
+    final ratio =
+        widget.aspectRatio ??
         (initialized ? widget.controller.value.aspectRatio : 16 / 9);
     final topInset = widget.topSafeInset;
 
@@ -303,8 +300,7 @@ class _SHOVideoPlayerWidgetState extends State<SHOVideoPlayerWidget> {
                   onPressed: widget.onBack,
                 ),
               ),
-            if (widget.showNetworkMoreMenu &&
-                widget.onMoreMenuAction != null)
+            if (widget.showNetworkMoreMenu && widget.onMoreMenuAction != null)
               Positioned(
                 top: topInset + 2,
                 right: 0,
@@ -472,13 +468,9 @@ class _ControlsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final initialized = controller.value.isInitialized;
-    final duration = initialized
-        ? controller.value.duration
-        : Duration.zero;
+    final duration = initialized ? controller.value.duration : Duration.zero;
     final canSeek = initialized && duration.inMilliseconds > 0;
-    final position = initialized
-        ? controller.value.position
-        : Duration.zero;
+    final position = initialized ? controller.value.position : Duration.zero;
     final sliderTheme = SliderTheme.of(context).copyWith(
       trackHeight: 2,
       thumbShape: _ScalingSliderThumbShape(isDragging: isDragging),
@@ -527,8 +519,7 @@ class _ControlsBar extends StatelessWidget {
                       child: Slider(
                         value: sliderValue.clamp(0, sliderMax),
                         max: sliderMax,
-                        onChangeStart:
-                            canSeek ? (_) => onChangeStart() : null,
+                        onChangeStart: canSeek ? (_) => onChangeStart() : null,
                         onChanged: canSeek ? onChanged : null,
                         onChangeEnd: canSeek ? onChangeEnd : null,
                       ),
@@ -553,7 +544,9 @@ class _ControlsBar extends StatelessWidget {
                 tooltip: showDanmaku
                     ? l10n.videoPlayerDanmakuOff
                     : l10n.videoPlayerDanmakuOn,
-                icon: showDanmaku ? Icons.subtitles : Icons.subtitles_off_outlined,
+                icon: showDanmaku
+                    ? Icons.subtitles
+                    : Icons.subtitles_off_outlined,
                 onPressed: onToggleDanmaku,
               ),
             Stack(
@@ -586,8 +579,8 @@ class _ControlsBar extends StatelessWidget {
                   icon: volume == 0
                       ? Icons.volume_off
                       : volume < 0.5
-                          ? Icons.volume_down
-                          : Icons.volume_up,
+                      ? Icons.volume_down
+                      : Icons.volume_up,
                   onPressed: onToggleVolumePanel,
                 ),
               ],

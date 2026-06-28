@@ -27,15 +27,11 @@ final dioProvider = Provider<Dio>((ref) {
 
   final crypto = ref.watch(cryptoServiceProvider);
 
-  final prepend = <Interceptor>[
-    if (config.useMockApi) SHOMockInterceptor(),
-  ];
+  final prepend = <Interceptor>[if (config.useMockApi) SHOMockInterceptor()];
 
   final append = <Interceptor>[
     if (config.isDebugPanelEnabled)
-      SHONetworkLogInterceptor(
-        () => ref.read(debugNetworkLogConfigProvider),
-      )
+      SHONetworkLogInterceptor(() => ref.read(debugNetworkLogConfigProvider))
     else if (kDebugMode && config.enableNetworkLogging)
       LogInterceptor(requestBody: true, responseBody: true),
   ];

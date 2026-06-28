@@ -39,9 +39,9 @@ class SHODebugFlowStatusBanner extends StatelessWidget {
           Expanded(
             child: Text(
               active ? l10n.debugFlowOverride : l10n.debugFlowNormal,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
         ],

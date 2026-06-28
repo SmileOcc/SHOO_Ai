@@ -15,7 +15,7 @@ abstract final class SHOAppCustomRefreshSliver {
   static Widget footer(
     SHOAppCustomRefreshController controller, {
     Widget Function(BuildContext context, SHOAppCustomLoadStatus status)?
-        footerBuilder,
+    footerBuilder,
     VoidCallback? onLoadRetry,
   }) {
     return SliverToBoxAdapter(
@@ -45,7 +45,8 @@ class _HeaderSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scope = SHOAppCustomRefreshScope.maybeOf(context);
-    final triggerOffset = scope?.refreshTriggerOffset ??
+    final triggerOffset =
+        scope?.refreshTriggerOffset ??
         SHOAppCustomRefreshController.triggerOffsetDefault;
     final headerBuilder = scope?.headerBuilder;
 
@@ -58,7 +59,8 @@ class _HeaderSlot extends StatelessWidget {
         final animating =
             controller.refreshStatus != SHOAppCustomRefreshStatus.dragging;
 
-        final header = headerBuilder?.call(
+        final header =
+            headerBuilder?.call(
               context,
               controller.refreshStatus,
               controller.pullProgress(triggerOffset),

@@ -39,7 +39,8 @@ class _SHODebugNativeExamplePageState
   StreamSubscription<Map<String, dynamic>>? _eventSub;
   bool _streaming = false;
 
-  bool get _isEventExample => widget.example.id == SHONativeDebugExampleId.eventTick;
+  bool get _isEventExample =>
+      widget.example.id == SHONativeDebugExampleId.eventTick;
 
   @override
   void dispose() {
@@ -117,7 +118,9 @@ class _SHODebugNativeExamplePageState
   }
 
   Future<void> _copyResult() async {
-    final text = _isEventExample ? _eventLog.join('\n') : (_result ?? _error ?? '');
+    final text = _isEventExample
+        ? _eventLog.join('\n')
+        : (_result ?? _error ?? '');
     if (text.isEmpty) return;
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
@@ -133,90 +136,95 @@ class _SHODebugNativeExamplePageState
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.nativeExampleTitle(example.id))),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(l10n.nativeExampleDesc(example.id)),
-          const SizedBox(height: SHOAppSpacing.xl),
-          if (example.id == SHONativeDebugExampleId.messageEcho) ...[
-            TextField(
-              controller: _messageCtrl,
-              decoration: InputDecoration(
-                labelText: l10n.debugNativeInputHint,
-                border: const OutlineInputBorder(),
+        appBar: AppBar(title: Text(l10n.nativeExampleTitle(example.id))),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            Text(l10n.nativeExampleDesc(example.id)),
+            const SizedBox(height: SHOAppSpacing.xl),
+            if (example.id == SHONativeDebugExampleId.messageEcho) ...[
+              TextField(
+                controller: _messageCtrl,
+                decoration: InputDecoration(
+                  labelText: l10n.debugNativeInputHint,
+                  border: const OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-          ],
-          if (_isEventExample) ...[
+              const SizedBox(height: SHOAppSpacing.lg),
+            ],
+            if (_isEventExample) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: _streaming ? null : _startEventStream,
+                      icon: const Icon(Icons.play_arrow),
+                      label: Text(l10n.debugNativeStartStream),
+                    ),
+                  ),
+                  const SizedBox(width: SHOAppSpacing.md),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _streaming ? _stopEventStream : null,
+                      icon: const Icon(Icons.stop),
+                      label: Text(l10n.debugNativeStopStream),
+                    ),
+                  ),
+                ],
+              ),
+            ] else
+              FilledButton.icon(
+                onPressed: _loading ? null : _runOnce,
+                icon: _loading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.play_arrow),
+                label: Text(l10n.debugNativeRun),
+              ),
+            const SizedBox(height: SHOAppSpacing.xl),
             Row(
               children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: _streaming ? null : _startEventStream,
-                    icon: const Icon(Icons.play_arrow),
-                    label: Text(l10n.debugNativeStartStream),
-                  ),
+                Text(
+                  _isEventExample
+                      ? l10n.debugNativeStreamLog
+                      : l10n.debugNativeResult,
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-                const SizedBox(width: SHOAppSpacing.md),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _streaming ? _stopEventStream : null,
-                    icon: const Icon(Icons.stop),
-                    label: Text(l10n.debugNativeStopStream),
-                  ),
+                const Spacer(),
+                TextButton.icon(
+                  onPressed: _copyResult,
+                  icon: const Icon(Icons.copy, size: 18),
+                  label: Text(l10n.debugNativeCopy),
                 ),
               ],
             ),
-          ] else
-            FilledButton.icon(
-              onPressed: _loading ? null : _runOnce,
-              icon: _loading
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.play_arrow),
-              label: Text(l10n.debugNativeRun),
-            ),
-          const SizedBox(height: SHOAppSpacing.xl),
-          Row(
-            children: [
-              Text(
-                _isEventExample ? l10n.debugNativeStreamLog : l10n.debugNativeResult,
-                style: Theme.of(context).textTheme.titleSmall,
+            const SizedBox(height: SHOAppSpacing.sm),
+            if (_error != null)
+              _ResultBox(text: _error!, isError: true)
+            else if (_isEventExample)
+              _ResultBox(
+                text: _eventLog.isEmpty
+                    ? (_streaming
+                          ? l10n.debugNativeWaiting
+                          : l10n.debugNativeStreamIdle)
+                    : _eventLog.join('\n'),
+                isError: false,
+              )
+            else
+              _ResultBox(
+                text:
+                    _result ??
+                    (_loading
+                        ? l10n.debugNativeWaiting
+                        : l10n.debugNativeNoResult),
+                isError: false,
               ),
-              const Spacer(),
-              TextButton.icon(
-                onPressed: _copyResult,
-                icon: const Icon(Icons.copy, size: 18),
-                label: Text(l10n.debugNativeCopy),
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          if (_error != null)
-            _ResultBox(
-              text: _error!,
-              isError: true,
-            )
-          else if (_isEventExample)
-            _ResultBox(
-              text: _eventLog.isEmpty
-                  ? (_streaming ? l10n.debugNativeWaiting : l10n.debugNativeStreamIdle)
-                  : _eventLog.join('\n'),
-              isError: false,
-            )
-          else
-            _ResultBox(
-              text: _result ?? (_loading ? l10n.debugNativeWaiting : l10n.debugNativeNoResult),
-              isError: false,
-            ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -240,16 +248,18 @@ class _ResultBox extends StatelessWidget {
       child: SelectableText(
         text,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontFamily: 'monospace',
-              color: isError ? colors.onErrorContainer : null,
-            ),
+          fontFamily: 'monospace',
+          color: isError ? colors.onErrorContainer : null,
+        ),
       ),
     );
   }
 }
 
 /// EventChannel 示例用的流服务封装（演示 [SHONativeStreamService] 用法）。
-class SHONativeDebugEventService extends SHONativeStreamService<Map<String, dynamic>> {
+class SHONativeDebugEventService
+    extends SHONativeStreamService<Map<String, dynamic>> {
   @override
-  Stream<Map<String, dynamic>> get stream => SHONativeDebugRunner.debugEventStream();
+  Stream<Map<String, dynamic>> get stream =>
+      SHONativeDebugRunner.debugEventStream();
 }

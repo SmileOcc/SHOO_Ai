@@ -43,14 +43,18 @@ class _SHORegisterPageState extends ConsumerState<SHORegisterPage>
     if (!SHOFormHelper.validateAndFocus(_formKey)) return;
     if (_passwordController.text != _confirmController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).registerPasswordMismatch)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).registerPasswordMismatch),
+        ),
       );
       return;
     }
 
     setState(() => _isLoading = true);
     try {
-      final session = await ref.read(sessionProvider.notifier).registerRequest(
+      final session = await ref
+          .read(sessionProvider.notifier)
+          .registerRequest(
             SHOLoginRequest(
               phone: _phoneController.text.trim(),
               password: _passwordController.text,
@@ -78,73 +82,76 @@ class _SHORegisterPageState extends ConsumerState<SHORegisterPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.registerTitle),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(SHOAppRoutes.home);
-            }
-          },
+        appBar: AppBar(
+          title: Text(l10n.registerTitle),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(SHOAppRoutes.home);
+              }
+            },
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(l10n.registerMockHint, style: Theme.of(context).textTheme.bodySmall),
-              const SizedBox(height: SHOAppSpacing.xl),
-              SHOAppTextField(
-                label: l10n.loginPhoneHint,
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                validator: SHOValidators.compose([
-                  SHOValidators.required(l10n),
-                  SHOValidators.phone(l10n),
-                ]),
-              ),
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOAppTextField(
-                label: l10n.loginPasswordHint,
-                controller: _passwordController,
-                obscureText: true,
-                validator: SHOValidators.compose([
-                  SHOValidators.required(l10n),
-                  SHOValidators.minLength(l10n, 6),
-                ]),
-              ),
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOAppTextField(
-                label: l10n.registerConfirmPassword,
-                controller: _confirmController,
-                obscureText: true,
-                validator: SHOValidators.required(l10n),
-              ),
-              const SizedBox(height: SHOAppSpacing.xxxl),
-              SHOAppButton(
-                label: l10n.registerSubmit,
-                onPressed: _submit,
-                isLoading: _isLoading,
-                fullWidth: true,
-                variant: SHOAppButtonVariant.accent,
-              ),
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOAppButton(
-                label: l10n.registerHasAccount,
-                variant: SHOAppButtonVariant.text,
-                onPressed: () => context.push(SHOAppRoutes.login),
-              ),
-            ],
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  l10n.registerMockHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: SHOAppSpacing.xl),
+                SHOAppTextField(
+                  label: l10n.loginPhoneHint,
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  validator: SHOValidators.compose([
+                    SHOValidators.required(l10n),
+                    SHOValidators.phone(l10n),
+                  ]),
+                ),
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOAppTextField(
+                  label: l10n.loginPasswordHint,
+                  controller: _passwordController,
+                  obscureText: true,
+                  validator: SHOValidators.compose([
+                    SHOValidators.required(l10n),
+                    SHOValidators.minLength(l10n, 6),
+                  ]),
+                ),
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOAppTextField(
+                  label: l10n.registerConfirmPassword,
+                  controller: _confirmController,
+                  obscureText: true,
+                  validator: SHOValidators.required(l10n),
+                ),
+                const SizedBox(height: SHOAppSpacing.xxxl),
+                SHOAppButton(
+                  label: l10n.registerSubmit,
+                  onPressed: _submit,
+                  isLoading: _isLoading,
+                  fullWidth: true,
+                  variant: SHOAppButtonVariant.accent,
+                ),
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOAppButton(
+                  label: l10n.registerHasAccount,
+                  variant: SHOAppButtonVariant.text,
+                  onPressed: () => context.push(SHOAppRoutes.login),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

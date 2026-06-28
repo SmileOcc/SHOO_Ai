@@ -16,7 +16,8 @@ class SHOAppCustomRefreshScope extends InheritedWidget {
     BuildContext context,
     SHOAppCustomRefreshStatus status,
     double pullProgress,
-  )? headerBuilder;
+  )?
+  headerBuilder;
 
   static SHOAppCustomRefreshScope? maybeOf(BuildContext context) {
     return context

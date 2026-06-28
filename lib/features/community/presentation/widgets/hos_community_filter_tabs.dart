@@ -36,10 +36,9 @@ class SHOCommunityFilterTabs extends StatelessWidget {
             onTap: () {
               if (sort == selected) return;
               onSortChanged(sort);
-              SHOAnalyticsManager.instance.track(
-                'community_sort_switch',
-                {'sort': sort.name},
-              );
+              SHOAnalyticsManager.instance.track('community_sort_switch', {
+                'sort': sort.name,
+              });
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +60,9 @@ class SHOCommunityFilterTabs extends StatelessWidget {
                   width: isSelected ? 20 : 0,
                   height: 2,
                   decoration: BoxDecoration(
-                    color: isSelected ? SHOAppColors.accent : Colors.transparent,
+                    color: isSelected
+                        ? SHOAppColors.accent
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),

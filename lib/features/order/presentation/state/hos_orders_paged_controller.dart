@@ -5,8 +5,11 @@ import 'package:shoo/core/pagination/hos_paged_list_state.dart';
 import 'package:shoo/features/order/data/repositories/hos_order_repository_impl.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 
-final ordersPagedProvider = AutoDisposeAsyncNotifierProvider<OrdersPagedNotifier,
-    SHOPagedListState<SHOOrderSummary>>(OrdersPagedNotifier.new);
+final ordersPagedProvider =
+    AutoDisposeAsyncNotifierProvider<
+      OrdersPagedNotifier,
+      SHOPagedListState<SHOOrderSummary>
+    >(OrdersPagedNotifier.new);
 
 class OrdersPagedNotifier
     extends AutoDisposeAsyncNotifier<SHOPagedListState<SHOOrderSummary>> {

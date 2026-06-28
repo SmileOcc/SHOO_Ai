@@ -50,7 +50,9 @@ abstract final class SHOActivityWebViewBridge {
 
     final type = message['type']?.toString() ?? '';
     final action = message['action']?.toString() ?? '';
-    final params = Map<String, dynamic>.from(message['params'] as Map? ?? const {});
+    final params = Map<String, dynamic>.from(
+      message['params'] as Map? ?? const {},
+    );
 
     switch (type) {
       case 'flutter':
@@ -74,9 +76,9 @@ abstract final class SHOActivityWebViewBridge {
       case 'screenshot':
         final dataUrl = params['data']?.toString();
         if (action == 'captured' && dataUrl != null) {
-          ref.read(shareProvider.notifier).completeScreenshot(
-                SHOWebViewCapture.decodeDataUrl(dataUrl),
-              );
+          ref
+              .read(shareProvider.notifier)
+              .completeScreenshot(SHOWebViewCapture.decodeDataUrl(dataUrl));
         } else {
           ref.read(shareProvider.notifier).completeScreenshot(null);
         }
@@ -174,13 +176,17 @@ abstract final class SHOActivityWebViewBridge {
     if (url == null) return;
     final title = params['title']?.toString() ?? '';
     final config = ref.read(activityConfigProvider).valueOrNull;
-    final galleryImages = config?.images
+    final galleryImages =
+        config?.images
             .map((e) => SHOImagePreviewItem(url: e.url, title: e.title))
             .toList() ??
         <SHOImagePreviewItem>[];
-    final promoImages = config?.promoBlocks
+    final promoImages =
+        config?.promoBlocks
             .where((b) => b.type == 'image' && (b.url?.isNotEmpty ?? false))
-            .map((b) => SHOImagePreviewItem(url: b.url!, title: b.caption ?? ''))
+            .map(
+              (b) => SHOImagePreviewItem(url: b.url!, title: b.caption ?? ''),
+            )
             .toList() ??
         <SHOImagePreviewItem>[];
     final images = [...galleryImages, ...promoImages];

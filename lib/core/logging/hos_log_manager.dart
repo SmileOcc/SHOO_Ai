@@ -33,8 +33,7 @@ class SHOAppLogManager {
   Future<void> append(String level, String message) async {
     if (!_ready || _file == null || !shouldCacheLevel(level)) return;
     try {
-      final line =
-          '${DateTime.now().toIso8601String()} [$level] $message\n';
+      final line = '${DateTime.now().toIso8601String()} [$level] $message\n';
       await _rotateIfNeeded(line.length);
       await _file!.writeAsString(line, mode: FileMode.append, flush: false);
     } catch (_) {}

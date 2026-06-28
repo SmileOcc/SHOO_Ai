@@ -16,10 +16,12 @@ class SHODebugActivityConfigPage extends ConsumerStatefulWidget {
   const SHODebugActivityConfigPage({super.key});
 
   @override
-  ConsumerState<SHODebugActivityConfigPage> createState() => _SHODebugActivityConfigPageState();
+  ConsumerState<SHODebugActivityConfigPage> createState() =>
+      _SHODebugActivityConfigPageState();
 }
 
-class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityConfigPage>
+class _SHODebugActivityConfigPageState
+    extends ConsumerState<SHODebugActivityConfigPage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'debug_activity_config';
@@ -104,7 +106,13 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
     );
     if (time == null) return;
 
-    final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    final picked = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
     setState(() {
       if (isStart) {
         _startAt = picked;
@@ -128,7 +136,9 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
     setState(() => _overrideEnabled = value);
     final l10n = AppLocalizations.of(context);
     await _save(
-      snackMessage: value ? l10n.debugOverrideActiveNow : l10n.debugOverrideInactiveNow,
+      snackMessage: value
+          ? l10n.debugOverrideActiveNow
+          : l10n.debugOverrideInactiveNow,
     );
   }
 
@@ -141,16 +151,18 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
     if (!mounted) return;
 
     if (activity == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.debugPreviewNoActivity)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.debugPreviewNoActivity)));
       return;
     }
 
     var popup = activity;
     if (activity.prefetchEnabled) {
       await ref.read(activityPrefetchServiceProvider).prefetch(activity);
-      final cached = await ref.read(activityPrefetchServiceProvider).loadPrefetched(activity.id);
+      final cached = await ref
+          .read(activityPrefetchServiceProvider)
+          .loadPrefetched(activity.id);
       if (cached != null) popup = cached;
     }
     if (!mounted) return;
@@ -163,136 +175,147 @@ class _SHODebugActivityConfigPageState extends ConsumerState<SHODebugActivityCon
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugActivityTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          SHODebugFlowStatusBanner(overrideEnabled: _overrideEnabled),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SwitchListTile(
-            title: Text(l10n.debugOverrideEnabled),
-            subtitle: Text(l10n.debugActivityOverrideHint),
-            value: _overrideEnabled,
-            onChanged: _onOverrideChanged,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          TextField(
-            controller: _delayCtrl,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityDelay,
-              border: const OutlineInputBorder(),
+        appBar: AppBar(title: Text(l10n.debugActivityTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            SHODebugFlowStatusBanner(overrideEnabled: _overrideEnabled),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SwitchListTile(
+              title: Text(l10n.debugOverrideEnabled),
+              subtitle: Text(l10n.debugActivityOverrideHint),
+              value: _overrideEnabled,
+              onChanged: _onOverrideChanged,
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _titleCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityPopupTitle,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.md),
+            TextField(
+              controller: _delayCtrl,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityDelay,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _descCtrl,
-            minLines: 4,
-            maxLines: 12,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityDescription,
-              helperText: l10n.debugActivityDescScrollHint,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _titleCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityPopupTitle,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _imageCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityImageUrl,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _descCtrl,
+              minLines: 4,
+              maxLines: 12,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityDescription,
+                helperText: l10n.debugActivityDescScrollHint,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _idCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityId,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _imageCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityImageUrl,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          TextField(
-            controller: _linkCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityLink,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _idCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityId,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          TextField(
-            controller: _buttonCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityButton,
-              border: const OutlineInputBorder(),
+            TextField(
+              controller: _linkCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityLink,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.debugActivityStartAt),
-            subtitle: Text(_startAt == null ? l10n.debugActivityDateUnset : _dateFormat.format(_startAt!)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_startAt != null)
+            TextField(
+              controller: _buttonCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityButton,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.debugActivityStartAt),
+              subtitle: Text(
+                _startAt == null
+                    ? l10n.debugActivityDateUnset
+                    : _dateFormat.format(_startAt!),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_startAt != null)
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () => setState(() => _startAt = null),
+                    ),
                   IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => setState(() => _startAt = null),
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _pickDateTime(isStart: true),
                   ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () => _pickDateTime(isStart: true),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.debugActivityEndAt),
-            subtitle: Text(_endAt == null ? l10n.debugActivityDateUnset : _dateFormat.format(_endAt!)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_endAt != null)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.debugActivityEndAt),
+              subtitle: Text(
+                _endAt == null
+                    ? l10n.debugActivityDateUnset
+                    : _dateFormat.format(_endAt!),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_endAt != null)
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () => setState(() => _endAt = null),
+                    ),
                   IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => setState(() => _endAt = null),
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _pickDateTime(isStart: false),
                   ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () => _pickDateTime(isStart: false),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SwitchListTile(
-            title: Text(l10n.debugActivityPrefetch),
-            subtitle: Text(l10n.debugActivityPrefetchHint),
-            value: _prefetchEnabled,
-            onChanged: (v) => setState(() => _prefetchEnabled = v),
-          ),
-          TextField(
-            controller: _maxDailyCtrl,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: l10n.debugActivityMaxDaily,
-              border: const OutlineInputBorder(),
+            SwitchListTile(
+              title: Text(l10n.debugActivityPrefetch),
+              subtitle: Text(l10n.debugActivityPrefetchHint),
+              value: _prefetchEnabled,
+              onChanged: (v) => setState(() => _prefetchEnabled = v),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          FilledButton(onPressed: _save, child: Text(l10n.debugSaveConfig)),
-          const SizedBox(height: SHOAppSpacing.md),
-          OutlinedButton(onPressed: _preview, child: Text(l10n.debugPreviewPopup)),
-        ],
+            TextField(
+              controller: _maxDailyCtrl,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: l10n.debugActivityMaxDaily,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            FilledButton(onPressed: _save, child: Text(l10n.debugSaveConfig)),
+            const SizedBox(height: SHOAppSpacing.md),
+            OutlinedButton(
+              onPressed: _preview,
+              child: Text(l10n.debugPreviewPopup),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

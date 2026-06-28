@@ -109,80 +109,80 @@ class _SHODebugFeedbackPageState extends ConsumerState<SHODebugFeedbackPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugFeedbackTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(
-            l10n.debugFeedbackHint,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: context.shoTheme.textSecondary,
+        appBar: AppBar(title: Text(l10n.debugFeedbackTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            Text(
+              l10n.debugFeedbackHint,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.shoTheme.textSecondary,
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          _StatusCard(overlayCount: overlayCount, lastAction: _lastAction),
-          const SizedBox(height: SHOAppSpacing.xl),
-          Text(
-            l10n.debugFeedbackLoadingSection,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          _ActionButton(
-            icon: Icons.hourglass_top,
-            label: l10n.debugFeedbackLoadingBasic,
-            onPressed: _loadingBasic,
-          ),
-          _ActionButton(
-            icon: Icons.message_outlined,
-            label: l10n.debugFeedbackLoadingMessage,
-            onPressed: _loadingWithMessage,
-          ),
-          _ActionButton(
-            icon: Icons.layers_outlined,
-            label: l10n.debugFeedbackLoadingConcurrent,
-            onPressed: _loadingConcurrent,
-          ),
-          _ActionButton(
-            icon: Icons.sync_problem,
-            label: l10n.debugFeedbackLoadingThenError,
-            onPressed: _loadingThenError,
-          ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text(
-            l10n.debugFeedbackErrorSection,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          _ActionButton(
-            icon: Icons.error_outline,
-            label: l10n.debugFeedbackErrorToast,
-            onPressed: _errorToast,
-          ),
-          _ActionButton(
-            icon: Icons.report_outlined,
-            label: l10n.debugFeedbackErrorDialog,
-            onPressed: _errorDialog,
-          ),
-          _ActionButton(
-            icon: Icons.wifi_off,
-            label: l10n.debugFeedbackErrorNetwork,
-            onPressed: _errorNetworkToast,
-          ),
-          _ActionButton(
-            icon: Icons.cloud_off_outlined,
-            label: l10n.debugFeedbackErrorStatic,
-            onPressed: _errorStaticReport,
-          ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text(
-            l10n.debugFeedbackAsyncSection,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          SHODebugFeedbackAsyncDemo(onAction: _note),
-        ],
+            const SizedBox(height: SHOAppSpacing.lg),
+            _StatusCard(overlayCount: overlayCount, lastAction: _lastAction),
+            const SizedBox(height: SHOAppSpacing.xl),
+            Text(
+              l10n.debugFeedbackLoadingSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            _ActionButton(
+              icon: Icons.hourglass_top,
+              label: l10n.debugFeedbackLoadingBasic,
+              onPressed: _loadingBasic,
+            ),
+            _ActionButton(
+              icon: Icons.message_outlined,
+              label: l10n.debugFeedbackLoadingMessage,
+              onPressed: _loadingWithMessage,
+            ),
+            _ActionButton(
+              icon: Icons.layers_outlined,
+              label: l10n.debugFeedbackLoadingConcurrent,
+              onPressed: _loadingConcurrent,
+            ),
+            _ActionButton(
+              icon: Icons.sync_problem,
+              label: l10n.debugFeedbackLoadingThenError,
+              onPressed: _loadingThenError,
+            ),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text(
+              l10n.debugFeedbackErrorSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            _ActionButton(
+              icon: Icons.error_outline,
+              label: l10n.debugFeedbackErrorToast,
+              onPressed: _errorToast,
+            ),
+            _ActionButton(
+              icon: Icons.report_outlined,
+              label: l10n.debugFeedbackErrorDialog,
+              onPressed: _errorDialog,
+            ),
+            _ActionButton(
+              icon: Icons.wifi_off,
+              label: l10n.debugFeedbackErrorNetwork,
+              onPressed: _errorNetworkToast,
+            ),
+            _ActionButton(
+              icon: Icons.cloud_off_outlined,
+              label: l10n.debugFeedbackErrorStatic,
+              onPressed: _errorStaticReport,
+            ),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text(
+              l10n.debugFeedbackAsyncSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            SHODebugFeedbackAsyncDemo(onAction: _note),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -249,7 +249,6 @@ class _ActionButton extends StatelessWidget {
     );
   }
 }
-
 
 /*
 // 场景 1: 简单错误展示（Widget 中）

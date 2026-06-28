@@ -23,8 +23,8 @@ class SHOAddress with _$SHOAddress {
       _$SHOAddressFromJson(json);
 
   String get fullLine => [
-        line1,
-        if (line2.isNotEmpty) line2,
-        '$city, $region $postalCode',
-      ].join(', ');
+    line1,
+    if (line2.isNotEmpty) line2,
+    '$city, $region $postalCode',
+  ].join(', ');
 }

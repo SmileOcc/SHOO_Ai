@@ -20,7 +20,9 @@ class SHOShareProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = product.images.isNotEmpty ? product.images.first : product.imageUrl;
+    final imageUrl = product.images.isNotEmpty
+        ? product.images.first
+        : product.imageUrl;
 
     return Container(
       width: width,
@@ -67,7 +69,11 @@ class SHOShareProductCard extends StatelessWidget {
                 const SizedBox(height: SHOAppSpacing.md),
                 Row(
                   children: [
-                    const Icon(Icons.star_rounded, size: 14, color: SHOAppColors.warning),
+                    const Icon(
+                      Icons.star_rounded,
+                      size: 14,
+                      color: SHOAppColors.warning,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       product.rating.toStringAsFixed(1),

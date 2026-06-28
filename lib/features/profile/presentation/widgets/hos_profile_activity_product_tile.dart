@@ -79,8 +79,9 @@ class SHOProfileActivityProductTile extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.black.withValues(alpha: 0.55),
-                                borderRadius:
-                                    BorderRadius.circular(SHOAppSpacing.cardRadius),
+                                borderRadius: BorderRadius.circular(
+                                  SHOAppSpacing.cardRadius,
+                                ),
                               ),
                               child: Text(
                                 l10n.cartItemUnavailable,
@@ -106,9 +107,9 @@ class SHOProfileActivityProductTile extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 13,
-                              height: 1.25,
-                            ),
+                          fontSize: 13,
+                          height: 1.25,
+                        ),
                       ),
                       const SizedBox(height: SHOAppSpacing.sm),
                       if (item.available)
@@ -120,7 +121,8 @@ class SHOProfileActivityProductTile extends StatelessWidget {
                       else
                         Text(
                           l10n.cartItemUnavailable,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: SHOAppColors.error,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -129,11 +131,7 @@ class SHOProfileActivityProductTile extends StatelessWidget {
                   ),
                 ),
                 if (!editing && item.available)
-                  Icon(
-                    Icons.chevron_right,
-                    color: theme.textMuted,
-                    size: 20,
-                  ),
+                  Icon(Icons.chevron_right, color: theme.textMuted, size: 20),
               ],
             ),
           ),

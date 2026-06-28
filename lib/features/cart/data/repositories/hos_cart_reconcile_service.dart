@@ -36,9 +36,7 @@ class SHOCartReconcileService {
     }
 
     final catalog = await _homeApi.fetchProducts(page: 1);
-    final priceById = {
-      for (final p in catalog.items) p.id: p.price,
-    };
+    final priceById = {for (final p in catalog.items) p.id: p.price};
 
     var unavailable = 0;
     var priceChanged = 0;

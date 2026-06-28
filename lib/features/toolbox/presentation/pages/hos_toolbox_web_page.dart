@@ -86,10 +86,7 @@ class _SHOToolboxWebPageState extends ConsumerState<SHOToolboxWebPage>
               label: const Text('打开网页'),
             ),
             const SizedBox(height: SHOAppSpacing.lg),
-            Text(
-              '快捷入口',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            Text('快捷入口', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: SHOAppSpacing.sm),
             Wrap(
               spacing: 8,

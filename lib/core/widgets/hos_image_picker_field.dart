@@ -56,9 +56,9 @@ class SHOImagePickerField extends ConsumerWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: SHOAppSpacing.md),
         ],
@@ -70,7 +70,9 @@ class SHOImagePickerField extends ConsumerWidget {
               return Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    borderRadius: BorderRadius.circular(
+                      SHOAppSpacing.cardRadius,
+                    ),
                     child: Image.file(
                       File(entry.value.path),
                       width: 72,
@@ -112,9 +114,9 @@ class SHOImagePickerField extends ConsumerWidget {
         const SizedBox(height: SHOAppSpacing.xs),
         Text(
           l10n.imagePickerHint(maxCount),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: SHOAppColors.textMuted,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: SHOAppColors.textMuted),
         ),
       ],
     );
@@ -152,7 +154,10 @@ class _SHOImageAddButton extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               label,
-              style: const TextStyle(fontSize: 9, color: SHOAppColors.textMuted),
+              style: const TextStyle(
+                fontSize: 9,
+                color: SHOAppColors.textMuted,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

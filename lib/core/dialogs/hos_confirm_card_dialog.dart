@@ -51,17 +51,14 @@ class SHOConfirmCardDialog extends StatelessWidget {
             padding: const EdgeInsets.only(right: SHOAppSpacing.xxl),
             child: Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
           ),
           if (message != null) ...[
             const SizedBox(height: SHOAppSpacing.md),
-            Text(
-              message!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(message!, style: Theme.of(context).textTheme.bodyMedium),
           ],
           const SizedBox(height: SHOAppSpacing.xl),
           SHOAppButton(

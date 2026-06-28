@@ -134,7 +134,7 @@ class SHOWidgetWithCustomHitTest2 extends StatelessWidget {
 
 class _CustomHitTestStack22 extends MultiChildRenderObjectWidget {
   _CustomHitTestStack22({required List<Widget> children})
-      : super(children: children);
+    : super(children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {

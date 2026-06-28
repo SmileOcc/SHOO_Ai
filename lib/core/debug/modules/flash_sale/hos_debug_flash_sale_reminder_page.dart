@@ -74,72 +74,72 @@ class _SHODebugFlashSaleReminderPageState
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: const Text('抢购活动通知调试')),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(
-            '预览抢购提醒弹窗，或延时 8 秒触发本地通知与前台弹窗。',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: SHOAppSpacing.xl),
-          TextField(
-            controller: _activityIdCtrl,
-            decoration: const InputDecoration(
-              labelText: '抢购活动 ID',
-              hintText: 'activity_flash_001',
-              border: OutlineInputBorder(),
+        appBar: AppBar(title: const Text('抢购活动通知调试')),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            Text(
+              '预览抢购提醒弹窗，或延时 8 秒触发本地通知与前台弹窗。',
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          Wrap(
-            spacing: SHOAppSpacing.sm,
-            runSpacing: SHOAppSpacing.sm,
-            children: [
-              ActionChip(
-                label: const Text('抢购 activity_flash_001'),
-                onPressed: () =>
-                    _activityIdCtrl.text = SHOFlashSaleActivities.flash,
+            const SizedBox(height: SHOAppSpacing.xl),
+            TextField(
+              controller: _activityIdCtrl,
+              decoration: const InputDecoration(
+                labelText: '抢购活动 ID',
+                hintText: 'activity_flash_001',
+                border: OutlineInputBorder(),
               ),
-              ActionChip(
-                label: const Text('折扣 activity_discount_001'),
-                onPressed: () =>
-                    _activityIdCtrl.text = SHOFlashSaleActivities.discount,
-              ),
-              ActionChip(
-                label: const Text('通用 activity_common_000'),
-                onPressed: () =>
-                    _activityIdCtrl.text = SHOFlashSaleActivities.common,
-              ),
-            ],
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          SHOAppButton(
-            label: '立即预览抢购弹窗',
-            isExpanded: true,
-            onPressed: _previewPopup,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          SHOAppButton(
-            label: '延时 8 秒通知',
-            variant: SHOAppButtonVariant.outline,
-            isExpanded: true,
-            onPressed: _scheduleDelayed,
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('打开对应抢购活动页'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              final id = _activityIdCtrl.text.trim();
-              if (id.isEmpty) return;
-              context.push(SHOAppRoutes.flashSaleFor(activityId: id));
-            },
-          ),
-        ],
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            Wrap(
+              spacing: SHOAppSpacing.sm,
+              runSpacing: SHOAppSpacing.sm,
+              children: [
+                ActionChip(
+                  label: const Text('抢购 activity_flash_001'),
+                  onPressed: () =>
+                      _activityIdCtrl.text = SHOFlashSaleActivities.flash,
+                ),
+                ActionChip(
+                  label: const Text('折扣 activity_discount_001'),
+                  onPressed: () =>
+                      _activityIdCtrl.text = SHOFlashSaleActivities.discount,
+                ),
+                ActionChip(
+                  label: const Text('通用 activity_common_000'),
+                  onPressed: () =>
+                      _activityIdCtrl.text = SHOFlashSaleActivities.common,
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            SHOAppButton(
+              label: '立即预览抢购弹窗',
+              isExpanded: true,
+              onPressed: _previewPopup,
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            SHOAppButton(
+              label: '延时 8 秒通知',
+              variant: SHOAppButtonVariant.outline,
+              isExpanded: true,
+              onPressed: _scheduleDelayed,
+            ),
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('打开对应抢购活动页'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                final id = _activityIdCtrl.text.trim();
+                if (id.isEmpty) return;
+                context.push(SHOAppRoutes.flashSaleFor(activityId: id));
+              },
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

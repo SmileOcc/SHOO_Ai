@@ -22,20 +22,20 @@ enum SHOOrderListTab {
 
 extension SHOOrderListTabX on SHOOrderListTab {
   SHOOrderStatus? get statusFilter => switch (this) {
-        SHOOrderListTab.all => null,
-        SHOOrderListTab.pendingPayment => SHOOrderStatus.pendingPayment,
-        SHOOrderListTab.shipped => SHOOrderStatus.shipped,
-        SHOOrderListTab.paid => SHOOrderStatus.paid,
-        SHOOrderListTab.delivered => SHOOrderStatus.delivered,
-      };
+    SHOOrderListTab.all => null,
+    SHOOrderListTab.pendingPayment => SHOOrderStatus.pendingPayment,
+    SHOOrderListTab.shipped => SHOOrderStatus.shipped,
+    SHOOrderListTab.paid => SHOOrderStatus.paid,
+    SHOOrderListTab.delivered => SHOOrderStatus.delivered,
+  };
 
   String label(AppLocalizations l10n) => switch (this) {
-        SHOOrderListTab.all => l10n.ordersAllShort,
-        SHOOrderListTab.pendingPayment => l10n.ordersPendingPayment,
-        SHOOrderListTab.shipped => l10n.ordersShipped,
-        SHOOrderListTab.paid => l10n.ordersToUse,
-        SHOOrderListTab.delivered => l10n.ordersReviews,
-      };
+    SHOOrderListTab.all => l10n.ordersAllShort,
+    SHOOrderListTab.pendingPayment => l10n.ordersPendingPayment,
+    SHOOrderListTab.shipped => l10n.ordersShipped,
+    SHOOrderListTab.paid => l10n.ordersToUse,
+    SHOOrderListTab.delivered => l10n.ordersReviews,
+  };
 }
 
 SHOOrderStatus? _parseStatusFilter(String? raw) {

@@ -9,15 +9,16 @@ import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 // 用户关注本地存储状态
 final flashSaleFollowStorageProvider =
     FutureProvider<SHOFlashSaleFollowStorage>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return SHOFlashSaleFollowStorage(prefs);
-});
+      final prefs = await SharedPreferences.getInstance();
+      return SHOFlashSaleFollowStorage(prefs);
+    });
 
 // 用户关注的闪购商品列表
 final flashSaleFollowControllerProvider =
-    StateNotifierProvider<SHOFlashSaleFollowController, AsyncValue<List<SHOFlashSaleFollow>>>(
-  (ref) => SHOFlashSaleFollowController(ref),
-);
+    StateNotifierProvider<
+      SHOFlashSaleFollowController,
+      AsyncValue<List<SHOFlashSaleFollow>>
+    >((ref) => SHOFlashSaleFollowController(ref));
 
 class SHOFlashSaleFollowController
     extends StateNotifier<AsyncValue<List<SHOFlashSaleFollow>>> {
@@ -58,7 +59,9 @@ class SHOFlashSaleFollowController
 
       for (final follow in merged) {
         final onServer = remote.any(
-          (r) => r.sessionId == follow.sessionId && r.productId == follow.productId,
+          (r) =>
+              r.sessionId == follow.sessionId &&
+              r.productId == follow.productId,
         );
         if (!onServer) {
           await repo.follow(follow: follow);
@@ -128,7 +131,8 @@ class SHOFlashSaleFollowController
       final next = current
           .where(
             (f) =>
-                !(f.sessionId == product.sessionId && f.productId == product.id),
+                !(f.sessionId == product.sessionId &&
+                    f.productId == product.id),
           )
           .toList();
       state = AsyncValue.data(next);
@@ -157,6 +161,7 @@ class SHOFlashSaleFollowController
     await storage.writeAll(next);
     return true;
   }
+
   // 本地数据推送到服务器
   Future<void> pushLocalToServer() async {
     final storage = await _ref.read(flashSaleFollowStorageProvider.future);

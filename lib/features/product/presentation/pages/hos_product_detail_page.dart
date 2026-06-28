@@ -61,21 +61,23 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'product_id': widget.productId,
-        if (widget.sessionId != null && widget.sessionId!.isNotEmpty)
-          'session_id': widget.sessionId,
-      };
+    'product_id': widget.productId,
+    if (widget.sessionId != null && widget.sessionId!.isNotEmpty)
+      'session_id': widget.sessionId,
+  };
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final detailAsync = ref.watch(productDetailProvider(widget.productId));
     final reviewsAsync = ref.watch(productReviewsProvider(widget.productId));
-    final activityAsync = widget.sessionId != null && widget.sessionId!.isNotEmpty
+    final activityAsync =
+        widget.sessionId != null && widget.sessionId!.isNotEmpty
         ? ref.watch(
-            flashSaleProductActivityProvider(
-              (productId: widget.productId, sessionId: widget.sessionId!),
-            ),
+            flashSaleProductActivityProvider((
+              productId: widget.productId,
+              sessionId: widget.sessionId!,
+            )),
           )
         : null;
     final topInset = MediaQuery.paddingOf(context).top;
@@ -91,268 +93,307 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
 
     return buildTrackedPage(
       Stack(
-      children: [
-        SHOProductViewReporter(productId: widget.productId),
-        detailAsync.whenWidget(
-      loading: _SHOProductDetailSkeleton(heroHeight: heroHeight),
-      error: (error, _) => _SHOProductDetailError(
-        message: error.toString(),
-        onBack: handleBack,
-        onRetry: () => ref.invalidate(productDetailProvider(widget.productId)),
-      ),
-      data: (detail) {
-        final activity = activityAsync?.maybeWhen(
-          data: (value) => value,
-          orElse: () => null,
-        );
-        final displayPrice = activity?.displayPrice ?? detail.price;
-        final showActivityPrice = activity?.showActivityPrice ?? false;
-        final originalPrice = showActivityPrice
-            ? activity!.originalPrice
-            : detail.originalPrice;
+        children: [
+          SHOProductViewReporter(productId: widget.productId),
+          detailAsync.whenWidget(
+            loading: _SHOProductDetailSkeleton(heroHeight: heroHeight),
+            error: (error, _) => _SHOProductDetailError(
+              message: error.toString(),
+              onBack: handleBack,
+              onRetry: () =>
+                  ref.invalidate(productDetailProvider(widget.productId)),
+            ),
+            data: (detail) {
+              final activity = activityAsync?.maybeWhen(
+                data: (value) => value,
+                orElse: () => null,
+              );
+              final displayPrice = activity?.displayPrice ?? detail.price;
+              final showActivityPrice = activity?.showActivityPrice ?? false;
+              final originalPrice = showActivityPrice
+                  ? activity!.originalPrice
+                  : detail.originalPrice;
 
-        final banners = detail.images
-            .map(
-              (url) => SHOBannerItem(
-                id: url,
-                imageUrl: url,
-                link: '',
-                title: detail.title,
-              ),
-            )
-            .toList();
+              final banners = detail.images
+                  .map(
+                    (url) => SHOBannerItem(
+                      id: url,
+                      imageUrl: url,
+                      link: '',
+                      title: detail.title,
+                    ),
+                  )
+                  .toList();
 
-        return Stack(
-          children: [
-            SHOProductFootprintRecorder(detail: detail),
-            AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: Stack(
-              children: [
-                CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Stack(
+              return Stack(
+                children: [
+                  SHOProductFootprintRecorder(detail: detail),
+                  AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: SystemUiOverlayStyle.light,
+                    child: Scaffold(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).scaffoldBackgroundColor,
+                      body: Stack(
                         children: [
-                          SHOBannerCarousel(
-                            banners: banners,
-                            height: heroHeight,
-                            edgeToEdge: true,
-                            showTitleOverlay: false,
-                            showIndicators: banners.length > 1,
-                            autoPlay: false,
+                          CustomScrollView(
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Stack(
+                                  children: [
+                                    SHOBannerCarousel(
+                                      banners: banners,
+                                      height: heroHeight,
+                                      edgeToEdge: true,
+                                      showTitleOverlay: false,
+                                      showIndicators: banners.length > 1,
+                                      autoPlay: false,
+                                    ),
+                                    if (activity?.overlayLabel != null)
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: SHOPromoBadge(
+                                          type: SHOPromoBadgeType.status,
+                                          label: activity!.overlayLabel!,
+                                          preset:
+                                              SHOPromoBadgePreset.overlayBanner,
+                                          enabled:
+                                              activity.status ==
+                                              SHOFlashSaleProductStatus.ongoing,
+                                        ),
+                                      ),
+                                    if (activity?.primaryBadgeType != null &&
+                                        activity?.primaryPromoLabel != null)
+                                      Positioned(
+                                        left: SHOAppSpacing.pagePadding,
+                                        top: topInset + SHOAppSpacing.sm,
+                                        child: SHOPromoBadge(
+                                          type: activity!.primaryBadgeType!,
+                                          label: activity.primaryPromoLabel!,
+                                          preset:
+                                              SHOPromoBadgePreset.cornerOnImage,
+                                          enabled:
+                                              activity.status ==
+                                                  SHOFlashSaleProductStatus
+                                                      .ongoing ||
+                                              activity.status ==
+                                                  SHOFlashSaleProductStatus
+                                                      .notStarted,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              SliverPadding(
+                                padding: const EdgeInsets.all(
+                                  SHOAppSpacing.pagePadding,
+                                ),
+                                sliver: SliverList(
+                                  delegate: SliverChildListDelegate([
+                                    if (detail.discountLabel.isNotEmpty &&
+                                        activity == null)
+                                      SHOPromoTag(label: detail.discountLabel),
+                                    if (detail.discountLabel.isNotEmpty &&
+                                        activity == null)
+                                      const SizedBox(height: SHOAppSpacing.sm),
+                                    if (activity != null &&
+                                        activity.promoTags.isNotEmpty) ...[
+                                      SHOPromoBadgeWrap(
+                                        tags: activity.promoTags
+                                            .map((t) => t.toBadgeData())
+                                            .toList(),
+                                        enabled:
+                                            activity.status ==
+                                            SHOFlashSaleProductStatus.ongoing,
+                                      ),
+                                      const SizedBox(height: SHOAppSpacing.sm),
+                                    ],
+                                    Text(
+                                      detail.title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    const SizedBox(height: SHOAppSpacing.md),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Expanded(
+                                          child: SHOAppPriceText(
+                                            priceCents: displayPrice,
+                                            originalCents: showActivityPrice
+                                                ? originalPrice
+                                                : detail.originalPrice,
+                                            showOriginal:
+                                                showActivityPrice ||
+                                                detail.originalPrice >
+                                                    detail.price,
+                                          ),
+                                        ),
+                                        if (activity != null &&
+                                            activity.primaryBadgeType != null &&
+                                            activity.primaryPromoLabel != null)
+                                          SHOPromoBadge(
+                                            type: activity.primaryBadgeType!,
+                                            label: activity.primaryPromoLabel!,
+                                            preset:
+                                                SHOPromoBadgePreset.priceInline,
+                                            enabled:
+                                                activity.status ==
+                                                SHOFlashSaleProductStatus
+                                                    .ongoing,
+                                          ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: SHOAppSpacing.sm),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.star_rounded,
+                                          size: 16,
+                                          color: SHOAppColors.warning,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${detail.rating.toStringAsFixed(1)} · ${detail.soldCount} sold',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: SHOAppSpacing.xl),
+                                    Text(
+                                      l10n.productDescriptionTitle,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    const SizedBox(height: SHOAppSpacing.sm),
+                                    Text(
+                                      detail.description,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(fontSize: 13, height: 1.5),
+                                    ),
+                                    const SizedBox(height: SHOAppSpacing.xl),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          l10n.reviewsTitle,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => context.push(
+                                            SHOAppRoutes.productReviews(
+                                              widget.productId,
+                                            ),
+                                          ),
+                                          child: Text(l10n.reviewsViewAll),
+                                        ),
+                                      ],
+                                    ),
+                                    reviewsAsync.when(
+                                      loading: () =>
+                                          const SHOSkeletonBox(height: 120),
+                                      error: (_, __) => const SizedBox.shrink(),
+                                      data: (summary) {
+                                        if (summary.items.isEmpty) {
+                                          return Text(
+                                            l10n.reviewsEmpty,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          );
+                                        }
+                                        return Column(
+                                          children: summary.items
+                                              .take(2)
+                                              .map(
+                                                (r) => SHOReviewTile(review: r),
+                                              )
+                                              .toList(),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 88),
+                                  ]),
+                                ),
+                              ),
+                            ],
                           ),
-                          if (activity?.overlayLabel != null)
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: SHOPromoBadge(
-                                type: SHOPromoBadgeType.status,
-                                label: activity!.overlayLabel!,
-                                preset: SHOPromoBadgePreset.overlayBanner,
-                                enabled: activity.status ==
-                                    SHOFlashSaleProductStatus.ongoing,
-                              ),
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: _SHOProductDetailTopBar(
+                              product: detail,
+                              onBack: handleBack,
                             ),
-                          if (activity?.primaryBadgeType != null &&
-                              activity?.primaryPromoLabel != null)
-                            Positioned(
-                              left: SHOAppSpacing.pagePadding,
-                              top: topInset + SHOAppSpacing.sm,
-                              child: SHOPromoBadge(
-                                type: activity!.primaryBadgeType!,
-                                label: activity.primaryPromoLabel!,
-                                preset: SHOPromoBadgePreset.cornerOnImage,
-                                enabled: activity.status ==
-                                        SHOFlashSaleProductStatus.ongoing ||
-                                    activity.status ==
-                                        SHOFlashSaleProductStatus.notStarted,
-                              ),
-                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    SliverPadding(
-                      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          if (detail.discountLabel.isNotEmpty && activity == null)
-                            SHOPromoTag(label: detail.discountLabel),
-                          if (detail.discountLabel.isNotEmpty && activity == null)
-                            const SizedBox(height: SHOAppSpacing.sm),
-                          if (activity != null && activity.promoTags.isNotEmpty) ...[
-                            SHOPromoBadgeWrap(
-                              tags: activity.promoTags
-                                  .map((t) => t.toBadgeData())
-                                  .toList(),
-                              enabled: activity.status ==
-                                  SHOFlashSaleProductStatus.ongoing,
-                            ),
-                            const SizedBox(height: SHOAppSpacing.sm),
-                          ],
-                          Text(
-                            detail.title,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                          ),
-                          const SizedBox(height: SHOAppSpacing.md),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: SHOAppPriceText(
-                                  priceCents: displayPrice,
-                                  originalCents: showActivityPrice ? originalPrice : detail.originalPrice,
-                                  showOriginal: showActivityPrice ||
-                                      detail.originalPrice > detail.price,
-                                ),
-                              ),
-                              if (activity != null &&
-                                  activity.primaryBadgeType != null &&
-                                  activity.primaryPromoLabel != null)
-                                SHOPromoBadge(
-                                  type: activity.primaryBadgeType!,
-                                  label: activity.primaryPromoLabel!,
-                                  preset: SHOPromoBadgePreset.priceInline,
-                                  enabled: activity.status ==
-                                      SHOFlashSaleProductStatus.ongoing,
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: SHOAppSpacing.sm),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.star_rounded,
-                                size: 16,
-                                color: SHOAppColors.warning,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${detail.rating.toStringAsFixed(1)} · ${detail.soldCount} sold',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: SHOAppSpacing.xl),
-                          Text(
-                            l10n.productDescriptionTitle,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                ),
-                          ),
-                          const SizedBox(height: SHOAppSpacing.sm),
-                          Text(
-                            detail.description,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontSize: 13,
-                                  height: 1.5,
-                                ),
-                          ),
-                          const SizedBox(height: SHOAppSpacing.xl),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                l10n.reviewsTitle,
-                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                              ),
-                              TextButton(
-                                onPressed: () => context.push(
-                                  SHOAppRoutes.productReviews(widget.productId),
-                                ),
-                                child: Text(l10n.reviewsViewAll),
-                              ),
-                            ],
-                          ),
-                          reviewsAsync.when(
-                            loading: () => const SHOSkeletonBox(height: 120),
-                            error: (_, __) => const SizedBox.shrink(),
-                            data: (summary) {
-                              if (summary.items.isEmpty) {
-                                return Text(
-                                  l10n.reviewsEmpty,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                );
-                              }
-                              return Column(
-                                children: summary.items
-                                    .take(2)
-                                    .map((r) => SHOReviewTile(review: r))
-                                    .toList(),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 88),
-                        ]),
+                      bottomNavigationBar: _SHOProductDetailFooter(
+                        cartCount: ref.watch(cartBadgeCountProvider),
+                        onCustomerService: () =>
+                            SHOAppToast.info(l10n.productCustomerServiceHint),
+                        onCart: () {
+                          if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                          context.push(SHOAppRoutes.cartStack);
+                        },
+                        onAddToBag: () {
+                          if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                          SHOSkuSheet.show(context, detail, ref: ref);
+                        },
+                        onBuyNow: () {
+                          if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                          final activityLine = activity != null
+                              ? buildCheckoutActivityLineFromActivity(
+                                  productId: widget.productId,
+                                  activity: activity,
+                                )
+                              : null;
+                          SHOSkuSheet.show(
+                            context,
+                            detail,
+                            ref: ref,
+                            intent: SHOSkuSheetIntent.buyNow,
+                            checkoutActivityLine: activityLine,
+                          );
+                        },
                       ),
                     ),
-                  ],
-                ),
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: _SHOProductDetailTopBar(
-                    product: detail,
-                    onBack: handleBack,
                   ),
-                ),
-              ],
-            ),
-            bottomNavigationBar: _SHOProductDetailFooter(
-              cartCount: ref.watch(cartBadgeCountProvider),
-              onCustomerService: () =>
-                  SHOAppToast.info(l10n.productCustomerServiceHint),
-              onCart: () {
-                if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                context.push(SHOAppRoutes.cartStack);
-              },
-              onAddToBag: () {
-                if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                SHOSkuSheet.show(context, detail, ref: ref);
-              },
-              onBuyNow: () {
-                if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                final activityLine = activity != null
-                    ? buildCheckoutActivityLineFromActivity(
-                        productId: widget.productId,
-                        activity: activity,
-                      )
-                    : null;
-                SHOSkuSheet.show(
-                  context,
-                  detail,
-                  ref: ref,
-                  intent: SHOSkuSheetIntent.buyNow,
-                  checkoutActivityLine: activityLine,
-                );
-              },
-            ),
+                ],
+              );
+            },
           ),
-        ),
-          ],
-        );
-      },
-    ),
-      ],
-    ),
-    onRetry: () => ref.invalidate(productDetailProvider(widget.productId)),
+        ],
+      ),
+      onRetry: () => ref.invalidate(productDetailProvider(widget.productId)),
     );
   }
 }
 
 class _SHOProductDetailTopBar extends ConsumerStatefulWidget {
-  const _SHOProductDetailTopBar({
-    required this.product,
-    required this.onBack,
-  });
+  const _SHOProductDetailTopBar({required this.product, required this.onBack});
 
   final SHOProductDetail product;
   final VoidCallback onBack;
@@ -362,7 +403,8 @@ class _SHOProductDetailTopBar extends ConsumerStatefulWidget {
       _SHOProductDetailTopBarState();
 }
 
-class _SHOProductDetailTopBarState extends ConsumerState<_SHOProductDetailTopBar> {
+class _SHOProductDetailTopBarState
+    extends ConsumerState<_SHOProductDetailTopBar> {
   final _shareCardKey = GlobalKey();
 
   @override
@@ -397,7 +439,8 @@ class _SHOProductDetailTopBarState extends ConsumerState<_SHOProductDetailTopBar
                 ),
                 const Spacer(),
                 SHOCircleOverlayButton(
-                  icon: ref
+                  icon:
+                      ref
                           .watch(profileActivityProvider)
                           .favorites
                           .contains(widget.product.id)
@@ -475,14 +518,8 @@ class _SHOProductDetailTopBarState extends ConsumerState<_SHOProductDetailTopBar
         anchor.dy,
       ),
       items: [
-        PopupMenuItem(
-          value: 'share',
-          child: Text(l10n.sharePanelTitle),
-        ),
-        PopupMenuItem(
-          value: 'copy',
-          child: Text(l10n.shareCopyLink),
-        ),
+        PopupMenuItem(value: 'share', child: Text(l10n.sharePanelTitle)),
+        PopupMenuItem(value: 'copy', child: Text(l10n.shareCopyLink)),
       ],
     ).then((value) {
       if (!pageContext.mounted) return;
@@ -599,9 +636,7 @@ class _SHOProductDetailSkeleton extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     const SHOSkeletonBox(),
-                    Center(
-                      child: SHOAppLoading(size: 80),
-                    ),
+                    Center(child: SHOAppLoading(size: 80)),
                   ],
                 ),
               ),
@@ -647,19 +682,25 @@ class _SHOProductDetailSkeleton extends StatelessWidget {
                   SHOSkeletonBox(
                     width: actionSize,
                     height: actionSize,
-                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(actionSize / 2),
+                    ),
                   ),
                   Spacer(),
                   SHOSkeletonBox(
                     width: actionSize,
                     height: actionSize,
-                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(actionSize / 2),
+                    ),
                   ),
                   SizedBox(width: SHOAppSpacing.sm),
                   SHOSkeletonBox(
                     width: actionSize,
                     height: actionSize,
-                    borderRadius: BorderRadius.all(Radius.circular(actionSize / 2)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(actionSize / 2),
+                    ),
                   ),
                 ],
               ),
@@ -720,10 +761,7 @@ class _SHOProductDetailError extends StatelessWidget {
         ),
         title: Text(l10n.productDetailTitle),
       ),
-      body: SHOAppErrorView(
-        message: message,
-        onRetry: onRetry,
-      ),
+      body: SHOAppErrorView(message: message, onRetry: onRetry),
     );
   }
 }

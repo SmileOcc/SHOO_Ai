@@ -117,130 +117,130 @@ class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugMicrotaskTitle)),
-      body: Column(
-        children: [
-          // 操作按钮区
-          Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  l10n.debugMicrotaskHint,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: theme.textSecondary),
-                ),
-                const SizedBox(height: SHOAppSpacing.md),
-                FilledButton.tonalIcon(
-                  onPressed: _runDemo,
-                  icon: const Icon(Icons.play_arrow),
-                  label: Text(l10n.debugMicrotaskRunDemo),
-                ),
-                const SizedBox(height: SHOAppSpacing.sm),
-                FilledButton.tonalIcon(
-                  onPressed: _runRouterScenario,
-                  icon: const Icon(Icons.router),
-                  label: Text(l10n.debugMicrotaskRunRouterScenario),
-                ),
-              ],
-            ),
-          ),
-
-          // 代码示例区
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
-            child: Padding(
-              padding: const EdgeInsets.all(SHOAppSpacing.md),
+        appBar: AppBar(title: Text(l10n.debugMicrotaskTitle)),
+        body: Column(
+          children: [
+            // 操作按钮区
+            Padding(
+              padding: const EdgeInsets.all(SHOAppSpacing.lg),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    l10n.debugMicrotaskCodeExample,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    l10n.debugMicrotaskHint,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: theme.textSecondary),
+                  ),
+                  const SizedBox(height: SHOAppSpacing.md),
+                  FilledButton.tonalIcon(
+                    onPressed: _runDemo,
+                    icon: const Icon(Icons.play_arrow),
+                    label: Text(l10n.debugMicrotaskRunDemo),
                   ),
                   const SizedBox(height: SHOAppSpacing.sm),
-                  SelectableText(
-                    '''
+                  FilledButton.tonalIcon(
+                    onPressed: _runRouterScenario,
+                    icon: const Icon(Icons.router),
+                    label: Text(l10n.debugMicrotaskRunRouterScenario),
+                  ),
+                ],
+              ),
+            ),
+
+            // 代码示例区
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
+              child: Padding(
+                padding: const EdgeInsets.all(SHOAppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.debugMicrotaskCodeExample,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: SHOAppSpacing.sm),
+                    SelectableText(
+                      '''
 // routerProvider 中的典型用法
 router.routerDelegate.addListener(syncMusicRoute);
 ref.onDispose(() =>
   router.routerDelegate.removeListener(syncMusicRoute));
 Future.microtask(syncMusicRoute); // ← 初始化同步
 return router;''',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontFamily: 'monospace',
-                      height: 1.4,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontFamily: 'monospace',
+                        height: 1.4,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: SHOAppSpacing.md),
+            const SizedBox(height: SHOAppSpacing.md),
 
-          // 日志输出区
-          Expanded(
-            child: Card(
-              margin: const EdgeInsets.fromLTRB(
-                SHOAppSpacing.lg,
-                0,
-                SHOAppSpacing.lg,
-                SHOAppSpacing.lg,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(SHOAppSpacing.md),
-                    child: Row(
-                      children: [
-                        Text(
-                          l10n.debugMicrotaskLog,
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${l10n.debugMicrotaskLogCount(_logs.length)} ',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.clear_all, size: 20),
-                          onPressed: _clearLogs,
-                          tooltip: l10n.debugMicrotaskClear,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  Expanded(
-                    child: _logs.isEmpty
-                        ? Center(
-                            child: Text(
-                              l10n.debugMicrotaskEmpty,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: _logs.length,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: SHOAppSpacing.sm,
-                            ),
-                            itemBuilder: (context, index) {
-                              final entry = _logs[index];
-                              return _LogEntryTile(entry: entry);
-                            },
+            // 日志输出区
+            Expanded(
+              child: Card(
+                margin: const EdgeInsets.fromLTRB(
+                  SHOAppSpacing.lg,
+                  0,
+                  SHOAppSpacing.lg,
+                  SHOAppSpacing.lg,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(SHOAppSpacing.md),
+                      child: Row(
+                        children: [
+                          Text(
+                            l10n.debugMicrotaskLog,
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
-                  ),
-                ],
+                          const Spacer(),
+                          Text(
+                            '${l10n.debugMicrotaskLogCount(_logs.length)} ',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.clear_all, size: 20),
+                            onPressed: _clearLogs,
+                            tooltip: l10n.debugMicrotaskClear,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    Expanded(
+                      child: _logs.isEmpty
+                          ? Center(
+                              child: Text(
+                                l10n.debugMicrotaskEmpty,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: _logs.length,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: SHOAppSpacing.sm,
+                              ),
+                              itemBuilder: (context, index) {
+                                final entry = _logs[index];
+                                return _LogEntryTile(entry: entry);
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }

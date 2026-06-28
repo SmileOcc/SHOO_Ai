@@ -52,7 +52,8 @@ final class _PullDragTracker {
     final metrics = notification.metrics;
     if (!_isVertical(metrics) || !_atScrollTop(metrics)) return false;
 
-    final userDrag = (notification is ScrollStartNotification &&
+    final userDrag =
+        (notification is ScrollStartNotification &&
             notification.dragDetails != null) ||
         (notification is ScrollUpdateNotification &&
             notification.dragDetails != null);
@@ -113,7 +114,10 @@ final class _PullDragTracker {
   }
 
   void _applyOffset(double next, double triggerOffset) {
-    offset = next.clamp(0.0, SHOAppCustomRefreshController.headerExpandedHeight);
+    offset = next.clamp(
+      0.0,
+      SHOAppCustomRefreshController.headerExpandedHeight,
+    );
     if (phase == _PullDragPhase.dragging && offset >= triggerOffset) {
       phase = _PullDragPhase.armed;
     } else if (phase == _PullDragPhase.armed && offset < triggerOffset) {
@@ -157,7 +161,8 @@ class SHOAppCustomRefresh extends StatefulWidget {
     this.onLoadMore,
     this.enableRefresh = true,
     this.enableLoadMore = true,
-    this.refreshTriggerOffset = SHOAppCustomRefreshController.triggerOffsetDefault,
+    this.refreshTriggerOffset =
+        SHOAppCustomRefreshController.triggerOffsetDefault,
     this.loadOffset = 100,
     this.headerBuilder,
     this.footerBuilder,
@@ -183,14 +188,19 @@ class SHOAppCustomRefresh extends StatefulWidget {
     BuildContext context,
     SHOAppCustomRefreshStatus status,
     double pullProgress,
-  )? headerBuilder;
+  )?
+  headerBuilder;
 
   final Widget Function(BuildContext context, SHOAppCustomLoadStatus status)?
-      footerBuilder;
+  footerBuilder;
 
   final Widget Function(BuildContext context)? emptyBuilder;
-  final Widget Function(BuildContext context, String message, VoidCallback? onRetry)?
-      errorBuilder;
+  final Widget Function(
+    BuildContext context,
+    String message,
+    VoidCallback? onRetry,
+  )?
+  errorBuilder;
 
   final bool isEmpty;
   final bool isError;
@@ -205,7 +215,7 @@ class SHOAppCustomRefresh extends StatefulWidget {
   static Widget footerSliver(
     SHOAppCustomRefreshController controller, {
     Widget Function(BuildContext context, SHOAppCustomLoadStatus status)?
-        footerBuilder,
+    footerBuilder,
     VoidCallback? onLoadRetry,
   }) {
     return SHOAppCustomRefreshSliver.footer(
@@ -301,10 +311,7 @@ class _SHOAppCustomRefreshState extends State<SHOAppCustomRefresh> {
   void _syncDragToController() {
     if (widget.controller.isRefreshLoading) return;
     if (_pullTracker.isActive) {
-      widget.controller.updateDrag(
-        _pullTracker.offset,
-        dragging: true,
-      );
+      widget.controller.updateDrag(_pullTracker.offset, dragging: true);
     } else if (widget.controller.dragOffset > 0 ||
         widget.controller.refreshStatus == SHOAppCustomRefreshStatus.dragging) {
       widget.controller.resetDrag();
@@ -364,7 +371,9 @@ class _SHOAppCustomRefreshState extends State<SHOAppCustomRefresh> {
     return false;
   }
 
-  bool _handleOverscrollIndicator(OverscrollIndicatorNotification notification) {
+  bool _handleOverscrollIndicator(
+    OverscrollIndicatorNotification notification,
+  ) {
     if (notification.depth != 0 || !notification.leading) return false;
     if (_pullTracker.isActive ||
         widget.controller.isRefreshLoading ||
@@ -421,9 +430,7 @@ class _SHOAppCustomRefreshState extends State<SHOAppCustomRefresh> {
 /// - [AlwaysScrollableScrollPhysics]：内容不足一屏也可下拉
 /// - [ClampingScrollPhysics]：Android 顶部 overscroll；位移由 Header Sliver 吸收
 const ScrollPhysics shoAppCustomRefreshScrollPhysics =
-    AlwaysScrollableScrollPhysics(
-  parent: ClampingScrollPhysics(),
-);
+    AlwaysScrollableScrollPhysics(parent: ClampingScrollPhysics());
 
 /// Android 推荐；与 [shoAppCustomRefreshScrollPhysics] 相同，语义更明确。
 const ScrollPhysics shoAppCustomRefreshScrollPhysicsAndroid =

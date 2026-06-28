@@ -17,11 +17,16 @@ class SHOReviewsPage extends SHOPagedDataPage<SHOProductReview> {
 
   @override
   SHOPagedDataPageState<SHOProductReview, SHOReviewsPagedState, SHOReviewsPage>
-      createState() => _SHOReviewsPageState();
+  createState() => _SHOReviewsPageState();
 }
 
-class _SHOReviewsPageState extends SHOPagedDataPageState<SHOProductReview,
-    SHOReviewsPagedState, SHOReviewsPage> {
+class _SHOReviewsPageState
+    extends
+        SHOPagedDataPageState<
+          SHOProductReview,
+          SHOReviewsPagedState,
+          SHOReviewsPage
+        > {
   final _scrollController = ScrollController();
 
   @override
@@ -32,7 +37,9 @@ class _SHOReviewsPageState extends SHOPagedDataPageState<SHOProductReview,
   String get pageName => 'reviews';
 
   @override
-  Map<String, Object?> get pageAnalyticsExtra => {'product_id': widget.productId};
+  Map<String, Object?> get pageAnalyticsExtra => {
+    'product_id': widget.productId,
+  };
 
   @override
   ScrollController? get scrollController => _scrollController;
@@ -44,16 +51,14 @@ class _SHOReviewsPageState extends SHOPagedDataPageState<SHOProductReview,
   }
 
   @override
-  void refreshPaged(WidgetRef ref) =>
-      ref.read(reviewsPagedProvider(widget.productId).notifier).refresh(
-            widget.productId,
-          );
+  void refreshPaged(WidgetRef ref) => ref
+      .read(reviewsPagedProvider(widget.productId).notifier)
+      .refresh(widget.productId);
 
   @override
-  void loadMorePaged(WidgetRef ref) =>
-      ref.read(reviewsPagedProvider(widget.productId).notifier).loadMore(
-            widget.productId,
-          );
+  void loadMorePaged(WidgetRef ref) => ref
+      .read(reviewsPagedProvider(widget.productId).notifier)
+      .loadMore(widget.productId);
 
   @override
   PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
@@ -65,10 +70,8 @@ class _SHOReviewsPageState extends SHOPagedDataPageState<SHOProductReview,
   Widget? buildFloatingActionButton(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return FloatingActionButton.extended(
-      onPressed: () => SHOReviewSubmitSheet.show(
-        context,
-        productId: widget.productId,
-      ),
+      onPressed: () =>
+          SHOReviewSubmitSheet.show(context, productId: widget.productId),
       icon: const Icon(Icons.rate_review_outlined),
       label: Text(l10n.reviewSubmitAction),
     );
@@ -98,9 +101,9 @@ class _SHOReviewsPageState extends SHOPagedDataPageState<SHOProductReview,
         children: [
           Text(
             '${summary.averageRating}',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(width: SHOAppSpacing.sm),
           Text(

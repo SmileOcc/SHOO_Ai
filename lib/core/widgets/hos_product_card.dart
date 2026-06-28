@@ -12,11 +12,7 @@ import 'package:shoo/core/widgets/hos_profile_section_card.dart';
 
 /// 双列商品卡：圆角卡片 + 图 + 标题 + 价格 + 评分。
 class SHOProductCard extends StatelessWidget {
-  const SHOProductCard({
-    super.key,
-    required this.product,
-    this.onTap,
-  });
+  const SHOProductCard({super.key, required this.product, this.onTap});
 
   final SHOProduct product;
   final VoidCallback? onTap;
@@ -87,12 +83,12 @@ class SHOProductCard extends StatelessWidget {
                           product.title,
                           maxLines: _titleMaxLines,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: SHOAppColors.textPrimary,
-                                    fontSize: _titleFontSize,
-                                    height: _titleLineHeight,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: SHOAppColors.textPrimary,
+                                fontSize: _titleFontSize,
+                                height: _titleLineHeight,
+                              ),
                         ),
                       ),
                       const SizedBox(height: SHOAppSpacing.xs),

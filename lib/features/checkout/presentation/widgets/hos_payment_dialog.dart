@@ -74,9 +74,9 @@ class _SHOPaymentDialogState extends State<SHOPaymentDialog> {
             padding: const EdgeInsets.only(right: SHOAppSpacing.xxl),
             child: Text(
               l10n.paymentDialogTitle,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
           ),
           const SizedBox(height: SHOAppSpacing.lg),
@@ -89,10 +89,7 @@ class _SHOPaymentDialogState extends State<SHOPaymentDialog> {
                   color: widget.method.tint.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  widget.method.icon,
-                  color: widget.method.tint,
-                ),
+                child: Icon(widget.method.icon, color: widget.method.tint),
               ),
               const SizedBox(width: SHOAppSpacing.md),
               Expanded(
@@ -102,8 +99,8 @@ class _SHOPaymentDialogState extends State<SHOPaymentDialog> {
                     Text(
                       widget.method.label(l10n),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -124,16 +121,16 @@ class _SHOPaymentDialogState extends State<SHOPaymentDialog> {
           Text(
             priceFormatter.formatCents(widget.amountCents),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: SHOAppColors.sale,
-                ),
+              fontWeight: FontWeight.w900,
+              color: SHOAppColors.sale,
+            ),
           ),
           const SizedBox(height: SHOAppSpacing.sm),
           Text(
             l10n.paymentMockHint,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).hintColor,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
           ),
           const SizedBox(height: SHOAppSpacing.xl),
           Row(

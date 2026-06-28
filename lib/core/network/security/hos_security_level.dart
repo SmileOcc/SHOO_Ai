@@ -15,11 +15,11 @@ enum SHOSecurityLevel {
 
 extension SHOSecurityLevelX on SHOSecurityLevel {
   String get label => switch (this) {
-        SHOSecurityLevel.basic => 'Basic (HTTPS)',
-        SHOSecurityLevel.standard => 'Standard (AES)',
-        SHOSecurityLevel.high => 'High (RSA+AES)',
-        SHOSecurityLevel.extreme => 'Extreme (SM4)',
-      };
+    SHOSecurityLevel.basic => 'Basic (HTTPS)',
+    SHOSecurityLevel.standard => 'Standard (AES)',
+    SHOSecurityLevel.high => 'High (RSA+AES)',
+    SHOSecurityLevel.extreme => 'Extreme (SM4)',
+  };
 
   bool get requiresPayloadEncryption => this != SHOSecurityLevel.basic;
 }

@@ -62,7 +62,10 @@ class SHOActivityNativeDispatcher {
     }
   }
 
-  Future<void> _openCamera(BuildContext context, Map<String, dynamic> params) async {
+  Future<void> _openCamera(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
     final picker = ImagePicker();
     final file = await picker.pickImage(source: ImageSource.camera);
     if (!context.mounted) return;
@@ -71,14 +74,20 @@ class SHOActivityNativeDispatcher {
     }
   }
 
-  Future<void> _openAlbum(BuildContext context, Map<String, dynamic> params) async {
+  Future<void> _openAlbum(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
     final picker = ImagePicker();
     final files = await picker.pickMultiImage();
     if (!context.mounted) return;
     context.showToast('已选择 ${files.length} 张图片');
   }
 
-  Future<void> _openLocation(BuildContext context, Map<String, dynamic> params) async {
+  Future<void> _openLocation(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
     final lat = params['lat'];
     final lng = params['lng'];
     final uri = Uri.parse('https://maps.apple.com/?ll=$lat,$lng');

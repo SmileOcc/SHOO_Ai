@@ -83,10 +83,7 @@ class _SHOAppTabBarState extends State<SHOAppTabBar>
           ),
         ),
         Expanded(
-          child: TabBarView(
-            controller: _controller,
-            children: widget.children,
-          ),
+          child: TabBarView(controller: _controller, children: widget.children),
         ),
       ],
     );

@@ -70,12 +70,7 @@ extension SHOPromoBadgeTypeX on SHOPromoBadgeType {
 }
 
 /// 预设样式，禁止业务侧随意硬编码颜色。
-enum SHOPromoBadgePreset {
-  cornerOnImage,
-  wrapTag,
-  priceInline,
-  overlayBanner,
-}
+enum SHOPromoBadgePreset { cornerOnImage, wrapTag, priceInline, overlayBanner }
 
 class SHOPromoBadgeStyle {
   const SHOPromoBadgeStyle({
@@ -119,7 +114,9 @@ class SHOPromoBadgeStyle {
       case SHOPromoBadgePreset.wrapTag:
         return SHOPromoBadgeStyle(
           hasBackground: true,
-          backgroundColor: base.background.withValues(alpha: enabled ? 0.12 : 0.06),
+          backgroundColor: base.background.withValues(
+            alpha: enabled ? 0.12 : 0.06,
+          ),
           textColor: enabled ? base.background : SHOAppColors.textMuted,
           fontSize: 10,
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -183,7 +180,8 @@ class SHOPromoBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolved = style ??
+    final resolved =
+        style ??
         SHOPromoBadgeStyle.forPreset(preset, type: type, enabled: enabled);
 
     return Container(

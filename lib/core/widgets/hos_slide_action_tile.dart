@@ -52,8 +52,10 @@ class _SHOSlideActionTileState extends State<SHOSlideActionTile> {
           GestureDetector(
             onHorizontalDragUpdate: (details) {
               setState(() {
-                _dragOffset = (_dragOffset - details.delta.dx)
-                    .clamp(0.0, widget.actionWidth);
+                _dragOffset = (_dragOffset - details.delta.dx).clamp(
+                  0.0,
+                  widget.actionWidth,
+                );
               });
             },
             onHorizontalDragEnd: (_) {

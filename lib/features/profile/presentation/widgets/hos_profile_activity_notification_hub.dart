@@ -17,7 +17,8 @@ class SHOProfileActivityNotificationHub extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final follows = ref.watch(flashSaleFollowControllerProvider).valueOrNull ?? const [];
+    final follows =
+        ref.watch(flashSaleFollowControllerProvider).valueOrNull ?? const [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,17 +30,19 @@ class SHOProfileActivityNotificationHub extends ConsumerWidget {
           ),
           child: Text(
             l10n.profileActivityNotifications,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         SHOProfileSectionCard(
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: SHOAppColors.accent.withValues(alpha: 0.12),
-              child: const Icon(Icons.notifications_active_outlined,
-                  color: SHOAppColors.accent),
+              child: const Icon(
+                Icons.notifications_active_outlined,
+                color: SHOAppColors.accent,
+              ),
             ),
             title: Text(l10n.profileActivityFlashSale),
             subtitle: Text(l10n.profileActivityFlashSaleDesc),
@@ -48,7 +51,10 @@ class SHOProfileActivityNotificationHub extends ConsumerWidget {
               children: [
                 if (follows.isNotEmpty)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: SHOAppColors.accent,
                       borderRadius: BorderRadius.circular(999),

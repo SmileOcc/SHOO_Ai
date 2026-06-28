@@ -59,10 +59,7 @@ class SHOAnalyticsRecord {
   final List<String> backendIds;
   final String? error;
 
-  SHOAnalyticsRecord copyWith({
-    List<String>? backendIds,
-    String? error,
-  }) {
+  SHOAnalyticsRecord copyWith({List<String>? backendIds, String? error}) {
     return SHOAnalyticsRecord(
       eventKey: eventKey,
       params: params,

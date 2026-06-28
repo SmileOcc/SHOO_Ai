@@ -51,10 +51,7 @@ class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
     _launchReported = true;
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.appLaunch,
-      {
-        'cold_start': true,
-        'build_mode': kReleaseMode ? 'release' : 'debug',
-      },
+      {'cold_start': true, 'build_mode': kReleaseMode ? 'release' : 'debug'},
     );
   }
 
@@ -65,10 +62,9 @@ class _SHOAppLifecycleBinderState extends ConsumerState<SHOAppLifecycleBinder>
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
-        SHOAnalyticsManager.instance.trackEvent(
-          SHOAnalyticsRegistry.appClose,
-          {'reason': state.name},
-        );
+        SHOAnalyticsManager.instance.trackEvent(SHOAnalyticsRegistry.appClose, {
+          'reason': state.name,
+        });
       case AppLifecycleState.resumed:
       case AppLifecycleState.inactive:
         break;

@@ -9,12 +9,16 @@ import 'package:shoo/core/theme/hos_typography.dart';
 enum SHOAppButtonVariant {
   /// 主色填充（默认）
   primary,
+
   /// 促销强调色填充（Shein 红）
   accent,
+
   /// 描边按钮
   outline,
+
   /// 纯文字按钮
   text,
+
   /// 浅色背景幽灵按钮
   ghost,
 }
@@ -78,29 +82,39 @@ class SHOAppButton extends StatelessWidget {
   final bool isExpanded;
   final double? height;
 
-  double get _height => height ?? switch (size) {
+  double get _height =>
+      height ??
+      switch (size) {
         SHOAppButtonSize.sm => 32,
         SHOAppButtonSize.md => 40,
         SHOAppButtonSize.lg => 48,
       };
 
   EdgeInsets get _padding => switch (size) {
-        SHOAppButtonSize.sm => const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
-        SHOAppButtonSize.md => const EdgeInsets.symmetric(horizontal: SHOAppSpacing.xl),
-        SHOAppButtonSize.lg => const EdgeInsets.symmetric(horizontal: SHOAppSpacing.xxl),
-      };
+    SHOAppButtonSize.sm => const EdgeInsets.symmetric(
+      horizontal: SHOAppSpacing.lg,
+    ),
+    SHOAppButtonSize.md => const EdgeInsets.symmetric(
+      horizontal: SHOAppSpacing.xl,
+    ),
+    SHOAppButtonSize.lg => const EdgeInsets.symmetric(
+      horizontal: SHOAppSpacing.xxl,
+    ),
+  };
 
   TextStyle get _textStyle => switch (size) {
-        SHOAppButtonSize.sm => SHOAppTypography.textTheme.labelMedium!,
-        SHOAppButtonSize.md => SHOAppTypography.textTheme.labelLarge!,
-        SHOAppButtonSize.lg => SHOAppTypography.textTheme.titleMedium!,
-      };
+    SHOAppButtonSize.sm => SHOAppTypography.textTheme.labelMedium!,
+    SHOAppButtonSize.md => SHOAppTypography.textTheme.labelLarge!,
+    SHOAppButtonSize.lg => SHOAppTypography.textTheme.titleMedium!,
+  };
 
   @override
   Widget build(BuildContext context) {
     final disabled = onPressed == null || isLoading;
     final borderRadius = BorderRadius.circular(
-      size == SHOAppButtonSize.sm ? SHOAppSpacing.tagRadius : SHOAppSpacing.buttonRadius,
+      size == SHOAppButtonSize.sm
+          ? SHOAppSpacing.tagRadius
+          : SHOAppSpacing.buttonRadius,
     );
 
     final scheme = Theme.of(context).colorScheme;
@@ -109,7 +123,8 @@ class SHOAppButton extends StatelessWidget {
         : SHOAppColors.primary;
 
     final contentColor = switch (variant) {
-      SHOAppButtonVariant.primary || SHOAppButtonVariant.accent => SHOAppColors.textOnAccent,
+      SHOAppButtonVariant.primary ||
+      SHOAppButtonVariant.accent => SHOAppColors.textOnAccent,
       SHOAppButtonVariant.outline => scheme.onSurface,
       _ => accentColor,
     };
@@ -146,49 +161,46 @@ class SHOAppButton extends StatelessWidget {
 
     final Widget styledButton = switch (variant) {
       SHOAppButtonVariant.primary || SHOAppButtonVariant.accent => Container(
-          height: _height,
-          decoration: BoxDecoration(
-            color: disabled ? SHOAppColors.textMuted : accentColor,
-            borderRadius: borderRadius,
-          ),
-          alignment: Alignment.center,
-          padding: _padding,
-          child: buttonContent,
+        height: _height,
+        decoration: BoxDecoration(
+          color: disabled ? SHOAppColors.textMuted : accentColor,
+          borderRadius: borderRadius,
         ),
+        alignment: Alignment.center,
+        padding: _padding,
+        child: buttonContent,
+      ),
       SHOAppButtonVariant.outline => Container(
-          height: _height,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: outlineBorderColor,
-              width: 1,
-            ),
-            borderRadius: borderRadius,
-          ),
-          alignment: Alignment.center,
-          padding: _padding,
-          child: buttonContent,
+        height: _height,
+        decoration: BoxDecoration(
+          border: Border.all(color: outlineBorderColor, width: 1),
+          borderRadius: borderRadius,
         ),
+        alignment: Alignment.center,
+        padding: _padding,
+        child: buttonContent,
+      ),
       SHOAppButtonVariant.text => Padding(
-          padding: _padding,
-          child: DefaultTextStyle(
-            style: _textStyle.copyWith(
-              color: disabled ? SHOAppColors.textMuted : accentColor,
-            ),
-            child: buttonContent,
+        padding: _padding,
+        child: DefaultTextStyle(
+          style: _textStyle.copyWith(
+            color: disabled ? SHOAppColors.textMuted : accentColor,
           ),
-        ),
-      SHOAppButtonVariant.ghost => Container(
-          height: _height,
-          decoration: BoxDecoration(
-            color: disabled
-                ? Colors.transparent
-                : accentColor.withValues(alpha: 0.08),
-            borderRadius: borderRadius,
-          ),
-          alignment: Alignment.center,
-          padding: _padding,
           child: buttonContent,
         ),
+      ),
+      SHOAppButtonVariant.ghost => Container(
+        height: _height,
+        decoration: BoxDecoration(
+          color: disabled
+              ? Colors.transparent
+              : accentColor.withValues(alpha: 0.08),
+          borderRadius: borderRadius,
+        ),
+        alignment: Alignment.center,
+        padding: _padding,
+        child: buttonContent,
+      ),
     };
 
     final button = IgnorePointer(

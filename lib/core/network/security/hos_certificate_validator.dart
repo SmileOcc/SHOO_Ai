@@ -6,7 +6,7 @@ abstract final class SHOCertificateValidator {
     if (kDebugMode) return true;
     // 生产环境应校验证书指纹 / SPKI Pin
     // Demo：仅允许 shoo 相关域名
-    const allowedHosts = {'api.shoo.com', 'm.shoo.com','api.staging.shoo.com'};
+    const allowedHosts = {'api.shoo.com', 'm.shoo.com', 'api.staging.shoo.com'};
     return allowedHosts.contains(host);
   }
 }

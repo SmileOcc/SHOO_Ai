@@ -5,11 +5,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 
 class SHOAppErrorView extends StatelessWidget {
-  const SHOAppErrorView({
-    super.key,
-    required this.message,
-    this.onRetry,
-  });
+  const SHOAppErrorView({super.key, required this.message, this.onRetry});
 
   final String message;
   final VoidCallback? onRetry;
@@ -52,9 +48,9 @@ class SHOSectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.5,
-                  ),
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
           if (actionLabel != null && onAction != null)
@@ -63,8 +59,8 @@ class SHOSectionHeader extends StatelessWidget {
               child: Text(
                 actionLabel!,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
         ],

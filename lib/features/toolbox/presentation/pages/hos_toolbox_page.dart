@@ -15,14 +15,18 @@ import 'package:shoo/l10n/app_localizations.dart';
 
 Future<void> _openNativeComponents(BuildContext context) async {
   if (!SHONativeComponentsBridge.isSupported) {
-    context.showToast(AppLocalizations.of(context).toolboxNativeComponentsIosOnly);
+    context.showToast(
+      AppLocalizations.of(context).toolboxNativeComponentsIosOnly,
+    );
     return;
   }
   try {
     await SHONativeComponentsBridge.openHub();
   } catch (error) {
     if (context.mounted) {
-      context.showToast('${AppLocalizations.of(context).toolboxNativeComponents}: $error');
+      context.showToast(
+        '${AppLocalizations.of(context).toolboxNativeComponents}: $error',
+      );
     }
   }
 }
@@ -36,7 +40,9 @@ Future<void> _openSActivity(BuildContext context) async {
     await SHOHybridBridge.openSActivity();
   } catch (error) {
     if (context.mounted) {
-      context.showToast('${AppLocalizations.of(context).toolboxSActivity}: $error');
+      context.showToast(
+        '${AppLocalizations.of(context).toolboxSActivity}: $error',
+      );
     }
   }
 }
@@ -166,61 +172,61 @@ class _SHOToolboxPageState extends ConsumerState<SHOToolboxPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.toolboxTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+        appBar: AppBar(
+          title: Text(
+            l10n.toolboxTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+        body: ListView.separated(
+          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+          itemCount: groups.length,
+          separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.lg),
+          itemBuilder: (context, index) {
+            final group = groups[index];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: SHOAppSpacing.xs,
+                    bottom: SHOAppSpacing.sm,
+                  ),
+                  child: Text(
+                    group.title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                SHOProfileSectionCard(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: SHOAppSpacing.sm,
+                    vertical: SHOAppSpacing.md,
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      const columns = 4;
+                      final itemWidth = constraints.maxWidth / columns;
+                      return Wrap(
+                        spacing: 0,
+                        runSpacing: SHOAppSpacing.md,
+                        children: [
+                          for (final item in group.items)
+                            SizedBox(
+                              width: itemWidth,
+                              child: _ToolboxMenuButton(item: item),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        itemCount: groups.length,
-        separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.lg),
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: SHOAppSpacing.xs,
-                  bottom: SHOAppSpacing.sm,
-                ),
-                child: Text(
-                  group.title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
-                ),
-              ),
-              SHOProfileSectionCard(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: SHOAppSpacing.sm,
-                  vertical: SHOAppSpacing.md,
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    const columns = 4;
-                    final itemWidth = constraints.maxWidth / columns;
-                    return Wrap(
-                      spacing: 0,
-                      runSpacing: SHOAppSpacing.md,
-                      children: [
-                        for (final item in group.items)
-                          SizedBox(
-                            width: itemWidth,
-                            child: _ToolboxMenuButton(item: item),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    ),
     );
   }
 }
@@ -273,9 +279,9 @@ class _ToolboxMenuButton extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: context.shoTheme.textSecondary,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: context.shoTheme.textSecondary,
+              ),
             ),
           ],
         ),

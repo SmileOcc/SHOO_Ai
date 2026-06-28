@@ -51,281 +51,287 @@ class _SHOMusicLibraryPageState extends ConsumerState<SHOMusicLibraryPage>
     ref.listen<SHOMusicPlayerState>(musicPlayerProvider, (previous, next) {
       if (previous?.errorMessage == next.errorMessage) return;
       if (next.errorMessage == SHOMusicPlayerMessages.noValidTracks) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.musicPlayerNoValidTracks)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.musicPlayerNoValidTracks)));
       }
     });
     final sort = ref.watch(musicLibrarySortProvider);
     final listAsync = ref.watch(musicLibraryListProvider);
     final playerState = ref.watch(musicPlayerProvider);
     final currentTrackId = playerState.currentTrack?.id;
-    final playingTrackId =
-        playerState.isPlaying ? currentTrackId : null;
+    final playingTrackId = playerState.isPlaying ? currentTrackId : null;
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.musicLibraryTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              SHOAppSpacing.pagePadding,
-              SHOAppSpacing.xs,
-              SHOAppSpacing.pagePadding,
-              SHOAppSpacing.xs,
-            ),
-            child: Row(
-              children: [
-                _SortChip(
-                  label: l10n.musicLibrarySortRecent,
-                  selected: sort == SHOMusicLibrarySort.recent,
-                  onTap: () => ref
-                      .read(musicLibrarySortProvider.notifier)
-                      .state = SHOMusicLibrarySort.recent,
-                ),
-                const SizedBox(width: SHOAppSpacing.xs),
-                _SortChip(
-                  label: l10n.musicLibrarySortLiked,
-                  selected: sort == SHOMusicLibrarySort.liked,
-                  onTap: () => ref
-                      .read(musicLibrarySortProvider.notifier)
-                      .state = SHOMusicLibrarySort.liked,
-                ),
-              ],
-            ),
+        appBar: AppBar(
+          title: Text(
+            l10n.musicLibraryTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-          Expanded(
-            child: listAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => SHOEmptyState(title: error.toString()),
-              data: (items) {
-                if (items.isEmpty) {
-                  return SHOEmptyState(title: l10n.musicLibraryEmpty);
-                }
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                SHOAppSpacing.pagePadding,
+                SHOAppSpacing.xs,
+                SHOAppSpacing.pagePadding,
+                SHOAppSpacing.xs,
+              ),
+              child: Row(
+                children: [
+                  _SortChip(
+                    label: l10n.musicLibrarySortRecent,
+                    selected: sort == SHOMusicLibrarySort.recent,
+                    onTap: () =>
+                        ref.read(musicLibrarySortProvider.notifier).state =
+                            SHOMusicLibrarySort.recent,
+                  ),
+                  const SizedBox(width: SHOAppSpacing.xs),
+                  _SortChip(
+                    label: l10n.musicLibrarySortLiked,
+                    selected: sort == SHOMusicLibrarySort.liked,
+                    onTap: () =>
+                        ref.read(musicLibrarySortProvider.notifier).state =
+                            SHOMusicLibrarySort.liked,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: listAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => SHOEmptyState(title: error.toString()),
+                data: (items) {
+                  if (items.isEmpty) {
+                    return SHOEmptyState(title: l10n.musicLibraryEmpty);
+                  }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-                  itemCount: items.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: SHOAppSpacing.sm),
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    final track = item.track;
-                    final resume = _formatDuration(item.lastPosition);
-                    final playDate = _formatPlayDate(item.stats.lastPlayedAt);
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+                    itemCount: items.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: SHOAppSpacing.sm),
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      final track = item.track;
+                      final resume = _formatDuration(item.lastPosition);
+                      final playDate = _formatPlayDate(item.stats.lastPlayedAt);
 
-                    final isPlayingNow = playingTrackId == track.id;
-                    final isCurrentTrack = currentTrackId == track.id;
-                    final showPauseIcon =
-                        isCurrentTrack && playerState.isPlaying;
+                      final isPlayingNow = playingTrackId == track.id;
+                      final isCurrentTrack = currentTrackId == track.id;
+                      final showPauseIcon =
+                          isCurrentTrack && playerState.isPlaying;
 
-                    final tile = SHOProfileSectionCard(
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: SHOAppSpacing.md,
-                          vertical: SHOAppSpacing.xs,
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor:
-                              Color(track.coverColor ?? 0xFF5C6BC0)
-                                  .withValues(alpha: 0.18),
-                          child: isPlayingNow
-                              ? Icon(
-                                  Icons.graphic_eq_rounded,
-                                  color: Color(track.coverColor ?? 0xFF5C6BC0),
-                                )
-                              : Icon(
-                                  Icons.music_note_rounded,
-                                  color: Color(track.coverColor ?? 0xFF5C6BC0),
-                                ),
-                        ),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                track.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: isPlayingNow
-                                      ? SHOAppColors.accent
-                                      : null,
-                                ),
-                              ),
-                            ),
-                            if (isPlayingNow) ...[
-                              const SizedBox(width: SHOAppSpacing.xs),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: SHOAppColors.accent
-                                      .withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
+                      final tile = SHOProfileSectionCard(
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: SHOAppSpacing.md,
+                            vertical: SHOAppSpacing.xs,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: Color(
+                              track.coverColor ?? 0xFF5C6BC0,
+                            ).withValues(alpha: 0.18),
+                            child: isPlayingNow
+                                ? Icon(
+                                    Icons.graphic_eq_rounded,
+                                    color: Color(
+                                      track.coverColor ?? 0xFF5C6BC0,
+                                    ),
+                                  )
+                                : Icon(
+                                    Icons.music_note_rounded,
+                                    color: Color(
+                                      track.coverColor ?? 0xFF5C6BC0,
+                                    ),
+                                  ),
+                          ),
+                          title: Row(
+                            children: [
+                              Expanded(
                                 child: Text(
-                                  l10n.musicLibraryNowPlayingBadge,
-                                  style: const TextStyle(
-                                    fontSize: 10,
+                                  track.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: SHOAppColors.accent,
+                                    color: isPlayingNow
+                                        ? SHOAppColors.accent
+                                        : null,
                                   ),
                                 ),
+                              ),
+                              if (isPlayingNow) ...[
+                                const SizedBox(width: SHOAppSpacing.xs),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: SHOAppColors.accent.withValues(
+                                      alpha: 0.12,
+                                    ),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    l10n.musicLibraryNowPlayingBadge,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      color: SHOAppColors.accent,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(width: SHOAppSpacing.xs),
+                              _SourceBadge(
+                                label:
+                                    track.id.startsWith(
+                                      SHOMusicTrack.bundleIdPrefix,
+                                    )
+                                    ? l10n.musicLibraryBuiltinBadge
+                                    : item.isOnline
+                                    ? l10n.musicLibraryOnlineBadge
+                                    : l10n.musicLibraryLocalBadge,
+                                isOnline:
+                                    item.isOnline &&
+                                    !track.id.startsWith(
+                                      SHOMusicTrack.bundleIdPrefix,
+                                    ),
                               ),
                             ],
-                            const SizedBox(width: SHOAppSpacing.xs),
-                            _SourceBadge(
-                              label: track.id
-                                      .startsWith(SHOMusicTrack.bundleIdPrefix)
-                                  ? l10n.musicLibraryBuiltinBadge
-                                  : item.isOnline
-                                      ? l10n.musicLibraryOnlineBadge
-                                      : l10n.musicLibraryLocalBadge,
-                              isOnline: item.isOnline &&
-                                  !track.id.startsWith(
-                                    SHOMusicTrack.bundleIdPrefix,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        subtitle: Text(
-                          [
-                            track.artist,
-                            if (playDate.isNotEmpty)
-                              l10n.musicLibraryLastPlayedDate(playDate),
-                            if (item.stats.liked) l10n.musicLibraryLikedBadge,
-                            l10n.musicLibraryPlayCount(
-                              item.stats.playCount.toString(),
-                            ),
-                            if (resume.isNotEmpty)
-                              l10n.musicLibraryLastPlayed(resume),
-                          ].join(' · '),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: context.shoTheme.textSecondary,
-                            fontSize: 12,
                           ),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                item.stats.liked
-                                    ? Icons.favorite_rounded
-                                    : Icons.favorite_border_rounded,
-                                size: 20,
-                                color: item.stats.liked
-                                    ? SHOAppColors.accent
-                                    : context.shoTheme.textMuted,
+                          subtitle: Text(
+                            [
+                              track.artist,
+                              if (playDate.isNotEmpty)
+                                l10n.musicLibraryLastPlayedDate(playDate),
+                              if (item.stats.liked) l10n.musicLibraryLikedBadge,
+                              l10n.musicLibraryPlayCount(
+                                item.stats.playCount.toString(),
                               ),
-                              onPressed: () async {
-                                await ref
-                                    .read(musicStatsStorageProvider)
-                                    .toggleLike(track.id);
-                                ref
-                                    .read(musicLibraryRevisionProvider.notifier)
-                                    .state++;
-                              },
+                              if (resume.isNotEmpty)
+                                l10n.musicLibraryLastPlayed(resume),
+                            ].join(' · '),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: context.shoTheme.textSecondary,
+                              fontSize: 12,
                             ),
-                            IconButton(
-                              icon: Icon(
-                                showPauseIcon
-                                    ? Icons.pause_rounded
-                                    : Icons.play_arrow_rounded,
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  item.stats.liked
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_border_rounded,
+                                  size: 20,
+                                  color: item.stats.liked
+                                      ? SHOAppColors.accent
+                                      : context.shoTheme.textMuted,
+                                ),
+                                onPressed: () async {
+                                  await ref
+                                      .read(musicStatsStorageProvider)
+                                      .toggleLike(track.id);
+                                  ref
+                                      .read(
+                                        musicLibraryRevisionProvider.notifier,
+                                      )
+                                      .state++;
+                                },
                               ),
-                              onPressed: () async {
-                                if (isCurrentTrack) {
+                              IconButton(
+                                icon: Icon(
+                                  showPauseIcon
+                                      ? Icons.pause_rounded
+                                      : Icons.play_arrow_rounded,
+                                ),
+                                onPressed: () async {
+                                  if (isCurrentTrack) {
+                                    await ref
+                                        .read(musicPlayerProvider.notifier)
+                                        .togglePlayPause();
+                                    return;
+                                  }
+                                  final playlist = items
+                                      .map((e) => e.track)
+                                      .toList();
                                   await ref
                                       .read(musicPlayerProvider.notifier)
-                                      .togglePlayPause();
-                                  return;
-                                }
-                                final playlist =
-                                    items.map((e) => e.track).toList();
-                                await ref
-                                    .read(musicPlayerProvider.notifier)
-                                    .setPlaylist(
-                                      playlist,
-                                      startIndex: index,
-                                    );
-                              },
-                            ),
-                          ],
-                        ),
-                        onTap: () async {
-                          final playable =
-                              await isMusicTrackPlayable(track);
-                          if (!playable) {
-                            if (!context.mounted) return;
-                            await SHOConfirmCardDialog.show(
-                              context,
-                              title: l10n.musicInvalidTitle,
-                              message: l10n.musicInvalidMessage,
-                              confirmLabel: l10n.downloadPreviewOk,
+                                      .setPlaylist(playlist, startIndex: index);
+                                },
+                              ),
+                            ],
+                          ),
+                          onTap: () async {
+                            final playable = await isMusicTrackPlayable(track);
+                            if (!playable) {
+                              if (!context.mounted) return;
+                              await SHOConfirmCardDialog.show(
+                                context,
+                                title: l10n.musicInvalidTitle,
+                                message: l10n.musicInvalidMessage,
+                                confirmLabel: l10n.downloadPreviewOk,
+                              );
+                              return;
+                            }
+
+                            await openMusicPlayerPage(
+                              ref,
+                              trackId: track.id,
+                              index: index,
                             );
-                            return;
-                          }
+                          },
+                        ),
+                      );
 
-                          await openMusicPlayerPage(
-                            ref,
-                            trackId: track.id,
-                            index: index,
-                          );
-                        },
-                      ),
-                    );
-
-                    return SHOSlideActionTile(
-                      key: ValueKey('music_${track.id}'),
-                      actionWidth: 88,
-                      action: Container(
-                        alignment: Alignment.center,
-                        color: SHOAppColors.error.withValues(alpha: 0.92),
-                        child: Text(
-                          l10n.musicLibraryRemoveAction,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
+                      return SHOSlideActionTile(
+                        key: ValueKey('music_${track.id}'),
+                        actionWidth: 88,
+                        action: Container(
+                          alignment: Alignment.center,
+                          color: SHOAppColors.error.withValues(alpha: 0.92),
+                          child: Text(
+                            l10n.musicLibraryRemoveAction,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                      ),
-                      onAction: () async {
-                        final ok = await SHOConfirmCardDialog.show(
-                          context,
-                          title: l10n.musicLibraryRemoveConfirmTitle,
-                          message: l10n.musicLibraryRemoveConfirmMessage,
-                          confirmLabel: l10n.musicLibraryRemoveAction,
-                          isDestructive: true,
-                        );
-                        if (!ok || !context.mounted) return;
-                        await removeTrackFromLibrary(ref, item: item);
-                        await ref
-                            .read(musicPlayerProvider.notifier)
-                            .removeTrackFromPlaylist(track.id);
-                      },
-                      child: tile,
-                    );
-                  },
-                );
-              },
+                        onAction: () async {
+                          final ok = await SHOConfirmCardDialog.show(
+                            context,
+                            title: l10n.musicLibraryRemoveConfirmTitle,
+                            message: l10n.musicLibraryRemoveConfirmMessage,
+                            confirmLabel: l10n.musicLibraryRemoveAction,
+                            isDestructive: true,
+                          );
+                          if (!ok || !context.mounted) return;
+                          await removeTrackFromLibrary(ref, item: item);
+                          await ref
+                              .read(musicPlayerProvider.notifier)
+                              .removeTrackFromPlaylist(track.id);
+                        },
+                        child: tile,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-    onRetry: () => ref.invalidate(musicLibraryListProvider),
+      onRetry: () => ref.invalidate(musicLibraryListProvider),
     );
   }
 }
@@ -371,10 +377,7 @@ class _SortChip extends StatelessWidget {
 }
 
 class _SourceBadge extends StatelessWidget {
-  const _SourceBadge({
-    required this.label,
-    required this.isOnline,
-  });
+  const _SourceBadge({required this.label, required this.isOnline});
 
   final String label;
   final bool isOnline;

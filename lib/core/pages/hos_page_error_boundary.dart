@@ -69,10 +69,7 @@ class _SHOPageErrorBoundaryState extends State<SHOPageErrorBoundary> {
       );
     }
 
-    return KeyedSubtree(
-      key: ValueKey(_generation),
-      child: widget.child,
-    );
+    return KeyedSubtree(key: ValueKey(_generation), child: widget.child);
   }
 }
 

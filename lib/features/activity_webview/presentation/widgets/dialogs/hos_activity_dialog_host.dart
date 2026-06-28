@@ -67,10 +67,14 @@ class SHOActivityDialogHost extends ConsumerWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        IgnorePointer(ignoring: visible, child: child),//IgnorePointer 是 Flutter 框架层的机制，只能影响 Flutter 渲染树中的 Widget
+        IgnorePointer(
+          ignoring: visible,
+          child: child,
+        ), //IgnorePointer 是 Flutter 框架层的机制，只能影响 Flutter 渲染树中的 Widget
         if (visible) ...[
           Positioned.fill(
-            child: _ActivityModalBarrier(//_ActivityModalBarrier 遮罩层：组合使用确保滚轮、滑动、点击全部被拦截，无遗漏
+            child: _ActivityModalBarrier(
+              //_ActivityModalBarrier 遮罩层：组合使用确保滚轮、滑动、点击全部被拦截，无遗漏
               onDismiss: () => _dismissOverlay(
                 ref,
                 shareVisible: share.visible && config != null,
@@ -78,7 +82,8 @@ class SHOActivityDialogHost extends ConsumerWidget {
             ),
           ),
           if (dialogKind == 'coupon')
-            _ActivityDialogPanel(//弹窗面板
+            _ActivityDialogPanel(
+              //弹窗面板
               child: SHOCouponDialog(
                 coupon:
                     config?.coupons.firstOrNull ??

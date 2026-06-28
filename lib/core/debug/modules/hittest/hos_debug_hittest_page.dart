@@ -230,81 +230,89 @@ class _SHODebugHitTestPageState extends ConsumerState<SHODebugHitTestPage>
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: const Text('HitTestBehavior 调试'),
-        actions: [
-          IconButton(
-            tooltip: '清空日志',
-            icon: const Icon(Icons.clear_all),
-            onPressed: _clearLog,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          _buildLegend(),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              children: [
-                _BehaviorDemoCard(
-                  behavior: HitTestBehavior.deferToChild,
-                  title: 'deferToChild',
-                  subtitle: '仅子组件命中时，父层才参与命中测试',
-                  parentColor: Colors.red,
-                  onLog: (source, event, position) =>
-                      _log('deferToChild', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-                const SizedBox(height: 12),
-                _BehaviorDemoCard(
-                  behavior: HitTestBehavior.opaque,
-                  title: 'opaque',
-                  subtitle: '父层参与命中并阻挡下层，独占事件',
-                  parentColor: Colors.blue,
-                  onLog: (source, event, position) =>
-                      _log('opaque', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-                const SizedBox(height: 12),
-                _BehaviorDemoCard(
-                  behavior: HitTestBehavior.translucent,
-                  title: 'translucent',
-                  subtitle: '父层参与命中，同时允许事件继续传给下层',
-                  parentColor: Colors.green,
-                  onLog: (source, event, position) =>
-                      _log('translucent', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-                const SizedBox(height: 12),
-                // ========== opaque 阻断效果演示 ==========
-                _OpaqueBlockingDemo(
-                  onLog: (source, event, position) =>
-                      _log('opaque阻断', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-                const SizedBox(height: 12),
-                // ========== translucent 穿透效果演示 ==========
-                _TranslucentPenetrateDemo(
-                  onLog: (source, event, position) =>
-                      _log('translucent穿透', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-
-                // ========== other  穿透无效果演示 ==========
-                _OtherPenetrateDemo(
-                  onLog: (source, event, position) =>
-                      _log('translucent不穿透', source, event, position: position),
-                  showPointerMove: _showPointerMove,
-                ),
-              ],
+        appBar: AppBar(
+          title: const Text('HitTestBehavior 调试'),
+          actions: [
+            IconButton(
+              tooltip: '清空日志',
+              icon: const Icon(Icons.clear_all),
+              onPressed: _clearLog,
             ),
-          ),
-          const Divider(height: 1),
-          SizedBox(height: 280, child: _buildLogArea()),
-        ],
+          ],
+        ),
+        body: Column(
+          children: [
+            _buildLegend(),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                children: [
+                  _BehaviorDemoCard(
+                    behavior: HitTestBehavior.deferToChild,
+                    title: 'deferToChild',
+                    subtitle: '仅子组件命中时，父层才参与命中测试',
+                    parentColor: Colors.red,
+                    onLog: (source, event, position) =>
+                        _log('deferToChild', source, event, position: position),
+                    showPointerMove: _showPointerMove,
+                  ),
+                  const SizedBox(height: 12),
+                  _BehaviorDemoCard(
+                    behavior: HitTestBehavior.opaque,
+                    title: 'opaque',
+                    subtitle: '父层参与命中并阻挡下层，独占事件',
+                    parentColor: Colors.blue,
+                    onLog: (source, event, position) =>
+                        _log('opaque', source, event, position: position),
+                    showPointerMove: _showPointerMove,
+                  ),
+                  const SizedBox(height: 12),
+                  _BehaviorDemoCard(
+                    behavior: HitTestBehavior.translucent,
+                    title: 'translucent',
+                    subtitle: '父层参与命中，同时允许事件继续传给下层',
+                    parentColor: Colors.green,
+                    onLog: (source, event, position) =>
+                        _log('translucent', source, event, position: position),
+                    showPointerMove: _showPointerMove,
+                  ),
+                  const SizedBox(height: 12),
+                  // ========== opaque 阻断效果演示 ==========
+                  _OpaqueBlockingDemo(
+                    onLog: (source, event, position) =>
+                        _log('opaque阻断', source, event, position: position),
+                    showPointerMove: _showPointerMove,
+                  ),
+                  const SizedBox(height: 12),
+                  // ========== translucent 穿透效果演示 ==========
+                  _TranslucentPenetrateDemo(
+                    onLog: (source, event, position) => _log(
+                      'translucent穿透',
+                      source,
+                      event,
+                      position: position,
+                    ),
+                    showPointerMove: _showPointerMove,
+                  ),
+
+                  // ========== other  穿透无效果演示 ==========
+                  _OtherPenetrateDemo(
+                    onLog: (source, event, position) => _log(
+                      'translucent不穿透',
+                      source,
+                      event,
+                      position: position,
+                    ),
+                    showPointerMove: _showPointerMove,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            SizedBox(height: 280, child: _buildLogArea()),
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -1075,7 +1083,6 @@ flutter: 文字点击事件回调
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Text('$descResult'),
             const SizedBox(height: 10),
             // 点击测试区域

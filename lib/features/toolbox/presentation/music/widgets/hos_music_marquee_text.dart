@@ -60,7 +60,9 @@ class _SHOMusicMarqueeTextState extends State<SHOMusicMarqueeText>
     final distance = textWidth + gap;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: (distance * 28).round().clamp(4000, 14000)),
+      duration: Duration(
+        milliseconds: (distance * 28).round().clamp(4000, 14000),
+      ),
     )..repeat();
   }
 

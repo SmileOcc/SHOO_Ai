@@ -9,8 +9,8 @@ class SHODebugCustomInterceptor extends Interceptor {
   SHODebugCustomInterceptor({
     required SHODebugNetworkLabConfig config,
     required SHODebugInterceptorEvent onEvent,
-  })  : _config = config,
-        _onEvent = onEvent;
+  }) : _config = config,
+       _onEvent = onEvent;
 
   final SHODebugNetworkLabConfig _config;
   final SHODebugInterceptorEvent _onEvent;
@@ -37,7 +37,10 @@ class SHODebugCustomInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     _onEvent(
       '[Custom:onResponse] ${response.statusCode} ${response.requestOptions.path}',
     );
@@ -46,9 +49,7 @@ class SHODebugCustomInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _onEvent(
-      '[Custom:onError] ${err.type.name} ${err.requestOptions.path}',
-    );
+    _onEvent('[Custom:onError] ${err.type.name} ${err.requestOptions.path}');
     handler.next(err);
   }
 }

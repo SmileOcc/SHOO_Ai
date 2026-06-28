@@ -11,10 +11,7 @@ abstract final class SHOMockOrderStore {
   static void markPaid(String orderId) {
     final existing = _orders[orderId];
     if (existing != null) {
-      _orders[orderId] = {
-        ...existing,
-        'status': 'paid',
-      };
+      _orders[orderId] = {...existing, 'status': 'paid'};
       return;
     }
     _orders[orderId] = {

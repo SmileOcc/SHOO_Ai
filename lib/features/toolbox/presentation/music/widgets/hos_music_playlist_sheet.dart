@@ -37,7 +37,8 @@ class _SHOMusicPlaylistSheet extends ConsumerStatefulWidget {
       _SHOMusicPlaylistSheetState();
 }
 
-class _SHOMusicPlaylistSheetState extends ConsumerState<_SHOMusicPlaylistSheet> {
+class _SHOMusicPlaylistSheetState
+    extends ConsumerState<_SHOMusicPlaylistSheet> {
   late double _height;
   var _downwardDrag = 0.0;
   var _dragging = false;
@@ -111,16 +112,16 @@ class _SHOMusicPlaylistSheetState extends ConsumerState<_SHOMusicPlaylistSheet> 
 
   Future<void> _playAt(int index, List<SHOMusicTrack> likedTracks) async {
     if (index < 0 || index >= likedTracks.length) return;
-    await ref.read(musicPlayerProvider.notifier).setPlaylist(
+    await ref
+        .read(musicPlayerProvider.notifier)
+        .setPlaylist(
           likedTracks,
           startIndex: index,
           scope: SHOMusicPlaylistScope.likedDirectory,
         );
   }
 
-  List<SHOMusicTrack> _likedTracksFrom(
-    List<SHOMusicLibraryListItem> items,
-  ) {
+  List<SHOMusicTrack> _likedTracksFrom(List<SHOMusicLibraryListItem> items) {
     return items
         .where((item) => item.stats.liked)
         .map((item) => item.track)
@@ -146,12 +147,9 @@ class _SHOMusicPlaylistSheetState extends ConsumerState<_SHOMusicPlaylistSheet> 
       musicLibraryListProvider,
       (_, next) => next.whenData(_syncScrollToCurrent),
     );
-    ref.listen<SHOMusicPlayerState>(
-      musicPlayerProvider,
-      (_, __) {
-        listAsync.whenData(_syncScrollToCurrent);
-      },
-    );
+    ref.listen<SHOMusicPlayerState>(musicPlayerProvider, (_, __) {
+      listAsync.whenData(_syncScrollToCurrent);
+    });
 
     return SizedBox(
       height: screenH,
@@ -182,141 +180,146 @@ class _SHOMusicPlaylistSheetState extends ConsumerState<_SHOMusicPlaylistSheet> 
                   ),
                 ),
                 child: Column(
-          children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onVerticalDragStart: _onVerticalDragStart,
-              onVerticalDragUpdate: _onVerticalDragUpdate,
-              onVerticalDragEnd: _onVerticalDragEnd,
-              child: Column(
-                children: [
-                  const SizedBox(height: SHOAppSpacing.sm),
-                  Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.28),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      SHOAppSpacing.lg,
-                      SHOAppSpacing.md,
-                      SHOAppSpacing.lg,
-                      SHOAppSpacing.sm,
-                    ),
-                    child: listAsync.maybeWhen(
-                      data: (items) {
-                        final likedCount =
-                            items.where((item) => item.stats.liked).length;
-                        return Row(
-                          children: [
-                            Text(
-                              l10n.musicPlayerLikedPlaylistTitle,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onVerticalDragStart: _onVerticalDragStart,
+                      onVerticalDragUpdate: _onVerticalDragUpdate,
+                      onVerticalDragEnd: _onVerticalDragEnd,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: SHOAppSpacing.sm),
+                          Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.28),
+                              borderRadius: BorderRadius.circular(99),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              SHOAppSpacing.lg,
+                              SHOAppSpacing.md,
+                              SHOAppSpacing.lg,
+                              SHOAppSpacing.sm,
+                            ),
+                            child: listAsync.maybeWhen(
+                              data: (items) {
+                                final likedCount = items
+                                    .where((item) => item.stats.liked)
+                                    .length;
+                                return Row(
+                                  children: [
+                                    Text(
+                                      l10n.musicPlayerLikedPlaylistTitle,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      l10n.musicPlayerPlaylistCount(
+                                        likedCount.toString(),
+                                      ),
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.55,
+                                        ),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              orElse: () => Text(
+                                l10n.musicPlayerLikedPlaylistTitle,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                             ),
-                            const Spacer(),
-                            Text(
-                              l10n.musicPlayerPlaylistCount(
-                                likedCount.toString(),
-                              ),
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.55),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      orElse: () => Text(
-                        l10n.musicPlayerLikedPlaylistTitle,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: listAsync.when(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                error: (error, _) => Center(
-                  child: Text(
-                    error.toString(),
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                    ),
-                  ),
-                ),
-                data: (items) {
-                  final likedTracks = _likedTracksFrom(items);
-
-                  if (!_didRequestInitialScroll) {
-                    _didRequestInitialScroll = true;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (mounted) _syncScrollToCurrent(items);
-                    });
-                  }
-
-                  if (likedTracks.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(SHOAppSpacing.lg),
-                        child: Text(
-                          l10n.musicPlayerLikedPlaylistEmpty,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            height: 1.4,
+                    Expanded(
+                      child: listAsync.when(
+                        loading: () => const Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        error: (error, _) => Center(
+                          child: Text(
+                            error.toString(),
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.5),
+                            ),
                           ),
                         ),
+                        data: (items) {
+                          final likedTracks = _likedTracksFrom(items);
+
+                          if (!_didRequestInitialScroll) {
+                            _didRequestInitialScroll = true;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) _syncScrollToCurrent(items);
+                            });
+                          }
+
+                          if (likedTracks.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(SHOAppSpacing.lg),
+                                child: Text(
+                                  l10n.musicPlayerLikedPlaylistEmpty,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.5),
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.only(
+                              left: SHOAppSpacing.md,
+                              right: SHOAppSpacing.md,
+                              bottom: SHOAppSpacing.lg,
+                            ),
+                            itemCount: likedTracks.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 4),
+                            itemBuilder: (context, index) {
+                              final track = likedTracks[index];
+                              final isSelected = track.id == currentTrackId;
+                              final isPlaying =
+                                  isSelected && playerState.isPlaying;
+
+                              return _PlaylistTile(
+                                track: track,
+                                index: index + 1,
+                                isSelected: isSelected,
+                                isPlaying: isPlaying,
+                                onTap: () => _playAt(index, likedTracks),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    );
-                  }
-
-                  return ListView.separated(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.only(
-                      left: SHOAppSpacing.md,
-                      right: SHOAppSpacing.md,
-                      bottom: SHOAppSpacing.lg,
                     ),
-                    itemCount: likedTracks.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 4),
-                    itemBuilder: (context, index) {
-                      final track = likedTracks[index];
-                      final isSelected = track.id == currentTrackId;
-                      final isPlaying = isSelected && playerState.isPlaying;
-
-                      return _PlaylistTile(
-                        track: track,
-                        index: index + 1,
-                        isSelected: isSelected,
-                        isPlaying: isPlaying,
-                        onTap: () => _playAt(index, likedTracks),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ],
       ),
     );
@@ -396,8 +399,9 @@ class _PlaylistTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: isSelected ? SHOAppColors.accent : Colors.white,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 2),

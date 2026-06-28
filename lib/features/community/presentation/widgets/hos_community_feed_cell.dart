@@ -9,10 +9,7 @@ import 'package:shoo/features/community/presentation/widgets/hos_community_news_
 import 'package:shoo/features/community/presentation/widgets/hos_community_post_cell.dart';
 
 class SHOCommunityFeedCell extends StatelessWidget {
-  const SHOCommunityFeedCell({
-    super.key,
-    required this.item,
-  });
+  const SHOCommunityFeedCell({super.key, required this.item});
 
   final SHOCommunityFeedItem item;
 
@@ -20,17 +17,17 @@ class SHOCommunityFeedCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (item.kind) {
       SHOCommunityFeedKind.news => SHOCommunityNewsCell(
-          item: item,
-          onTap: () => _openNews(context),
-        ),
+        item: item,
+        onTap: () => _openNews(context),
+      ),
       SHOCommunityFeedKind.post => SHOCommunityPostCell(
-          item: item,
-          onTap: () => _openPost(context),
-        ),
+        item: item,
+        onTap: () => _openPost(context),
+      ),
       SHOCommunityFeedKind.ad => SHOCommunityAdCell(
-          item: item,
-          onTap: () => _openAd(context),
-        ),
+        item: item,
+        onTap: () => _openAd(context),
+      ),
     };
   }
 

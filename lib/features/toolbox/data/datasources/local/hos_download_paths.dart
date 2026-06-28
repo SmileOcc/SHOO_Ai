@@ -31,7 +31,9 @@ abstract final class SHODownloadPaths {
     if (await File(canonical).exists()) return canonical;
 
     final legacy = task.localPath.trim();
-    if (legacy.isNotEmpty && legacy != canonical && await File(legacy).exists()) {
+    if (legacy.isNotEmpty &&
+        legacy != canonical &&
+        await File(legacy).exists()) {
       return legacy;
     }
     return null;

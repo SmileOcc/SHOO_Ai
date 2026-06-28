@@ -13,10 +13,12 @@ class SHODebugUpdateConfigPage extends ConsumerStatefulWidget {
   const SHODebugUpdateConfigPage({super.key});
 
   @override
-  ConsumerState<SHODebugUpdateConfigPage> createState() => _SHODebugUpdateConfigPageState();
+  ConsumerState<SHODebugUpdateConfigPage> createState() =>
+      _SHODebugUpdateConfigPageState();
 }
 
-class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigPage>
+class _SHODebugUpdateConfigPageState
+    extends ConsumerState<SHODebugUpdateConfigPage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'debug_update_config';
@@ -71,7 +73,9 @@ class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigP
     setState(() => _overrideEnabled = value);
     final l10n = AppLocalizations.of(context);
     await _save(
-      snackMessage: value ? l10n.debugOverrideActiveNow : l10n.debugOverrideInactiveNow,
+      snackMessage: value
+          ? l10n.debugOverrideActiveNow
+          : l10n.debugOverrideInactiveNow,
     );
   }
 
@@ -84,9 +88,9 @@ class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigP
     if (!mounted) return;
 
     if (!info.hasUpdate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.debugPreviewNoUpdate)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.debugPreviewNoUpdate)));
       return;
     }
 
@@ -99,56 +103,59 @@ class _SHODebugUpdateConfigPageState extends ConsumerState<SHODebugUpdateConfigP
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugUpdateTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          SHODebugFlowStatusBanner(overrideEnabled: _overrideEnabled),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SwitchListTile(
-            title: Text(l10n.debugOverrideEnabled),
-            subtitle: Text(l10n.debugUpdateOverrideHint),
-            value: _overrideEnabled,
-            onChanged: _onOverrideChanged,
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _versionCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugUpdateVersion,
-              border: const OutlineInputBorder(),
+        appBar: AppBar(title: Text(l10n.debugUpdateTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            SHODebugFlowStatusBanner(overrideEnabled: _overrideEnabled),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SwitchListTile(
+              title: Text(l10n.debugOverrideEnabled),
+              subtitle: Text(l10n.debugUpdateOverrideHint),
+              value: _overrideEnabled,
+              onChanged: _onOverrideChanged,
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          TextField(
-            controller: _notesCtrl,
-            minLines: 3,
-            maxLines: 8,
-            decoration: InputDecoration(
-              labelText: l10n.debugUpdateNotes,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _versionCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugUpdateVersion,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.lg),
-          SwitchListTile(
-            title: Text(l10n.debugUpdateForce),
-            value: _forceUpdate,
-            onChanged: (v) => setState(() => _forceUpdate = v),
-          ),
-          TextField(
-            controller: _urlCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.debugUpdateUrl,
-              border: const OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.lg),
+            TextField(
+              controller: _notesCtrl,
+              minLines: 3,
+              maxLines: 8,
+              decoration: InputDecoration(
+                labelText: l10n.debugUpdateNotes,
+                border: const OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          FilledButton(onPressed: _save, child: Text(l10n.debugSaveConfig)),
-          const SizedBox(height: SHOAppSpacing.md),
-          OutlinedButton(onPressed: _preview, child: Text(l10n.debugPreviewPopup)),
-        ],
+            const SizedBox(height: SHOAppSpacing.lg),
+            SwitchListTile(
+              title: Text(l10n.debugUpdateForce),
+              value: _forceUpdate,
+              onChanged: (v) => setState(() => _forceUpdate = v),
+            ),
+            TextField(
+              controller: _urlCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.debugUpdateUrl,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            FilledButton(onPressed: _save, child: Text(l10n.debugSaveConfig)),
+            const SizedBox(height: SHOAppSpacing.md),
+            OutlinedButton(
+              onPressed: _preview,
+              child: Text(l10n.debugPreviewPopup),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

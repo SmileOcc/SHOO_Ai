@@ -29,9 +29,7 @@ abstract final class SHOPageLoadReporter {
     String? routePath,
     Map<String, Object?> extra = const {},
   }) async {
-    SHOAppLogger.d(
-      '[PageLoad] $pageName phase=${phase.value} ${durationMs}ms',
-    );
+    SHOAppLogger.d('[PageLoad] $pageName phase=${phase.value} ${durationMs}ms');
 
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.pageLoadTime,
@@ -76,17 +74,15 @@ abstract final class SHOPageLoadReporter {
       '[WebViewLoad] ${success ? 'ok' : 'fail'} ${durationMs}ms $url',
     );
 
-    await SHOAnalyticsManager.instance.trackEvent(
-      SHOAnalyticsRegistry.webViewPageLoad,
-      {
-        'url': url,
-        'duration_ms': durationMs,
-        'success': success,
-        if (errorCode != null) 'error_code': errorCode,
-        if (errorMessage != null && errorMessage.isNotEmpty)
-          'error_message': errorMessage,
-      },
-    );
+    await SHOAnalyticsManager.instance
+        .trackEvent(SHOAnalyticsRegistry.webViewPageLoad, {
+          'url': url,
+          'duration_ms': durationMs,
+          'success': success,
+          if (errorCode != null) 'error_code': errorCode,
+          if (errorMessage != null && errorMessage.isNotEmpty)
+            'error_message': errorMessage,
+        });
   }
 
   static Future<void> reportBridgeError({
@@ -98,16 +94,15 @@ abstract final class SHOPageLoadReporter {
   }) async {
     SHOAppLogger.w('[BridgeError] $pageName $error');
 
-    await SHOAnalyticsManager.instance.trackEvent(
-      SHOAnalyticsRegistry.bridgeError,
-      {
-        'page_name': pageName,
-        'error': error,
-        if (bridgeType != null && bridgeType.isNotEmpty) 'bridge_type': bridgeType,
-        if (bridgeAction != null && bridgeAction.isNotEmpty)
-          'bridge_action': bridgeAction,
-        ...extra,
-      },
-    );
+    await SHOAnalyticsManager.instance
+        .trackEvent(SHOAnalyticsRegistry.bridgeError, {
+          'page_name': pageName,
+          'error': error,
+          if (bridgeType != null && bridgeType.isNotEmpty)
+            'bridge_type': bridgeType,
+          if (bridgeAction != null && bridgeAction.isNotEmpty)
+            'bridge_action': bridgeAction,
+          ...extra,
+        });
   }
 }

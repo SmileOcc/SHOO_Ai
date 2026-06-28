@@ -12,8 +12,9 @@ import 'package:shoo/features/address/domain/entities/hos_address.dart';
 import 'package:shoo/features/address/presentation/state/hos_address_controller.dart';
 import 'package:shoo/features/address/presentation/widgets/hos_address_text_field.dart';
 
-final _addressFormCreateProvider =
-    Provider<AsyncValue<SHOAddress?>>((ref) => const AsyncData(null));
+final _addressFormCreateProvider = Provider<AsyncValue<SHOAddress?>>(
+  (ref) => const AsyncData(null),
+);
 
 class SHOAddressFormPage extends SHODataPage<SHOAddress?> {
   const SHOAddressFormPage({super.key, this.addressId});
@@ -57,9 +58,9 @@ class _SHOAddressFormPageState
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.addressId != null) 'address_id': widget.addressId,
-        'is_edit': _isEditing,
-      };
+    if (widget.addressId != null) 'address_id': widget.addressId,
+    'is_edit': _isEditing,
+  };
 
   @override
   bool isEmptyData(SHOAddress? data) => _isEditing && data == null;
@@ -106,7 +107,8 @@ class _SHOAddressFormPageState
 
     setState(() => _saving = true);
     try {
-      final addresses = ref.read(addressesProvider).valueOrNull ?? const <SHOAddress>[];
+      final addresses =
+          ref.read(addressesProvider).valueOrNull ?? const <SHOAddress>[];
       final id =
           widget.addressId ?? 'addr_${DateTime.now().millisecondsSinceEpoch}';
       final shouldDefault = _isDefault || addresses.isEmpty;

@@ -1,7 +1,6 @@
 /// 常用字典/Map 工具。
 abstract final class SHOMapUtils {
-  static bool isEmpty(Map<dynamic, dynamic>? map) =>
-      map == null || map.isEmpty;
+  static bool isEmpty(Map<dynamic, dynamic>? map) => map == null || map.isEmpty;
 
   static bool isNotEmpty(Map<dynamic, dynamic>? map) => !isEmpty(map);
 
@@ -14,7 +13,9 @@ abstract final class SHOMapUtils {
 
   static Map<K, V> filterNullValues<K, V>(Map<K, V?> map) {
     return Map.fromEntries(
-      map.entries.where((e) => e.value != null).map((e) => MapEntry(e.key, e.value as V)),
+      map.entries
+          .where((e) => e.value != null)
+          .map((e) => MapEntry(e.key, e.value as V)),
     );
   }
 
@@ -26,7 +27,10 @@ abstract final class SHOMapUtils {
   }
 
   static Map<K, V> pick<K, V>(Map<K, V> map, List<K> keys) {
-    return {for (final k in keys) if (map.containsKey(k)) k: map[k]!};
+    return {
+      for (final k in keys)
+        if (map.containsKey(k)) k: map[k]!,
+    };
   }
 
   static Map<K, V> omit<K, V>(Map<K, V> map, List<K> keys) {

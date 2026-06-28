@@ -53,9 +53,9 @@ String downloadStatusLabel(AppLocalizations l10n, SHODownloadStatus status) {
 
 extension SHODownloadListTabX on SHODownloadListTab {
   String label(AppLocalizations l10n) => switch (this) {
-        SHODownloadListTab.all => l10n.downloadTabAll,
-        SHODownloadListTab.downloading => l10n.downloadTabDownloading,
-        SHODownloadListTab.paused => l10n.downloadTabPaused,
-        SHODownloadListTab.completed => l10n.downloadTabCompleted,
-      };
+    SHODownloadListTab.all => l10n.downloadTabAll,
+    SHODownloadListTab.downloading => l10n.downloadTabDownloading,
+    SHODownloadListTab.paused => l10n.downloadTabPaused,
+    SHODownloadListTab.completed => l10n.downloadTabCompleted,
+  };
 }

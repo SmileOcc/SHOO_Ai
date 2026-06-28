@@ -16,10 +16,7 @@ SHOAppException mapDioError(DioException error) {
       final message = error.response?.data is Map
           ? (error.response!.data as Map)['message']?.toString()
           : null;
-      return SHOServerException(
-        message ?? 'Server error',
-        code: statusCode,
-      );
+      return SHOServerException(message ?? 'Server error', code: statusCode);
     case DioExceptionType.cancel:
       return const SHONetworkException('Request cancelled');
     case DioExceptionType.badCertificate:

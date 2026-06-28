@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shoo/core/brand/hos_app_icon.dart';
 import 'package:shoo/core/brand/hos_app_icon_style.dart';
 import 'package:shoo/core/brand/hos_brand_config.dart';
+
 /// 品牌加载组件：圆角 App Icon + 内部浅灰圆形旋转环。
 ///
 /// ```dart
@@ -100,7 +101,8 @@ class _SHOAppLoadingState extends State<SHOAppLoading>
           Text(
             SHOAppBrandConfig.displayName,
             style: TextStyle(
-              color: widget.appNameColor ??
+              color:
+                  widget.appNameColor ??
                   Theme.of(context).colorScheme.onSurface,
               fontSize: widget.size * 0.22,
               fontWeight: FontWeight.w900,

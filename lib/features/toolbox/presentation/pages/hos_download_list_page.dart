@@ -27,7 +27,11 @@ class SHODownloadListPage extends ConsumerStatefulWidget {
 }
 
 class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
-    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+    with
+        SingleTickerProviderStateMixin,
+        SHOPageRouteAnalyticsMixin,
+        SHOAppPageMixin,
+        SHOAppTrackedPageMixin {
   late final TabController _tabController;
 
   static const _tabs = SHODownloadListTab.values;
@@ -54,7 +58,9 @@ class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
   Future<void> _openAddTaskDialog() async {
     final result = await SHODownloadTaskDialog.show(context);
     if (result == null || !mounted) return;
-    await ref.read(downloadTasksProvider.notifier).addTask(
+    await ref
+        .read(downloadTasksProvider.notifier)
+        .addTask(
           url: result.url,
           fileName: result.fileName,
           priority: result.priority,
@@ -67,59 +73,60 @@ class _SHODownloadListPageState extends ConsumerState<SHODownloadListPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.downloadListTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+        appBar: AppBar(
+          title: Text(
+            l10n.downloadListTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              tooltip: l10n.downloadAddTask,
+              onPressed: _openAddTaskDialog,
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kTextTabBarHeight + 1),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: SHOAppColors.border,
+                ),
+                TabBar(
+                  controller: _tabController,
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
+                  dividerHeight: 0,
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  unselectedLabelColor: context.shoTheme.textSecondary,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                  indicator: const UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      color: SHOAppColors.accent,
+                      width: 3,
+                    ),
+                  ),
+                  tabs: _tabs.map((tab) => Tab(text: tab.label(l10n))).toList(),
+                ),
+              ],
+            ),
+          ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: l10n.downloadAddTask,
-            onPressed: _openAddTaskDialog,
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(kTextTabBarHeight + 1),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: SHOAppColors.border,
-              ),
-              TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                tabAlignment: TabAlignment.start,
-                dividerHeight: 0,
-                labelColor: Theme.of(context).colorScheme.onSurface,
-                unselectedLabelColor: context.shoTheme.textSecondary,
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-                indicator: const UnderlineTabIndicator(
-                  borderSide: BorderSide(color: SHOAppColors.accent, width: 3),
-                ),
-                tabs: _tabs.map((tab) => Tab(text: tab.label(l10n))).toList(),
-              ),
-            ],
-          ),
+        body: TabBarView(
+          controller: _tabController,
+          children: _tabs.map((tab) => _SHODownloadTabView(tab: tab)).toList(),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabs
-            .map((tab) => _SHODownloadTabView(tab: tab))
-            .toList(),
-      ),
-    ),
     );
   }
 }
@@ -135,15 +142,12 @@ class _SHODownloadTabView extends ConsumerWidget {
     final tasks = ref.watch(userDownloadTasksProvider);
     final filtered = switch (tab) {
       SHODownloadListTab.all => tasks,
-      SHODownloadListTab.downloading => tasks
-          .where((t) => t.status == SHODownloadStatus.downloading)
-          .toList(),
-      SHODownloadListTab.paused => tasks
-          .where((t) => t.status == SHODownloadStatus.paused)
-          .toList(),
-      SHODownloadListTab.completed => tasks
-          .where((t) => t.status == SHODownloadStatus.completed)
-          .toList(),
+      SHODownloadListTab.downloading =>
+        tasks.where((t) => t.status == SHODownloadStatus.downloading).toList(),
+      SHODownloadListTab.paused =>
+        tasks.where((t) => t.status == SHODownloadStatus.paused).toList(),
+      SHODownloadListTab.completed =>
+        tasks.where((t) => t.status == SHODownloadStatus.completed).toList(),
     };
 
     if (tasks.isEmpty) {

@@ -6,10 +6,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 
 /// 物流轨迹时间轴组件。
 class SHOLogisticsTimeline extends StatelessWidget {
-  const SHOLogisticsTimeline({
-    super.key,
-    required this.events,
-  });
+  const SHOLogisticsTimeline({super.key, required this.events});
 
   final List<SHOLogisticsEvent> events;
 
@@ -28,10 +25,7 @@ class SHOLogisticsTimeline extends StatelessWidget {
 }
 
 class _SHOLogisticsTimelineItem extends StatelessWidget {
-  const _SHOLogisticsTimelineItem({
-    required this.event,
-    required this.isLast,
-  });
+  const _SHOLogisticsTimelineItem({required this.event, required this.isLast});
 
   final SHOLogisticsEvent event;
   final bool isLast;
@@ -60,31 +54,24 @@ class _SHOLogisticsTimelineItem extends StatelessWidget {
                   ),
                 ),
                 if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      color: lineColor,
-                    ),
-                  ),
+                  Expanded(child: Container(width: 2, color: lineColor)),
               ],
             ),
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
-                bottom: isLast ? 0 : SHOAppSpacing.xl,
-              ),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : SHOAppSpacing.xl),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     event.status,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                          color: active
-                              ? SHOAppColors.textPrimary
-                              : SHOAppColors.textSecondary,
-                        ),
+                      fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+                      color: active
+                          ? SHOAppColors.textPrimary
+                          : SHOAppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: SHOAppSpacing.xxs),
                   Text(
@@ -95,9 +82,9 @@ class _SHOLogisticsTimelineItem extends StatelessWidget {
                   Text(
                     event.description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 12,
-                          color: SHOAppColors.textSecondary,
-                        ),
+                      fontSize: 12,
+                      color: SHOAppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),

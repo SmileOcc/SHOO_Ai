@@ -115,7 +115,6 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
   }
 }
 
-
 /*
 用户登录/登出
     ↓

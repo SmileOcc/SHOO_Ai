@@ -19,10 +19,10 @@ class SHOFullReductionTier {
   }
 
   Map<String, dynamic> toJson() => {
-        'minOrderCents': minOrderCents,
-        'reductionCents': reductionCents,
-        if (label.isNotEmpty) 'label': label,
-      };
+    'minOrderCents': minOrderCents,
+    'reductionCents': reductionCents,
+    if (label.isNotEmpty) 'label': label,
+  };
 }
 
 /// 抢购结算活动上下文（单商品行）。
@@ -42,7 +42,8 @@ class SHOCheckoutActivityLine {
   final List<SHOFullReductionTier> fullReductionTiers;
 
   factory SHOCheckoutActivityLine.fromJson(Map<String, dynamic> json) {
-    final tiers = (json['fullReductionTiers'] as List<dynamic>?)
+    final tiers =
+        (json['fullReductionTiers'] as List<dynamic>?)
             ?.whereType<Map<String, dynamic>>()
             .map(SHOFullReductionTier.fromJson)
             .toList() ??
@@ -57,13 +58,12 @@ class SHOCheckoutActivityLine {
   }
 
   Map<String, dynamic> toJson() => {
-        'productId': productId,
-        'sessionId': sessionId,
-        'unitPriceCents': unitPriceCents,
-        'originalUnitPriceCents': originalUnitPriceCents,
-        'fullReductionTiers':
-            fullReductionTiers.map((t) => t.toJson()).toList(),
-      };
+    'productId': productId,
+    'sessionId': sessionId,
+    'unitPriceCents': unitPriceCents,
+    'originalUnitPriceCents': originalUnitPriceCents,
+    'fullReductionTiers': fullReductionTiers.map((t) => t.toJson()).toList(),
+  };
 }
 
 extension SHOFullReductionCalculator on List<SHOFullReductionTier> {
@@ -71,8 +71,7 @@ extension SHOFullReductionCalculator on List<SHOFullReductionTier> {
   int bestReductionFor(int subtotalCents) {
     var best = 0;
     for (final tier in this) {
-      if (subtotalCents >= tier.minOrderCents &&
-          tier.reductionCents > best) {
+      if (subtotalCents >= tier.minOrderCents && tier.reductionCents > best) {
         best = tier.reductionCents;
       }
     }

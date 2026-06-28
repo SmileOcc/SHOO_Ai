@@ -6,10 +6,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 
 class SHOCommunityMenuBar extends StatelessWidget {
-  const SHOCommunityMenuBar({
-    super.key,
-    required this.items,
-  });
+  const SHOCommunityMenuBar({super.key, required this.items});
 
   final List<SHOCommunityMenuItem> items;
 

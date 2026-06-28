@@ -32,10 +32,7 @@ class SHOAppIcon extends StatelessWidget {
 }
 
 class _SHOAppIconPainter extends CustomPainter {
-  const _SHOAppIconPainter({
-    required this.style,
-    this.borderRadius,
-  });
+  const _SHOAppIconPainter({required this.style, this.borderRadius});
 
   final SHOAppIconStyle style;
   final double? borderRadius;
@@ -83,7 +80,12 @@ class _SHOAppIconPainter extends CustomPainter {
       size.width / 2,
       Paint()..color = SHOAppColors.accent,
     );
-    _drawWordmark(canvas, size, color: Colors.white, fontSize: size.width * 0.18);
+    _drawWordmark(
+      canvas,
+      size,
+      color: Colors.white,
+      fontSize: size.width * 0.18,
+    );
   }
 
   void _paintFashionBag(Canvas canvas, Size size) {

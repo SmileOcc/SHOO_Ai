@@ -16,7 +16,8 @@ class SHOVideoPlaybackStorage {
 
   final SharedPreferences _prefs;
 
-  String _key(String entryId) => '${SHOVideoStorageKeys.progressPrefix}$entryId';
+  String _key(String entryId) =>
+      '${SHOVideoStorageKeys.progressPrefix}$entryId';
 
   SHOVideoPlaybackProgress? read(String entryId) {
     final raw = _prefs.getString(_key(entryId));

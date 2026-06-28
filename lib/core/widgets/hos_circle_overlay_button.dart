@@ -131,7 +131,10 @@ class SHOFooterIconAction extends StatelessWidget {
                     right: -8,
                     top: -6,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 1,
+                      ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.error,
                         borderRadius: BorderRadius.circular(8),
@@ -151,7 +154,9 @@ class SHOFooterIconAction extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 10),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(fontSize: 10),
             ),
           ],
         ),

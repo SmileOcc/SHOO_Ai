@@ -4,7 +4,7 @@ import 'package:shoo/core/constants/hos_constants.dart';
 
 class SHOTapGuard {
   SHOTapGuard({Duration? interval})
-      : _interval = interval ?? SHOAppConstants.debounceDuration;
+    : _interval = interval ?? SHOAppConstants.debounceDuration;
 
   final Duration _interval;
   DateTime? _lastTap;

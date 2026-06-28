@@ -21,9 +21,7 @@ class SHOMusicStatsStorage {
   SHOMusicTrackStats read(String trackId) {
     final raw = _prefs.getString(_key(trackId));
     if (raw == null || raw.isEmpty) return const SHOMusicTrackStats();
-    return SHOMusicTrackStats.fromJson(
-      jsonDecode(raw) as Map<String, dynamic>,
-    );
+    return SHOMusicTrackStats.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
 
   Future<void> write(String trackId, SHOMusicTrackStats stats) async {

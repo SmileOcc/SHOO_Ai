@@ -6,8 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_txt_novel_models.dart';
 
-final txtReaderProgressStorageProvider =
-    Provider<SHOTxtReaderProgressStorage>((ref) {
+final txtReaderProgressStorageProvider = Provider<SHOTxtReaderProgressStorage>((
+  ref,
+) {
   return SHOTxtReaderProgressStorage(ref.watch(sharedPreferencesProvider));
 });
 

@@ -23,9 +23,7 @@ abstract final class SHOScreenOrientation {
   /// 锁定竖屏（仅正向，避免 iOS 过渡失败）。
   static Future<void> lockPortrait() async {
     _lockMode = _SHOOrientationLockMode.portrait;
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   /// 锁定横屏。
@@ -69,14 +67,8 @@ abstract final class SHOScreenOrientation {
     await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     await Future<void>.delayed(const Duration(milliseconds: 150));
     _lockMode = _SHOOrientationLockMode.portrait;
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 }
 
-enum _SHOOrientationLockMode {
-  followDevice,
-  portrait,
-  landscape,
-}
+enum _SHOOrientationLockMode { followDevice, portrait, landscape }

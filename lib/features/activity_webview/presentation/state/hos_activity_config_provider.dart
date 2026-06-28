@@ -9,7 +9,9 @@ final activityConfigProvider = FutureProvider<SHOActivityConfig>((ref) async {
   return api.fetchActivityConfig();
 });
 
-final activityUserStatusProvider = FutureProvider<SHOActivityUserStatus>((ref) async {
+final activityUserStatusProvider = FutureProvider<SHOActivityUserStatus>((
+  ref,
+) async {
   final api = ref.watch(activityApiProvider);
   return api.checkUserStatus();
 });
@@ -19,8 +21,9 @@ final activityDetailProvider = FutureProvider<SHOActivityDetail>((ref) async {
   return api.fetchActivityDetail();
 });
 
-final activityLevel3DetailProvider =
-    FutureProvider<SHOActivityLevel3Detail>((ref) async {
+final activityLevel3DetailProvider = FutureProvider<SHOActivityLevel3Detail>((
+  ref,
+) async {
   final api = ref.watch(activityApiProvider);
   return api.fetchActivityLevel3Detail();
 });

@@ -138,17 +138,13 @@ class _SHOCartMarqueeTickerState extends State<_SHOCartMarqueeTicker>
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: SHOAppColors.accent,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: SHOAppColors.accent,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           const SizedBox(width: SHOAppSpacing.xs),
-          const Icon(
-            Icons.chevron_right,
-            size: 16,
-            color: SHOAppColors.accent,
-          ),
+          const Icon(Icons.chevron_right, size: 16, color: SHOAppColors.accent),
         ],
       ),
     );
@@ -182,8 +178,9 @@ class _SHOCartMarqueeTickerState extends State<_SHOCartMarqueeTicker>
                         child: AnimatedBuilder(
                           animation: _activeController,
                           builder: (context, child) {
-                            final progress = Curves.easeInOut
-                                .transform(_activeController.value);
+                            final progress = Curves.easeInOut.transform(
+                              _activeController.value,
+                            );
                             return Transform.translate(
                               offset: Offset(0, -progress * _lineHeight),
                               child: child,

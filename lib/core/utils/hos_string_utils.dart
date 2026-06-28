@@ -1,7 +1,6 @@
 /// 常用字符串工具。
 abstract final class SHOStringUtils {
-  static bool isBlank(String? value) =>
-      value == null || value.trim().isEmpty;
+  static bool isBlank(String? value) => value == null || value.trim().isEmpty;
 
   static bool isNotBlank(String? value) => !isBlank(value);
 

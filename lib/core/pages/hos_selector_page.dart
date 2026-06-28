@@ -18,8 +18,8 @@ abstract class SHOSelectorPageState<T, W extends SHOSelectorPage<T>>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.selectMode) 'select_mode': true,
-      };
+    if (widget.selectMode) 'select_mode': true,
+  };
 
   /// 选中后 pop 回传结果。
   @protected

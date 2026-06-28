@@ -45,8 +45,8 @@ class _SHOCategoryProductsPageState
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'category_id': widget.leafCategoryId,
-      };
+    'category_id': widget.leafCategoryId,
+  };
 
   @override
   PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {

@@ -15,16 +15,9 @@ import 'package:shoo/features/toolbox/presentation/state/hos_download_controller
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_library_controller.dart';
 import 'package:shoo/features/toolbox/presentation/music/state/hos_music_mini_player_controller.dart';
 
-enum SHOMusicPlayMode {
-  sequence,
-  loopAll,
-  loopOne,
-}
+enum SHOMusicPlayMode { sequence, loopAll, loopOne }
 
-enum SHOMusicPlaylistScope {
-  library,
-  likedDirectory,
-}
+enum SHOMusicPlaylistScope { library, likedDirectory }
 
 /// UI maps this key to localized [musicPlayerNoValidTracks].
 abstract final class SHOMusicPlayerMessages {
@@ -55,7 +48,9 @@ class SHOMusicPlayerState {
   final String? errorMessage;
 
   SHOMusicTrack? get currentTrack {
-    if (playlist.isEmpty || currentIndex < 0 || currentIndex >= playlist.length) {
+    if (playlist.isEmpty ||
+        currentIndex < 0 ||
+        currentIndex >= playlist.length) {
       return null;
     }
     return playlist[currentIndex];
@@ -89,16 +84,15 @@ class SHOMusicPlayerState {
       duration: duration ?? this.duration,
       playMode: playMode ?? this.playMode,
       playlistScope: playlistScope ?? this.playlistScope,
-      errorMessage:
-          errorMessage != null ? errorMessage() : this.errorMessage,
+      errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
     );
   }
 }
 
 final musicPlayerProvider =
     NotifierProvider<SHOMusicPlayerNotifier, SHOMusicPlayerState>(
-  SHOMusicPlayerNotifier.new,
-);
+      SHOMusicPlayerNotifier.new,
+    );
 
 class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
   late final SHOMusicPlaybackStorage _playbackStorage;
@@ -145,7 +139,8 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
     });
     _processingSub = _player.processingStateStream.listen((processingState) {
       if (_disposed) return;
-      final loading = processingState == ProcessingState.loading ||
+      final loading =
+          processingState == ProcessingState.loading ||
           processingState == ProcessingState.buffering;
       state = state.copyWith(isLoading: loading);
       if (processingState == ProcessingState.completed) {
@@ -167,7 +162,8 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
 
     var index = startIndex.clamp(0, playlist.length - 1);
     final target = playlist[index];
-    final sameLoaded = state.currentTrack?.id == target.id &&
+    final sameLoaded =
+        state.currentTrack?.id == target.id &&
         state.currentIndex == index &&
         state.playlist.length == playlist.length &&
         state.playlistScope == scope &&
@@ -215,8 +211,9 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
   }
 
   Future<void> removeTrackFromPlaylist(String trackId) async {
-    final playlist =
-        state.playlist.where((track) => track.id != trackId).toList();
+    final playlist = state.playlist
+        .where((track) => track.id != trackId)
+        .toList();
     if (playlist.isEmpty) {
       await stop();
       ref.read(musicMiniPlayerDismissedProvider.notifier).dismiss();
@@ -240,8 +237,10 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
         .take(state.currentIndex)
         .where((track) => track.id == trackId)
         .length;
-    nextIndex =
-        (state.currentIndex - removedBefore).clamp(0, playlist.length - 1);
+    nextIndex = (state.currentIndex - removedBefore).clamp(
+      0,
+      playlist.length - 1,
+    );
     state = state.copyWith(playlist: playlist, currentIndex: nextIndex);
   }
 
@@ -252,8 +251,7 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
   }) async {
     final list = playlist ?? [track];
     final rawIndex = index ?? list.indexWhere((item) => item.id == track.id);
-    final startIndex =
-        rawIndex >= 0 ? rawIndex.clamp(0, list.length - 1) : 0;
+    final startIndex = rawIndex >= 0 ? rawIndex.clamp(0, list.length - 1) : 0;
     await setPlaylist(list, startIndex: startIndex);
   }
 
@@ -454,7 +452,9 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
           resolved.source == SHOMusicSource.local ||
           resolved.isCachedLocally) {
         final path = await resolveMusicLocalPath(resolved);
-        return path != null && File(path).existsSync() && File(path).lengthSync() > 0;
+        return path != null &&
+            File(path).existsSync() &&
+            File(path).lengthSync() > 0;
       }
       return false;
     } catch (_) {
@@ -552,9 +552,11 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
     }
 
     return track.copyWith(
-      coverColor: track.coverColor ??
+      coverColor:
+          track.coverColor ??
           SHOMusicColorUtils.colorForKey(track.resolvedSongKey, salt: 11),
-      bgColor: track.bgColor ??
+      bgColor:
+          track.bgColor ??
           SHOMusicColorUtils.colorForKey(track.resolvedSongKey, salt: 29),
     );
   }
@@ -568,9 +570,11 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
       lrc: assets.lyricsText ?? track.lrc,
       packTaskId: assets.packTaskId,
       isCachedLocally: true,
-      coverColor: track.coverColor ??
+      coverColor:
+          track.coverColor ??
           SHOMusicColorUtils.colorForKey(track.resolvedSongKey, salt: 11),
-      bgColor: track.bgColor ??
+      bgColor:
+          track.bgColor ??
           SHOMusicColorUtils.colorForKey(track.resolvedSongKey, salt: 29),
     );
   }
@@ -586,12 +590,8 @@ class SHOMusicPlayerNotifier extends Notifier<SHOMusicPlayerState> {
     return switch (track.source) {
       SHOMusicSource.network => AudioSource.uri(Uri.parse(track.audioUrl!)),
       SHOMusicSource.asset => AudioSource.asset(track.assetPath!),
-      SHOMusicSource.local => AudioSource.file(
-          await _resolveLocalPath(track),
-        ),
-      SHOMusicSource.cached => AudioSource.file(
-          await _resolveLocalPath(track),
-        ),
+      SHOMusicSource.local => AudioSource.file(await _resolveLocalPath(track)),
+      SHOMusicSource.cached => AudioSource.file(await _resolveLocalPath(track)),
     };
   }
 

@@ -7,13 +7,13 @@ import 'package:shoo/features/order/presentation/pages/hos_logistics_page.dart';
 import 'package:shoo/features/order/presentation/pages/hos_order_detail_page.dart';
 import 'package:shoo/features/order/presentation/pages/hos_order_list_page.dart';
 
-List<RouteBase> shoOrderRoutes({required GlobalKey<NavigatorState> rootKey}) => [
+List<RouteBase> shoOrderRoutes({required GlobalKey<NavigatorState> rootKey}) =>
+    [
       GoRoute(
         path: SHOAppRoutes.orders,
         parentNavigatorKey: rootKey,
-        builder: (context, state) => SHOOrderListPage(
-          statusFilter: state.orderListArgs.status,
-        ),
+        builder: (context, state) =>
+            SHOOrderListPage(statusFilter: state.orderListArgs.status),
         routes: [
           GoRoute(
             path: ':id',
@@ -27,9 +27,8 @@ List<RouteBase> shoOrderRoutes({required GlobalKey<NavigatorState> rootKey}) => 
             routes: [
               GoRoute(
                 path: 'logistics',
-                builder: (context, state) => SHOLogisticsPage(
-                  orderId: state.pathIdArgs().id,
-                ),
+                builder: (context, state) =>
+                    SHOLogisticsPage(orderId: state.pathIdArgs().id),
               ),
             ],
           ),

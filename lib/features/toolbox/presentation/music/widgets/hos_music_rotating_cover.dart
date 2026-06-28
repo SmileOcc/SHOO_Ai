@@ -49,7 +49,8 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
     super.didUpdateWidget(oldWidget);
     if (widget.isPlaying && _hasCoverImage && !_controller.isAnimating) {
       _controller.repeat();
-    } else if ((!widget.isPlaying || !_hasCoverImage) && _controller.isAnimating) {
+    } else if ((!widget.isPlaying || !_hasCoverImage) &&
+        _controller.isAnimating) {
       _controller.stop();
     }
   }
@@ -67,10 +68,7 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
     }
 
     final cover = _buildCoverImage();
-    return RotationTransition(
-      turns: _controller,
-      child: cover,
-    );
+    return RotationTransition(turns: _controller, child: cover);
   }
 
   Widget _buildCoverImage() {
@@ -104,10 +102,7 @@ class _SHOMusicRotatingCoverState extends State<SHOMusicRotatingCover>
     return Container(
       width: widget.size,
       height: widget.size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       alignment: Alignment.center,
       child: Icon(
         Icons.music_note_rounded,

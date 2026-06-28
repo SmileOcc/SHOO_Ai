@@ -11,7 +11,8 @@ class SHODebugAnalyticsPage extends ConsumerStatefulWidget {
   const SHODebugAnalyticsPage({super.key});
 
   @override
-  ConsumerState<SHODebugAnalyticsPage> createState() => _SHODebugAnalyticsPageState();
+  ConsumerState<SHODebugAnalyticsPage> createState() =>
+      _SHODebugAnalyticsPageState();
 }
 
 class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage>
@@ -30,7 +31,9 @@ class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage>
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context).debugAnalyticsFired(event.key)),
+        content: Text(
+          AppLocalizations.of(context).debugAnalyticsFired(event.key),
+        ),
       ),
     );
   }
@@ -46,50 +49,44 @@ class _SHODebugAnalyticsPageState extends ConsumerState<SHODebugAnalyticsPage>
 
     return buildTrackedPage(
       DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.debugAnalyticsEntry),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: l10n.debugAnalyticsTabEvents),
-              Tab(text: l10n.debugAnalyticsTabBackends),
-              Tab(text: l10n.debugAnalyticsTabHistory),
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.debugAnalyticsEntry),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: l10n.debugAnalyticsTabEvents),
+                Tab(text: l10n.debugAnalyticsTabBackends),
+                Tab(text: l10n.debugAnalyticsTabHistory),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _EventsTab(events: manager.events, onFire: _fireSample),
+              _BackendsTab(
+                backends: manager.backends,
+                mockRemoteCount: mockRemote?.sent.length ?? 0,
+              ),
+              _HistoryTab(
+                history: history,
+                onClear: () {
+                  manager.clearHistory();
+                  _refresh();
+                },
+                onFireBridgeErrorSample: () =>
+                    _fireSample(SHOAnalyticsRegistry.bridgeError),
+              ),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            _EventsTab(
-              events: manager.events,
-              onFire: _fireSample,
-            ),
-            _BackendsTab(
-              backends: manager.backends,
-              mockRemoteCount: mockRemote?.sent.length ?? 0,
-            ),
-            _HistoryTab(
-              history: history,
-              onClear: () {
-                manager.clearHistory();
-                _refresh();
-              },
-              onFireBridgeErrorSample: () =>
-                  _fireSample(SHOAnalyticsRegistry.bridgeError),
-            ),
-          ],
-        ),
       ),
-    ),
     );
   }
 }
 
 class _EventsTab extends StatelessWidget {
-  const _EventsTab({
-    required this.events,
-    required this.onFire,
-  });
+  const _EventsTab({required this.events, required this.onFire});
 
   final List<SHOAnalyticsEventDef> events;
   final Future<void> Function(SHOAnalyticsEventDef event) onFire;
@@ -126,7 +123,9 @@ class _EventsTab extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.lg),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.lg,
+                ),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -153,9 +152,9 @@ class _EventsTab extends StatelessWidget {
                       child: Text(
                         event.sampleOrDefault().toString(),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontFamily: 'monospace',
-                              color: context.shoTheme.textMuted,
-                            ),
+                          fontFamily: 'monospace',
+                          color: context.shoTheme.textMuted,
+                        ),
                       ),
                     ),
                     const SizedBox(width: SHOAppSpacing.md),
@@ -175,10 +174,7 @@ class _EventsTab extends StatelessWidget {
 }
 
 class _BackendsTab extends StatelessWidget {
-  const _BackendsTab({
-    required this.backends,
-    required this.mockRemoteCount,
-  });
+  const _BackendsTab({required this.backends, required this.mockRemoteCount});
 
   final List<SHOAnalyticsBackend> backends;
   final int mockRemoteCount;
@@ -190,7 +186,10 @@ class _BackendsTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(SHOAppSpacing.xl),
       children: [
-        Text(l10n.debugAnalyticsBackendsHint, style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          l10n.debugAnalyticsBackendsHint,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         const SizedBox(height: SHOAppSpacing.lg),
         ...backends.map(
           (backend) => ListTile(
@@ -198,7 +197,9 @@ class _BackendsTab extends StatelessWidget {
             subtitle: Text('${backend.id} — ${backend.description}'),
             trailing: Chip(
               label: Text(
-                backend.enabled ? l10n.debugAnalyticsBackendOn : l10n.debugAnalyticsBackendOff,
+                backend.enabled
+                    ? l10n.debugAnalyticsBackendOn
+                    : l10n.debugAnalyticsBackendOff,
               ),
             ),
           ),
@@ -241,9 +242,7 @@ class _HistoryTab extends StatelessWidget {
             records: bridgeErrors,
             onFireSample: onFireBridgeErrorSample,
           ),
-          Expanded(
-            child: Center(child: Text(l10n.debugAnalyticsHistoryEmpty)),
-          ),
+          Expanded(child: Center(child: Text(l10n.debugAnalyticsHistoryEmpty))),
         ],
       );
     }
@@ -335,13 +334,11 @@ class _BridgeErrorSection extends StatelessWidget {
             Text(
               l10n.debugAnalyticsBridgeErrorEmpty,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.shoTheme.textMuted,
-                  ),
+                color: context.shoTheme.textMuted,
+              ),
             )
           else
-            ...records.map(
-              (record) => _BridgeErrorRecordTile(record: record),
-            ),
+            ...records.map((record) => _BridgeErrorRecordTile(record: record)),
         ],
       ),
     );
@@ -362,7 +359,8 @@ class _BridgeErrorRecordTile extends StatelessWidget {
     final detail = [
       error,
       if (bridgeType != null && bridgeType.isNotEmpty) 'type=$bridgeType',
-      if (bridgeAction != null && bridgeAction.isNotEmpty) 'action=$bridgeAction',
+      if (bridgeAction != null && bridgeAction.isNotEmpty)
+        'action=$bridgeAction',
     ].join(' · ');
 
     return ListTile(
@@ -380,10 +378,7 @@ class _BridgeErrorRecordTile extends StatelessWidget {
 }
 
 class _HistoryRecordTile extends StatelessWidget {
-  const _HistoryRecordTile({
-    required this.record,
-    required this.l10n,
-  });
+  const _HistoryRecordTile({required this.record, required this.l10n});
 
   final SHOAnalyticsRecord record;
   final AppLocalizations l10n;

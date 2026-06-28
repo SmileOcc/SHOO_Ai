@@ -62,11 +62,7 @@ class SHOCryptoService {
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final plain = data is String ? data : jsonEncode(data);
     final encrypted = encrypter.encrypt(plain, iv: iv);
-    return {
-      'algorithm': 'aes',
-      'iv': iv.base64,
-      'payload': encrypted.base64,
-    };
+    return {'algorithm': 'aes', 'iv': iv.base64, 'payload': encrypted.base64};
   }
 
   Future<dynamic> decryptAes(Map<String, dynamic> envelope) async {
@@ -74,7 +70,10 @@ class SHOCryptoService {
     final key = Key.fromBase64(keyBase64);
     final iv = IV.fromBase64(envelope['iv'] as String);
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-    final decrypted = encrypter.decrypt64(envelope['payload'] as String, iv: iv);
+    final decrypted = encrypter.decrypt64(
+      envelope['payload'] as String,
+      iv: iv,
+    );
     return _tryParseJson(decrypted);
   }
 
@@ -83,10 +82,7 @@ class SHOCryptoService {
     final encrypter = Encrypter(RSA(publicKey: publicKey));
     final plain = data is String ? data : jsonEncode(data);
     final encrypted = encrypter.encrypt(plain);
-    return {
-      'algorithm': 'rsa',
-      'payload': encrypted.base64,
-    };
+    return {'algorithm': 'rsa', 'payload': encrypted.base64};
   }
 
   Future<Map<String, dynamic>> encryptHybrid(Object data) async {
@@ -116,11 +112,7 @@ class SHOCryptoService {
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
     final plain = data is String ? data : jsonEncode(data);
     final encrypted = encrypter.encrypt(plain, iv: iv);
-    return {
-      'algorithm': 'sm4',
-      'iv': iv.base64,
-      'payload': encrypted.base64,
-    };
+    return {'algorithm': 'sm4', 'iv': iv.base64, 'payload': encrypted.base64};
   }
 
   Future<dynamic> decryptSm4(Map<String, dynamic> envelope) async {
@@ -128,7 +120,10 @@ class SHOCryptoService {
     final key = Key.fromBase64(keyBase64);
     final iv = IV.fromBase64(envelope['iv'] as String);
     final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-    final decrypted = encrypter.decrypt64(envelope['payload'] as String, iv: iv);
+    final decrypted = encrypter.decrypt64(
+      envelope['payload'] as String,
+      iv: iv,
+    );
     return _tryParseJson(decrypted);
   }
 

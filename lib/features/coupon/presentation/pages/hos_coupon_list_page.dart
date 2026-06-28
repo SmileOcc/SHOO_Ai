@@ -156,7 +156,9 @@ class _SHOCouponTile extends StatelessWidget {
             children: [
               if (onTap != null) ...[
                 Icon(
-                  selected ? Icons.radio_button_checked : Icons.radio_button_off,
+                  selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
                   size: 20,
                 ),
                 const SizedBox(width: SHOAppSpacing.md),
@@ -170,9 +172,9 @@ class _SHOCouponTile extends StatelessWidget {
                     Text(
                       coupon.title,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                          ),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
                     ),
                     if (coupon.description.isNotEmpty)
                       Text(
@@ -190,8 +192,8 @@ class _SHOCouponTile extends StatelessWidget {
                       Text(
                         l10n.couponNotEligible,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: SHOAppColors.error,
-                            ),
+                          color: SHOAppColors.error,
+                        ),
                       ),
                   ],
                 ),

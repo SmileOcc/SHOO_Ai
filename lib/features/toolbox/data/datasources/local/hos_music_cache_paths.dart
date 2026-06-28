@@ -39,7 +39,14 @@ abstract final class SHOMusicCachePaths {
     await for (final entity in dir.list()) {
       if (entity is! File) continue;
       final ext = p.extension(entity.path).toLowerCase();
-      if (const {'.mp3', '.m4a', '.flac', '.wav', '.aac', '.ogg'}.contains(ext)) {
+      if (const {
+        '.mp3',
+        '.m4a',
+        '.flac',
+        '.wav',
+        '.aac',
+        '.ogg',
+      }.contains(ext)) {
         return entity.path;
       }
     }
@@ -47,7 +54,11 @@ abstract final class SHOMusicCachePaths {
   }
 
   static Future<String?> coverPath(String songKey) async {
-    return _firstExisting(songKey, const ['cover.jpg', 'cover.png', 'cover.webp']);
+    return _firstExisting(songKey, const [
+      'cover.jpg',
+      'cover.png',
+      'cover.webp',
+    ]);
   }
 
   static Future<String?> bgPath(String songKey) async {
@@ -137,7 +148,14 @@ abstract final class SHOMusicCachePaths {
   static bool isAudioEntry(String path) {
     if (isIgnoredZipEntry(path)) return false;
     final ext = p.extension(path).toLowerCase();
-    return const {'.mp3', '.m4a', '.flac', '.wav', '.aac', '.ogg'}.contains(ext);
+    return const {
+      '.mp3',
+      '.m4a',
+      '.flac',
+      '.wav',
+      '.aac',
+      '.ogg',
+    }.contains(ext);
   }
 
   static bool isImageEntry(String path) {

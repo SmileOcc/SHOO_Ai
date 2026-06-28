@@ -55,10 +55,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
     _checkoutTracked = true;
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.checkoutStart,
-      {
-        'item_count': items.length,
-        'amount': cart.selectedTotalCents / 100.0,
-      },
+      {'item_count': items.length, 'amount': cart.selectedTotalCents / 100.0},
     );
   }
 
@@ -78,15 +75,17 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
     final l10n = AppLocalizations.of(context);
     final session = ref.read(sessionProvider);
     if (!session.isAuthenticated) {
-      context.push('${SHOAppRoutes.login}?redirect=${Uri.encodeComponent(SHOAppRoutes.checkout)}');
+      context.push(
+        '${SHOAppRoutes.login}?redirect=${Uri.encodeComponent(SHOAppRoutes.checkout)}',
+      );
       return;
     }
 
     final address = ref.read(selectedAddressProvider).valueOrNull;
     if (address == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.checkoutNoAddress)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.checkoutNoAddress)));
       return;
     }
 
@@ -101,9 +100,12 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
 
     setState(() => _submitting = true);
     try {
-      final order = await ref.read(checkoutApiProvider).createOrder(
+      final order = await ref
+          .read(checkoutApiProvider)
+          .createOrder(
             addressId: address.id,
-            couponId: coupon != null &&
+            couponId:
+                coupon != null &&
                     SHOPriceCalculator.couponIneligibleReason(
                           subtotalCents: subtotal,
                           coupon: coupon,
@@ -111,27 +113,23 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
                         null
                 ? couponId
                 : null,
-            items: items
-                .map(
-                  (i) {
-                    final line = activityLines[i.productId];
-                    return {
-                      'productId': i.productId,
-                      'quantity': i.quantity,
-                      'variantLabel': i.variantLabel,
-                      if (line != null) ...{
-                        'sessionId': line.sessionId,
-                        'unitPriceCents': line.unitPriceCents,
-                      },
-                    };
-                  },
-                )
-                .toList(),
+            items: items.map((i) {
+              final line = activityLines[i.productId];
+              return {
+                'productId': i.productId,
+                'quantity': i.quantity,
+                'variantLabel': i.variantLabel,
+                if (line != null) ...{
+                  'sessionId': line.sessionId,
+                  'unitPriceCents': line.unitPriceCents,
+                },
+              };
+            }).toList(),
           );
       if (mounted) {
         final fromCartStack =
             GoRouterState.of(context).uri.queryParameters['fromCartStack'] ==
-                '1';
+            '1';
         context.push(
           SHOAppRoutes.payment(order.id, fromCartStack: fromCartStack),
           extra: order,
@@ -139,9 +137,9 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -156,7 +154,9 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
   }
 
   SHOCoupon? _displayCoupon() {
-    return _resolveCoupon(_pickedCouponId ?? ref.read(selectedCouponIdProvider));
+    return _resolveCoupon(
+      _pickedCouponId ?? ref.read(selectedCouponIdProvider),
+    );
   }
 
   @override
@@ -179,158 +179,169 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
     if (items.isEmpty) {
       return buildTrackedPage(
         Scaffold(
-        appBar: AppBar(title: Text(l10n.checkoutTitle)),
-        body: const SHOAppLoadingState(state: SHOLoadingState.empty),
+          appBar: AppBar(title: Text(l10n.checkoutTitle)),
+          body: const SHOAppLoadingState(state: SHOLoadingState.empty),
         ),
       );
     }
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.checkoutTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        children: [
-          Text(
-            l10n.checkoutAddressSection,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          InkWell(
-            onTap: _pickAddress,
-            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(SHOAppSpacing.lg),
-              decoration: BoxDecoration(
-                color: context.shoTheme.surfaceMuted,
-                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                border: Border.all(color: context.shoTheme.border),
-              ),
-              child: addressAsync.when(
-                loading: () => Text(l10n.loading),
-                error: (_, __) => Text(l10n.loadFailed),
-                data: (address) {
-                  if (address == null) {
-                    return Text(l10n.checkoutAddAddress);
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${address.name}  ${address.phone}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      const SizedBox(height: SHOAppSpacing.xs),
-                      Text(
-                        address.fullLine,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  );
-                },
-              ),
+        appBar: AppBar(title: Text(l10n.checkoutTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+          children: [
+            Text(
+              l10n.checkoutAddressSection,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.xl),
-          Text(
-            l10n.checkoutCouponSection,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
+            const SizedBox(height: SHOAppSpacing.md),
+            InkWell(
+              onTap: _pickAddress,
+              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(SHOAppSpacing.lg),
+                decoration: BoxDecoration(
+                  color: context.shoTheme.surfaceMuted,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  border: Border.all(color: context.shoTheme.border),
                 ),
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          InkWell(
-            onTap: _pickCoupon,
-            borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(SHOAppSpacing.lg),
-              decoration: BoxDecoration(
-                color: context.shoTheme.surfaceMuted,
-                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                border: Border.all(color: context.shoTheme.border),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.local_offer_outlined, size: 20),
-                  const SizedBox(width: SHOAppSpacing.md),
-                  Expanded(
-                    child: Text(
-                      selectedCoupon?.title ?? l10n.couponSelectHint,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 13,
-                          ),
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, size: 18),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: SHOAppSpacing.xl),
-          Text(
-            l10n.orderItemsTitle,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          ...items.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: SHOAppSpacing.md),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                    child: SizedBox(
-                      width: 56,
-                      height: 56,
-                      child: SHOAppNetworkImage(url: item.imageUrl, fit: BoxFit.cover),
-                    ),
-                  ),
-                  const SizedBox(width: SHOAppSpacing.md),
-                  Expanded(
-                    child: Column(
+                child: addressAsync.when(
+                  loading: () => Text(l10n.loading),
+                  error: (_, __) => Text(l10n.loadFailed),
+                  data: (address) {
+                    if (address == null) {
+                      return Text(l10n.checkoutAddAddress);
+                    }
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.title, style: Theme.of(context).textTheme.bodySmall),
-                        Text('x${item.quantity}', style: Theme.of(context).textTheme.bodySmall),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    priceFormatter.formatCents(
-                      (activityLines[item.productId]?.unitPriceCents ?? item.price) *
-                          item.quantity,
-                    ),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                        Text(
+                          '${address.name}  ${address.phone}',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                  ),
-                ],
+                        const SizedBox(height: SHOAppSpacing.xs),
+                        Text(
+                          address.fullLine,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          SHOPriceBreakdownView(breakdown: breakdown),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          child: SHOAppButton(
-            label: l10n.checkoutPlaceOrder,
-            isExpanded: true,
-            isLoading: _submitting,
-            onPressed: _submitting ? null : _placeOrder,
+            const SizedBox(height: SHOAppSpacing.xl),
+            Text(
+              l10n.checkoutCouponSection,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            InkWell(
+              onTap: _pickCoupon,
+              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(SHOAppSpacing.lg),
+                decoration: BoxDecoration(
+                  color: context.shoTheme.surfaceMuted,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  border: Border.all(color: context.shoTheme.border),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.local_offer_outlined, size: 20),
+                    const SizedBox(width: SHOAppSpacing.md),
+                    Expanded(
+                      child: Text(
+                        selectedCoupon?.title ?? l10n.couponSelectHint,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(fontSize: 13),
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right, size: 18),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.xl),
+            Text(
+              l10n.orderItemsTitle,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            ...items.map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: SHOAppSpacing.md),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        SHOAppSpacing.cardRadius,
+                      ),
+                      child: SizedBox(
+                        width: 56,
+                        height: 56,
+                        child: SHOAppNetworkImage(
+                          url: item.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: SHOAppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.title,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          Text(
+                            'x${item.quantity}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      priceFormatter.formatCents(
+                        (activityLines[item.productId]?.unitPriceCents ??
+                                item.price) *
+                            item.quantity,
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SHOPriceBreakdownView(breakdown: breakdown),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+            child: SHOAppButton(
+              label: l10n.checkoutPlaceOrder,
+              isExpanded: true,
+              isLoading: _submitting,
+              onPressed: _submitting ? null : _placeOrder,
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -356,7 +367,8 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
       final line = activityLines[item.productId];
       if (line == null) continue;
       if (line.originalUnitPriceCents <= line.unitPriceCents) continue;
-      saved += (line.originalUnitPriceCents - line.unitPriceCents) * item.quantity;
+      saved +=
+          (line.originalUnitPriceCents - line.unitPriceCents) * item.quantity;
     }
     return saved;
   }

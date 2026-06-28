@@ -27,16 +27,17 @@ class SHOVideoPlayerRoutePage extends ConsumerStatefulWidget {
       _SHOVideoPlayerRoutePageState();
 }
 
-class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePage>
+class _SHOVideoPlayerRoutePageState
+    extends ConsumerState<SHOVideoPlayerRoutePage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'video_player_route';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.entryId.isNotEmpty) 'entry_id': widget.entryId,
-        if (widget.taskId.isNotEmpty) 'task_id': widget.taskId,
-      };
+    if (widget.entryId.isNotEmpty) 'entry_id': widget.entryId,
+    if (widget.taskId.isNotEmpty) 'task_id': widget.taskId,
+  };
 
   SHOVideoLibraryEntry? _findEntry(List<SHOVideoLibraryEntry> entries) {
     if (widget.entryId.isNotEmpty) {
@@ -44,7 +45,9 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
         if (item.id == widget.entryId) return item;
       }
 
-      final parsedTaskId = SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId);
+      final parsedTaskId = SHOVideoLibraryEntry.taskIdFromEntryId(
+        widget.entryId,
+      );
       if (parsedTaskId != null) {
         for (final item in entries) {
           if (item.taskId == parsedTaskId) return item;
@@ -55,8 +58,8 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     final lookupTaskId = widget.taskId.isNotEmpty
         ? widget.taskId
         : (widget.entryId.isNotEmpty
-            ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
-            : null);
+              ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
+              : null);
     if (lookupTaskId != null) {
       for (final item in entries) {
         if (item.taskId == lookupTaskId) return item;
@@ -66,7 +69,10 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     return null;
   }
 
-  SHODownloadTask? _findTask(List<SHODownloadTask> tasks, String? lookupTaskId) {
+  SHODownloadTask? _findTask(
+    List<SHODownloadTask> tasks,
+    String? lookupTaskId,
+  ) {
     if (lookupTaskId == null) return null;
     for (final item in tasks) {
       if (item.id == lookupTaskId) return item;
@@ -85,12 +91,14 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     final lookupTaskId = widget.taskId.isNotEmpty
         ? widget.taskId
         : (widget.entryId.isNotEmpty
-            ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
-            : entry?.taskId);
+              ? SHOVideoLibraryEntry.taskIdFromEntryId(widget.entryId)
+              : entry?.taskId);
 
     final task = _findTask(tasks, lookupTaskId);
 
-    if (entry == null && task != null && task.fileType == SHODownloadFileType.video) {
+    if (entry == null &&
+        task != null &&
+        task.fileType == SHODownloadFileType.video) {
       entry = SHOVideoLibraryEntry.local(
         taskId: task.id,
         displayName: task.fileName,
@@ -100,16 +108,16 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     if (entry == null) {
       return buildTrackedPage(
         Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-            child: Text(
-              l10n.txtReaderTaskMissing,
-              textAlign: TextAlign.center,
+          appBar: AppBar(),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+              child: Text(
+                l10n.txtReaderTaskMissing,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
         ),
         onRetry: () {
           ref.invalidate(videoLibraryEntriesProvider);
@@ -119,7 +127,9 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     }
 
     final resolvedTask =
-        resolveDownloadTaskForEntry(entry, tasks) ?? task ?? _findTask(tasks, entry.taskId);
+        resolveDownloadTaskForEntry(entry, tasks) ??
+        task ??
+        _findTask(tasks, entry.taskId);
 
     if (entry.isNetwork) {
       if (resolvedTask != null &&
@@ -132,16 +142,16 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
     if (resolvedTask == null) {
       return buildTrackedPage(
         Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-            child: Text(
-              l10n.txtReaderTaskMissing,
-              textAlign: TextAlign.center,
+          appBar: AppBar(),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+              child: Text(
+                l10n.txtReaderTaskMissing,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
         ),
         onRetry: () => ref.invalidate(downloadTasksProvider),
       );
@@ -152,16 +162,14 @@ class _SHOVideoPlayerRoutePageState extends ConsumerState<SHOVideoPlayerRoutePag
 }
 
 class _LocalVideoPlayerLoader extends StatefulWidget {
-  const _LocalVideoPlayerLoader({
-    required this.entry,
-    required this.task,
-  });
+  const _LocalVideoPlayerLoader({required this.entry, required this.task});
 
   final SHOVideoLibraryEntry entry;
   final SHODownloadTask task;
 
   @override
-  State<_LocalVideoPlayerLoader> createState() => _LocalVideoPlayerLoaderState();
+  State<_LocalVideoPlayerLoader> createState() =>
+      _LocalVideoPlayerLoaderState();
 }
 
 class _LocalVideoPlayerLoaderState extends State<_LocalVideoPlayerLoader> {

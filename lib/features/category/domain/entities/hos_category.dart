@@ -32,7 +32,9 @@ Map<String, dynamic> normalizeCategoryJson(Map<String, dynamic> raw) {
       if (group is Map)
         {
           ...Map<String, dynamic>.from(group),
-          'children': group['children'] is List ? group['children'] : <dynamic>[],
+          'children': group['children'] is List
+              ? group['children']
+              : <dynamic>[],
         },
   ];
   return map;

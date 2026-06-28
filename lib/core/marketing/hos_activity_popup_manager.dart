@@ -16,17 +16,24 @@ String _dailyCountKey(String activityId) {
 abstract final class SHOActivityPopupManager {
   static bool isWithinSchedule(SHOActivityPopup activity) {
     final now = DateTime.now();
-    if (activity.startAt != null && now.isBefore(activity.startAt!)) return false;
+    if (activity.startAt != null && now.isBefore(activity.startAt!))
+      return false;
     if (activity.endAt != null && now.isAfter(activity.endAt!)) return false;
     return true;
   }
 
-  static Future<bool> canShowToday(SHOLocalStorage storage, SHOActivityPopup activity) async {
+  static Future<bool> canShowToday(
+    SHOLocalStorage storage,
+    SHOActivityPopup activity,
+  ) async {
     final count = await storage.read<int>(_dailyCountKey(activity.id)) ?? 0;
     return count < activity.maxDailyShows;
   }
 
-  static Future<void> recordShow(SHOLocalStorage storage, SHOActivityPopup activity) async {
+  static Future<void> recordShow(
+    SHOLocalStorage storage,
+    SHOActivityPopup activity,
+  ) async {
     final key = _dailyCountKey(activity.id);
     final count = await storage.read<int>(key) ?? 0;
     await storage.write(key, count + 1);
@@ -37,10 +44,13 @@ abstract final class SHOActivityPopupManager {
     if (activity == null) return null;
 
     if (!isWithinSchedule(activity)) return null;
-    if (!await canShowToday(ref.read(localStorageProvider), activity)) return null;
+    if (!await canShowToday(ref.read(localStorageProvider), activity))
+      return null;
 
     if (activity.prefetchEnabled) {
-      final cached = await ref.read(activityPrefetchServiceProvider).loadPrefetched(activity.id);
+      final cached = await ref
+          .read(activityPrefetchServiceProvider)
+          .loadPrefetched(activity.id);
       return cached ?? activity;
     }
     return activity;
@@ -56,7 +66,9 @@ abstract final class SHOActivityPopupManager {
       final activity = await resolveActivity(ref);
       if (activity == null || !context.mounted) return;
 
-      final delay = Duration(seconds: activity.delaySeconds + extraDelaySeconds);
+      final delay = Duration(
+        seconds: activity.delaySeconds + extraDelaySeconds,
+      );
       if (delay > Duration.zero) {
         await Future<void>.delayed(delay);
         if (!context.mounted) return;

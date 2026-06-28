@@ -18,21 +18,20 @@ enum SHOAppIconStyle {
 
 extension SHOAppIconStyleX on SHOAppIconStyle {
   String get label => switch (this) {
-        SHOAppIconStyle.classic => 'Classic',
-        SHOAppIconStyle.accentBadge => 'Accent Badge',
-        SHOAppIconStyle.fashionBag => 'Fashion Bag',
-        SHOAppIconStyle.monogram => 'Monogram S',
-        SHOAppIconStyle.outlineRing => 'Outline Ring',
-      };
+    SHOAppIconStyle.classic => 'Classic',
+    SHOAppIconStyle.accentBadge => 'Accent Badge',
+    SHOAppIconStyle.fashionBag => 'Fashion Bag',
+    SHOAppIconStyle.monogram => 'Monogram S',
+    SHOAppIconStyle.outlineRing => 'Outline Ring',
+  };
 
   String get labelZh => switch (this) {
-        SHOAppIconStyle.classic => '经典方块',
-        SHOAppIconStyle.accentBadge => '红色徽章',
-        SHOAppIconStyle.fashionBag => '时尚购物袋',
-        SHOAppIconStyle.monogram => '字母 S',
-        SHOAppIconStyle.outlineRing => '描边圆环',
-      };
-
+    SHOAppIconStyle.classic => '经典方块',
+    SHOAppIconStyle.accentBadge => '红色徽章',
+    SHOAppIconStyle.fashionBag => '时尚购物袋',
+    SHOAppIconStyle.monogram => '字母 S',
+    SHOAppIconStyle.outlineRing => '描边圆环',
+  };
 }
 
 SHOAppIconStyle? shoAppIconStyleFromName(String? raw) {

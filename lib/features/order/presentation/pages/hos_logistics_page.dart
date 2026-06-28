@@ -52,19 +52,19 @@ class _SHOLogisticsPageState
           .read(nativeBusinessEventServiceProvider)
           .watchLogistics(orderId: widget.orderId)
           .listen((event) {
-        if (!mounted) return;
-        setState(() {
-          _liveEvents.insert(
-            0,
-            SHOLogisticsEvent(
-              time: DateTime.now().toLocal().toString().substring(0, 16),
-              status: event.trackingEvent ?? 'Update',
-              description: event.message ?? '',
-              isActive: true,
-            ),
-          );
-        });
-      });
+            if (!mounted) return;
+            setState(() {
+              _liveEvents.insert(
+                0,
+                SHOLogisticsEvent(
+                  time: DateTime.now().toLocal().toString().substring(0, 16),
+                  status: event.trackingEvent ?? 'Update',
+                  description: event.message ?? '',
+                  isActive: true,
+                ),
+              );
+            });
+          });
     });
   }
 
@@ -87,10 +87,7 @@ class _SHOLogisticsPageState
     SHOLogisticsTrack track,
   ) {
     final l10n = AppLocalizations.of(context);
-    final events = [
-      ..._liveEvents,
-      ...track.events,
-    ];
+    final events = [..._liveEvents, ...track.events];
 
     return ListView(
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -101,9 +98,9 @@ class _SHOLogisticsPageState
             child: Text(
               l10n.logisticsLiveUpdates,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: SHOAppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: SHOAppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         Container(
@@ -121,9 +118,9 @@ class _SHOLogisticsPageState
               ),
               Text(
                 track.carrier,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: SHOAppSpacing.md),
               Text(
@@ -136,8 +133,8 @@ class _SHOLogisticsPageState
                     child: Text(
                       track.trackingNumber,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -159,9 +156,9 @@ class _SHOLogisticsPageState
         const SizedBox(height: SHOAppSpacing.xl),
         Text(
           l10n.logisticsTimelineTitle,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.lg),
         SHOLogisticsTimeline(events: events),

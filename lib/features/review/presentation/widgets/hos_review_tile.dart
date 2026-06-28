@@ -7,10 +7,7 @@ import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/features/review/domain/entities/hos_review.dart';
 
 class SHOReviewTile extends StatelessWidget {
-  const SHOReviewTile({
-    super.key,
-    required this.review,
-  });
+  const SHOReviewTile({super.key, required this.review});
 
   final SHOProductReview review;
 
@@ -46,9 +43,9 @@ class SHOReviewTile extends StatelessWidget {
                     Text(
                       review.userName,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
                     ),
                     Text(
                       review.createdAt,
@@ -60,7 +57,11 @@ class SHOReviewTile extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.star_rounded, size: 14, color: SHOAppColors.warning),
+                  const Icon(
+                    Icons.star_rounded,
+                    size: 14,
+                    color: SHOAppColors.warning,
+                  ),
                   const SizedBox(width: 2),
                   Text(
                     review.rating.toStringAsFixed(1),
@@ -75,17 +76,16 @@ class SHOReviewTile extends StatelessWidget {
             Text(
               review.variantLabel,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.shoTheme.textMuted,
-                  ),
+                color: context.shoTheme.textMuted,
+              ),
             ),
           ],
           const SizedBox(height: SHOAppSpacing.sm),
           Text(
             review.content,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 13,
-                  height: 1.4,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontSize: 13, height: 1.4),
           ),
           if (review.imageUrls.isNotEmpty) ...[
             const SizedBox(height: SHOAppSpacing.md),
@@ -97,8 +97,7 @@ class SHOReviewTile extends StatelessWidget {
                 separatorBuilder: (_, __) =>
                     const SizedBox(width: SHOAppSpacing.sm),
                 itemBuilder: (context, index) => ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                   child: SizedBox(
                     width: 72,
                     height: 72,

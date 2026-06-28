@@ -112,7 +112,8 @@ bool _hasSignificantCjk(String text) {
   for (final code in text.runes) {
     if (code == 0x0A || code == 0x0D || code == 0x09 || code == 0x20) continue;
     total++;
-    final isCjk = (code >= 0x4E00 && code <= 0x9FFF) ||
+    final isCjk =
+        (code >= 0x4E00 && code <= 0x9FFF) ||
         (code >= 0x3400 && code <= 0x4DBF) ||
         (code >= 0x3000 && code <= 0x303F) ||
         (code >= 0xFF00 && code <= 0xFFEF);

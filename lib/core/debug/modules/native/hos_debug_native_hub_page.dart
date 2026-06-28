@@ -29,39 +29,44 @@ class _SHODebugNativeHubPageState extends ConsumerState<SHODebugNativeHubPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugNativeHubTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(l10n.debugNativeHubHint, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: SHOAppSpacing.xl),
-          for (final category in SHONativeDebugCategory.values) ...[
+        appBar: AppBar(title: Text(l10n.debugNativeHubTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
             Text(
-              l10n.nativeCategoryTitle(category),
-              style: Theme.of(context).textTheme.titleMedium,
+              l10n.debugNativeHubHint,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-            const SizedBox(height: SHOAppSpacing.sm),
-            ...nativeDebugExamplesByCategory(category).map((example) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: SHOAppSpacing.md),
-                child: ListTile(
-                  leading: Icon(example.icon),
-                  title: Text(l10n.nativeExampleTitle(example.id)),
-                  subtitle: Text(
-                    l10n.nativeExampleDesc(example.id),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+            const SizedBox(height: SHOAppSpacing.xl),
+            for (final category in SHONativeDebugCategory.values) ...[
+              Text(
+                l10n.nativeCategoryTitle(category),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: SHOAppSpacing.sm),
+              ...nativeDebugExamplesByCategory(category).map((example) {
+                return Card(
+                  margin: const EdgeInsets.only(bottom: SHOAppSpacing.md),
+                  child: ListTile(
+                    leading: Icon(example.icon),
+                    title: Text(l10n.nativeExampleTitle(example.id)),
+                    subtitle: Text(
+                      l10n.nativeExampleDesc(example.id),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push(
+                      SHOAppRoutes.debugNativeExample(example.routeId),
+                    ),
                   ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.push(SHOAppRoutes.debugNativeExample(example.routeId)),
-                ),
-              );
-            }),
-            const SizedBox(height: SHOAppSpacing.lg),
+                );
+              }),
+              const SizedBox(height: SHOAppSpacing.lg),
+            ],
           ],
-        ],
+        ),
       ),
-    ),
     );
   }
 }

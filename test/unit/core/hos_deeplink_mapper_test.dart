@@ -29,9 +29,7 @@ void main() {
 
     test('maps category products', () {
       final path = SHODeepLinkMapper.toAppPath(
-        Uri.parse(
-          'https://shoo.app/category/products?leafId=c1&title=Test',
-        ),
+        Uri.parse('https://shoo.app/category/products?leafId=c1&title=Test'),
       );
       expect(
         path,
@@ -81,10 +79,7 @@ void main() {
         SHODeepLinkResolver.resolveLink('https://www.example.com'),
         isNull,
       );
-      expect(
-        SHODeepLinkResolver.isDeepLink('https://www.google.com'),
-        isFalse,
-      );
+      expect(SHODeepLinkResolver.isDeepLink('https://www.google.com'), isFalse);
     });
 
     test('shoo.app root maps to home', () {
@@ -93,7 +88,9 @@ void main() {
     });
 
     test('profile deep link', () {
-      final target = SHODeepLinkResolver.resolveLink('https://shoo.app/profile');
+      final target = SHODeepLinkResolver.resolveLink(
+        'https://shoo.app/profile',
+      );
       expect(target?.type, SHODeepLinkActionType.profile);
       expect(target?.appPath, SHOAppRoutes.profile);
       expect(target?.requiresAuth, isFalse);

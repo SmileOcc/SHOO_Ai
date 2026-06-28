@@ -17,9 +17,8 @@ class SHOSearchApi {
   Future<List<String>> fetchHotKeywords() {
     return _dio.getData<List<String>>(
       '/search/hot',
-      parser: (data) => (data['keywords'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      parser: (data) =>
+          (data['keywords'] as List<dynamic>).map((e) => e as String).toList(),
     );
   }
 
@@ -30,11 +29,7 @@ class SHOSearchApi {
   }) {
     return _dio.getData<SHOPageResult<SHOProduct>>(
       '/search',
-      queryParameters: {
-        'q': query,
-        'page': page,
-        'pageSize': pageSize,
-      },
+      queryParameters: {'q': query, 'page': page, 'pageSize': pageSize},
       parser: (data) => SHOPageResult.fromJson(
         data as Map<String, dynamic>,
         (json) => SHOProduct.fromJson(json as Map<String, dynamic>),

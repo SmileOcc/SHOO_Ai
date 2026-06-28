@@ -329,7 +329,6 @@ extension SHOGlobalFeedbackRef on WidgetRef {
   }
 }
 
-
 /**
  应用启动
     ↓
@@ -351,7 +350,6 @@ SHOGlobalErrorController.bind(_controller!)
     ↓
 用户看到 Toast/Dialog
  */
-
 
 /**
  ┌─────────────────────────────────────────────────────────────┐
@@ -397,7 +395,6 @@ setState(() => _dialogEvent = null)
     ↓
 Dialog 关闭
  */
-
 
 /*
 1. 对比传统 try-catch 分散处理

@@ -9,11 +9,7 @@ import 'package:shoo/core/platform/webview/hos_url_navigator.dart';
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_promo.dart';
 import 'package:shoo/features/activity_webview/presentation/state/hos_image_preview_provider.dart';
 
-void shoOpenActivityPromoLink(
-  BuildContext context,
-  WidgetRef ref,
-  String url,
-) {
+void shoOpenActivityPromoLink(BuildContext context, WidgetRef ref, String url) {
   if (url.startsWith('/')) {
     context.push(url);
     return;
@@ -73,7 +69,9 @@ class SHOActivityPromoSection extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          ...blocks.map((block) => _PromoBlockTile(block: block, blocks: blocks)),
+          ...blocks.map(
+            (block) => _PromoBlockTile(block: block, blocks: blocks),
+          ),
         ],
       ),
     );
@@ -81,10 +79,7 @@ class SHOActivityPromoSection extends ConsumerWidget {
 }
 
 class _PromoBlockTile extends ConsumerWidget {
-  const _PromoBlockTile({
-    required this.block,
-    required this.blocks,
-  });
+  const _PromoBlockTile({required this.block, required this.blocks});
 
   final SHOActivityPromoBlock block;
   final List<SHOActivityPromoBlock> blocks;
@@ -146,10 +141,7 @@ class _PromoParagraph extends ConsumerWidget {
 }
 
 class _PromoImageTile extends ConsumerWidget {
-  const _PromoImageTile({
-    required this.block,
-    required this.blocks,
-  });
+  const _PromoImageTile({required this.block, required this.blocks});
 
   final SHOActivityPromoBlock block;
   final List<SHOActivityPromoBlock> blocks;
@@ -159,7 +151,8 @@ class _PromoImageTile extends ConsumerWidget {
     final url = block.url;
     if (url == null || url.isEmpty) return const SizedBox.shrink();
 
-    final aspect = (block.width != null && block.height != null && block.height! > 0)
+    final aspect =
+        (block.width != null && block.height != null && block.height! > 0)
         ? block.width! / block.height!
         : 16 / 9;
 
@@ -205,8 +198,8 @@ class _PromoImageTile extends ConsumerWidget {
               child: Text(
                 block.caption!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
         ],

@@ -29,7 +29,10 @@ abstract final class SHOSharePanel {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.sharePanelTitle, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              l10n.sharePanelTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: SHOAppSpacing.xl),
             if (product != null && cardKey != null)
               _SHOShareTile(

@@ -54,11 +54,7 @@ class SHOWebViewLoadingNotifier extends Notifier<SHOWebViewLoadingState> {
   }
 
   void setError(String error, int code) {
-    state = state.copyWith(
-      error: error,
-      errorCode: code,
-      isLoading: false,
-    );
+    state = state.copyWith(error: error, errorCode: code, isLoading: false);
   }
 
   void setPageTitle(String? title) {
@@ -91,5 +87,5 @@ class SHOWebViewLoadingNotifier extends Notifier<SHOWebViewLoadingState> {
 
 final webviewLoadingProvider =
     NotifierProvider<SHOWebViewLoadingNotifier, SHOWebViewLoadingState>(
-  SHOWebViewLoadingNotifier.new,
-);
+      SHOWebViewLoadingNotifier.new,
+    );

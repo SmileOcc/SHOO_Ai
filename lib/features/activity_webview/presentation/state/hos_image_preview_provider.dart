@@ -1,20 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SHOImagePreviewItem {
-  const SHOImagePreviewItem({
-    required this.url,
-    this.title = '',
-  });
+  const SHOImagePreviewItem({required this.url, this.title = ''});
 
   final String url;
   final String title;
 }
 
 class SHOImagePreviewState {
-  const SHOImagePreviewState({
-    this.images = const [],
-    this.currentIndex = 0,
-  });
+  const SHOImagePreviewState({this.images = const [], this.currentIndex = 0});
 
   final List<SHOImagePreviewItem> images;
   final int currentIndex;
@@ -51,5 +45,5 @@ class SHOImagePreviewNotifier extends Notifier<SHOImagePreviewState> {
 
 final imagePreviewProvider =
     NotifierProvider<SHOImagePreviewNotifier, SHOImagePreviewState>(
-  SHOImagePreviewNotifier.new,
-);
+      SHOImagePreviewNotifier.new,
+    );

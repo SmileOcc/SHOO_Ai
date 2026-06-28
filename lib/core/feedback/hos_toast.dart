@@ -18,7 +18,10 @@ abstract final class SHOAppToast {
     if (messenger == null) return;
 
     final (icon, color) = switch (type) {
-      SHOToastType.success => (Icons.check_circle_outline, SHOAppColors.success),
+      SHOToastType.success => (
+        Icons.check_circle_outline,
+        SHOAppColors.success,
+      ),
       SHOToastType.error => (Icons.error_outline, SHOAppColors.error),
       SHOToastType.info => (Icons.info_outline, SHOAppColors.primary),
     };

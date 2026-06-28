@@ -18,8 +18,10 @@ abstract final class SHOWebViewRouteMapper {
   }
 
   static String? _mapPath(String path) {
-    final segments =
-        path.split('/').where((s) => s.isNotEmpty).toList(growable: false);
+    final segments = path
+        .split('/')
+        .where((s) => s.isNotEmpty)
+        .toList(growable: false);
     if (segments.isEmpty) return null;
 
     if (segments.length >= 2 && segments[0] == 'product') {

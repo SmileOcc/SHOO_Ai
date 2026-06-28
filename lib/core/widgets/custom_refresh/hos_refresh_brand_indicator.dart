@@ -26,7 +26,8 @@ class SHOAppRefreshBrandIndicator extends StatefulWidget {
       _SHOAppRefreshBrandIndicatorState();
 }
 
-class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicator>
+class _SHOAppRefreshBrandIndicatorState
+    extends State<SHOAppRefreshBrandIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _spinController;
 
@@ -52,8 +53,7 @@ class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicato
   }
 
   void _syncSpin() {
-    final spinning =
-        widget.refreshStatus == SHOAppCustomRefreshStatus.loading;
+    final spinning = widget.refreshStatus == SHOAppCustomRefreshStatus.loading;
     if (spinning && !_spinController.isAnimating) {
       _spinController.repeat();
     } else if (!spinning && _spinController.isAnimating) {
@@ -72,8 +72,7 @@ class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicato
   Widget build(BuildContext context) {
     final size = widget.compact ? widget.size * 0.72 : widget.size;
     final progress = widget.pullProgress.clamp(0.0, 1.0);
-    final isLoading =
-        widget.refreshStatus == SHOAppCustomRefreshStatus.loading;
+    final isLoading = widget.refreshStatus == SHOAppCustomRefreshStatus.loading;
     final isCompleted =
         widget.refreshStatus == SHOAppCustomRefreshStatus.completed;
     final isFailed = widget.refreshStatus == SHOAppCustomRefreshStatus.error;
@@ -83,8 +82,8 @@ class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicato
     final scale = isLoading
         ? 1.0
         : isCompleted
-            ? 1.0
-            : 0.78 + progress * 0.22;
+        ? 1.0
+        : 0.78 + progress * 0.22;
 
     Widget icon = SHOAppIcon(size: size * scale, borderRadius: size * 0.18);
 
@@ -112,10 +111,10 @@ class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicato
               progress: isLoading
                   ? null
                   : isCompleted
-                      ? 1
-                      : isDragging || progress > 0
-                          ? progress
-                          : 0,
+                  ? 1
+                  : isDragging || progress > 0
+                  ? progress
+                  : 0,
               spinning: isLoading,
               spinValue: _spinController.value,
               color: isFailed ? SHOAppColors.error : SHOAppColors.accent,
@@ -123,7 +122,11 @@ class _SHOAppRefreshBrandIndicatorState extends State<SHOAppRefreshBrandIndicato
           ),
           icon,
           if (isCompleted)
-            Icon(Icons.check_rounded, size: size * 0.45, color: SHOAppColors.success),
+            Icon(
+              Icons.check_rounded,
+              size: size * 0.45,
+              color: SHOAppColors.success,
+            ),
           if (isFailed)
             Positioned(
               right: 0,

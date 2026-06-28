@@ -21,10 +21,7 @@ final debugFeedbackOrdersProvider = FutureProvider<List<String>>((ref) async {
 
 /// Debug：演示 Riverpod [AsyncValue.when] + [WidgetRef.showGlobalError]。
 class SHODebugFeedbackAsyncDemo extends ConsumerWidget {
-  const SHODebugFeedbackAsyncDemo({
-    super.key,
-    required this.onAction,
-  });
+  const SHODebugFeedbackAsyncDemo({super.key, required this.onAction});
 
   final ValueChanged<String> onAction;
 
@@ -78,8 +75,8 @@ return ordersAsync.when(
         Text(
           l10n.debugFeedbackAsyncHint,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.shoTheme.textSecondary,
-              ),
+            color: context.shoTheme.textSecondary,
+          ),
         ),
         const SizedBox(height: SHOAppSpacing.sm),
         _CodeSnippetCard(text: codeSnippet),
@@ -234,9 +231,9 @@ class _CodeSnippetCard extends StatelessWidget {
         child: SelectableText(
           text,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontFamily: 'monospace',
-                height: 1.45,
-              ),
+            fontFamily: 'monospace',
+            height: 1.45,
+          ),
         ),
       ),
     );

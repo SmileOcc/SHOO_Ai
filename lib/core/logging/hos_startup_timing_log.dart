@@ -27,14 +27,12 @@ abstract final class SHOStartupTimingLog {
     await SHOAppLogManager.instance.append('INFO', text);
 
     if (bootstrapMs != null && firstFrameMs != null) {
-      await SHOAnalyticsManager.instance.trackEvent(
-        SHOAnalyticsRegistry.appStartupTime,
-        {
-          'bootstrap_ms': bootstrapMs,
-          'first_frame_ms': firstFrameMs,
-          'bootstrap_to_first_frame_ms': renderMs ?? 0,
-        },
-      );
+      await SHOAnalyticsManager.instance
+          .trackEvent(SHOAnalyticsRegistry.appStartupTime, {
+            'bootstrap_ms': bootstrapMs,
+            'first_frame_ms': firstFrameMs,
+            'bootstrap_to_first_frame_ms': renderMs ?? 0,
+          });
     }
   }
 }

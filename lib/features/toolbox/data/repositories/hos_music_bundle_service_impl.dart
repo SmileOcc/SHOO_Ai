@@ -23,11 +23,15 @@ class SHOMusicBundleService {
     required Set<String> seenSongKeys,
   }) async {
     final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-    final zipAssets = manifest
-        .listAssets()
-        .where((path) => path.startsWith(_assetMusicPrefix) && path.endsWith('.zip'))
-        .toList()
-      ..sort();
+    final zipAssets =
+        manifest
+            .listAssets()
+            .where(
+              (path) =>
+                  path.startsWith(_assetMusicPrefix) && path.endsWith('.zip'),
+            )
+            .toList()
+          ..sort();
 
     final tracks = <SHOMusicTrack>[];
 

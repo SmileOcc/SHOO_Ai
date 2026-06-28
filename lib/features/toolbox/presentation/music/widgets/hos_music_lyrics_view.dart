@@ -44,7 +44,8 @@ class _SHOMusicLyricsViewState extends State<SHOMusicLyricsView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scrollController.hasClients) return;
       const lineHeight = 42.0;
-      final target = (index * lineHeight) -
+      final target =
+          (index * lineHeight) -
           (_scrollController.position.viewportDimension / 2) +
           (lineHeight / 2);
       final max = _scrollController.position.maxScrollExtent;
@@ -90,10 +91,7 @@ class _SHOMusicLyricsViewState extends State<SHOMusicLyricsView> {
                   : Colors.white.withValues(alpha: isActive ? 1 : 0.42),
               height: 1.45,
             ),
-            child: Text(
-              line.text,
-              textAlign: TextAlign.center,
-            ),
+            child: Text(line.text, textAlign: TextAlign.center),
           ),
         );
       },

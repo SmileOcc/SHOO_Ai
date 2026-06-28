@@ -12,10 +12,7 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'hos_bottom_nav.dart';
 
 class SHOMainShell extends ConsumerWidget {
-  const SHOMainShell({
-    super.key,
-    required this.navigationShell,
-  });
+  const SHOMainShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
@@ -50,12 +47,12 @@ class SHOMainShell extends ConsumerWidget {
   ];
 
   String _tabLabel(AppLocalizations l10n, int index) => switch (index) {
-        0 => l10n.tabShop,
-        1 => l10n.tabCategory,
-        2 => l10n.tabCommunity,
-        3 => l10n.tabBag,
-        _ => l10n.tabMe,
-      };
+    0 => l10n.tabShop,
+    1 => l10n.tabCategory,
+    2 => l10n.tabCommunity,
+    3 => l10n.tabBag,
+    _ => l10n.tabMe,
+  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,29 +81,27 @@ class SHOMainShell extends ConsumerWidget {
                         titleSpacing: 0,
                       )
                     : isCommunityTab
-                        ? AppBar(
-                            title: Text(
-                              l10n.communityCenterTitle,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            actions: [
-                              IconButton(
-                                icon: const Icon(Icons.search_rounded),
-                                onPressed: () =>
-                                    context.push(SHOAppRoutes.search),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit_outlined),
-                                onPressed: () => SHOAppToast.info(
-                                  l10n.communityPostComingSoon,
-                                ),
-                              ),
-                            ],
-                          )
-                        : AppBar(
+                    ? AppBar(
+                        title: Text(
+                          l10n.communityCenterTitle,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        actions: [
+                          IconButton(
+                            icon: const Icon(Icons.search_rounded),
+                            onPressed: () => context.push(SHOAppRoutes.search),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.edit_outlined),
+                            onPressed: () =>
+                                SHOAppToast.info(l10n.communityPostComingSoon),
+                          ),
+                        ],
+                      )
+                    : AppBar(
                         title: Text(
                           isCategoryTab && categoryTitle.isNotEmpty
                               ? categoryTitle

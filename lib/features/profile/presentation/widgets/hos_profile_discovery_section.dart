@@ -145,11 +145,11 @@ class _ServiceEntryButton extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    height: 1.1,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                height: 1.1,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ],
         ),
@@ -188,9 +188,9 @@ class SHOProfileCouponStrip extends ConsumerWidget {
             children: [
               Text(
                 l10n.profileCouponCenter,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
               ),
               const Spacer(),
               TextButton(
@@ -214,10 +214,8 @@ class SHOProfileCouponStrip extends ConsumerWidget {
           ),
           const SizedBox(height: SHOAppSpacing.sm),
           couponsAsync.when(
-            loading: () => const SizedBox(
-              height: 92,
-              child: SHOSkeletonBox(height: 92),
-            ),
+            loading: () =>
+                const SizedBox(height: 92, child: SHOSkeletonBox(height: 92)),
             error: (_, __) => const SizedBox.shrink(),
             data: (coupons) {
               if (coupons.isEmpty) return const SizedBox.shrink();
@@ -273,18 +271,18 @@ class _CouponTicketCard extends StatelessWidget {
                 Text(
                   amount,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: SHOAppColors.accent,
-                        fontWeight: FontWeight.w900,
-                        height: 1,
-                      ),
+                    color: SHOAppColors.accent,
+                    fontWeight: FontWeight.w900,
+                    height: 1,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '券',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: SHOAppColors.accent,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: SHOAppColors.accent,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -293,7 +291,9 @@ class _CouponTicketCard extends StatelessWidget {
             width: 1,
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: CustomPaint(
-              painter: _DashedLinePainter(color: SHOAppColors.accent.withValues(alpha: 0.35)),
+              painter: _DashedLinePainter(
+                color: SHOAppColors.accent.withValues(alpha: 0.35),
+              ),
             ),
           ),
           Expanded(
@@ -307,10 +307,10 @@ class _CouponTicketCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
-                        ),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
                   ),
                   const Spacer(),
                   Align(
@@ -369,11 +369,9 @@ class _DashedLinePainter extends CustomPainter {
       oldDelegate.color != color;
 }
 
-class SHOProfileFeedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const SHOProfileFeedTabBar({
-    super.key,
-    required this.controller,
-  });
+class SHOProfileFeedTabBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const SHOProfileFeedTabBar({super.key, required this.controller});
 
   final TabController controller;
 
@@ -394,7 +392,10 @@ class SHOProfileFeedTabBar extends StatelessWidget implements PreferredSizeWidge
         labelColor: Theme.of(context).colorScheme.onSurface,
         unselectedLabelColor: context.shoTheme.textSecondary,
         labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+        ),
         indicator: const UnderlineTabIndicator(
           borderSide: BorderSide(color: SHOAppColors.accent, width: 3),
           insets: EdgeInsets.symmetric(horizontal: 18),
@@ -421,65 +422,16 @@ Widget buildProfileFeedSliver(
   BuildContext context,
   SHOProfileFeedTab tab,
 ) {
-    if (tab == SHOProfileFeedTab.reviews) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: _ReviewsPromptWrapper(),
-      );
-    }
+  if (tab == SHOProfileFeedTab.reviews) {
+    return const SliverFillRemaining(
+      hasScrollBody: false,
+      child: _ReviewsPromptWrapper(),
+    );
+  }
 
-    if (tab == SHOProfileFeedTab.favorites) {
-      final favoritesAsync = ref.watch(profileFavoriteActivityProductsProvider);
-      return favoritesAsync.when(
-        loading: () => SliverGrid(
-          gridDelegate: _feedGridDelegate,
-          delegate: SliverChildBuilderDelegate(
-            (_, __) => const SHOSkeletonBox(height: 220),
-            childCount: 4,
-          ),
-        ),
-        error: (error, _) => SliverToBoxAdapter(
-          child: SHOEmptyState(
-            title: error.toString(),
-            onAction: () => ref.invalidate(profileFavoriteActivityProductsProvider),
-          ),
-        ),
-        data: (items) {
-          if (items.isEmpty) {
-            return SliverFillRemaining(
-              hasScrollBody: false,
-              child: SHOEmptyState(
-                title: AppLocalizations.of(context).profileFavoritesEmpty,
-                actionLabel: AppLocalizations.of(context).cartEmptyAction,
-                onAction: () => context.go(SHOAppRoutes.home),
-              ),
-            );
-          }
-          return SliverGrid(
-            gridDelegate: _feedGridDelegate,
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final item = items[index];
-                final product = item.product;
-                return Opacity(
-                  opacity: item.available ? 1 : 0.45,
-                  child: SHOProductCard(
-                    product: product,
-                    onTap: item.available
-                        ? () => context.push(SHOAppRoutes.product(product.id))
-                        : null,
-                  ),
-                );
-              },
-              childCount: items.length,
-            ),
-          );
-        },
-      );
-    }
-
-    final feedAsync = ref.watch(homeFeedProvider);
-    return feedAsync.when(
+  if (tab == SHOProfileFeedTab.favorites) {
+    final favoritesAsync = ref.watch(profileFavoriteActivityProductsProvider);
+    return favoritesAsync.when(
       loading: () => SliverGrid(
         gridDelegate: _feedGridDelegate,
         delegate: SliverChildBuilderDelegate(
@@ -490,23 +442,67 @@ Widget buildProfileFeedSliver(
       error: (error, _) => SliverToBoxAdapter(
         child: SHOEmptyState(
           title: error.toString(),
-          onAction: () => ref.invalidate(homeFeedProvider),
+          onAction: () =>
+              ref.invalidate(profileFavoriteActivityProductsProvider),
         ),
       ),
-      data: (feed) => SliverGrid(
-        gridDelegate: _feedGridDelegate,
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final product = feed.products[index];
-            return SHOProductCard(
-              product: product,
-              onTap: () => context.push(SHOAppRoutes.product(product.id)),
+      data: (items) {
+        if (items.isEmpty) {
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: SHOEmptyState(
+              title: AppLocalizations.of(context).profileFavoritesEmpty,
+              actionLabel: AppLocalizations.of(context).cartEmptyAction,
+              onAction: () => context.go(SHOAppRoutes.home),
+            ),
+          );
+        }
+        return SliverGrid(
+          gridDelegate: _feedGridDelegate,
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final item = items[index];
+            final product = item.product;
+            return Opacity(
+              opacity: item.available ? 1 : 0.45,
+              child: SHOProductCard(
+                product: product,
+                onTap: item.available
+                    ? () => context.push(SHOAppRoutes.product(product.id))
+                    : null,
+              ),
             );
-          },
-          childCount: feed.products.length,
-        ),
-      ),
+          }, childCount: items.length),
+        );
+      },
     );
+  }
+
+  final feedAsync = ref.watch(homeFeedProvider);
+  return feedAsync.when(
+    loading: () => SliverGrid(
+      gridDelegate: _feedGridDelegate,
+      delegate: SliverChildBuilderDelegate(
+        (_, __) => const SHOSkeletonBox(height: 220),
+        childCount: 4,
+      ),
+    ),
+    error: (error, _) => SliverToBoxAdapter(
+      child: SHOEmptyState(
+        title: error.toString(),
+        onAction: () => ref.invalidate(homeFeedProvider),
+      ),
+    ),
+    data: (feed) => SliverGrid(
+      gridDelegate: _feedGridDelegate,
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final product = feed.products[index];
+        return SHOProductCard(
+          product: product,
+          onTap: () => context.push(SHOAppRoutes.product(product.id)),
+        );
+      }, childCount: feed.products.length),
+    ),
+  );
 }
 
 class _ReviewsPromptWrapper extends ConsumerWidget {

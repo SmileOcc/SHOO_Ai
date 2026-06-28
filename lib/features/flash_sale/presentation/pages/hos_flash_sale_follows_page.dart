@@ -19,11 +19,12 @@ class SHOFlashSaleFollowsPage extends SHODataPage<List<SHOFlashSaleFollow>> {
 
   @override
   SHODataPageState<List<SHOFlashSaleFollow>, SHOFlashSaleFollowsPage>
-      createState() => _SHOFlashSaleFollowsPageState();
+  createState() => _SHOFlashSaleFollowsPageState();
 }
 
 class _SHOFlashSaleFollowsPageState
-    extends SHODataPageState<List<SHOFlashSaleFollow>, SHOFlashSaleFollowsPage> {
+    extends
+        SHODataPageState<List<SHOFlashSaleFollow>, SHOFlashSaleFollowsPage> {
   @override
   ProviderListenable<AsyncValue<List<SHOFlashSaleFollow>>> get dataProvider =>
       flashSaleFollowControllerProvider;
@@ -139,7 +140,8 @@ class _FollowTile extends StatelessWidget {
               type: SHOPromoBadgeType.status,
               label: _statusLabel(follow.status, l10n),
               preset: SHOPromoBadgePreset.wrapTag,
-              enabled: follow.status == SHOFlashSaleProductStatus.notStarted ||
+              enabled:
+                  follow.status == SHOFlashSaleProductStatus.notStarted ||
                   follow.status == SHOFlashSaleProductStatus.ongoing,
             ),
           ],

@@ -15,7 +15,8 @@ abstract final class SHOAppConstants {
   static const int activityMockServerPort = 8888;
 
   static const String defaultDevApiBaseUrl = 'https://mock.shoo.local/api/v1';
-  static const String defaultStagingApiBaseUrl = 'https://api.staging.shoo.com/v1';
+  static const String defaultStagingApiBaseUrl =
+      'https://api.staging.shoo.com/v1';
   static const String defaultProdApiBaseUrl = 'https://api.shoo.com/v1';
 
   static const Duration debounceDuration = Duration(milliseconds: 350);

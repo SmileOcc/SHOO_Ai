@@ -242,8 +242,9 @@ class _SHODebugSecureNetworkPageState
   }
 
   void _syncCustomInterceptorConfig() {
-    ref.read(debugNetworkLabConfigProvider.notifier).state =
-        SHODebugNetworkLabConfig(
+    ref
+        .read(debugNetworkLabConfigProvider.notifier)
+        .state = SHODebugNetworkLabConfig(
       enableCustomInterceptor: _enableCustomInterceptor,
       customHeaderKey: _customHeaderKeyCtrl.text.trim(),
       customHeaderValue: _customHeaderValueCtrl.text.trim(),
@@ -258,9 +259,9 @@ class _SHODebugSecureNetworkPageState
       _retryResult = null;
     });
     ref.read(debugNetworkLabLogProvider.notifier).clear();
-    ref.read(debugNetworkLabLogProvider.notifier).add(
-          '开始重试调试：先模拟 $_retryFailCount 次 503，再期望成功',
-        );
+    ref
+        .read(debugNetworkLabLogProvider.notifier)
+        .add('开始重试调试：先模拟 $_retryFailCount 次 503，再期望成功');
 
     final stopwatch = Stopwatch()..start();
     try {
@@ -279,9 +280,12 @@ class _SHODebugSecureNetworkPageState
         ),
       );
       _validateDebugEnvelope(response.data);
-      final attempt = response.requestOptions.extra['retry_attempt'] as int? ?? 0;
+      final attempt =
+          response.requestOptions.extra['retry_attempt'] as int? ?? 0;
       stopwatch.stop();
-      ref.read(debugNetworkLabLogProvider.notifier).add(
+      ref
+          .read(debugNetworkLabLogProvider.notifier)
+          .add(
             '重试成功：retry_attempt=$attempt，耗时 ${stopwatch.elapsedMilliseconds}ms',
           );
       setState(() {
@@ -293,9 +297,9 @@ class _SHODebugSecureNetworkPageState
       });
     } catch (error) {
       stopwatch.stop();
-      ref.read(debugNetworkLabLogProvider.notifier).add(
-            '重试失败：${messageFromAny(_unwrapError(error))}',
-          );
+      ref
+          .read(debugNetworkLabLogProvider.notifier)
+          .add('重试失败：${messageFromAny(_unwrapError(error))}');
       _showErrorDialog('重试调试最终失败', error);
     } finally {
       if (mounted) setState(() => _retryBusy = false);
@@ -309,9 +313,9 @@ class _SHODebugSecureNetworkPageState
     });
     _syncCustomInterceptorConfig();
     ref.read(debugNetworkLabLogProvider.notifier).clear();
-    ref.read(debugNetworkLabLogProvider.notifier).add(
-          '自定义拦截器已${_enableCustomInterceptor ? "启用" : "禁用"}',
-        );
+    ref
+        .read(debugNetworkLabLogProvider.notifier)
+        .add('自定义拦截器已${_enableCustomInterceptor ? "启用" : "禁用"}');
 
     try {
       final dio = ref.refresh(debugNetworkLabDioProvider);
@@ -340,10 +344,7 @@ class _SHODebugSecureNetworkPageState
 
   Widget _labLogPanel(List<String> logs) {
     if (logs.isEmpty) return const SizedBox.shrink();
-    return _SHODebugJsonResult(
-      title: '实验室日志',
-      content: logs.join('\n'),
-    );
+    return _SHODebugJsonResult(title: '实验室日志', content: logs.join('\n'));
   }
 
   Widget _encryptButton({
@@ -372,272 +373,281 @@ class _SHODebugSecureNetworkPageState
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: const Text('安全网络 / 加密调试')),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(
-            '当前安全等级：${config.securityLevel.label}',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: SHOAppSpacing.xs),
-          Text(
-            'Mock 模式 ${config.useMockApi ? "已跳过载荷加密" : "已启用加密拦截器"}\n'
-            'RSA 路径：${SHOEncryptionPolicy.rsaPaths.join(", ")} + POST /orders\n'
-            '登录/注册/下单在 API 层显式 RSA 加密',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text('加密调试', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _encryptSampleCtrl,
-            decoration: const InputDecoration(
-              labelText: '样例 JSON 载荷',
-              border: OutlineInputBorder(),
+        appBar: AppBar(title: const Text('安全网络 / 加密调试')),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            Text(
+              '当前安全等级：${config.securityLevel.label}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            maxLines: 4,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          Wrap(
-            spacing: SHOAppSpacing.sm,
-            runSpacing: SHOAppSpacing.sm,
-            children: [
-              _encryptButton(type: 'rsa', label: 'RSA 加密', icon: Icons.vpn_key),
-              _encryptButton(
-                type: 'aes',
-                label: 'AES 加密',
-                icon: Icons.lock_outline,
+            const SizedBox(height: SHOAppSpacing.xs),
+            Text(
+              'Mock 模式 ${config.useMockApi ? "已跳过载荷加密" : "已启用加密拦截器"}\n'
+              'RSA 路径：${SHOEncryptionPolicy.rsaPaths.join(", ")} + POST /orders\n'
+              '登录/注册/下单在 API 层显式 RSA 加密',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text('加密调试', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _encryptSampleCtrl,
+              decoration: const InputDecoration(
+                labelText: '样例 JSON 载荷',
+                border: OutlineInputBorder(),
               ),
-              _encryptButton(
-                type: 'hybrid',
-                label: 'Hybrid 加密',
-                icon: Icons.merge_type,
-              ),
-              _encryptButton(type: 'sm4', label: 'SM4 加密', icon: Icons.shield),
-            ],
-          ),
-          for (final entry in _encryptResults.entries)
-            _SHODebugJsonResult(
-              key: ValueKey('encrypt-${entry.key}'),
-              title: '${entry.key.toUpperCase()} 结果',
-              content: entry.value,
+              maxLines: 4,
             ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text('AES 通用 GET 调试', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _getPathCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Path',
-              border: OutlineInputBorder(),
-              hintText: '错误测试可填 /not-found',
-            ),
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _getQueryCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Query JSON（可选）',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 2,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _getHeadersCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Headers（JSON 或 Key: Value 每行）',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          FilledButton.icon(
-            onPressed: _getBusy ? null : _runGetDebug,
-            icon: _getBusy
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.download_outlined),
-            label: const Text('发送 GET（失败弹窗提示）'),
-          ),
-          if (_getResult != null)
-            _SHODebugJsonResult(title: 'GET 响应', content: _getResult!),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text(
-            'AES 通用 POST 调试',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _postPathCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Path',
-              border: OutlineInputBorder(),
-              hintText: '登录 RSA：/auth/login；错误测试：/not-found',
-            ),
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _postBodyCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Body JSON',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 4,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _postHeadersCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Headers（JSON 或 Key: Value 每行）',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          FilledButton.icon(
-            onPressed: _postBusy ? null : _runPostDebug,
-            icon: _postBusy
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.upload_outlined),
-            label: const Text('发送 POST（失败弹窗提示）'),
-          ),
-          if (_postResult != null)
-            _SHODebugJsonResult(title: 'POST 响应', content: _postResult!),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text('接口错误重试调试', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: SHOAppSpacing.xs),
-          Text(
-            '通过 SHODebugFailInterceptor 模拟 503，验证 SHORetryInterceptor '
-            '（默认最多 3 次，延迟 1s/3s/5s）',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _retryPathCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Path',
-              border: OutlineInputBorder(),
-              hintText: '/auth/profile',
-            ),
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          Row(
-            children: [
-              Expanded(
-                child: Text('模拟失败次数: $_retryFailCount'),
-              ),
-              Expanded(
-                flex: 2,
-                child: Slider(
-                  value: _retryFailCount.toDouble(),
-                  min: 1,
-                  max: 3,
-                  divisions: 2,
-                  label: '$_retryFailCount',
-                  onChanged: _retryBusy
-                      ? null
-                      : (v) => setState(() => _retryFailCount = v.round()),
+            const SizedBox(height: SHOAppSpacing.md),
+            Wrap(
+              spacing: SHOAppSpacing.sm,
+              runSpacing: SHOAppSpacing.sm,
+              children: [
+                _encryptButton(
+                  type: 'rsa',
+                  label: 'RSA 加密',
+                  icon: Icons.vpn_key,
                 ),
+                _encryptButton(
+                  type: 'aes',
+                  label: 'AES 加密',
+                  icon: Icons.lock_outline,
+                ),
+                _encryptButton(
+                  type: 'hybrid',
+                  label: 'Hybrid 加密',
+                  icon: Icons.merge_type,
+                ),
+                _encryptButton(
+                  type: 'sm4',
+                  label: 'SM4 加密',
+                  icon: Icons.shield,
+                ),
+              ],
+            ),
+            for (final entry in _encryptResults.entries)
+              _SHODebugJsonResult(
+                key: ValueKey('encrypt-${entry.key}'),
+                title: '${entry.key.toUpperCase()} 结果',
+                content: entry.value,
               ),
-            ],
-          ),
-          FilledButton.icon(
-            onPressed: _retryBusy ? null : _runRetryDebug,
-            icon: _retryBusy
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.replay_outlined),
-            label: const Text('发送请求（模拟失败后重试）'),
-          ),
-          if (_retryResult != null)
-            _SHODebugJsonResult(title: '重试结果', content: _retryResult!),
-          const Divider(height: SHOAppSpacing.xxxl),
-          Text('自定义拦截器调试', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: SHOAppSpacing.xs),
-          Text(
-            '配置 SHODebugCustomInterceptor：注入 Header、延迟、记录 onRequest/onResponse',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('启用自定义拦截器'),
-            value: _enableCustomInterceptor,
-            onChanged: _customBusy
-                ? null
-                : (v) => setState(() => _enableCustomInterceptor = v),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('插入在 Auth 之前（prepend）'),
-            subtitle: const Text('关闭则 append 到拦截器链末尾'),
-            value: _customInsertBeforeAuth,
-            onChanged: _customBusy
-                ? null
-                : (v) => setState(() => _customInsertBeforeAuth = v),
-          ),
-          TextField(
-            controller: _customHeaderKeyCtrl,
-            decoration: const InputDecoration(
-              labelText: '注入 Header Key',
-              border: OutlineInputBorder(),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text(
+              'AES 通用 GET 调试',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _customHeaderValueCtrl,
-            decoration: const InputDecoration(
-              labelText: '注入 Header Value',
-              border: OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _getPathCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Path',
+                border: OutlineInputBorder(),
+                hintText: '错误测试可填 /not-found',
+              ),
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _customDelayCtrl,
-            decoration: const InputDecoration(
-              labelText: 'onRequest 延迟 (ms)',
-              border: OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _getQueryCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Query JSON（可选）',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
             ),
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: SHOAppSpacing.sm),
-          TextField(
-            controller: _customPathCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Path',
-              border: OutlineInputBorder(),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _getHeadersCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Headers（JSON 或 Key: Value 每行）',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
             ),
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          FilledButton.icon(
-            onPressed: _customBusy ? null : _runCustomInterceptorDebug,
-            icon: _customBusy
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.filter_alt_outlined),
-            label: const Text('发送请求（验证自定义拦截器）'),
-          ),
-          if (_customResult != null)
-            _SHODebugJsonResult(title: '自定义拦截器响应', content: _customResult!),
-          _labLogPanel(labLogs),
-        ],
+            const SizedBox(height: SHOAppSpacing.md),
+            FilledButton.icon(
+              onPressed: _getBusy ? null : _runGetDebug,
+              icon: _getBusy
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.download_outlined),
+              label: const Text('发送 GET（失败弹窗提示）'),
+            ),
+            if (_getResult != null)
+              _SHODebugJsonResult(title: 'GET 响应', content: _getResult!),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text(
+              'AES 通用 POST 调试',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _postPathCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Path',
+                border: OutlineInputBorder(),
+                hintText: '登录 RSA：/auth/login；错误测试：/not-found',
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _postBodyCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Body JSON',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 4,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _postHeadersCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Headers（JSON 或 Key: Value 每行）',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            FilledButton.icon(
+              onPressed: _postBusy ? null : _runPostDebug,
+              icon: _postBusy
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.upload_outlined),
+              label: const Text('发送 POST（失败弹窗提示）'),
+            ),
+            if (_postResult != null)
+              _SHODebugJsonResult(title: 'POST 响应', content: _postResult!),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text('接口错误重试调试', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: SHOAppSpacing.xs),
+            Text(
+              '通过 SHODebugFailInterceptor 模拟 503，验证 SHORetryInterceptor '
+              '（默认最多 3 次，延迟 1s/3s/5s）',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _retryPathCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Path',
+                border: OutlineInputBorder(),
+                hintText: '/auth/profile',
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            Row(
+              children: [
+                Expanded(child: Text('模拟失败次数: $_retryFailCount')),
+                Expanded(
+                  flex: 2,
+                  child: Slider(
+                    value: _retryFailCount.toDouble(),
+                    min: 1,
+                    max: 3,
+                    divisions: 2,
+                    label: '$_retryFailCount',
+                    onChanged: _retryBusy
+                        ? null
+                        : (v) => setState(() => _retryFailCount = v.round()),
+                  ),
+                ),
+              ],
+            ),
+            FilledButton.icon(
+              onPressed: _retryBusy ? null : _runRetryDebug,
+              icon: _retryBusy
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.replay_outlined),
+              label: const Text('发送请求（模拟失败后重试）'),
+            ),
+            if (_retryResult != null)
+              _SHODebugJsonResult(title: '重试结果', content: _retryResult!),
+            const Divider(height: SHOAppSpacing.xxxl),
+            Text('自定义拦截器调试', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: SHOAppSpacing.xs),
+            Text(
+              '配置 SHODebugCustomInterceptor：注入 Header、延迟、记录 onRequest/onResponse',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('启用自定义拦截器'),
+              value: _enableCustomInterceptor,
+              onChanged: _customBusy
+                  ? null
+                  : (v) => setState(() => _enableCustomInterceptor = v),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('插入在 Auth 之前（prepend）'),
+              subtitle: const Text('关闭则 append 到拦截器链末尾'),
+              value: _customInsertBeforeAuth,
+              onChanged: _customBusy
+                  ? null
+                  : (v) => setState(() => _customInsertBeforeAuth = v),
+            ),
+            TextField(
+              controller: _customHeaderKeyCtrl,
+              decoration: const InputDecoration(
+                labelText: '注入 Header Key',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _customHeaderValueCtrl,
+              decoration: const InputDecoration(
+                labelText: '注入 Header Value',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _customDelayCtrl,
+              decoration: const InputDecoration(
+                labelText: 'onRequest 延迟 (ms)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: SHOAppSpacing.sm),
+            TextField(
+              controller: _customPathCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Path',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            FilledButton.icon(
+              onPressed: _customBusy ? null : _runCustomInterceptorDebug,
+              icon: _customBusy
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.filter_alt_outlined),
+              label: const Text('发送请求（验证自定义拦截器）'),
+            ),
+            if (_customResult != null)
+              _SHODebugJsonResult(title: '自定义拦截器响应', content: _customResult!),
+            _labLogPanel(labLogs),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -656,17 +666,16 @@ class _SHODebugJsonResult extends StatelessWidget {
   Future<void> _copy(BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: content));
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已复制到剪贴板')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('已复制到剪贴板')));
   }
 
   @override
   Widget build(BuildContext context) {
-    final mono = Theme.of(context).textTheme.bodySmall?.copyWith(
-          fontFamily: 'monospace',
-          fontSize: 12,
-        );
+    final mono = Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(fontFamily: 'monospace', fontSize: 12);
 
     return Padding(
       padding: const EdgeInsets.only(top: SHOAppSpacing.md),
@@ -676,7 +685,10 @@ class _SHODebugJsonResult extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.copy_outlined, size: 20),

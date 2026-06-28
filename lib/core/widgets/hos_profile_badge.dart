@@ -14,6 +14,7 @@ class SHOProfileBadge extends StatelessWidget {
 
   final String text;
   final bool compact;
+
   /// 弱化样式：浅底 + 次要文字色，用于足迹/收藏等统计数字。
   final bool muted;
 

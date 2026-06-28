@@ -46,10 +46,7 @@ class _SHOActivityDetailPageState
         if (detail.bannerUrl != null && detail.bannerUrl!.isNotEmpty)
           AspectRatio(
             aspectRatio: 2.5,
-            child: Image.network(
-              detail.bannerUrl!,
-              fit: BoxFit.cover,
-            ),
+            child: Image.network(detail.bannerUrl!, fit: BoxFit.cover),
           ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),

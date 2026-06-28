@@ -27,5 +27,4 @@ abstract final class SHORemoteLogClient {
     _dio = null;
     _cachedBaseUrl = null;
   }
-
 }

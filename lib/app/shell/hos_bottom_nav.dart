@@ -42,10 +42,7 @@ class SHOAppBottomNav extends ConsumerWidget {
             toIndex: index,
             isReselect: isReselect,
           );
-          navigationShell.goBranch(
-            index,
-            initialLocation: isReselect,
-          );
+          navigationShell.goBranch(index, initialLocation: isReselect);
         },
         items: List.generate(tabs.length, (index) {
           final tab = tabs[index];

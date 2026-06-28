@@ -27,9 +27,9 @@ class _SHONotFoundPageState extends ConsumerState<SHONotFoundPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.location != null && widget.location!.isNotEmpty)
-          'location': widget.location,
-      };
+    if (widget.location != null && widget.location!.isNotEmpty)
+      'location': widget.location,
+  };
 
   @override
   Widget build(BuildContext context) {

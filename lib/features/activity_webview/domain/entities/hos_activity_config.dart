@@ -128,13 +128,22 @@ class SHOActivityConfig {
       shareDesc: json['shareDesc'] as String? ?? '',
       shareUrl: json['shareUrl'] as String? ?? '',
       modules: (json['modules'] as List<dynamic>? ?? const [])
-          .map((e) => SHOActivityModule.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                SHOActivityModule.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       images: (json['images'] as List<dynamic>? ?? const [])
-          .map((e) => SHOActivityImage.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                SHOActivityImage.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       coupons: (json['coupons'] as List<dynamic>? ?? const [])
-          .map((e) => SHOActivityCoupon.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                SHOActivityCoupon.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       rules: (json['rules'] as List<dynamic>? ?? const [])
           .map((e) => e.toString())

@@ -40,7 +40,9 @@ class SHOAddressRepository {
       list.add(address);
     }
 
-    final normalized = address.isDefault ? _normalizeDefault(list, address) : list;
+    final normalized = address.isDefault
+        ? _normalizeDefault(list, address)
+        : list;
     await _addressStorage.write(normalized);
   }
 
@@ -60,8 +62,9 @@ class SHOAddressRepository {
 
     await _addressStorage.write(list);
 
-    final selectedId =
-        await _selectionStorage.read<String>(SHOAppConstants.selectedAddressIdKey);
+    final selectedId = await _selectionStorage.read<String>(
+      SHOAppConstants.selectedAddressIdKey,
+    );
     if (selectedId == id) {
       final fallback = list.firstWhere(
         (item) => item.isDefault,
@@ -86,8 +89,7 @@ class SHOAddressRepository {
   ) {
     if (!incoming.isDefault) return list;
     return [
-      for (final item in list)
-        item.copyWith(isDefault: item.id == incoming.id),
+      for (final item in list) item.copyWith(isDefault: item.id == incoming.id),
     ];
   }
 }

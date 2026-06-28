@@ -95,7 +95,9 @@ class SHOCacheCleanupService {
       SHOCacheCategory.searchHistory: await _textKeyBytes(
         SHOAppConstants.searchHistoryKey,
       ),
-      SHOCacheCategory.cart: await _textKeyBytes(SHOAppConstants.cartStorageKey),
+      SHOCacheCategory.cart: await _textKeyBytes(
+        SHOAppConstants.cartStorageKey,
+      ),
       SHOCacheCategory.activityPrefetch: await _activityPrefetchBytes(),
       SHOCacheCategory.appPreferences: await _miscPreferenceBytes(),
     };

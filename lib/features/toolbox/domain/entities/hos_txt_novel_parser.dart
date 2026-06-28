@@ -40,12 +40,7 @@ Future<List<SHONovelChapterMeta>> scanChapterMetas(
   final total = await file.length();
   if (total == 0) {
     return const [
-      SHONovelChapterMeta(
-        index: 0,
-        title: '正文',
-        startByte: 0,
-        endByte: 0,
-      ),
+      SHONovelChapterMeta(index: 0, title: '正文', startByte: 0, endByte: 0),
     ];
   }
 
@@ -137,10 +132,7 @@ Future<List<SHONovelChapterMeta>> scanChapterMetas(
   }
 }
 
-Future<String> readChapterContent(
-  File file,
-  SHONovelChapterMeta meta,
-) async {
+Future<String> readChapterContent(File file, SHONovelChapterMeta meta) async {
   final length = meta.endByte - meta.startByte;
   if (length <= 0) return '';
 

@@ -13,7 +13,11 @@ Map<String, dynamic> resolveFlashSaleCalendar(
 
   final days = <Map<String, dynamic>>[];
   for (var offset = -1; offset < 6; offset++) {
-    final day = DateTime(now.year, now.month, now.day).add(Duration(days: offset));
+    final day = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).add(Duration(days: offset));
     final dateStr = _formatDate(day);
     final sessions = _buildSessionsForDay(day, templates, now);
     final status = _aggregateDayStatus(sessions);
@@ -50,7 +54,8 @@ Map<String, dynamic> resolveFlashSalePage(
   final templates = (data['sessionTemplates'] as List<dynamic>?) ?? [];
   final allProducts = (data['products'] as List<dynamic>?) ?? [];
   final promoEntries = data['promoEntries'] ?? <dynamic>[];
-  final couponsBySuffix = data['couponsBySessionSuffix'] as Map<String, dynamic>? ?? {};
+  final couponsBySuffix =
+      data['couponsBySessionSuffix'] as Map<String, dynamic>? ?? {};
   final activityId = query['activityId']?.toString() ?? '';
   final activity = _resolveActivity(data, activityId);
   final filteredProducts = _filterProductsForActivity(allProducts, activity);
@@ -65,9 +70,9 @@ Map<String, dynamic> resolveFlashSalePage(
   }
 
   final session = sessions.cast<Map<String, dynamic>?>().firstWhere(
-        (s) => s!['id'] == sessionId,
-        orElse: () => sessions.isNotEmpty ? sessions.first : null,
-      );
+    (s) => s!['id'] == sessionId,
+    orElse: () => sessions.isNotEmpty ? sessions.first : null,
+  );
   sessionId = session?['id'] as String? ?? sessionId;
 
   final suffix = sessionId.split('-').last;
@@ -129,22 +134,25 @@ Map<String, dynamic> resolveFlashSaleProductActivity(
   final templates = (data['sessionTemplates'] as List<dynamic>?) ?? [];
 
   final product = products.whereType<Map<String, dynamic>>().firstWhere(
-        (p) => p['id'] == productId,
-        orElse: () => <String, dynamic>{},
-      );
-  final activityBase = activities[productId] as Map<String, dynamic>? ?? product;
+    (p) => p['id'] == productId,
+    orElse: () => <String, dynamic>{},
+  );
+  final activityBase =
+      activities[productId] as Map<String, dynamic>? ?? product;
 
   if (product.isEmpty && activityBase.isEmpty) {
     return {'code': 404, 'message': 'Activity not found', 'data': null};
   }
 
-  final datePart = sessionId.contains('-') ? sessionId.split('-')[1] : _formatDate(now);
+  final datePart = sessionId.contains('-')
+      ? sessionId.split('-')[1]
+      : _formatDate(now);
   final day = _parseDate(datePart) ?? DateTime(now.year, now.month, now.day);
   final sessions = _buildSessionsForDay(day, templates, now);
   final session = sessions.cast<Map<String, dynamic>?>().firstWhere(
-        (s) => s!['id'] == sessionId,
-        orElse: () => sessions.isNotEmpty ? sessions.first : null,
-      );
+    (s) => s!['id'] == sessionId,
+    orElse: () => sessions.isNotEmpty ? sessions.first : null,
+  );
 
   final status = _resolveProductStatus(
     session: session,
@@ -160,10 +168,14 @@ Map<String, dynamic> resolveFlashSaleProductActivity(
     'data': {
       'sessionId': sessionId,
       'status': status,
-      'originalPrice': activityBase['originalPrice'] ?? product['originalPrice'] ?? 0,
-      'activityPrice': activityBase['activityPrice'] ?? product['activityPrice'] ?? 0,
-      'primaryPromoType': activityBase['primaryPromoType'] ?? product['primaryPromoType'],
-      'primaryPromoLabel': activityBase['primaryPromoLabel'] ?? product['primaryPromoLabel'],
+      'originalPrice':
+          activityBase['originalPrice'] ?? product['originalPrice'] ?? 0,
+      'activityPrice':
+          activityBase['activityPrice'] ?? product['activityPrice'] ?? 0,
+      'primaryPromoType':
+          activityBase['primaryPromoType'] ?? product['primaryPromoType'],
+      'primaryPromoLabel':
+          activityBase['primaryPromoLabel'] ?? product['primaryPromoLabel'],
       'promoTags':
           activityBase['promoTags'] ?? product['promoTags'] ?? <dynamic>[],
       'sessionStartAt': session?['startAt'],
@@ -227,7 +239,10 @@ String _sessionStatus(DateTime start, DateTime end, DateTime now) {
   return 'ended';
 }
 
-String _pickDefaultSessionId(List<Map<String, dynamic>> sessions, DateTime now) {
+String _pickDefaultSessionId(
+  List<Map<String, dynamic>> sessions,
+  DateTime now,
+) {
   for (final s in sessions) {
     if (s['status'] == 'ongoing') return s['id'] as String;
   }
@@ -239,7 +254,9 @@ String _pickDefaultSessionId(List<Map<String, dynamic>> sessions, DateTime now) 
 
 String _resolveClaimPhase(Map<String, dynamic>? session, DateTime now) {
   if (session == null) return 'after_claim';
-  final claimStart = DateTime.parse(session['claimStartAt'] as String).toLocal();
+  final claimStart = DateTime.parse(
+    session['claimStartAt'] as String,
+  ).toLocal();
   final claimEnd = DateTime.parse(session['claimEndAt'] as String).toLocal();
   if (now.isBefore(claimStart)) return 'before_claim';
   if (now.isBefore(claimEnd)) return 'claiming';
@@ -303,7 +320,11 @@ Map<String, dynamic> _hydrateProduct(
   DateTime now,
 ) {
   final stock = product['stock'] as int? ?? 0;
-  final status = _resolveProductStatus(session: session, stock: stock, now: now);
+  final status = _resolveProductStatus(
+    session: session,
+    stock: stock,
+    now: now,
+  );
   return {
     ...product,
     'sessionId': sessionId,
@@ -358,7 +379,9 @@ List<Map<String, dynamic>> _sortProducts(
         return bt.compareTo(at);
       case 'hot':
       default:
-        return (b['soldCount'] as int? ?? 0).compareTo(a['soldCount'] as int? ?? 0);
+        return (b['soldCount'] as int? ?? 0).compareTo(
+          a['soldCount'] as int? ?? 0,
+        );
     }
   });
   return list;
@@ -428,7 +451,8 @@ Map<String, dynamic> lookupFlashSaleProductDetail(
       } else {
         price = activityData['originalPrice'] as int? ?? price;
       }
-      discountLabel = activityData['primaryPromoLabel'] as String? ?? discountLabel;
+      discountLabel =
+          activityData['primaryPromoLabel'] as String? ?? discountLabel;
     }
   }
 
@@ -446,8 +470,7 @@ Map<String, dynamic> lookupFlashSaleProductDetail(
       'discountLabel': discountLabel,
       'rating': 4.6,
       'soldCount': product['soldCount'] ?? 0,
-      'description':
-          '${product['title']} — 限时抢购专享商品，支持折扣/满减活动价（以场次状态为准）。',
+      'description': '${product['title']} — 限时抢购专享商品，支持折扣/满减活动价（以场次状态为准）。',
       'reviewCount': 0,
     },
   };
@@ -486,14 +509,16 @@ List<Map<String, dynamic>> _filterProductsForActivity(
   final typed = allProducts.whereType<Map<String, dynamic>>().toList();
   if (activity == null) return typed;
 
-  final kinds = (activity['kinds'] as List<dynamic>?)
+  final kinds =
+      (activity['kinds'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList() ??
       const [];
   if (kinds.isEmpty) return typed;
 
   return typed.where((product) {
-    final productKinds = (product['activityKinds'] as List<dynamic>?)
+    final productKinds =
+        (product['activityKinds'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList() ??
         const [];

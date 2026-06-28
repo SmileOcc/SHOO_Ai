@@ -12,10 +12,7 @@ import 'package:shoo/l10n/app_localizations.dart';
 
 /// 评价晒图提交（Mock：本地选图 + Toast 反馈）。
 abstract final class SHOReviewSubmitSheet {
-  static Future<void> show(
-    BuildContext context, {
-    required String productId,
-  }) {
+  static Future<void> show(BuildContext context, {required String productId}) {
     return SHOAppDialog.showBottomSheet<void>(
       context,
       isScrollControlled: true,
@@ -61,9 +58,7 @@ class _SHOReviewSubmitSheetBodyState
     if (!mounted) return;
     setState(() => _submitting = false);
     Navigator.pop(context);
-    SHOAppToast.success(
-      l10n.reviewSubmitSuccess(_images.length),
-    );
+    SHOAppToast.success(l10n.reviewSubmitSuccess(_images.length));
   }
 
   @override
@@ -83,9 +78,9 @@ class _SHOReviewSubmitSheetBodyState
         children: [
           Text(
             l10n.reviewSubmitTitle,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: SHOAppSpacing.lg),
           SHOAppTextField(

@@ -21,15 +21,23 @@ class SHOCommunityNewsCell extends StatelessWidget {
     return SHOCommunityFeedCard(
       onTap: null,
       child: switch (item.newsStyle) {
-        SHOCommunityNewsStyle.headline =>
-          _HeadlineNews(item: item, onTap: onTap),
-        SHOCommunityNewsStyle.imageText =>
-          _ImageTextNews(item: item, onTap: onTap),
-        SHOCommunityNewsStyle.tripleImage =>
-          _TripleImageNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.headline => _HeadlineNews(
+          item: item,
+          onTap: onTap,
+        ),
+        SHOCommunityNewsStyle.imageText => _ImageTextNews(
+          item: item,
+          onTap: onTap,
+        ),
+        SHOCommunityNewsStyle.tripleImage => _TripleImageNews(
+          item: item,
+          onTap: onTap,
+        ),
         SHOCommunityNewsStyle.video => _VideoNews(item: item, onTap: onTap),
-        SHOCommunityNewsStyle.topicCard =>
-          _TopicCardNews(item: item, onTap: onTap),
+        SHOCommunityNewsStyle.topicCard => _TopicCardNews(
+          item: item,
+          onTap: onTap,
+        ),
         null => _ImageTextNews(item: item, onTap: onTap),
       },
     );
@@ -118,48 +126,48 @@ class _ImageTextNews extends StatelessWidget {
     return SHOCommunityTappableSection(
       onTap: onTap,
       child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (item.isPinned) const SHOCommunityPinnedBadge(),
-              if (item.isPinned) const SizedBox(height: SHOAppSpacing.xs),
-              Text(
-                item.title,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  height: 1.35,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (item.isPinned) const SHOCommunityPinnedBadge(),
+                if (item.isPinned) const SizedBox(height: SHOAppSpacing.xs),
+                Text(
+                  item.title,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    height: 1.35,
+                  ),
                 ),
-              ),
-              const SizedBox(height: SHOAppSpacing.sm),
-              Text(
-                '${item.source.isNotEmpty ? '${item.source} · ' : ''}${item.category}',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: SHOAppColors.textMuted,
+                const SizedBox(height: SHOAppSpacing.sm),
+                Text(
+                  '${item.source.isNotEmpty ? '${item.source} · ' : ''}${item.category}',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: SHOAppColors.textMuted,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        if (item.coverUrl.isNotEmpty) ...[
-          const SizedBox(width: SHOAppSpacing.md),
-          SizedBox(
-            width: 108,
-            height: 72,
-            child: SHOCommunityCoverImage(
-              url: item.coverUrl,
-              aspectRatio: 3 / 2,
-              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+              ],
             ),
           ),
+          if (item.coverUrl.isNotEmpty) ...[
+            const SizedBox(width: SHOAppSpacing.md),
+            SizedBox(
+              width: 108,
+              height: 72,
+              child: SHOCommunityCoverImage(
+                url: item.coverUrl,
+                aspectRatio: 3 / 2,
+                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+              ),
+            ),
+          ],
         ],
-      ],
       ),
     );
   }
@@ -180,34 +188,34 @@ class _TripleImageNews extends StatelessWidget {
     return SHOCommunityTappableSection(
       onTap: onTap,
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-        ),
-        if (images.isNotEmpty) ...[
-          const SizedBox(height: SHOAppSpacing.md),
-          Row(
-            children: [
-              for (var i = 0; i < images.length; i++) ...[
-                if (i > 0) const SizedBox(width: SHOAppSpacing.xs),
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: SHOCommunityCoverImage(url: images[i]),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            item.title,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+          if (images.isNotEmpty) ...[
+            const SizedBox(height: SHOAppSpacing.md),
+            Row(
+              children: [
+                for (var i = 0; i < images.length; i++) ...[
+                  if (i > 0) const SizedBox(width: SHOAppSpacing.xs),
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: SHOCommunityCoverImage(url: images[i]),
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
+          ],
+          const SizedBox(height: SHOAppSpacing.sm),
+          Text(
+            item.source,
+            style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
           ),
         ],
-        const SizedBox(height: SHOAppSpacing.sm),
-        Text(
-          item.source,
-          style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
-        ),
-      ],
       ),
     );
   }
@@ -224,47 +232,47 @@ class _VideoNews extends StatelessWidget {
     return SHOCommunityTappableSection(
       onTap: onTap,
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          item.title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: SHOAppSpacing.md),
-        SHOCommunityCoverImage(
-          url: item.coverUrl,
-          overlay: Container(
-            color: Colors.black26,
-            alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsets.all(SHOAppSpacing.md),
-              decoration: const BoxDecoration(
-                color: Colors.black54,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.play_arrow_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            item.title,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
-        ),
-        if (item.videoDuration.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: SHOAppSpacing.xs),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                item.videoDuration,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: SHOAppColors.textMuted,
+          const SizedBox(height: SHOAppSpacing.md),
+          SHOCommunityCoverImage(
+            url: item.coverUrl,
+            overlay: Container(
+              color: Colors.black26,
+              alignment: Alignment.center,
+              child: Container(
+                padding: const EdgeInsets.all(SHOAppSpacing.md),
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.play_arrow_rounded,
+                  color: Colors.white,
+                  size: 28,
                 ),
               ),
             ),
           ),
-      ],
+          if (item.videoDuration.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: SHOAppSpacing.xs),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  item.videoDuration,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: SHOAppColors.textMuted,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

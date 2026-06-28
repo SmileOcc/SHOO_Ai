@@ -11,7 +11,10 @@ import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
 /// 1. 先展示升级弹窗并等待关闭
 /// 2. 再按配置延时展示活动弹窗
 abstract final class SHOPopupOrchestrator {
-  static Future<void> showHomePopups(BuildContext context, WidgetRef ref) async {
+  static Future<void> showHomePopups(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     SHOActivityPopup? pending;
     try {
       pending = await SHOActivityPopupManager.resolveActivity(ref);

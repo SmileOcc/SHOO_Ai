@@ -50,9 +50,9 @@ class _SHOOrderDetailPageState
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'order_id': widget.orderId,
-        if (widget.skipPaymentFlowOnPop) 'skip_payment_flow_on_pop': true,
-      };
+    'order_id': widget.orderId,
+    if (widget.skipPaymentFlowOnPop) 'skip_payment_flow_on_pop': true,
+  };
 
   @override
   void onPageResumeVisible(WidgetRef ref) {
@@ -109,40 +109,34 @@ class _SHOOrderDetailPageState
     return ListView(
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
       children: [
-        _SHOInfoRow(
-          label: l10n.orderNoLabel,
-          value: detail.orderNo,
-        ),
+        _SHOInfoRow(label: l10n.orderNoLabel, value: detail.orderNo),
         _SHOInfoRow(
           label: l10n.orderStatusLabel,
           value: shoOrderStatusLabel(context, detail.status),
         ),
-        _SHOInfoRow(
-          label: l10n.orderCreatedAtLabel,
-          value: detail.createdAt,
-        ),
+        _SHOInfoRow(label: l10n.orderCreatedAtLabel, value: detail.createdAt),
         if (detail.shippingAddress.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.md),
           Text(
             l10n.orderShippingAddress,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: SHOAppSpacing.xs),
           Text(
             detail.shippingAddress,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 13,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontSize: 13),
           ),
         ],
         const SizedBox(height: SHOAppSpacing.xl),
         Text(
           l10n.orderItemsTitle,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.md),
         ...detail.items.map(
@@ -151,8 +145,7 @@ class _SHOOrderDetailPageState
             child: Row(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                   child: SizedBox(
                     width: 72,
                     height: 72,
@@ -169,9 +162,9 @@ class _SHOOrderDetailPageState
                     children: [
                       Text(
                         item.title,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 13,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(fontSize: 13),
                       ),
                       if (item.variantLabel.isNotEmpty)
                         Text(
@@ -187,9 +180,9 @@ class _SHOOrderDetailPageState
                 ),
                 Text(
                   priceFormatter.formatCents(item.price * item.quantity),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -206,9 +199,9 @@ class _SHOOrderDetailPageState
             Text(
               priceFormatter.formatCents(detail.totalCents),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: SHOAppColors.primary,
-                  ),
+                fontWeight: FontWeight.w900,
+                color: SHOAppColors.primary,
+              ),
             ),
           ],
         ),
@@ -251,17 +244,14 @@ class _SHOInfoRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 110,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            child: Text(label, style: Theme.of(context).textTheme.bodySmall),
           ),
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 13,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontSize: 13),
             ),
           ),
         ],

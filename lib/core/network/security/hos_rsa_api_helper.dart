@@ -12,9 +12,6 @@ abstract final class SHORsaApiHelper {
       return (body: plainBody, headers: <String, dynamic>{});
     }
     final envelope = await crypto.encryptRsa(plainBody);
-    return (
-      body: envelope,
-      headers: <String, dynamic>{'X-Encrypted': 'rsa'},
-    );
+    return (body: envelope, headers: <String, dynamic>{'X-Encrypted': 'rsa'});
   }
 }

@@ -11,15 +11,16 @@ import 'package:shoo/core/network/hos_mock_interceptor.dart';
 import 'package:shoo/core/network/security/hos_secure_dio_factory.dart';
 import 'package:shoo/features/auth/presentation/state/hos_auth_token_provider.dart';
 
-final debugNetworkLabConfigProvider =
-    StateProvider<SHODebugNetworkLabConfig>((ref) {
+final debugNetworkLabConfigProvider = StateProvider<SHODebugNetworkLabConfig>((
+  ref,
+) {
   return const SHODebugNetworkLabConfig();
 });
 
 final debugNetworkLabLogProvider =
     StateNotifierProvider<SHODebugNetworkLabLogNotifier, List<String>>(
-  (ref) => SHODebugNetworkLabLogNotifier(),
-);
+      (ref) => SHODebugNetworkLabLogNotifier(),
+    );
 
 class SHODebugNetworkLabLogNotifier extends StateNotifier<List<String>> {
   SHODebugNetworkLabLogNotifier() : super(const []);

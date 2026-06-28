@@ -68,13 +68,18 @@ class SHOProfileOrderHub extends ConsumerWidget {
                 ),
                 _DiscoverChip(
                   label: l10n.profileDiscover,
-                  badge: stats.showDiscoverBadge ? l10n.profileDiscoverBadge : null,
+                  badge: stats.showDiscoverBadge
+                      ? l10n.profileDiscoverBadge
+                      : null,
                   onTap: () => context.go(SHOAppRoutes.home),
                 ),
               ],
             ),
           ),
-          Divider(height: SHOProfileSectionCard.borderWidth, color: theme.divider),
+          Divider(
+            height: SHOProfileSectionCard.borderWidth,
+            color: theme.divider,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.md),
             child: IntrinsicHeight(
@@ -131,7 +136,8 @@ class SHOProfileOrderHub extends ConsumerWidget {
                         children: [
                           Text(
                             l10n.ordersAllShort,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -189,9 +195,9 @@ class _StatChip extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             if (count > 0) ...[
@@ -210,11 +216,7 @@ class _StatChip extends StatelessWidget {
 }
 
 class _DiscoverChip extends StatelessWidget {
-  const _DiscoverChip({
-    required this.label,
-    required this.onTap,
-    this.badge,
-  });
+  const _DiscoverChip({required this.label, required this.onTap, this.badge});
 
   final String label;
   final String? badge;
@@ -234,9 +236,9 @@ class _DiscoverChip extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             if (badge != null) ...[
@@ -280,9 +282,7 @@ class _OrderEntry extends StatelessWidget {
                   Positioned(
                     right: -8,
                     top: -6,
-                    child: SHOProfileBadge(
-                      text: badge > 9 ? '9+' : '$badge',
-                    ),
+                    child: SHOProfileBadge(text: badge > 9 ? '9+' : '$badge'),
                   ),
               ],
             ),
@@ -293,9 +293,9 @@ class _OrderEntry extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

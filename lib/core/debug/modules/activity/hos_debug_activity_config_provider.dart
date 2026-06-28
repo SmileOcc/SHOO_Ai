@@ -6,8 +6,8 @@ import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart'
 
 final debugActivityConfigProvider =
     NotifierProvider<SHODebugActivityConfigNotifier, SHODebugActivityConfig>(
-  SHODebugActivityConfigNotifier.new,
-);
+      SHODebugActivityConfigNotifier.new,
+    );
 
 class SHODebugActivityConfigNotifier extends Notifier<SHODebugActivityConfig> {
   late final SHODebugConfigRepository _repo;

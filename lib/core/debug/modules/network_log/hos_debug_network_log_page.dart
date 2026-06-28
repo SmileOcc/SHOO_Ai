@@ -60,9 +60,9 @@ class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage>
     final l10n = AppLocalizations.of(context);
     await ref.read(debugNetworkLogConfigProvider.notifier).save(_buildConfig());
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.debugConfigSaved)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.debugConfigSaved)));
   }
 
   @override
@@ -71,76 +71,79 @@ class _SHODebugNetworkLogPageState extends ConsumerState<SHODebugNetworkLogPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.debugNetworkLogTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          Text(
-            l10n.debugNetworkLogHint,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: SHOAppSpacing.xl),
-          SwitchListTile(
-            title: Text(l10n.debugNetworkLogEnabled),
-            subtitle: Text(l10n.debugNetworkLogEnabledHint),
-            value: _enabled,
-            onChanged: (v) => setState(() => _enabled = v),
-          ),
-          SwitchListTile(
-            title: Text(l10n.debugNetworkLogRequest),
-            subtitle: Text(l10n.debugNetworkLogRequestHint),
-            value: _logRequest,
-            onChanged: _enabled ? (v) => setState(() => _logRequest = v) : null,
-          ),
-          SwitchListTile(
-            title: Text(l10n.debugNetworkLogResponse),
-            subtitle: Text(l10n.debugNetworkLogResponseHint),
-            value: _logResponse,
-            onChanged: _enabled ? (v) => setState(() => _logResponse = v) : null,
-          ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          SwitchListTile(
-            title: Text(l10n.debugNetworkLogMockRemote),
-            subtitle: Text(l10n.debugNetworkLogMockRemoteHint),
-            value: _useMockRemote,
-            onChanged: (v) => setState(() => _useMockRemote = v),
-          ),
-          if (!_useMockRemote)
-            Padding(
-              padding: const EdgeInsets.only(bottom: SHOAppSpacing.lg),
-              child: Text(
-                l10n.debugNetworkLogRemoteHint,
-                style: Theme.of(context).textTheme.bodySmall,
+        appBar: AppBar(title: Text(l10n.debugNetworkLogTitle)),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            Text(
+              l10n.debugNetworkLogHint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: SHOAppSpacing.xl),
+            SwitchListTile(
+              title: Text(l10n.debugNetworkLogEnabled),
+              subtitle: Text(l10n.debugNetworkLogEnabledHint),
+              value: _enabled,
+              onChanged: (v) => setState(() => _enabled = v),
+            ),
+            SwitchListTile(
+              title: Text(l10n.debugNetworkLogRequest),
+              subtitle: Text(l10n.debugNetworkLogRequestHint),
+              value: _logRequest,
+              onChanged: _enabled
+                  ? (v) => setState(() => _logRequest = v)
+                  : null,
+            ),
+            SwitchListTile(
+              title: Text(l10n.debugNetworkLogResponse),
+              subtitle: Text(l10n.debugNetworkLogResponseHint),
+              value: _logResponse,
+              onChanged: _enabled
+                  ? (v) => setState(() => _logResponse = v)
+                  : null,
+            ),
+            const Divider(height: SHOAppSpacing.xxxl),
+            SwitchListTile(
+              title: Text(l10n.debugNetworkLogMockRemote),
+              subtitle: Text(l10n.debugNetworkLogMockRemoteHint),
+              value: _useMockRemote,
+              onChanged: (v) => setState(() => _useMockRemote = v),
+            ),
+            if (!_useMockRemote)
+              Padding(
+                padding: const EdgeInsets.only(bottom: SHOAppSpacing.lg),
+                child: Text(
+                  l10n.debugNetworkLogRemoteHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            const Divider(height: SHOAppSpacing.xxxl),
+            SwitchListTile(
+              title: Text(l10n.debugNetworkLogFilterEnabled),
+              subtitle: Text(l10n.debugNetworkLogFilterEnabledHint),
+              value: _filterEnabled,
+              onChanged: _enabled
+                  ? (v) => setState(() => _filterEnabled = v)
+                  : null,
+            ),
+            const SizedBox(height: SHOAppSpacing.md),
+            TextField(
+              controller: _pathsCtrl,
+              enabled: _enabled && _filterEnabled,
+              minLines: 3,
+              maxLines: 6,
+              decoration: InputDecoration(
+                labelText: l10n.debugNetworkLogFilterPaths,
+                hintText: l10n.debugNetworkLogFilterPathsHint,
+                border: const OutlineInputBorder(),
+                alignLabelWithHint: true,
               ),
             ),
-          const Divider(height: SHOAppSpacing.xxxl),
-          SwitchListTile(
-            title: Text(l10n.debugNetworkLogFilterEnabled),
-            subtitle: Text(l10n.debugNetworkLogFilterEnabledHint),
-            value: _filterEnabled,
-            onChanged: _enabled ? (v) => setState(() => _filterEnabled = v) : null,
-          ),
-          const SizedBox(height: SHOAppSpacing.md),
-          TextField(
-            controller: _pathsCtrl,
-            enabled: _enabled && _filterEnabled,
-            minLines: 3,
-            maxLines: 6,
-            decoration: InputDecoration(
-              labelText: l10n.debugNetworkLogFilterPaths,
-              hintText: l10n.debugNetworkLogFilterPathsHint,
-              border: const OutlineInputBorder(),
-              alignLabelWithHint: true,
-            ),
-          ),
-          const SizedBox(height: SHOAppSpacing.xxxl),
-          FilledButton(
-            onPressed: _save,
-            child: Text(l10n.debugSaveConfig),
-          ),
-        ],
+            const SizedBox(height: SHOAppSpacing.xxxl),
+            FilledButton(onPressed: _save, child: Text(l10n.debugSaveConfig)),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

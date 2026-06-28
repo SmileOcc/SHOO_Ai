@@ -47,9 +47,9 @@ class SHODownloadTaskTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     await Clipboard.setData(ClipboardData(text: task.url));
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.downloadUrlCopied)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.downloadUrlCopied)));
     }
   }
 
@@ -84,16 +84,16 @@ class SHODownloadTaskTile extends ConsumerWidget {
 
     final statusItems = switch (task.status) {
       SHODownloadStatus.downloading => [
-          PopupMenuItem(value: 'pause', child: Text(l10n.downloadActionPause)),
-          PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
-        ],
+        PopupMenuItem(value: 'pause', child: Text(l10n.downloadActionPause)),
+        PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
+      ],
       SHODownloadStatus.paused => [
-          PopupMenuItem(value: 'start', child: Text(l10n.downloadActionStart)),
-          PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
-        ],
+        PopupMenuItem(value: 'start', child: Text(l10n.downloadActionStart)),
+        PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
+      ],
       SHODownloadStatus.completed => [
-          PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
-        ],
+        PopupMenuItem(value: 'delete', child: Text(l10n.downloadActionDelete)),
+      ],
     };
 
     return [copyItem, ...extraItems, ...statusItems];
@@ -161,8 +161,7 @@ class SHODownloadTaskTile extends ConsumerWidget {
           Expanded(
             child: InkWell(
               onTap: onOpen,
-              borderRadius:
-                  BorderRadius.circular(SHOAppSpacing.cardRadius),
+              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -172,8 +171,9 @@ class SHODownloadTaskTile extends ConsumerWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: SHOAppColors.accent.withValues(alpha: 0.1),
-                      borderRadius:
-                          BorderRadius.circular(SHOAppSpacing.cardRadius),
+                      borderRadius: BorderRadius.circular(
+                        SHOAppSpacing.cardRadius,
+                      ),
                     ),
                     child: Icon(
                       downloadFileTypeIcon(task),
@@ -190,22 +190,16 @@ class SHODownloadTaskTile extends ConsumerWidget {
                           task.fileName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: SHOAppSpacing.xxs),
                         Text.rich(
                           TextSpan(
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
+                            style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(color: theme.textSecondary),
                             children: [
-                              TextSpan(
-                                text: downloadTaskTypeLabel(l10n, task),
-                              ),
+                              TextSpan(text: downloadTaskTypeLabel(l10n, task)),
                               const TextSpan(text: ' · '),
                               TextSpan(
                                 text: downloadStatusLabel(l10n, task.status),
@@ -245,17 +239,13 @@ class SHODownloadTaskTile extends ConsumerWidget {
                             Expanded(
                               child: Text(
                                 sizeLabel,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
+                                style: Theme.of(context).textTheme.labelSmall
                                     ?.copyWith(color: theme.textSecondary),
                               ),
                             ),
                             Text(
                               date,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
+                              style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(color: theme.textMuted),
                             ),
                           ],
@@ -307,9 +297,9 @@ class _StatusBadge extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: SHOAppColors.accent,
-              fontWeight: FontWeight.w600,
-            ),
+          color: SHOAppColors.accent,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

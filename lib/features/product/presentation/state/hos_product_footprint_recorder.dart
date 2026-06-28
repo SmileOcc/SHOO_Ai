@@ -29,7 +29,9 @@ class _SHOProductFootprintRecorderState
   Future<void> _record() async {
     if (_recorded.contains(widget.detail.id)) return;
     _recorded.add(widget.detail.id);
-    await ref.read(profileActivityProvider.notifier).recordFootprint(
+    await ref
+        .read(profileActivityProvider.notifier)
+        .recordFootprint(
           widget.detail.id,
           cache: widget.detail.toActivityCache(),
         );

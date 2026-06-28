@@ -15,7 +15,8 @@ abstract class SHODataPage<T> extends ConsumerStatefulWidget {
 }
 
 abstract class SHODataPageState<T, W extends SHODataPage<T>>
-    extends ConsumerState<W> with SHOPageRouteAnalyticsMixin<W>, SHOAppPageMixin<W> {
+    extends ConsumerState<W>
+    with SHOPageRouteAnalyticsMixin<W>, SHOAppPageMixin<W> {
   ProviderListenable<AsyncValue<T>> get dataProvider;
 
   void invalidateData(WidgetRef ref);
@@ -26,7 +27,8 @@ abstract class SHODataPageState<T, W extends SHODataPage<T>>
 
   Widget? buildLoading(BuildContext context) => null;
 
-  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) => null;
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) =>
+      null;
 
   /// 是否上报 [SHOPageLoadPhase.contentReady]。
   bool get reportContentReadyLoadTime => true;
@@ -85,7 +87,9 @@ abstract class SHODataPageState<T, W extends SHODataPage<T>>
   }
 
   Widget _buildPage(BuildContext context) {
-    final body = ref.watch(dataProvider).whenLoadingState(
+    final body = ref
+        .watch(dataProvider)
+        .whenLoadingState(
           data: (value) => _wrapContent(context, ref, value),
           onRetry: () => invalidateData(ref),
           empty: isEmptyData,

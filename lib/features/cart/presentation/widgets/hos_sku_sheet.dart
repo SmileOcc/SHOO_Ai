@@ -70,7 +70,9 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
     final variantLabel = '${l10n.skuSizeLabel} $_size';
-    await ref.read(cartProvider.notifier).addProduct(
+    await ref
+        .read(cartProvider.notifier)
+        .addProduct(
           product: widget.product,
           variantLabel: variantLabel,
           quantity: _quantity,
@@ -87,9 +89,9 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.productAddToBagSuccess)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.productAddToBagSuccess)));
   }
 
   @override
@@ -115,7 +117,10 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
                 child: SizedBox(
                   width: 88,
                   height: 88,
-                  child: SHOAppNetworkImage(url: product.imageUrl, fit: BoxFit.cover),
+                  child: SHOAppNetworkImage(
+                    url: product.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: SHOAppSpacing.lg),
@@ -139,9 +144,9 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
           const SizedBox(height: SHOAppSpacing.xl),
           Text(
             l10n.skuSelectSize,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: SHOAppSpacing.md),
           Wrap(
@@ -163,9 +168,9 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
             children: [
               Text(
                 l10n.skuQuantity,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
               ),
               Row(
                 children: [
@@ -175,7 +180,10 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
                         : null,
                     icon: const Icon(Icons.remove_circle_outline, size: 22),
                   ),
-                  Text('$_quantity', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    '$_quantity',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   IconButton(
                     onPressed: _quantity < 99
                         ? () => setState(() => _quantity++)

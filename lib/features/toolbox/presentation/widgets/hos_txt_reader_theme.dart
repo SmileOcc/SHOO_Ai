@@ -31,9 +31,7 @@ class SHOTxtReaderTheme {
     darkBackground,
   ];
 
-  factory SHOTxtReaderTheme.sepia({
-    Color textColor = const Color(0xFF3D3024),
-  }) {
+  factory SHOTxtReaderTheme.sepia({Color textColor = const Color(0xFF3D3024)}) {
     return SHOTxtReaderTheme(
       background: sepiaBackground,
       text: textColor,
@@ -52,9 +50,7 @@ class SHOTxtReaderTheme {
     );
   }
 
-  factory SHOTxtReaderTheme.dark({
-    Color textColor = const Color(0xFFB8B8B8),
-  }) {
+  factory SHOTxtReaderTheme.dark({Color textColor = const Color(0xFFB8B8B8)}) {
     return SHOTxtReaderTheme(
       background: darkBackground,
       text: textColor,
@@ -62,11 +58,7 @@ class SHOTxtReaderTheme {
     );
   }
 
-  SHOTxtReaderTheme copyWith({
-    Color? background,
-    Color? text,
-    bool? isDark,
-  }) {
+  SHOTxtReaderTheme copyWith({Color? background, Color? text, bool? isDark}) {
     return SHOTxtReaderTheme(
       background: background ?? this.background,
       text: text ?? this.text,
@@ -89,10 +81,6 @@ class SHOTxtReaderTheme {
     final bg = backgroundColorArgb == null
         ? sepiaBackground
         : Color(backgroundColorArgb);
-    return SHOTxtReaderTheme(
-      background: bg,
-      text: textColor,
-      isDark: false,
-    );
+    return SHOTxtReaderTheme(background: bg, text: textColor, isDark: false);
   }
 }

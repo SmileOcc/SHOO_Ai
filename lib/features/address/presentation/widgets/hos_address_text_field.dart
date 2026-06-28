@@ -78,10 +78,7 @@ class _SHOAddressTextFieldState extends State<SHOAddressTextField> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.label,
-              style: textTheme.labelLarge,
-            ),
+            Text(widget.label, style: textTheme.labelLarge),
             if (widget.required)
               Text(
                 ' *',
@@ -134,8 +131,10 @@ class _SHOAddressTextFieldState extends State<SHOAddressTextField> {
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: radius,
-              borderSide:
-                  const BorderSide(color: SHOAppColors.error, width: 1.5),
+              borderSide: const BorderSide(
+                color: SHOAppColors.error,
+                width: 1.5,
+              ),
             ),
           ),
         ),

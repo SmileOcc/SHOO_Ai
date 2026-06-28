@@ -5,10 +5,7 @@ import 'package:shoo/features/home/domain/entities/hos_banner.dart';
 import 'package:shoo/features/home/domain/entities/hos_product.dart';
 
 class SHOHomeFeed {
-  const SHOHomeFeed({
-    required this.banners,
-    required this.products,
-  });
+  const SHOHomeFeed({required this.banners, required this.products});
 
   final List<SHOBannerItem> banners;
   final List<SHOProduct> products;

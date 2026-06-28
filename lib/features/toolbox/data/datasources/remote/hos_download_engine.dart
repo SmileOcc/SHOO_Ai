@@ -13,16 +13,16 @@ class SHODownloadEngine {
   SHODownloadEngine({
     required DownloadTaskResolver resolveTask,
     required DownloadTaskUpdater updateTask,
-  })  : _resolveTask = resolveTask,
-        _updateTask = updateTask,
-        _dio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 30),
-            receiveTimeout: const Duration(minutes: 30),
-            followRedirects: true,
-            validateStatus: (status) => status != null && status < 500,
-          ),
-        );
+  }) : _resolveTask = resolveTask,
+       _updateTask = updateTask,
+       _dio = Dio(
+         BaseOptions(
+           connectTimeout: const Duration(seconds: 30),
+           receiveTimeout: const Duration(minutes: 30),
+           followRedirects: true,
+           validateStatus: (status) => status != null && status < 500,
+         ),
+       );
 
   final DownloadTaskResolver _resolveTask;
   final DownloadTaskUpdater _updateTask;
@@ -137,10 +137,7 @@ class SHODownloadEngine {
 
       final response = await _dio.get<ResponseBody>(
         initial.url,
-        options: Options(
-          responseType: ResponseType.stream,
-          headers: headers,
-        ),
+        options: Options(responseType: ResponseType.stream, headers: headers),
         cancelToken: cancelToken,
       );
 
@@ -246,7 +243,11 @@ class SHODownloadEngine {
     }
   }
 
-  int? _parseTotalBytes(String? contentLength, int downloaded, int? statusCode) {
+  int? _parseTotalBytes(
+    String? contentLength,
+    int downloaded,
+    int? statusCode,
+  ) {
     final parsed = int.tryParse(contentLength ?? '');
     if (parsed == null) return null;
     if (statusCode == 206) return downloaded + parsed;

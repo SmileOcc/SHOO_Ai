@@ -19,7 +19,8 @@ abstract final class SHOStartupConfigLog {
         ? base.copyWith(
             environment: envOverride,
             apiBaseUrl: SHOAppConfig.defaultApiBaseUrl(envOverride),
-            useMockApi: envOverride != SHOAppEnvironment.prod &&
+            useMockApi:
+                envOverride != SHOAppEnvironment.prod &&
                 !envOverride.usesLocalServer,
             enableNetworkLogging: !envOverride.isProd,
           )
@@ -35,7 +36,9 @@ abstract final class SHOStartupConfigLog {
       ..writeln('envOverride: ${envOverride?.name ?? 'none'}')
       ..writeln('apiBaseUrl: ${effective.apiBaseUrl}')
       ..writeln('useMockApi: ${effective.useMockApi}')
-      ..writeln('mockNetworkDelayMs: ${effective.mockNetworkDelay.inMilliseconds}')
+      ..writeln(
+        'mockNetworkDelayMs: ${effective.mockNetworkDelay.inMilliseconds}',
+      )
       ..writeln('enableNetworkLogging: ${effective.enableNetworkLogging}')
       ..writeln('debugPanelEnabled: ${effective.isDebugPanelEnabled}')
       ..writeln(_border);

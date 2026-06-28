@@ -92,8 +92,9 @@ class _SHOCategoryPageState
       return SHOEmptyState(title: AppLocalizations.of(context).noData);
     }
 
-    final selectedIndex =
-        ref.watch(selectedCategoryIndexProvider).clamp(0, categories.length - 1);
+    final selectedIndex = ref
+        .watch(selectedCategoryIndexProvider)
+        .clamp(0, categories.length - 1);
     final selectedCategory = categories[selectedIndex];
 
     return Column(
@@ -115,9 +116,7 @@ class _SHOCategoryPageState
                       .recordFollowedCategory(categories[index].id);
                 },
               ),
-              Expanded(
-                child: _CategoryGroupPanel(category: selectedCategory),
-              ),
+              Expanded(child: _CategoryGroupPanel(category: selectedCategory)),
             ],
           ),
         ),
@@ -163,7 +162,9 @@ class _PrimaryCategoryRail extends StatelessWidget {
                   color: selected ? context.shoSurface : null,
                   border: Border(
                     left: BorderSide(
-                      color: selected ? SHOAppColors.accent : Colors.transparent,
+                      color: selected
+                          ? SHOAppColors.accent
+                          : Colors.transparent,
                       width: 3,
                     ),
                   ),
@@ -179,7 +180,9 @@ class _PrimaryCategoryRail extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: selected ? onSurface : theme.textSecondary,
                         height: 1.2,
                       ),
@@ -221,10 +224,7 @@ class _CategoryGroupPanel extends ConsumerWidget {
 }
 
 class _SecondaryGroupSection extends StatelessWidget {
-  const _SecondaryGroupSection({
-    required this.group,
-    required this.sort,
-  });
+  const _SecondaryGroupSection({required this.group, required this.sort});
 
   final SHOCategoryGroup group;
   final SHOCategorySort sort;
@@ -243,9 +243,9 @@ class _SecondaryGroupSection extends StatelessWidget {
           ),
           child: Text(
             group.name,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         DecoratedBox(
@@ -317,10 +317,10 @@ class _TertiaryCategoryChip extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  height: 1.2,
-                ),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              height: 1.2,
+            ),
           ),
         ),
       ),

@@ -17,11 +17,11 @@ class SHOVideoPlaybackProgress {
   }
 
   Map<String, dynamic> toJson() => {
-        'entryId': entryId,
-        'positionMs': positionMs,
-        'durationMs': durationMs,
-        'updatedAt': (updatedAt ?? DateTime.now()).toIso8601String(),
-      };
+    'entryId': entryId,
+    'positionMs': positionMs,
+    'durationMs': durationMs,
+    'updatedAt': (updatedAt ?? DateTime.now()).toIso8601String(),
+  };
 
   factory SHOVideoPlaybackProgress.fromJson(Map<String, dynamic> json) {
     return SHOVideoPlaybackProgress(

@@ -25,7 +25,8 @@ class SHOFlashSaleReminderHost extends ConsumerStatefulWidget {
 }
 
 class _SHOFlashSaleReminderHostState
-    extends ConsumerState<SHOFlashSaleReminderHost> with WidgetsBindingObserver {
+    extends ConsumerState<SHOFlashSaleReminderHost>
+    with WidgetsBindingObserver {
   Timer? _timer;
 
   @override
@@ -174,7 +175,10 @@ class _ReminderOverlay extends ConsumerWidget {
                   );
                   ref.read(flashSaleReminderPopupProvider.notifier).state =
                       null;
-                  if (SHOFlashSaleReminderNav.isOnSameActivity(router, payload)) {
+                  if (SHOFlashSaleReminderNav.isOnSameActivity(
+                    router,
+                    payload,
+                  )) {
                     return;
                   }
                   SHOFlashSaleReminderNav.openActivity(router, payload);

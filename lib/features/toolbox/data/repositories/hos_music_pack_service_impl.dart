@@ -106,7 +106,9 @@ class SHOMusicPackService {
     );
   }
 
-  Future<List<SHOMusicPackSongRef>> discoverSongsInArchive(List<int> bytes) async {
+  Future<List<SHOMusicPackSongRef>> discoverSongsInArchive(
+    List<int> bytes,
+  ) async {
     final archive = ZipDecoder().decodeBytes(bytes);
     return _discoverSongsInArchive(archive);
   }
@@ -159,7 +161,8 @@ class SHOMusicPackService {
       if (!_entryMatchesSong(entryName, songKey, title)) continue;
 
       final lower = entryName.toLowerCase();
-      if (SHOMusicCachePaths.isAudioEntry(entryName) && audioSourceName == null) {
+      if (SHOMusicCachePaths.isAudioEntry(entryName) &&
+          audioSourceName == null) {
         audioSourceName = entryName;
       } else if (lower.contains('song_cover/') &&
           SHOMusicCachePaths.isImageEntry(entryName)) {
@@ -275,7 +278,11 @@ class SHOMusicPackService {
   }
 
   String? _zipRootPrefix(String entryPath) {
-    final segments = entryPath.replaceAll('\\', '/').split('/').where((s) => s.isNotEmpty).toList();
+    final segments = entryPath
+        .replaceAll('\\', '/')
+        .split('/')
+        .where((s) => s.isNotEmpty)
+        .toList();
     if (segments.length <= 1) return null;
     return segments.first;
   }

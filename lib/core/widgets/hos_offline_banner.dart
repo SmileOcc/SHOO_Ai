@@ -41,10 +41,10 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
     final localServerAsync = ref.watch(localServerReachableProvider);
     final l10n = AppLocalizations.of(context);
 
-    final showBadge =
-        SHOAppConfig.instance.isDebugPanelEnabled && showEnvBadge;
+    final showBadge = SHOAppConfig.instance.isDebugPanelEnabled && showEnvBadge;
 
-    final showLocalServerBanner = config.environment.usesLocalServer &&
+    final showLocalServerBanner =
+        config.environment.usesLocalServer &&
         localServerAsync.maybeWhen(data: (ok) => !ok, orElse: () => false);
     final showOfflineBanner = !isOnline && !_offlineBannerDismissed;
 
@@ -53,52 +53,52 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
     return SHOGlobalErrorListener(
       child: SHOGlobalLoadingOverlay(
         child: Stack(
-        fit: StackFit.expand,
-        children: [
-          widget.child, // ← 页面内容
-          if (showLocalServerBanner || showOfflineBanner)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (showLocalServerBanner)
-                    _ShellTopBanner(
-                      color: SHOAppColors.error.withValues(alpha: 0.92),
-                      icon: Icons.dns_outlined,
-                      message: l10n.localServerBanner,
-                    ),
-                  if (showOfflineBanner)
-                    _ShellTopBanner(
-                      color: SHOAppColors.warning.withValues(alpha: 0.92),
-                      icon: Icons.wifi_off,
-                      message: l10n.offlineBanner,
-                      onDismiss: () =>
-                          setState(() => _offlineBannerDismissed = true),
-                    ),
-                ],
+          fit: StackFit.expand,
+          children: [
+            widget.child, // ← 页面内容
+            if (showLocalServerBanner || showOfflineBanner)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (showLocalServerBanner)
+                      _ShellTopBanner(
+                        color: SHOAppColors.error.withValues(alpha: 0.92),
+                        icon: Icons.dns_outlined,
+                        message: l10n.localServerBanner,
+                      ),
+                    if (showOfflineBanner)
+                      _ShellTopBanner(
+                        color: SHOAppColors.warning.withValues(alpha: 0.92),
+                        icon: Icons.wifi_off,
+                        message: l10n.offlineBanner,
+                        onDismiss: () =>
+                            setState(() => _offlineBannerDismissed = true),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          if (showBadge)
-            Positioned(
-              top: topInset + SHOAppSpacing.xs,
-              right: SHOAppSpacing.sm,
-              child: IgnorePointer(
-                child: Text(
-                  l10n.envBadgeLabel(config.environment.badgeLabel),
-                  style: const TextStyle(
-                    fontSize: 9,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w600,
+            if (showBadge)
+              Positioned(
+                top: topInset + SHOAppSpacing.xs,
+                right: SHOAppSpacing.sm,
+                child: IgnorePointer(
+                  child: Text(
+                    l10n.envBadgeLabel(config.environment.badgeLabel),
+                    style: const TextStyle(
+                      fontSize: 9,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-            ),
-          const SHOMusicMiniPlayer(), //迷你音乐播放器
-        ],
-      ),
+            const SHOMusicMiniPlayer(), //迷你音乐播放器
+          ],
+        ),
       ),
     );
   }
@@ -138,9 +138,9 @@ class _ShellTopBanner extends StatelessWidget {
                 child: Text(
                   message,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],

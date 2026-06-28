@@ -5,10 +5,7 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_promo.dart';
 
 class SHOActivityEntrySection extends StatelessWidget {
-  const SHOActivityEntrySection({
-    super.key,
-    required this.navigation,
-  });
+  const SHOActivityEntrySection({super.key, required this.navigation});
 
   final SHOActivityNavigation? navigation;
 
@@ -90,10 +87,7 @@ class _EntryChip extends StatelessWidget {
             children: [
               Icon(item.icon, size: 18, color: theme.colorScheme.primary),
               const SizedBox(width: 6),
-              Text(
-                item.label,
-                style: theme.textTheme.labelLarge,
-              ),
+              Text(item.label, style: theme.textTheme.labelLarge),
             ],
           ),
         ),

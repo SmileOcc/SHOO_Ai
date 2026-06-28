@@ -20,10 +20,7 @@ import 'package:shoo/features/toolbox/domain/entities/hos_music_track.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_music_track_stats.dart';
 import 'package:shoo/features/toolbox/presentation/state/hos_download_controller.dart';
 
-enum SHOMusicLibrarySort {
-  recent,
-  liked,
-}
+enum SHOMusicLibrarySort { recent, liked }
 
 class SHOMusicLibraryListItem {
   const SHOMusicLibraryListItem({
@@ -43,13 +40,15 @@ class SHOMusicLibraryListItem {
   final bool canDeleteCache;
 }
 
-final musicLibrarySortProvider =
-    StateProvider<SHOMusicLibrarySort>((ref) => SHOMusicLibrarySort.recent);
+final musicLibrarySortProvider = StateProvider<SHOMusicLibrarySort>(
+  (ref) => SHOMusicLibrarySort.recent,
+);
 
 final musicLibraryRevisionProvider = StateProvider<int>((ref) => 0);
 
-final musicLibraryListProvider =
-    FutureProvider<List<SHOMusicLibraryListItem>>((ref) async {
+final musicLibraryListProvider = FutureProvider<List<SHOMusicLibraryListItem>>((
+  ref,
+) async {
   ref.watch(musicLibraryRevisionProvider);
   final sort = ref.watch(musicLibrarySortProvider);
   final tasks = ref.watch(downloadTasksProvider);
@@ -96,8 +95,7 @@ final musicLibraryListProvider =
       continue;
     }
 
-    final zipPath =
-        await SHODownloadPaths.resolveExistingFilePath(packTask);
+    final zipPath = await SHODownloadPaths.resolveExistingFilePath(packTask);
     if (zipPath == null) continue;
 
     final songs = await packService.discoverSongsInPack(zipPath);
@@ -253,7 +251,8 @@ final musicLibraryListProvider =
       deduped[key] = item;
       continue;
     }
-    final preferNew = (item.track.id.startsWith(SHOMusicTrack.packIdPrefix) ||
+    final preferNew =
+        (item.track.id.startsWith(SHOMusicTrack.packIdPrefix) ||
             item.track.id.startsWith(SHOMusicTrack.bundleIdPrefix)) &&
         !existing.track.id.startsWith(SHOMusicTrack.packIdPrefix) &&
         !existing.track.id.startsWith(SHOMusicTrack.bundleIdPrefix);
@@ -291,9 +290,9 @@ int _compareItems(
 ) {
   return switch (sort) {
     SHOMusicLibrarySort.recent => _compareDate(
-        a.stats.lastPlayedAt,
-        b.stats.lastPlayedAt,
-      ),
+      a.stats.lastPlayedAt,
+      b.stats.lastPlayedAt,
+    ),
     SHOMusicLibrarySort.liked => _compareLiked(a, b),
   };
 }
@@ -314,18 +313,18 @@ int _compareDate(DateTime? a, DateTime? b) {
 
 final musicDismissedTasksProvider =
     NotifierProvider<SHOMusicDismissedTasksNotifier, Set<String>>(
-  SHOMusicDismissedTasksNotifier.new,
-);
+      SHOMusicDismissedTasksNotifier.new,
+    );
 
 final musicRemovedCachedProvider =
     NotifierProvider<SHOMusicRemovedCachedNotifier, Set<String>>(
-  SHOMusicRemovedCachedNotifier.new,
-);
+      SHOMusicRemovedCachedNotifier.new,
+    );
 
 final musicDismissedTrackIdsProvider =
     NotifierProvider<SHOMusicDismissedTrackIdsNotifier, Set<String>>(
-  SHOMusicDismissedTrackIdsNotifier.new,
-);
+      SHOMusicDismissedTrackIdsNotifier.new,
+    );
 
 class SHOMusicDismissedTrackIdsNotifier extends Notifier<Set<String>> {
   late final SharedPreferences _prefs;
@@ -474,8 +473,7 @@ Future<void> reconcileStaleMusicPackAddedTasks(WidgetRef ref) async {
 
   final items = await ref.read(musicLibraryListProvider.future);
   for (final packId in addedIds.toList()) {
-    final hasVisible =
-        musicPackItemsInLibrary(items, packId).isNotEmpty;
+    final hasVisible = musicPackItemsInLibrary(items, packId).isNotEmpty;
     if (!hasVisible) {
       await ref.read(musicPackAddedTasksProvider.notifier).remove(packId);
     }
@@ -483,7 +481,7 @@ Future<void> reconcileStaleMusicPackAddedTasks(WidgetRef ref) async {
 }
 
 Future<({List<SHOMusicLibraryListItem> items, List<String> extractedPaths})>
-    ensurePackInLibrary(
+ensurePackInLibrary(
   WidgetRef ref, {
   required SHODownloadTask packTask,
   required SHOMusicPackService packService,

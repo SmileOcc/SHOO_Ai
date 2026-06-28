@@ -1,10 +1,7 @@
 import 'package:shoo/features/activity_webview/domain/entities/hos_activity_promo.dart';
 
 class SHOActivityDetailSection {
-  const SHOActivityDetailSection({
-    required this.title,
-    required this.content,
-  });
+  const SHOActivityDetailSection({required this.title, required this.content});
 
   final String title;
   final String content;

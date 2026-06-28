@@ -17,14 +17,16 @@ abstract final class SHOMockFlashSaleFollowStore {
   }
 
   static List<Map<String, dynamic>> list() =>
-      _follows.values.map((e) => Map<String, dynamic>.from(e)).toList()
-        ..sort(
-          (a, b) => (a['sessionStartAt']?.toString() ?? '')
-              .compareTo(b['sessionStartAt']?.toString() ?? ''),
-        );
+      _follows.values.map((e) => Map<String, dynamic>.from(e)).toList()..sort(
+        (a, b) => (a['sessionStartAt']?.toString() ?? '').compareTo(
+          b['sessionStartAt']?.toString() ?? '',
+        ),
+      );
 
-  static bool contains({required String sessionId, required String productId}) =>
-      _follows.containsKey(keyFor(sessionId, productId));
+  static bool contains({
+    required String sessionId,
+    required String productId,
+  }) => _follows.containsKey(keyFor(sessionId, productId));
 
   static void replaceAll(List<Map<String, dynamic>> follows) {
     _follows.clear();

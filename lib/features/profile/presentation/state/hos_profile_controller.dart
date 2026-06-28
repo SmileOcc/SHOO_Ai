@@ -4,7 +4,8 @@ import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart'
 import 'package:shoo/features/home/domain/entities/hos_product.dart';
 import 'package:shoo/features/order/data/repositories/hos_order_repository_impl.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
-import 'package:shoo/features/product/data/datasources/remote/hos_product_remote_ds.dart' show productApiProvider;
+import 'package:shoo/features/product/data/datasources/remote/hos_product_remote_ds.dart'
+    show productApiProvider;
 import 'package:shoo/features/profile/data/datasources/local/hos_profile_activity_storage.dart';
 import 'package:shoo/features/profile/domain/entities/hos_profile_activity_product.dart';
 
@@ -12,13 +13,14 @@ enum SHOProfileFeedTab { guessYouLike, favorites, reviews }
 
 enum SHOProfileActivityListKind { footprints, favorites }
 
-final profileFeedTabProvider =
-    StateProvider<SHOProfileFeedTab>((ref) => SHOProfileFeedTab.guessYouLike);
+final profileFeedTabProvider = StateProvider<SHOProfileFeedTab>(
+  (ref) => SHOProfileFeedTab.guessYouLike,
+);
 
 final profileActivityProvider =
     NotifierProvider<SHOProfileActivityNotifier, SHOProfileActivitySnapshot>(
-  SHOProfileActivityNotifier.new,
-);
+      SHOProfileActivityNotifier.new,
+    );
 
 class SHOProfileActivityNotifier extends Notifier<SHOProfileActivitySnapshot> {
   late final SHOProfileActivityStorage _storage;
@@ -68,7 +70,9 @@ final profileQuickStatsProvider = Provider<SHOProfileQuickStats>((ref) {
   if (!authed) return const SHOProfileQuickStats();
 
   final activity = ref.watch(profileActivityProvider);
-  final orderCounts = ref.watch(profileOrderCountsProvider).maybeWhen(
+  final orderCounts = ref
+      .watch(profileOrderCountsProvider)
+      .maybeWhen(
         data: (counts) => counts.values.fold<int>(0, (sum, n) => sum + n),
         orElse: () => 0,
       );
@@ -98,15 +102,15 @@ class SHOProfileQuickStats {
   final bool showDiscoverBadge;
 }
 
-final profileOrderCountsProvider =
-    FutureProvider<Map<SHOOrderStatus, int>>((ref) async {
+final profileOrderCountsProvider = FutureProvider<Map<SHOOrderStatus, int>>((
+  ref,
+) async {
   if (!ref.watch(sessionProvider).isAuthenticated) {
     return {};
   }
-  final page = await ref.watch(orderRepositoryProvider).getOrdersPage(
-        page: 1,
-        pageSize: 100,
-      );
+  final page = await ref
+      .watch(orderRepositoryProvider)
+      .getOrdersPage(page: 1, pageSize: 100);
   final counts = <SHOOrderStatus, int>{};
   for (final order in page.items) {
     counts[order.status] = (counts[order.status] ?? 0) + 1;
@@ -156,10 +160,7 @@ Future<List<SHOProfileActivityProduct>> _resolveActivityProducts({
   return products;
 }
 
-Future<SHOProduct> _fetchListProduct(
-  Ref ref,
-  String id,
-) async {
+Future<SHOProduct> _fetchListProduct(Ref ref, String id) async {
   final detail = await ref.watch(productApiProvider).fetchProductDetail(id);
   return SHOProduct(
     id: detail.id,
@@ -175,24 +176,24 @@ Future<SHOProduct> _fetchListProduct(
 
 final profileFootprintActivityProductsProvider =
     FutureProvider.autoDispose<List<SHOProfileActivityProduct>>((ref) async {
-  final activity = ref.watch(profileActivityProvider);
-  if (activity.footprints.isEmpty) return const [];
+      final activity = ref.watch(profileActivityProvider);
+      if (activity.footprints.isEmpty) return const [];
 
-  return _resolveActivityProducts(
-    ids: activity.footprints,
-    cache: activity.productCache,
-    fetchProduct: (id) => _fetchListProduct(ref, id),
-  );
-});
+      return _resolveActivityProducts(
+        ids: activity.footprints,
+        cache: activity.productCache,
+        fetchProduct: (id) => _fetchListProduct(ref, id),
+      );
+    });
 
 final profileFavoriteActivityProductsProvider =
     FutureProvider.autoDispose<List<SHOProfileActivityProduct>>((ref) async {
-  final activity = ref.watch(profileActivityProvider);
-  if (activity.favorites.isEmpty) return const [];
+      final activity = ref.watch(profileActivityProvider);
+      if (activity.favorites.isEmpty) return const [];
 
-  return _resolveActivityProducts(
-    ids: activity.favorites,
-    cache: activity.productCache,
-    fetchProduct: (id) => _fetchListProduct(ref, id),
-  );
-});
+      return _resolveActivityProducts(
+        ids: activity.favorites,
+        cache: activity.productCache,
+        fetchProduct: (id) => _fetchListProduct(ref, id),
+      );
+    });

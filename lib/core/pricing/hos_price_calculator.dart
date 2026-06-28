@@ -52,7 +52,8 @@ abstract final class SHOPriceCalculator {
 
     final discount = switch (coupon.type) {
       SHOCouponType.fixed => coupon.discountCents,
-      SHOCouponType.percent => (subtotalCents * coupon.discountPercent / 100).round(),
+      SHOCouponType.percent =>
+        (subtotalCents * coupon.discountPercent / 100).round(),
     };
 
     return discount.clamp(0, subtotalCents);
@@ -85,12 +86,13 @@ abstract final class SHOPriceCalculator {
     }
 
     final afterCoupon = (subtotalCents - discountCents).clamp(0, 1 << 31);
-    final fullReductionCents =
-        fullReductionTiers.bestReductionFor(afterCoupon);
+    final fullReductionCents = fullReductionTiers.bestReductionFor(afterCoupon);
     final bestTier = fullReductionTiers.bestTierFor(afterCoupon);
 
-    final total = (afterCoupon - fullReductionCents + shippingCents)
-        .clamp(0, 1 << 31);
+    final total = (afterCoupon - fullReductionCents + shippingCents).clamp(
+      0,
+      1 << 31,
+    );
 
     return SHOPriceBreakdown(
       subtotalCents: subtotalCents,

@@ -22,11 +22,17 @@ class SHOShareDialog extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('分享活动', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+            const Text(
+              '分享活动',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
             const SizedBox(height: 16),
             _ScreenshotPreview(share: share),
             const SizedBox(height: 12),
-            Text(config.shareTitle, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              config.shareTitle,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
             Text(config.shareDesc, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 16),
             Wrap(
@@ -35,12 +41,16 @@ class SHOShareDialog extends ConsumerWidget {
                 _ShareChip(
                   label: '微信好友',
                   color: const Color(0xFF07C160),
-                  onTap: () => ref.read(shareProvider.notifier).shareTo(context, ref, 'wechat', config),
+                  onTap: () => ref
+                      .read(shareProvider.notifier)
+                      .shareTo(context, ref, 'wechat', config),
                 ),
                 _ShareChip(
                   label: '朋友圈',
                   color: const Color(0xFF4A90E2),
-                  onTap: () => ref.read(shareProvider.notifier).shareTo(context, ref, 'moments', config),
+                  onTap: () => ref
+                      .read(shareProvider.notifier)
+                      .shareTo(context, ref, 'moments', config),
                 ),
                 _ShareChip(
                   label: '复制链接',
@@ -50,7 +60,9 @@ class SHOShareDialog extends ConsumerWidget {
                 _ShareChip(
                   label: '保存图片',
                   color: const Color(0xFF9B59B6),
-                  onTap: () => ref.read(shareProvider.notifier).shareTo(context, ref, 'save', config),
+                  onTap: () => ref
+                      .read(shareProvider.notifier)
+                      .shareTo(context, ref, 'save', config),
                 ),
               ],
             ),
@@ -135,7 +147,10 @@ class _ShareChip extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Column(
         children: [
-          CircleAvatar(backgroundColor: color, child: const Icon(Icons.share, color: Colors.white, size: 18)),
+          CircleAvatar(
+            backgroundColor: color,
+            child: const Icon(Icons.share, color: Colors.white, size: 18),
+          ),
           const SizedBox(height: 4),
           Text(label, style: const TextStyle(fontSize: 12)),
         ],

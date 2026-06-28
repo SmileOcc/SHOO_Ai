@@ -126,7 +126,9 @@ class _SHOVideoLibraryPageState extends ConsumerState<SHOVideoLibraryPage>
             ),
           );
         } else if (item.cacheBytes > 0) {
-          parts.add(l10n.videoLibraryCacheSize(formatFileSize(item.cacheBytes)));
+          parts.add(
+            l10n.videoLibraryCacheSize(formatFileSize(item.cacheBytes)),
+          );
         }
       }
     } else if (entry.isNetwork) {
@@ -139,9 +141,7 @@ class _SHOVideoLibraryPageState extends ConsumerState<SHOVideoLibraryPage>
     if (progress != null && progress.positionMs > 0) {
       parts.add(
         l10n.videoLibraryLastPlayed(
-          formatVideoDuration(
-            Duration(milliseconds: progress.positionMs),
-          ),
+          formatVideoDuration(Duration(milliseconds: progress.positionMs)),
         ),
       );
     }
@@ -156,174 +156,176 @@ class _SHOVideoLibraryPageState extends ConsumerState<SHOVideoLibraryPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          l10n.videoLibraryTitle,
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => _openOnlinePlay(context),
-            child: Text(
-              l10n.videoLibraryOnlinePlay,
-              style: const TextStyle(fontWeight: FontWeight.w700),
-            ),
+        appBar: AppBar(
+          title: Text(
+            l10n.videoLibraryTitle,
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-        ],
-      ),
-      body: items.isEmpty
-          ? SHOEmptyState(
-              title: l10n.videoLibraryEmpty,
-              actionLabel: l10n.videoLibraryGoDownloads,
-              onAction: () => context.push(SHOAppRoutes.toolboxDownloads),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-              itemCount: items.length,
-              separatorBuilder: (_, __) =>
-                  const SizedBox(height: SHOAppSpacing.lg),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                final entry = item.entry;
-                final canPlay = entry.isNetwork ||
-                    (item.task != null &&
-                        item.task!.status == SHODownloadStatus.completed);
+          actions: [
+            TextButton(
+              onPressed: () => _openOnlinePlay(context),
+              child: Text(
+                l10n.videoLibraryOnlinePlay,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+        body: items.isEmpty
+            ? SHOEmptyState(
+                title: l10n.videoLibraryEmpty,
+                actionLabel: l10n.videoLibraryGoDownloads,
+                onAction: () => context.push(SHOAppRoutes.toolboxDownloads),
+              )
+            : ListView.separated(
+                padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+                itemCount: items.length,
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: SHOAppSpacing.lg),
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  final entry = item.entry;
+                  final canPlay =
+                      entry.isNetwork ||
+                      (item.task != null &&
+                          item.task!.status == SHODownloadStatus.completed);
 
-                return Dismissible(
-                  key: ValueKey(entry.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: SHOAppSpacing.xl),
-                    decoration: BoxDecoration(
-                      color: SHOAppColors.error.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      l10n.videoLibraryRemoveAction,
-                      style: const TextStyle(
-                        color: SHOAppColors.error,
-                        fontWeight: FontWeight.w700,
+                  return Dismissible(
+                    key: ValueKey(entry.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: SHOAppSpacing.xl),
+                      decoration: BoxDecoration(
+                        color: SHOAppColors.error.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                  ),
-                  confirmDismiss: (_) async {
-                    final ok = await SHOConfirmCardDialog.show(
-                      context,
-                      title: l10n.videoLibraryRemoveConfirmTitle,
-                      message: l10n.videoLibraryRemoveConfirmMessage,
-                      confirmLabel: l10n.videoLibraryRemoveAction,
-                      isDestructive: true,
-                    );
-                    if (ok) {
-                      await ref
-                          .read(videoLibraryEntriesProvider.notifier)
-                          .remove(entry.id);
-                    }
-                    return ok;
-                  },
-                  child: SHOProfileSectionCard(
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: SHOAppSpacing.lg,
-                        vertical: SHOAppSpacing.xs,
-                      ),
-                      leading: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF5C6BC0)
-                                  .withValues(alpha: 0.14),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              entry.isNetwork
-                                  ? Icons.cloud_outlined
-                                  : downloadFileTypeIconFor(
-                                      item.task?.fileType ??
-                                          SHODownloadFileType.video,
-                                    ),
-                              color: const Color(0xFF5C6BC0),
-                            ),
-                          ),
-                          if (entry.isNetwork)
-                            Positioned(
-                              right: -2,
-                              bottom: -2,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 1,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: SHOAppColors.accent,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  l10n.videoLibraryOnlineBadge,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          if (entry.isNetwork && item.isFullyCached)
-                            Positioned(
-                              left: -2,
-                              top: -2,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                  vertical: 1,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: SHOAppColors.success,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  l10n.videoLibraryCachedComplete,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      title: Text(
-                        entry.displayName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      subtitle: Text(
-                        _buildSubtitle(l10n, item),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: context.shoTheme.textSecondary,
-                          fontSize: 12,
+                      child: Text(
+                        l10n.videoLibraryRemoveAction,
+                        style: const TextStyle(
+                          color: SHOAppColors.error,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      trailing: canPlay
-                          ? const Icon(Icons.play_circle_outline)
-                          : null,
-                      onTap: () => _openItem(context, item),
                     ),
-                  ),
-                );
-              },
-            ),
-    ),
-    onRetry: () => ref.invalidate(videoLibraryEntriesProvider),
+                    confirmDismiss: (_) async {
+                      final ok = await SHOConfirmCardDialog.show(
+                        context,
+                        title: l10n.videoLibraryRemoveConfirmTitle,
+                        message: l10n.videoLibraryRemoveConfirmMessage,
+                        confirmLabel: l10n.videoLibraryRemoveAction,
+                        isDestructive: true,
+                      );
+                      if (ok) {
+                        await ref
+                            .read(videoLibraryEntriesProvider.notifier)
+                            .remove(entry.id);
+                      }
+                      return ok;
+                    },
+                    child: SHOProfileSectionCard(
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: SHOAppSpacing.lg,
+                          vertical: SHOAppSpacing.xs,
+                        ),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF5C6BC0,
+                                ).withValues(alpha: 0.14),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                entry.isNetwork
+                                    ? Icons.cloud_outlined
+                                    : downloadFileTypeIconFor(
+                                        item.task?.fileType ??
+                                            SHODownloadFileType.video,
+                                      ),
+                                color: const Color(0xFF5C6BC0),
+                              ),
+                            ),
+                            if (entry.isNetwork)
+                              Positioned(
+                                right: -2,
+                                bottom: -2,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                    vertical: 1,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: SHOAppColors.accent,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    l10n.videoLibraryOnlineBadge,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (entry.isNetwork && item.isFullyCached)
+                              Positioned(
+                                left: -2,
+                                top: -2,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                    vertical: 1,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: SHOAppColors.success,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    l10n.videoLibraryCachedComplete,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        title: Text(
+                          entry.displayName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        subtitle: Text(
+                          _buildSubtitle(l10n, item),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: context.shoTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                        trailing: canPlay
+                            ? const Icon(Icons.play_circle_outline)
+                            : null,
+                        onTap: () => _openItem(context, item),
+                      ),
+                    ),
+                  );
+                },
+              ),
+      ),
+      onRetry: () => ref.invalidate(videoLibraryEntriesProvider),
     );
   }
 }

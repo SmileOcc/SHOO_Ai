@@ -3,21 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 /// 下拉刷新状态。
-enum SHOAppCustomRefreshStatus {
-  idle,
-  dragging,
-  loading,
-  completed,
-  error,
-}
+enum SHOAppCustomRefreshStatus { idle, dragging, loading, completed, error }
 
 /// 上拉加载状态。
-enum SHOAppCustomLoadStatus {
-  idle,
-  loading,
-  noMore,
-  error,
-}
+enum SHOAppCustomLoadStatus { idle, loading, noMore, error }
 
 /// [SHOAppCustomRefresh] 状态控制器，外部持有并驱动头尾 UI。
 class SHOAppCustomRefreshController extends ChangeNotifier {

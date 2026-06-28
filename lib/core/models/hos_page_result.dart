@@ -16,6 +16,5 @@ class SHOPageResult<T> with _$SHOPageResult<T> {
   factory SHOPageResult.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$SHOPageResultFromJson(json, fromJsonT);
+  ) => _$SHOPageResultFromJson(json, fromJsonT);
 }

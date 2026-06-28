@@ -17,7 +17,8 @@ class SHOStudyArticlePage extends ConsumerStatefulWidget {
   final String articleId;
 
   @override
-  ConsumerState<SHOStudyArticlePage> createState() => _SHOStudyArticlePageState();
+  ConsumerState<SHOStudyArticlePage> createState() =>
+      _SHOStudyArticlePageState();
 }
 
 class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
@@ -31,8 +32,8 @@ class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'article_id': widget.articleId,
-      };
+    'article_id': widget.articleId,
+  };
 
   @override
   void initState() {
@@ -73,13 +74,13 @@ class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          article?.title ?? '学习',
-          style: const TextStyle(fontWeight: FontWeight.w800),
+        appBar: AppBar(
+          title: Text(
+            article?.title ?? '学习',
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
-      ),
-      body: _buildBody(theme),
+        body: _buildBody(theme),
       ),
       onRetry: _loadArticle,
     );
@@ -121,9 +122,7 @@ class _SHOStudyArticlePageState extends ConsumerState<SHOStudyArticlePage>
         ),
         tableBody: theme.textTheme.bodySmall,
         horizontalRuleDecoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: shoTheme.border),
-          ),
+          border: Border(top: BorderSide(color: shoTheme.border)),
         ),
         blockquoteDecoration: BoxDecoration(
           color: SHOAppColors.accent.withValues(alpha: 0.06),

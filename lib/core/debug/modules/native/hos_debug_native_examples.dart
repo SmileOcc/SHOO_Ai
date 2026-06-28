@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// 原生调试示例分类。
-enum SHONativeDebugCategory {
-  methodChannel,
-  messageChannel,
-  eventChannel,
-}
+enum SHONativeDebugCategory { methodChannel, messageChannel, eventChannel }
 
 /// 原生调试示例 ID（对应路由 `:id`）。
-enum SHONativeDebugExampleId {
-  ping,
-  platformVersion,
-  messageEcho,
-  eventTick,
-}
+enum SHONativeDebugExampleId { ping, platformVersion, messageEcho, eventTick }
 
 class SHONativeDebugExample {
   const SHONativeDebugExample({

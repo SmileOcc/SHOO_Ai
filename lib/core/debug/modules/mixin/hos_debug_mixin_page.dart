@@ -79,38 +79,38 @@ class _SHODebugMixinPageState extends ConsumerState<SHODebugMixinPage>
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: const Text('Mixin 调试')),
-      body: ListView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xl),
-        children: [
-          _section(
-            '1. 线性化链',
-            '自定义 Mixin 的 super 链式调用，验证 with 声明顺序决定 MRO',
-            '运行线性化链 Demo',
-            Icons.account_tree_outlined,
-            _runChainDemo,
-            _chainResult,
-          ),
-          _section(
-            '2. 多个 Mixin 同名方法',
-            'LogerA / LoggerB / LoggerC 都有 log()，演示最右侧覆盖规则',
-            '运行同名方法冲突 Demo',
-            Icons.merge_type,
-            _runCollisionDemo,
-            _collisionResult,
-          ),
-          _section(
-            '3. 业务 Form Mixin 聚合',
-            'Validatable + Loadable + Traceable 组合成一个 Form 类',
-            '运行业务 Mixin Demo',
-            Icons.business_outlined,
-            _runBizDemo,
-            _bizResult,
-            trace: _bizTrace,
-          ),
-        ],
+        appBar: AppBar(title: const Text('Mixin 调试')),
+        body: ListView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xl),
+          children: [
+            _section(
+              '1. 线性化链',
+              '自定义 Mixin 的 super 链式调用，验证 with 声明顺序决定 MRO',
+              '运行线性化链 Demo',
+              Icons.account_tree_outlined,
+              _runChainDemo,
+              _chainResult,
+            ),
+            _section(
+              '2. 多个 Mixin 同名方法',
+              'LogerA / LoggerB / LoggerC 都有 log()，演示最右侧覆盖规则',
+              '运行同名方法冲突 Demo',
+              Icons.merge_type,
+              _runCollisionDemo,
+              _collisionResult,
+            ),
+            _section(
+              '3. 业务 Form Mixin 聚合',
+              'Validatable + Loadable + Traceable 组合成一个 Form 类',
+              '运行业务 Mixin Demo',
+              Icons.business_outlined,
+              _runBizDemo,
+              _bizResult,
+              trace: _bizTrace,
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -145,10 +145,10 @@ class _SHODebugMixinPageState extends ConsumerState<SHODebugMixinPage>
               child: Text(
                 result,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      height: 1.5,
-                    ),
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  height: 1.5,
+                ),
               ),
             ),
           ),
@@ -165,10 +165,10 @@ class _SHODebugMixinPageState extends ConsumerState<SHODebugMixinPage>
               child: Text(
                 trace,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'monospace',
-                      fontSize: 11,
-                      height: 1.5,
-                    ),
+                  fontFamily: 'monospace',
+                  fontSize: 11,
+                  height: 1.5,
+                ),
               ),
             ),
           ),

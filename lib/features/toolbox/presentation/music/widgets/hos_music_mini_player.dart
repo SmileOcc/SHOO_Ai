@@ -31,7 +31,8 @@ class _SHOMusicMiniPlayerState extends ConsumerState<SHOMusicMiniPlayer> {
       return const SizedBox.shrink();
     }
 
-    final active = playerState.isPlaying ||
+    final active =
+        playerState.isPlaying ||
         playerState.isLoading ||
         playerState.position > Duration.zero;
     if (!active) return const SizedBox.shrink();
@@ -55,10 +56,14 @@ class _SHOMusicMiniPlayerState extends ConsumerState<SHOMusicMiniPlayer> {
         onPanUpdate: (details) {
           setState(() {
             _dragOffset = Offset(
-              (position.dx + details.delta.dx)
-                  .clamp(0.0, media.size.width - _size),
-              (position.dy + details.delta.dy)
-                  .clamp(media.padding.top, media.size.height - _size - 16),
+              (position.dx + details.delta.dx).clamp(
+                0.0,
+                media.size.width - _size,
+              ),
+              (position.dy + details.delta.dy).clamp(
+                media.padding.top,
+                media.size.height - _size - 16,
+              ),
             );
           });
         },

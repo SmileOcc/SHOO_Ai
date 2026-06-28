@@ -1,9 +1,4 @@
-enum SHOMusicSource {
-  network,
-  asset,
-  local,
-  cached,
-}
+enum SHOMusicSource { network, asset, local, cached }
 
 class SHOMusicTrack {
   const SHOMusicTrack({
@@ -111,25 +106,25 @@ class SHOMusicTrack {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'artist': artist,
-        'album': album,
-        'songKey': songKey,
-        'source': source.name,
-        'coverUrl': coverUrl,
-        'coverPath': coverPath,
-        'bgPath': bgPath,
-        'coverColor': coverColor,
-        'bgColor': bgColor,
-        'audioUrl': audioUrl,
-        'assetPath': assetPath,
-        'localPath': localPath,
-        'taskId': taskId,
-        'packTaskId': packTaskId,
-        'lrc': lrc,
-        'isCachedLocally': isCachedLocally,
-      };
+    'id': id,
+    'title': title,
+    'artist': artist,
+    'album': album,
+    'songKey': songKey,
+    'source': source.name,
+    'coverUrl': coverUrl,
+    'coverPath': coverPath,
+    'bgPath': bgPath,
+    'coverColor': coverColor,
+    'bgColor': bgColor,
+    'audioUrl': audioUrl,
+    'assetPath': assetPath,
+    'localPath': localPath,
+    'taskId': taskId,
+    'packTaskId': packTaskId,
+    'lrc': lrc,
+    'isCachedLocally': isCachedLocally,
+  };
 
   factory SHOMusicTrack.fromJson(Map<String, dynamic> json) {
     return SHOMusicTrack(

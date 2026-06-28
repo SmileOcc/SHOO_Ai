@@ -27,7 +27,11 @@ class SHOProfilePage extends ConsumerStatefulWidget {
 }
 
 class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
-    with SingleTickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+    with
+        SingleTickerProviderStateMixin,
+        SHOPageRouteAnalyticsMixin,
+        SHOAppPageMixin,
+        SHOAppTrackedPageMixin {
   late final TabController _tabController;
 
   @override
@@ -82,72 +86,72 @@ class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
 
     return buildTrackedPage(
       NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: _SHOProfileHeaderDelegate(
-            topInset: topInset,
-            session: session,
-            displayName: displayName,
-            subtitle: subtitle,
-            theme: theme,
-            backgroundColor: context.shoBackground,
-            l10n: l10n,
-            onMessages: () => context.push(SHOAppRoutes.messages),
-            onSettings: () => context.push(SHOAppRoutes.settings),
-            onLogin: () => context.push(SHOAppRoutes.login),
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SHOProfileHeaderDelegate(
+              topInset: topInset,
+              session: session,
+              displayName: displayName,
+              subtitle: subtitle,
+              theme: theme,
+              backgroundColor: context.shoBackground,
+              l10n: l10n,
+              onMessages: () => context.push(SHOAppRoutes.messages),
+              onSettings: () => context.push(SHOAppRoutes.settings),
+              onLogin: () => context.push(SHOAppRoutes.login),
+            ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(
-            SHOAppSpacing.pagePadding,
-            SHOAppSpacing.pagePadding,
-            SHOAppSpacing.pagePadding,
-            0,
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              SHOAppSpacing.pagePadding,
+              SHOAppSpacing.pagePadding,
+              SHOAppSpacing.pagePadding,
+              0,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                const SHOProfileOrderHub(),
+                const SizedBox(height: SHOAppSpacing.lg),
+                const SHOProfileActivityNotificationHub(),
+                const SizedBox(height: SHOAppSpacing.lg),
+                const SHOProfileServiceHub(),
+                const SizedBox(height: SHOAppSpacing.lg),
+                const SHOProfileCouponStrip(),
+                const SizedBox(height: SHOAppSpacing.lg),
+              ]),
+            ),
           ),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate([
-              const SHOProfileOrderHub(),
-              const SizedBox(height: SHOAppSpacing.lg),
-              const SHOProfileActivityNotificationHub(),
-              const SizedBox(height: SHOAppSpacing.lg),
-              const SHOProfileServiceHub(),
-              const SizedBox(height: SHOAppSpacing.lg),
-              const SHOProfileCouponStrip(),
-              const SizedBox(height: SHOAppSpacing.lg),
-            ]),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SHOProfileTabBarDelegate(
+              tabController: _tabController,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            ),
           ),
-        ),
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: _SHOProfileTabBarDelegate(
-            tabController: _tabController,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          ),
-        ),
-      ],
-      body: TabBarView(
-        controller: _tabController,
-        children: SHOProfileFeedTab.values
-            .map(
-              (tab) => CustomScrollView(
-                key: PageStorageKey<String>('profile_feed_${tab.name}'),
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                      SHOAppSpacing.pagePadding,
-                      SHOAppSpacing.lg,
-                      SHOAppSpacing.pagePadding,
-                      SHOAppSpacing.xxxl,
+        ],
+        body: TabBarView(
+          controller: _tabController,
+          children: SHOProfileFeedTab.values
+              .map(
+                (tab) => CustomScrollView(
+                  key: PageStorageKey<String>('profile_feed_${tab.name}'),
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                        SHOAppSpacing.pagePadding,
+                        SHOAppSpacing.lg,
+                        SHOAppSpacing.pagePadding,
+                        SHOAppSpacing.xxxl,
+                      ),
+                      sliver: buildProfileFeedSliver(ref, context, tab),
                     ),
-                    sliver: buildProfileFeedSliver(ref, context, tab),
-                  ),
-                ],
-              ),
-            )
-            .toList(),
+                  ],
+                ),
+              )
+              .toList(),
+        ),
       ),
-    ),
     );
   }
 }
@@ -168,7 +172,11 @@ class _SHOProfileTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 44;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return ColoredBox(
       color: backgroundColor,
       child: SHOProfileFeedTabBar(controller: tabController),
@@ -215,7 +223,11 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => topInset + kToolbarHeight;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final shrinkRange = maxExtent - minExtent;
     final progress = shrinkRange <= 0
         ? 1.0
@@ -224,7 +236,11 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     const collapsedAvatarRadius = 16.0;
     const expandedAvatarRadius = 36.0;
-    final avatarRadius = lerpDouble(collapsedAvatarRadius, expandedAvatarRadius, t)!;
+    final avatarRadius = lerpDouble(
+      collapsedAvatarRadius,
+      expandedAvatarRadius,
+      t,
+    )!;
     final nameSize = lerpDouble(14, 18, t)!;
     final left = lerpDouble(16, 20, t)!;
     const expandedRowExtra = 46.0;
@@ -359,10 +375,7 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _SHOProfileAvatar extends StatelessWidget {
-  const _SHOProfileAvatar({
-    required this.session,
-    required this.radius,
-  });
+  const _SHOProfileAvatar({required this.session, required this.radius});
 
   final SHOSessionState session;
   final double radius;

@@ -209,10 +209,7 @@ Map<String, dynamic> sortCommunityFeedEnvelope(
   final page = mockQueryInt(query, 'page', 0);
   var result = {
     ...envelope,
-    'data': {
-      ...data,
-      'items': items,
-    },
+    'data': {...data, 'items': items},
   };
   if (page > 0) {
     final pageSize = mockQueryInt(query, 'pageSize', 20);
@@ -245,7 +242,5 @@ bool _isFlashSaleProductId(
   if (data is! Map<String, dynamic>) return productId.startsWith('fs-');
   final products = data['products'] as List<dynamic>?;
   if (products == null) return productId.startsWith('fs-');
-  return products.any(
-    (p) => p is Map<String, dynamic> && p['id'] == productId,
-  );
+  return products.any((p) => p is Map<String, dynamic> && p['id'] == productId);
 }

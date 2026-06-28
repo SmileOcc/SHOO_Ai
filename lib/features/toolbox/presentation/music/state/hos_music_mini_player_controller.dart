@@ -42,8 +42,8 @@ Future<bool> openMusicPlayerPage(
 
 final musicMiniPlayerDismissedProvider =
     NotifierProvider<SHOMusicMiniPlayerDismissedNotifier, bool>(
-  SHOMusicMiniPlayerDismissedNotifier.new,
-);
+      SHOMusicMiniPlayerDismissedNotifier.new,
+    );
 
 class SHOMusicMiniPlayerDismissedNotifier extends Notifier<bool> {
   @override
@@ -56,8 +56,8 @@ class SHOMusicMiniPlayerDismissedNotifier extends Notifier<bool> {
 
 final musicMiniPlayerOffsetProvider =
     NotifierProvider<SHOMusicMiniPlayerOffsetNotifier, Offset?>(
-  SHOMusicMiniPlayerOffsetNotifier.new,
-);
+      SHOMusicMiniPlayerOffsetNotifier.new,
+    );
 
 class SHOMusicMiniPlayerOffsetNotifier extends Notifier<Offset?> {
   late final SharedPreferences _prefs;

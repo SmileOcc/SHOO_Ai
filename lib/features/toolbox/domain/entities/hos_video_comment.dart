@@ -14,12 +14,12 @@ class SHOVideoComment {
   final String authorName;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'videoId': videoId,
-        'content': content,
-        'createdAt': createdAt.toIso8601String(),
-        'authorName': authorName,
-      };
+    'id': id,
+    'videoId': videoId,
+    'content': content,
+    'createdAt': createdAt.toIso8601String(),
+    'authorName': authorName,
+  };
 
   factory SHOVideoComment.fromJson(Map<String, dynamic> json) {
     return SHOVideoComment(

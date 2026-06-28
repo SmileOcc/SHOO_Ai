@@ -6,8 +6,8 @@ import 'package:shoo/features/address/domain/entities/hos_address.dart';
 /// 全局地址列表；checkout / 表单与列表页共享，离开列表页不销毁。
 final addressesProvider =
     AsyncNotifierProvider<SHOAddressesNotifier, List<SHOAddress>>(
-  SHOAddressesNotifier.new,
-);
+      SHOAddressesNotifier.new,
+    );
 
 // AsyncNotifier 自动处理加载、错误、数据状态
 class SHOAddressesNotifier extends AsyncNotifier<List<SHOAddress>> {
@@ -34,12 +34,14 @@ class SHOAddressesNotifier extends AsyncNotifier<List<SHOAddress>> {
 }
 
 /// 地址列表页删除模式，页面离开后自动重置。
-final addressListDeleteModeProvider = StateProvider.autoDispose<bool>((ref) => false);
+final addressListDeleteModeProvider = StateProvider.autoDispose<bool>(
+  (ref) => false,
+);
 
 final selectedAddressIdProvider =
     NotifierProvider<SHOSelectedAddressNotifier, String?>(
-  SHOSelectedAddressNotifier.new,
-);
+      SHOSelectedAddressNotifier.new,
+    );
 
 class SHOSelectedAddressNotifier extends Notifier<String?> {
   late final SHOAddressRepository _repo;
@@ -78,8 +80,10 @@ final selectedAddressProvider = Provider<AsyncValue<SHOAddress?>>((ref) {
 });
 
 /// 按 ID 查询地址，编辑页与 checkout 派生展示共用。
-final addressByIdProvider =
-    Provider.family<AsyncValue<SHOAddress?>, String>((ref, id) {
+final addressByIdProvider = Provider.family<AsyncValue<SHOAddress?>, String>((
+  ref,
+  id,
+) {
   final addressesAsync = ref.watch(addressesProvider);
   return addressesAsync.whenData((list) {
     final matches = list.where((a) => a.id == id);

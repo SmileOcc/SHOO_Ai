@@ -58,11 +58,7 @@ class SHOAppImage extends StatelessWidget {
     return ColoredBox(
       color: theme.surfaceMuted,
       child: Center(
-        child: Icon(
-          Icons.image_outlined,
-          size: 32,
-          color: theme.textMuted,
-        ),
+        child: Icon(Icons.image_outlined, size: 32, color: theme.textMuted),
       ),
     );
   }

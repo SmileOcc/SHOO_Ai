@@ -6,8 +6,8 @@ import 'package:shoo/features/toolbox/data/datasources/local/hos_music_storage_k
 
 final musicPackAddedTasksProvider =
     NotifierProvider<SHOMusicPackAddedTasksNotifier, Set<String>>(
-  SHOMusicPackAddedTasksNotifier.new,
-);
+      SHOMusicPackAddedTasksNotifier.new,
+    );
 
 class SHOMusicPackAddedTasksNotifier extends Notifier<Set<String>> {
   late final SharedPreferences _prefs;

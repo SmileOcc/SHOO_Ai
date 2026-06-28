@@ -10,11 +10,12 @@ class SHOActivityLevel3DetailPage extends SHODataPage<SHOActivityLevel3Detail> {
 
   @override
   SHODataPageState<SHOActivityLevel3Detail, SHOActivityLevel3DetailPage>
-      createState() => _SHOActivityLevel3DetailPageState();
+  createState() => _SHOActivityLevel3DetailPageState();
 }
 
 class _SHOActivityLevel3DetailPageState
-    extends SHODataPageState<SHOActivityLevel3Detail, SHOActivityLevel3DetailPage> {
+    extends
+        SHODataPageState<SHOActivityLevel3Detail, SHOActivityLevel3DetailPage> {
   @override
   ProviderListenable<AsyncValue<SHOActivityLevel3Detail>> get dataProvider =>
       activityLevel3DetailProvider;

@@ -13,8 +13,8 @@ class SHOAfterSaleListPage extends SHODataPage<List<SHOAfterSaleRequest>> {
   const SHOAfterSaleListPage({super.key});
 
   @override
-  SHODataPageState<List<SHOAfterSaleRequest>, SHOAfterSaleListPage> createState() =>
-      _SHOAfterSaleListPageState();
+  SHODataPageState<List<SHOAfterSaleRequest>, SHOAfterSaleListPage>
+  createState() => _SHOAfterSaleListPageState();
 }
 
 class _SHOAfterSaleListPageState
@@ -69,9 +69,9 @@ class _SHOAfterSaleListPageState
                   Text(
                     shoAfterSaleStatusLabel(context, req.status),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: SHOAppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: SHOAppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -79,13 +79,16 @@ class _SHOAfterSaleListPageState
               Text(
                 shoAfterSaleTypeLabel(context, req.type),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               if (req.productTitle.isNotEmpty) ...[
                 const SizedBox(height: SHOAppSpacing.xxs),
-                Text(req.productTitle, style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  req.productTitle,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
               const SizedBox(height: SHOAppSpacing.xs),
               Text(req.reason, style: Theme.of(context).textTheme.bodySmall),

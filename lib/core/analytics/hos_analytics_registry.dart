@@ -327,7 +327,8 @@ abstract final class SHOAnalyticsRegistry {
   static const pageResume = SHOAnalyticsEventDef(
     key: 'page_resume',
     title: 'Page resume',
-    description: 'Page visible again after cover removed (RouteAware.didPopNext)',
+    description:
+        'Page visible again after cover removed (RouteAware.didPopNext)',
     fields: [
       SHOAnalyticsFieldDef(
         name: 'page_name',
@@ -547,7 +548,8 @@ abstract final class SHOAnalyticsRegistry {
         name: 'raw_payload',
         type: SHOAnalyticsFieldType.string,
         required: true,
-        example: 'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
+        example:
+            'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
       ),
       SHOAnalyticsFieldDef(
         name: 'session_id',
@@ -590,7 +592,8 @@ abstract final class SHOAnalyticsRegistry {
         name: 'raw_payload',
         type: SHOAnalyticsFieldType.string,
         required: true,
-        example: 'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
+        example:
+            'session_1|p_1|商品名|https://img|2026-06-27T10:00:00|activity_flash_001',
       ),
       SHOAnalyticsFieldDef(
         name: 'session_id',

@@ -61,17 +61,17 @@ class _SHOAboutPageState extends ConsumerState<SHOAboutPage>
               child: Text(
                 SHOAppConstants.appName,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             const SizedBox(height: SHOAppSpacing.xs),
             Center(
               child: Text(
                 'v${SHOAppConstants.appVersion}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: theme.textMuted,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: theme.textMuted),
               ),
             ),
             const SizedBox(height: SHOAppSpacing.xl),
@@ -79,10 +79,10 @@ class _SHOAboutPageState extends ConsumerState<SHOAboutPage>
               l10n.settingsAboutDescription,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 14,
-                    height: 1.6,
-                    color: theme.textSecondary,
-                  ),
+                fontSize: 14,
+                height: 1.6,
+                color: theme.textSecondary,
+              ),
             ),
             const SizedBox(height: SHOAppSpacing.xxxl),
             DecoratedBox(
@@ -95,13 +95,21 @@ class _SHOAboutPageState extends ConsumerState<SHOAboutPage>
                 children: [
                   ListTile(
                     title: Text(l10n.settingsPrivacyPolicy),
-                    trailing: Icon(Icons.open_in_new, size: 18, color: theme.textMuted),
+                    trailing: Icon(
+                      Icons.open_in_new,
+                      size: 18,
+                      color: theme.textMuted,
+                    ),
                     onTap: () => _openUrl(SHOAppConstants.privacyPolicyUrl),
                   ),
                   Divider(height: 1, color: theme.divider, indent: 16),
                   ListTile(
                     title: Text(l10n.settingsTermsOfService),
-                    trailing: Icon(Icons.open_in_new, size: 18, color: theme.textMuted),
+                    trailing: Icon(
+                      Icons.open_in_new,
+                      size: 18,
+                      color: theme.textMuted,
+                    ),
                     onTap: () => _openUrl(SHOAppConstants.termsOfServiceUrl),
                   ),
                 ],
@@ -113,10 +121,10 @@ class _SHOAboutPageState extends ConsumerState<SHOAboutPage>
                 l10n.settingsCompanyName,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: theme.textMuted,
-                      letterSpacing: 0.8,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: theme.textMuted,
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             const SizedBox(height: SHOAppSpacing.xxxl),

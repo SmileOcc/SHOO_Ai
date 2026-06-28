@@ -5,13 +5,13 @@ import 'package:shoo/features/category/presentation/widgets/hos_category_sort.da
 import 'package:shoo/features/home/domain/entities/hos_product.dart';
 
 SHOProduct _product(String id, int price) => SHOProduct(
-      id: id,
-      title: id,
-      imageUrl: '',
-      price: price,
-      originalPrice: price,
-      rating: 4.5,
-    );
+  id: id,
+  title: id,
+  imageUrl: '',
+  price: price,
+  originalPrice: price,
+  rating: 4.5,
+);
 
 void main() {
   test('filters products by price range', () {

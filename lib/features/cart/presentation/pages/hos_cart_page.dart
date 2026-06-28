@@ -50,14 +50,17 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage>
 
     setState(() => _reconciling = true);
     try {
-      final report =
-          await ref.read(cartReconcileServiceProvider).reconcile(cart);
+      final report = await ref
+          .read(cartReconcileServiceProvider)
+          .reconcile(cart);
       if (report.hasIssues) {
         await ref
             .read(cartProvider.notifier)
             .applyReconciledItems(report.updatedItems);
         if (mounted) {
-          SHOAppToast.info(_cartIssueMessage(AppLocalizations.of(context), report));
+          SHOAppToast.info(
+            _cartIssueMessage(AppLocalizations.of(context), report),
+          );
         }
       }
     } catch (_) {
@@ -67,7 +70,10 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage>
     }
   }
 
-  String _cartIssueMessage(AppLocalizations l10n, SHOCartReconcileReport report) {
+  String _cartIssueMessage(
+    AppLocalizations l10n,
+    SHOCartReconcileReport report,
+  ) {
     if (report.unavailableCount > 0 && report.priceChangedCount > 0) {
       return l10n.cartIssuesBoth(
         report.unavailableCount,
@@ -90,23 +96,23 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage>
     if (!session.isAuthenticated) {
       return buildTrackedPage(
         Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SHOCartMarqueeBanner(),
-          Expanded(
-            child: SHOEmptyState(
-              title: l10n.cartLoginTitle,
-              subtitle: l10n.cartLoginSubtitle,
-              icon: Icons.person_outline_rounded,
-              actionLabel: l10n.cartLoginAction,
-              onAction: () => context.push(
-                SHOAuthGuard.loginPath(
-                  redirectTo: GoRouterState.of(context).uri.toString(),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SHOCartMarqueeBanner(),
+            Expanded(
+              child: SHOEmptyState(
+                title: l10n.cartLoginTitle,
+                subtitle: l10n.cartLoginSubtitle,
+                icon: Icons.person_outline_rounded,
+                actionLabel: l10n.cartLoginAction,
+                onAction: () => context.push(
+                  SHOAuthGuard.loginPath(
+                    redirectTo: GoRouterState.of(context).uri.toString(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
         ),
       );
     }
@@ -114,107 +120,109 @@ class _SHOCartPageState extends ConsumerState<SHOCartPage>
     if (cart.items.isEmpty) {
       return buildTrackedPage(
         Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SHOCartMarqueeBanner(),
-          Expanded(
-            child: SHOEmptyState(
-              title: l10n.cartEmptyTitle,
-              subtitle: l10n.cartEmptySubtitle,
-              icon: Icons.shopping_bag_outlined,
-              actionLabel: l10n.cartEmptyAction,
-              onAction: () {
-                if (context.canPop()) {
-                  context.pop();
-                  return;
-                }
-                context.go(SHOAppRoutes.home);
-              },
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SHOCartMarqueeBanner(),
+            Expanded(
+              child: SHOEmptyState(
+                title: l10n.cartEmptyTitle,
+                subtitle: l10n.cartEmptySubtitle,
+                icon: Icons.shopping_bag_outlined,
+                actionLabel: l10n.cartEmptyAction,
+                onAction: () {
+                  if (context.canPop()) {
+                    context.pop();
+                    return;
+                  }
+                  context.go(SHOAppRoutes.home);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
         ),
       );
     }
 
     return buildTrackedPage(
       Column(
-      children: [
-        const SHOCartMarqueeBanner(),
-        if (hasUnavailable)
-          MaterialBanner(
-            content: Text(l10n.cartUnavailableBanner),
-            leading: const Icon(Icons.warning_amber_rounded),
-            actions: [
-              TextButton(
-                onPressed: () =>
-                    ref.read(cartProvider.notifier).removeUnavailableItems(),
-                child: Text(l10n.cartRemoveUnavailable),
-              ),
-            ],
-          ),
-        Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-            itemCount: cart.items.length,
-            separatorBuilder: (_, __) => const SizedBox(height: SHOAppSpacing.md),
-            itemBuilder: (context, index) => _SHOCartLineTile(
-              item: cart.items[index],
-              onOpenProduct: () => context.push(
-                SHOAppRoutes.product(cart.items[index].productId),
-              ),
-              onToggle: () => ref
-                  .read(cartProvider.notifier)
-                  .toggleSelected(cart.items[index].id),
-              onIncrement: () => ref.read(cartProvider.notifier).updateQuantity(
-                    cart.items[index].id,
-                    cart.items[index].quantity + 1,
-                  ),
-              onDecrement: () {
-                final item = cart.items[index];
-                if (item.quantity <= 1) return;
-                ref.read(cartProvider.notifier).updateQuantity(
-                      item.id,
-                      item.quantity - 1,
-                    );
-              },
-              onRemove: () async {
-                final ok = await SHOAppDialog.confirm(
-                  context,
-                  title: l10n.cartRemoveTitle,
-                  message: l10n.cartRemoveMessage,
-                  confirmLabel: l10n.cartRemoveConfirm,
-                  isDestructive: true,
-                );
-                if (ok) {
-                  await ref
+        children: [
+          const SHOCartMarqueeBanner(),
+          if (hasUnavailable)
+            MaterialBanner(
+              content: Text(l10n.cartUnavailableBanner),
+              leading: const Icon(Icons.warning_amber_rounded),
+              actions: [
+                TextButton(
+                  onPressed: () =>
+                      ref.read(cartProvider.notifier).removeUnavailableItems(),
+                  child: Text(l10n.cartRemoveUnavailable),
+                ),
+              ],
+            ),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+              itemCount: cart.items.length,
+              separatorBuilder: (_, __) =>
+                  const SizedBox(height: SHOAppSpacing.md),
+              itemBuilder: (context, index) => _SHOCartLineTile(
+                item: cart.items[index],
+                onOpenProduct: () => context.push(
+                  SHOAppRoutes.product(cart.items[index].productId),
+                ),
+                onToggle: () => ref
+                    .read(cartProvider.notifier)
+                    .toggleSelected(cart.items[index].id),
+                onIncrement: () => ref
+                    .read(cartProvider.notifier)
+                    .updateQuantity(
+                      cart.items[index].id,
+                      cart.items[index].quantity + 1,
+                    ),
+                onDecrement: () {
+                  final item = cart.items[index];
+                  if (item.quantity <= 1) return;
+                  ref
                       .read(cartProvider.notifier)
-                      .removeItem(cart.items[index].id);
-                }
-              },
+                      .updateQuantity(item.id, item.quantity - 1);
+                },
+                onRemove: () async {
+                  final ok = await SHOAppDialog.confirm(
+                    context,
+                    title: l10n.cartRemoveTitle,
+                    message: l10n.cartRemoveMessage,
+                    confirmLabel: l10n.cartRemoveConfirm,
+                    isDestructive: true,
+                  );
+                  if (ok) {
+                    await ref
+                        .read(cartProvider.notifier)
+                        .removeItem(cart.items[index].id);
+                  }
+                },
+              ),
             ),
           ),
-        ),
-        _SHOCartFooter(
-          cart: cart,
-          onSelectAll: (v) => ref.read(cartProvider.notifier).selectAll(v),
-          onCheckout: cart.selectedCount > 0 && !hasUnavailable
-              ? () {
-                  if (!SHOAuthGuard.requireAuth(context, ref)) {
-                    return;
+          _SHOCartFooter(
+            cart: cart,
+            onSelectAll: (v) => ref.read(cartProvider.notifier).selectAll(v),
+            onCheckout: cart.selectedCount > 0 && !hasUnavailable
+                ? () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) {
+                      return;
+                    }
+                    final fromCartStack =
+                        GoRouterState.of(context).uri.path ==
+                        SHOAppRoutes.cartStack;
+                    context.push(
+                      SHOAppRoutes.checkoutWithContext(
+                        fromCartStack: fromCartStack,
+                      ),
+                    );
                   }
-                  final fromCartStack =
-                      GoRouterState.of(context).uri.path ==
-                          SHOAppRoutes.cartStack;
-                  context.push(
-                    SHOAppRoutes.checkoutWithContext(
-                      fromCartStack: fromCartStack,
-                    ),
-                  );
-                }
-              : null,
-        ),
-      ],
+                : null,
+          ),
+        ],
       ),
     );
   }
@@ -262,8 +270,9 @@ class _SHOCartLineTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(SHOAppSpacing.cardRadius),
+                        borderRadius: BorderRadius.circular(
+                          SHOAppSpacing.cardRadius,
+                        ),
                         child: SizedBox(
                           width: 72,
                           height: 72,
@@ -283,25 +292,20 @@ class _SHOCartLineTile extends StatelessWidget {
                               item.title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontSize: 13),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(fontSize: 13),
                             ),
                             if (item.unavailable)
                               Text(
                                 l10n.cartItemUnavailable,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
+                                style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(color: SHOAppColors.error),
                               ),
                             if (item.priceChanged && !item.unavailable)
                               Text(
                                 l10n.cartItemPriceUpdated,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
+                                style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(color: SHOAppColors.warning),
                               ),
                             if (item.variantLabel.isNotEmpty) ...[
@@ -321,27 +325,27 @@ class _SHOCartLineTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 84),
                   child: Row(
-                  children: [
-                    Text(
-                      priceFormatter.formatCents(item.price),
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: SHOAppColors.sale,
-                          ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: item.unavailable ? null : onDecrement,
-                      icon: const Icon(Icons.remove, size: 16),
-                    ),
-                    Text('${item.quantity}'),
-                    IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: item.unavailable ? null : onIncrement,
-                      icon: const Icon(Icons.add, size: 16),
-                    ),
-                  ],
+                    children: [
+                      Text(
+                        priceFormatter.formatCents(item.price),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: SHOAppColors.sale,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: item.unavailable ? null : onDecrement,
+                        icon: const Icon(Icons.remove, size: 16),
+                      ),
+                      Text('${item.quantity}'),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: item.unavailable ? null : onIncrement,
+                        icon: const Icon(Icons.add, size: 16),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -387,18 +391,24 @@ class _SHOCartFooter extends StatelessWidget {
               tristate: true,
               onChanged: (v) => onSelectAll(v ?? false),
             ),
-            Text(l10n.cartSelectAll, style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              l10n.cartSelectAll,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             const Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(l10n.cartTotalLabel, style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  l10n.cartTotalLabel,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
                 Text(
                   priceFormatter.formatCents(cart.selectedTotalCents),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: SHOAppColors.primary,
-                      ),
+                    fontWeight: FontWeight.w900,
+                    color: SHOAppColors.primary,
+                  ),
                 ),
               ],
             ),

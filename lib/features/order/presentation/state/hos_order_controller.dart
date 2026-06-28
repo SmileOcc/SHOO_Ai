@@ -8,14 +8,17 @@ final ordersProvider = FutureProvider<List<SHOOrderSummary>>((ref) async {
   return repo.getOrders();
 });
 
-final orderDetailProvider =
-    FutureProvider.family<SHOOrderDetail, String>((ref, id) async {
+final orderDetailProvider = FutureProvider.family<SHOOrderDetail, String>((
+  ref,
+  id,
+) async {
   final repo = ref.watch(orderRepositoryProvider);
   return repo.getOrderDetail(id);
 });
 
-final orderLogisticsProvider =
-    FutureProvider.family<SHOLogisticsTrack, String>((ref, orderId) async {
-  final repo = ref.watch(orderRepositoryProvider);
-  return repo.getLogistics(orderId);
-});
+final orderLogisticsProvider = FutureProvider.family<SHOLogisticsTrack, String>(
+  (ref, orderId) async {
+    final repo = ref.watch(orderRepositoryProvider);
+    return repo.getLogistics(orderId);
+  },
+);

@@ -14,9 +14,4 @@ enum SHOPageAnalyticsAction {
 }
 
 /// Navigator 栈级动作（对应 [NavigatorObserver] 回调）。
-enum SHORouteNavigatorAction {
-  push,
-  pop,
-  replace,
-  remove,
-}
+enum SHORouteNavigatorAction { push, pop, replace, remove }

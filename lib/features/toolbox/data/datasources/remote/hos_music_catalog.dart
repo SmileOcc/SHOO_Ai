@@ -9,8 +9,7 @@ abstract final class SHOMusicCatalog {
       album: '叶惠美',
       source: SHOMusicSource.network,
       coverColor: 0xFFE57373,
-      audioUrl:
-          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
       lrc: '''
 [00:00.00]晴天 · 演示歌词
 [00:12.00]故事的小黄花
@@ -39,8 +38,7 @@ abstract final class SHOMusicCatalog {
       album: '魔杰座',
       source: SHOMusicSource.network,
       coverColor: 0xFF81C784,
-      audioUrl:
-          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
       lrc: '''
 [00:00.00]稻香 · 演示歌词
 [00:10.00]对这个世界如果你有太多的抱怨
@@ -65,8 +63,7 @@ abstract final class SHOMusicCatalog {
       album: '十一月的萧邦',
       source: SHOMusicSource.network,
       coverColor: 0xFF7986CB,
-      audioUrl:
-          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
       lrc: '''
 [00:00.00]夜曲 · 演示歌词
 [00:08.00]一群嗜血的蚂蚁

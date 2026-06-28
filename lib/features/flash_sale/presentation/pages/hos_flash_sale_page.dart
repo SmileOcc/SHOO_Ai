@@ -52,8 +52,9 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
   }
 
   void _syncLoadFooter() {
-    final data =
-        ref.read(flashSaleControllerProvider(widget.activityId)).pageData;
+    final data = ref
+        .read(flashSaleControllerProvider(widget.activityId))
+        .pageData;
     if (data != null && !data.hasMore) {
       _refreshCtrl.loadNoMore();
     }
@@ -70,8 +71,9 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
   }
 
   Future<void> _onLoadMore() async {
-    final before =
-        ref.read(flashSaleControllerProvider(widget.activityId)).pageData;
+    final before = ref
+        .read(flashSaleControllerProvider(widget.activityId))
+        .pageData;
     if (before == null || !before.hasMore) {
       _refreshCtrl.loadNoMore();
       return;
@@ -79,8 +81,7 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
     final beforeLen = before.products.length;
     await _controller.loadMore();
     if (!mounted) return;
-    final afterState =
-        ref.read(flashSaleControllerProvider(widget.activityId));
+    final afterState = ref.read(flashSaleControllerProvider(widget.activityId));
     final after = afterState.pageData;
     if (after == null) {
       _refreshCtrl.loadFailed();
@@ -190,21 +191,19 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final isLast = index >= products.length - 1;
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: isLast ? 0 : 8,
-                                ),
-                                child: SHOFlashSaleProductCard(
-                                  product: products[index],
-                                  activityId: widget.activityId,
-                                ),
-                              );
-                            },
-                            childCount: products.length,
-                          ),
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final isLast = index >= products.length - 1;
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: isLast ? 0 : 8),
+                              child: SHOFlashSaleProductCard(
+                                product: products[index],
+                                activityId: widget.activityId,
+                              ),
+                            );
+                          }, childCount: products.length),
                         ),
                       ),
                     SHOAppCustomRefresh.footerSliver(
@@ -246,7 +245,7 @@ class _DayTabs extends ConsumerWidget {
           return GestureDetector(
             onTap: () => ref
                 .read(flashSaleControllerProvider(activityId).notifier)
-                .selectDate(day.date),// 点击切换日期
+                .selectDate(day.date), // 点击切换日期
             child: Container(
               width: 64,
               padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
@@ -339,7 +338,8 @@ class _SessionBar extends ConsumerWidget {
           final session = sessions[index];
           final selected = session.id == state.selectedSessionId;
           final isEnded = session.status == SHOFlashSaleDayStatus.ended;
-          final isOngoing = session.status == SHOFlashSaleDayStatus.ongoing; // 是否进行中
+          final isOngoing =
+              session.status == SHOFlashSaleDayStatus.ongoing; // 是否进行中
 
           // 动态计算颜色
           final bgColor = selected
@@ -363,7 +363,7 @@ class _SessionBar extends ConsumerWidget {
           return GestureDetector(
             onTap: () => ref
                 .read(flashSaleControllerProvider(activityId).notifier)
-                .selectSession(session.id),// 点击切换场次
+                .selectSession(session.id), // 点击切换场次
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: SHOAppSpacing.md,
@@ -374,7 +374,8 @@ class _SessionBar extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(999),
                 border: Border.all(color: borderColor),
               ),
-              child: Text(// 场次标签（如"10:00场"）
+              child: Text(
+                // 场次标签（如"10:00场"）
                 session.label,
                 style: TextStyle(
                   fontSize: 12,
@@ -395,8 +396,8 @@ String _formatSessionClock(String iso) {
   // 解析 ISO 时间并转为本地时间
   final dt = DateTime.tryParse(iso)?.toLocal();
   if (dt == null) return '--:--';
-  final h = dt.hour.toString().padLeft(2, '0');// 小时补零
-  final m = dt.minute.toString().padLeft(2, '0');// 分钟补零
+  final h = dt.hour.toString().padLeft(2, '0'); // 小时补零
+  final m = dt.minute.toString().padLeft(2, '0'); // 分钟补零
   return '$h:$m';
 }
 
@@ -407,7 +408,7 @@ class _SessionCountdown extends StatelessWidget {
     required this.selectedSessionId,
   });
 
-  final List<SHOFlashSaleSession> sessions;// 场次列表
+  final List<SHOFlashSaleSession> sessions; // 场次列表
   final String selectedSessionId;
 
   @override
@@ -558,11 +559,11 @@ class _SessionCountdown extends StatelessWidget {
 class _PromoEntries extends ConsumerWidget {
   const _PromoEntries({required this.entries});
 
-  final List<SHOFlashSalePromoEntry> entries;// 促销入口列表
+  final List<SHOFlashSalePromoEntry> entries; // 促销入口列表
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider);// 用户会话信息
+    final session = ref.watch(sessionProvider); // 用户会话信息
 
     return SizedBox(
       height: 88,
@@ -580,7 +581,7 @@ class _PromoEntries extends ConsumerWidget {
               context,
               entry.deeplink,
               session: session,
-            ),// 点击跳转深度链接
+            ), // 点击跳转深度链接
             child: SizedBox(
               width: 64,
               child: Column(
@@ -625,7 +626,7 @@ class _CouponSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final pageData = state.pageData!;
-    final coupons = state.mergedCoupons;// 合后的优惠券列表
+    final coupons = state.mergedCoupons; // 合后的优惠券列表
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(

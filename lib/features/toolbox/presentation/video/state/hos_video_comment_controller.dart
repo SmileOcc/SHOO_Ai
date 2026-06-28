@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/features/toolbox/data/datasources/local/hos_video_comment_storage.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_video_comment.dart';
 
-final videoCommentsProvider = NotifierProvider.family<
-    SHOVideoCommentsNotifier, List<SHOVideoComment>, String>(
-  SHOVideoCommentsNotifier.new,
-);
+final videoCommentsProvider =
+    NotifierProvider.family<
+      SHOVideoCommentsNotifier,
+      List<SHOVideoComment>,
+      String
+    >(SHOVideoCommentsNotifier.new);
 
 class SHOVideoCommentsNotifier
     extends FamilyNotifier<List<SHOVideoComment>, String> {
@@ -18,7 +20,10 @@ class SHOVideoCommentsNotifier
     return _storage.read(videoId);
   }
 
-  Future<SHOVideoComment?> add(String content, {required String authorName}) async {
+  Future<SHOVideoComment?> add(
+    String content, {
+    required String authorName,
+  }) async {
     final trimmed = content.trim();
     if (trimmed.isEmpty) return null;
 

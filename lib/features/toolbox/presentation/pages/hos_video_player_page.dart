@@ -17,7 +17,8 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_screen_orientation.dart';
 import 'package:shoo/l10n/app_localizations.dart';
-import 'package:shoo/features/toolbox/data/datasources/local/hos_video_playback_storage.dart' show SHOVideoPlaybackStorage, videoPlaybackStorageProvider;
+import 'package:shoo/features/toolbox/data/datasources/local/hos_video_playback_storage.dart'
+    show SHOVideoPlaybackStorage, videoPlaybackStorageProvider;
 import 'package:shoo/features/toolbox/domain/entities/hos_download_task.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_video_library_entry.dart';
 import 'package:shoo/features/toolbox/domain/entities/hos_video_playback_progress.dart';
@@ -30,11 +31,7 @@ import 'package:shoo/features/toolbox/presentation/video/state/hos_video_library
 import 'package:shoo/features/toolbox/presentation/video/widgets/hos_video_player_widget.dart';
 
 class SHOVideoPlayerPage extends ConsumerStatefulWidget {
-  const SHOVideoPlayerPage({
-    super.key,
-    required this.entry,
-    this.filePath,
-  });
+  const SHOVideoPlayerPage({super.key, required this.entry, this.filePath});
 
   final SHOVideoLibraryEntry entry;
   final String? filePath;
@@ -44,10 +41,7 @@ class SHOVideoPlayerPage extends ConsumerStatefulWidget {
     required SHOVideoLibraryEntry entry,
   }) {
     return context.push(
-      SHOAppRoutes.toolboxVideoForEntry(
-        entry.id,
-        taskId: entry.taskId,
-      ),
+      SHOAppRoutes.toolboxVideoForEntry(entry.id, taskId: entry.taskId),
     );
   }
 
@@ -103,9 +97,9 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'entry_id': widget.entry.id,
-        if (widget.entry.isNetwork) 'is_network': true,
-      };
+    'entry_id': widget.entry.id,
+    if (widget.entry.isNetwork) 'is_network': true,
+  };
 
   @override
   void initState() {
@@ -223,10 +217,9 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
     }
 
     final trimmedUrl = url.trim();
-    await ref.read(downloadTasksProvider.notifier).addTask(
-          url: trimmedUrl,
-          fileName: widget.entry.displayName,
-        );
+    await ref
+        .read(downloadTasksProvider.notifier)
+        .addTask(url: trimmedUrl, fileName: widget.entry.displayName);
 
     final tasks = ref.read(downloadTasksProvider);
     SHODownloadTask? task;
@@ -237,10 +230,9 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
       }
     }
     if (task != null) {
-      await ref.read(videoLibraryEntriesProvider.notifier).linkDownloadTask(
-            entryId: _entryId,
-            taskId: task.id,
-          );
+      await ref
+          .read(videoLibraryEntriesProvider.notifier)
+          .linkDownloadTask(entryId: _entryId, taskId: task.id);
     }
 
     if (!mounted) return;
@@ -342,7 +334,10 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
     final l10n = AppLocalizations.of(context);
     final comment = await ref
         .read(videoCommentsProvider(_entryId).notifier)
-        .add(_commentController.text, authorName: l10n.videoPlayerCommentAuthorMe);
+        .add(
+          _commentController.text,
+          authorName: l10n.videoPlayerCommentAuthorMe,
+        );
     if (comment == null || !mounted) return;
 
     _commentController.clear();
@@ -389,7 +384,8 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
       embedded: !landscapeShell,
       topSafeInset: topInset,
       showNetworkMoreMenu:
-          widget.entry.isNetwork && (widget.filePath == null || widget.filePath!.isEmpty),
+          widget.entry.isNetwork &&
+          (widget.filePath == null || widget.filePath!.isEmpty),
       onMoreMenuAction: widget.entry.isNetwork
           ? (action) {
               switch (action) {
@@ -433,154 +429,154 @@ class _SHOVideoPlayerPageState extends ConsumerState<SHOVideoPlayerPage>
 
     return buildTrackedPage(
       OrientationBuilder(
-      builder: (context, orientation) {
-        final landscapeShell = orientation == Orientation.landscape;
+        builder: (context, orientation) {
+          final landscapeShell = orientation == Orientation.landscape;
 
-        if (_error != null) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: Center(child: Text(_error!)),
-          );
-        }
+          if (_error != null) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: Center(child: Text(_error!)),
+            );
+          }
 
-        final playerWidget = controller == null
-            ? ColoredBox(
-                color: Colors.black,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.paddingOf(context).top,
-                    ),
-                    child: const CircularProgressIndicator(
-                      color: Colors.white70,
+          final playerWidget = controller == null
+              ? ColoredBox(
+                  color: Colors.black,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.paddingOf(context).top,
+                      ),
+                      child: const CircularProgressIndicator(
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                ),
-              )
-            : _buildPlayer(
-                context: context,
-                controller: controller,
-                landscapeShell: landscapeShell,
-              );
+                )
+              : _buildPlayer(
+                  context: context,
+                  controller: controller,
+                  landscapeShell: landscapeShell,
+                );
 
-        if (landscapeShell) {
+          if (landscapeShell) {
+            return PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, _) {
+                if (!didPop) unawaited(_handlePop());
+              },
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                body: playerWidget,
+              ),
+            );
+          }
+
           return PopScope(
-            canPop: false,
             onPopInvokedWithResult: (didPop, _) {
-              if (!didPop) unawaited(_handlePop());
+              if (didPop) {
+                unawaited(_flushProgress(bumpRevision: false));
+                unawaited(SHOScreenOrientation.restoreOnLeave());
+              }
             },
             child: Scaffold(
-              backgroundColor: Colors.black,
-              body: playerWidget,
-            ),
-          );
-        }
-
-        return PopScope(
-          onPopInvokedWithResult: (didPop, _) {
-            if (didPop) {
-              unawaited(_flushProgress(bumpRevision: false));
-              unawaited(SHOScreenOrientation.restoreOnLeave());
-            }
-          },
-          child: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: Column(
-              children: [
-                _buildPortraitPlayerSlot(context, playerWidget),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    SHOAppSpacing.pagePadding,
-                    SHOAppSpacing.md,
-                    SHOAppSpacing.pagePadding,
-                    SHOAppSpacing.sm,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        l10n.videoPlayerComments(comments.length),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1),
-                Expanded(
-                  child: comments.isEmpty
-                      ? Center(
-                          child: Text(
-                            l10n.videoPlayerCommentEmpty,
-                            style: TextStyle(
-                              color: context.shoTheme.textSecondary,
-                            ),
-                          ),
-                        )
-                      : ListView.separated(
-                          controller: _commentScrollController,
-                          padding:
-                              const EdgeInsets.all(SHOAppSpacing.pagePadding),
-                          itemCount: comments.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: SHOAppSpacing.md),
-                          itemBuilder: (context, index) {
-                            return _CommentTile(comment: comments[index]);
-                          },
-                        ),
-                ),
-                SafeArea(
-                  top: false,
-                  child: Padding(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              body: Column(
+                children: [
+                  _buildPortraitPlayerSlot(context, playerWidget),
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(
                       SHOAppSpacing.pagePadding,
-                      SHOAppSpacing.sm,
-                      SHOAppSpacing.pagePadding,
                       SHOAppSpacing.md,
+                      SHOAppSpacing.pagePadding,
+                      SHOAppSpacing.sm,
                     ),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _commentController,
-                            textInputAction: TextInputAction.send,
-                            onSubmitted: (_) => _submitComment(),
-                            decoration: InputDecoration(
-                              hintText: l10n.videoPlayerCommentHint,
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: SHOAppSpacing.lg,
-                                vertical: SHOAppSpacing.md,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: SHOAppSpacing.sm),
-                        FilledButton(
-                          onPressed: _submitComment,
-                          style: FilledButton.styleFrom(
-                            backgroundColor: SHOAppColors.accent,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: SHOAppSpacing.lg,
-                              vertical: SHOAppSpacing.md,
-                            ),
-                          ),
-                          child: Text(l10n.videoPlayerSendComment),
+                        Text(
+                          l10n.videoPlayerComments(comments.length),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Divider(height: 1),
+                  Expanded(
+                    child: comments.isEmpty
+                        ? Center(
+                            child: Text(
+                              l10n.videoPlayerCommentEmpty,
+                              style: TextStyle(
+                                color: context.shoTheme.textSecondary,
+                              ),
+                            ),
+                          )
+                        : ListView.separated(
+                            controller: _commentScrollController,
+                            padding: const EdgeInsets.all(
+                              SHOAppSpacing.pagePadding,
+                            ),
+                            itemCount: comments.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: SHOAppSpacing.md),
+                            itemBuilder: (context, index) {
+                              return _CommentTile(comment: comments[index]);
+                            },
+                          ),
+                  ),
+                  SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        SHOAppSpacing.pagePadding,
+                        SHOAppSpacing.sm,
+                        SHOAppSpacing.pagePadding,
+                        SHOAppSpacing.md,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _commentController,
+                              textInputAction: TextInputAction.send,
+                              onSubmitted: (_) => _submitComment(),
+                              decoration: InputDecoration(
+                                hintText: l10n.videoPlayerCommentHint,
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: SHOAppSpacing.lg,
+                                  vertical: SHOAppSpacing.md,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: SHOAppSpacing.sm),
+                          FilledButton(
+                            onPressed: _submitComment,
+                            style: FilledButton.styleFrom(
+                              backgroundColor: SHOAppColors.accent,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: SHOAppSpacing.lg,
+                                vertical: SHOAppSpacing.md,
+                              ),
+                            ),
+                            child: Text(l10n.videoPlayerSendComment),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    ),
-    onRetry: _initPlayer,
+          );
+        },
+      ),
+      onRetry: _initPlayer,
     );
   }
 }

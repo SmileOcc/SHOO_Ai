@@ -22,13 +22,19 @@ class SHOCommunityPostCell extends StatelessWidget {
     return SHOCommunityFeedCard(
       onTap: null,
       child: switch (item.postStyle) {
-        SHOCommunityPostStyle.standard =>
-          _StandardPost(item: item, onTap: onTap),
-        SHOCommunityPostStyle.multiImage =>
-          _MultiImagePost(item: item, onTap: onTap),
+        SHOCommunityPostStyle.standard => _StandardPost(
+          item: item,
+          onTap: onTap,
+        ),
+        SHOCommunityPostStyle.multiImage => _MultiImagePost(
+          item: item,
+          onTap: onTap,
+        ),
         SHOCommunityPostStyle.poll => _PollPost(item: item, onTap: onTap),
-        SHOCommunityPostStyle.productShare =>
-          _ProductSharePost(item: item, onTap: onTap),
+        SHOCommunityPostStyle.productShare => _ProductSharePost(
+          item: item,
+          onTap: onTap,
+        ),
         null => _StandardPost(item: item, onTap: onTap),
       },
     );
@@ -58,7 +64,10 @@ class _StandardPost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               if (item.coverUrl.isNotEmpty) ...[
                 const SizedBox(height: SHOAppSpacing.md),
@@ -125,7 +134,10 @@ class _MultiImagePost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -229,7 +241,10 @@ class _PollPost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -255,7 +270,10 @@ class _PollPost extends StatelessWidget {
               ],
               Text(
                 '${item.pollParticipants} 人参与 · ${item.pollEndsIn}',
-                style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: SHOAppColors.textMuted,
+                ),
               ),
             ],
           ),
@@ -298,10 +316,7 @@ class _PollBar extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Text(
-                  option.label,
-                  style: const TextStyle(fontSize: 12),
-                ),
+                child: Text(option.label, style: const TextStyle(fontSize: 12)),
               ),
               Text(
                 '${option.percent}%',
@@ -343,7 +358,10 @@ class _ProductSharePost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -362,47 +380,47 @@ class _ProductSharePost extends StatelessWidget {
           SHOCommunityTappableSection(
             onTap: onTap,
             child: Container(
-            padding: const EdgeInsets.all(SHOAppSpacing.md),
-            decoration: BoxDecoration(
-              color: SHOAppColors.surfaceMuted,
-              borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 72,
-                  height: 72,
-                  child: SHOCommunityCoverImage(
-                    url: product.imageUrl,
-                    aspectRatio: 1,
+              padding: const EdgeInsets.all(SHOAppSpacing.md),
+              decoration: BoxDecoration(
+                color: SHOAppColors.surfaceMuted,
+                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 72,
+                    height: 72,
+                    child: SHOCommunityCoverImage(
+                      url: product.imageUrl,
+                      aspectRatio: 1,
+                    ),
                   ),
-                ),
-                const SizedBox(width: SHOAppSpacing.md),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                  const SizedBox(width: SHOAppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: SHOAppSpacing.xs),
-                      SHOAppPriceText(
-                        priceCents: product.priceCents,
-                        originalCents: product.originalPriceCents,
-                        size: SHOAppPriceSize.small,
-                      ),
-                    ],
+                        const SizedBox(height: SHOAppSpacing.xs),
+                        SHOAppPriceText(
+                          priceCents: product.priceCents,
+                          originalCents: product.originalPriceCents,
+                          size: SHOAppPriceSize.small,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           ),
         ],
       ],

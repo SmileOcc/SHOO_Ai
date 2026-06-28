@@ -5,10 +5,7 @@ import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 
 class SHOSettingsPickerOption<T> {
-  const SHOSettingsPickerOption({
-    required this.value,
-    required this.label,
-  });
+  const SHOSettingsPickerOption({required this.value, required this.label});
 
   final T value;
   final String label;
@@ -40,9 +37,9 @@ Future<T?> showSHOSettingsPickerSheet<T>({
                 title: Text(
                   options[i].label,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 trailing: groupValue == options[i].value
                     ? const Icon(

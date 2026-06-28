@@ -58,15 +58,17 @@ class _SHOAfterSaleApplyPageState
     final l10n = AppLocalizations.of(context);
     final reason = _reasonController.text.trim();
     if (reason.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.afterSaleReasonRequired)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.afterSaleReasonRequired)));
       return;
     }
 
     setState(() => _submitting = true);
     try {
-      await ref.read(afterSaleRepositoryProvider).submit(
+      await ref
+          .read(afterSaleRepositoryProvider)
+          .submit(
             SHOAfterSaleCreateRequest(
               orderId: widget.orderId,
               type: _type,
@@ -76,16 +78,16 @@ class _SHOAfterSaleApplyPageState
           );
       ref.invalidate(afterSalesProvider);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.afterSaleSubmitSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.afterSaleSubmitSuccess)));
         context.go(SHOAppRoutes.afterSales);
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.toString())));
       }
     } finally {
       if (mounted) setState(() => _submitting = false);
@@ -94,7 +96,9 @@ class _SHOAfterSaleApplyPageState
 
   @override
   PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) {
-    return AppBar(title: Text(AppLocalizations.of(context).afterSaleApplyTitle));
+    return AppBar(
+      title: Text(AppLocalizations.of(context).afterSaleApplyTitle),
+    );
   }
 
   @override
@@ -135,16 +139,16 @@ class _SHOAfterSaleApplyPageState
       children: [
         Text(
           order.orderNo,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.xl),
         Text(
           l10n.afterSaleTypeLabel,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.md),
         ...SHOAfterSaleType.values.map(

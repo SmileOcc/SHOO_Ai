@@ -16,9 +16,16 @@ abstract class SHOPagedDataPage<T> extends ConsumerStatefulWidget {
   const SHOPagedDataPage({super.key});
 }
 
-abstract class SHOPagedDataPageState<T, P extends SHOPagedContainer<T>,
-    W extends SHOPagedDataPage<T>> extends ConsumerState<W>
-    with SHOPageRouteAnalyticsMixin<W>, SHOAppPageMixin<W>, SHOAppTrackedPageMixin {
+abstract class SHOPagedDataPageState<
+  T,
+  P extends SHOPagedContainer<T>,
+  W extends SHOPagedDataPage<T>
+>
+    extends ConsumerState<W>
+    with
+        SHOPageRouteAnalyticsMixin<W>,
+        SHOAppPageMixin<W>,
+        SHOAppTrackedPageMixin {
   ProviderListenable<AsyncValue<P>> get pagedProvider;
 
   void refreshPaged(WidgetRef ref);
@@ -32,7 +39,8 @@ abstract class SHOPagedDataPageState<T, P extends SHOPagedContainer<T>,
 
   bool get reportContentReadyLoadTime => true;
 
-  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) => null;
+  PreferredSizeWidget? buildPageAppBar(BuildContext context, WidgetRef ref) =>
+      null;
 
   Widget? buildListHeader(BuildContext context, WidgetRef ref, P paged) => null;
 
@@ -49,7 +57,8 @@ abstract class SHOPagedDataPageState<T, P extends SHOPagedContainer<T>,
   /// 非 null 时使用 [SHOPagedGridView] 替代默认列表。
   SliverGridDelegate? get gridDelegate => null;
 
-  Widget? buildFloatingActionButton(BuildContext context, WidgetRef ref) => null;
+  Widget? buildFloatingActionButton(BuildContext context, WidgetRef ref) =>
+      null;
 
   Widget buildPagedItem(BuildContext context, WidgetRef ref, T item, int index);
 
@@ -120,7 +129,9 @@ abstract class SHOPagedDataPageState<T, P extends SHOPagedContainer<T>,
   }
 
   Widget _buildPagedBody(BuildContext context) {
-    final body = ref.watch(pagedProvider).when(
+    final body = ref
+        .watch(pagedProvider)
+        .when(
           loading: () =>
               buildLoading(context) ??
               const SHOAppLoadingState(
@@ -193,10 +204,6 @@ abstract class SHOPagedDataPageState<T, P extends SHOPagedContainer<T>,
     final fab = buildFloatingActionButton(context, ref);
     if (appBar == null && fab == null) return body;
 
-    return Scaffold(
-      appBar: appBar,
-      floatingActionButton: fab,
-      body: body,
-    );
+    return Scaffold(appBar: appBar, floatingActionButton: fab, body: body);
   }
 }

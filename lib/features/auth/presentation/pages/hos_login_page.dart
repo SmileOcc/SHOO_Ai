@@ -36,7 +36,9 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _exitIfAlreadyLoggedIn());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _exitIfAlreadyLoggedIn(),
+    );
   }
 
   @override
@@ -86,7 +88,9 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage>
     });
 
     try {
-      final session = await ref.read(sessionProvider.notifier).loginRequest(
+      final session = await ref
+          .read(sessionProvider.notifier)
+          .loginRequest(
             SHOLoginRequest(
               phone: _phoneController.text.trim(),
               password: _passwordController.text,
@@ -113,64 +117,72 @@ class _SHOLoginPageState extends ConsumerState<SHOLoginPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.loginTitle),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: _handleBack,
+        appBar: AppBar(
+          title: Text(l10n.loginTitle),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _handleBack,
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(l10n.loginMockHint, style: Theme.of(context).textTheme.bodySmall),
-              const SizedBox(height: SHOAppSpacing.xl),
-              SHOAppTextField(
-                label: l10n.loginPhoneHint,
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                validator: SHOValidators.compose([
-                  SHOValidators.required(l10n),
-                  SHOValidators.phone(l10n),
-                ]),
-              ),
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOAppTextField(
-                label: l10n.loginPasswordHint,
-                controller: _passwordController,
-                obscureText: true,
-                validator: SHOValidators.compose([
-                  SHOValidators.required(l10n),
-                  SHOValidators.minLength(l10n, 6),
-                ]),
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: SHOAppSpacing.md),
-                Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  l10n.loginMockHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: SHOAppSpacing.xl),
+                SHOAppTextField(
+                  label: l10n.loginPhoneHint,
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  validator: SHOValidators.compose([
+                    SHOValidators.required(l10n),
+                    SHOValidators.phone(l10n),
+                  ]),
+                ),
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOAppTextField(
+                  label: l10n.loginPasswordHint,
+                  controller: _passwordController,
+                  obscureText: true,
+                  validator: SHOValidators.compose([
+                    SHOValidators.required(l10n),
+                    SHOValidators.minLength(l10n, 6),
+                  ]),
+                ),
+                if (_error != null) ...[
+                  const SizedBox(height: SHOAppSpacing.md),
+                  Text(
+                    _error!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: SHOAppSpacing.xxxl),
+                SHOAppButton(
+                  label: l10n.loginSubmit,
+                  onPressed: _submit,
+                  isLoading: _isLoading,
+                  fullWidth: true,
+                  variant: SHOAppButtonVariant.accent,
+                ),
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOAppButton(
+                  label: l10n.loginNoAccount,
+                  variant: SHOAppButtonVariant.text,
+                  onPressed: () => context.push(SHOAppRoutes.register),
+                ),
               ],
-              const SizedBox(height: SHOAppSpacing.xxxl),
-              SHOAppButton(
-                label: l10n.loginSubmit,
-                onPressed: _submit,
-                isLoading: _isLoading,
-                fullWidth: true,
-                variant: SHOAppButtonVariant.accent,
-              ),
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOAppButton(
-                label: l10n.loginNoAccount,
-                variant: SHOAppButtonVariant.text,
-                onPressed: () => context.push(SHOAppRoutes.register),
-              ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

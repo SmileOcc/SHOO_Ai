@@ -17,7 +17,13 @@ abstract final class SHOTabAnalyticsRoutes {
     return routes[index];
   }
 
-  static const tabIds = <String>['home', 'category', 'community', 'cart', 'profile'];
+  static const tabIds = <String>[
+    'home',
+    'category',
+    'community',
+    'cart',
+    'profile',
+  ];
 
   static String tabIdAt(int index) {
     if (index < 0 || index >= tabIds.length) return 'unknown';
@@ -33,17 +39,15 @@ abstract final class SHOTabAnalyticsReporter {
     required int toIndex,
     required bool isReselect,
   }) {
-    return SHOAnalyticsManager.instance.trackEvent(
-      SHOAnalyticsRegistry.tabSwitch,
-      {
-        'from_index': fromIndex,
-        'to_index': toIndex,
-        'from_route': SHOTabAnalyticsRoutes.routeAt(fromIndex),
-        'to_route': SHOTabAnalyticsRoutes.routeAt(toIndex),
-        'from_tab_id': SHOTabAnalyticsRoutes.tabIdAt(fromIndex),
-        'to_tab_id': SHOTabAnalyticsRoutes.tabIdAt(toIndex),
-        'is_reselect': isReselect,
-      },
-    );
+    return SHOAnalyticsManager.instance
+        .trackEvent(SHOAnalyticsRegistry.tabSwitch, {
+          'from_index': fromIndex,
+          'to_index': toIndex,
+          'from_route': SHOTabAnalyticsRoutes.routeAt(fromIndex),
+          'to_route': SHOTabAnalyticsRoutes.routeAt(toIndex),
+          'from_tab_id': SHOTabAnalyticsRoutes.tabIdAt(fromIndex),
+          'to_tab_id': SHOTabAnalyticsRoutes.tabIdAt(toIndex),
+          'is_reselect': isReselect,
+        });
   }
 }

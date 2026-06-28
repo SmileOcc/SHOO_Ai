@@ -13,72 +13,72 @@ import 'package:shoo/features/toolbox/presentation/pages/hos_txt_reader_route_pa
 import 'package:shoo/features/toolbox/presentation/pages/hos_music_player_route_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_video_player_route_page.dart';
 
-List<RouteBase> shoToolboxRoutes({required GlobalKey<NavigatorState> rootKey}) =>
-    [
+List<RouteBase> shoToolboxRoutes({
+  required GlobalKey<NavigatorState> rootKey,
+}) => [
+  GoRoute(
+    path: SHOAppRoutes.toolbox,
+    parentNavigatorKey: rootKey,
+    builder: (context, state) => const SHOToolboxPage(),
+    routes: [
       GoRoute(
-        path: SHOAppRoutes.toolbox,
+        path: 'study',
         parentNavigatorKey: rootKey,
-        builder: (context, state) => const SHOToolboxPage(),
+        builder: (context, state) => const SHOStudyHomePage(),
         routes: [
           GoRoute(
-            path: 'study',
+            path: 'article',
             parentNavigatorKey: rootKey,
-            builder: (context, state) => const SHOStudyHomePage(),
-            routes: [
-              GoRoute(
-                path: 'article',
-                parentNavigatorKey: rootKey,
-                builder: (context, state) => SHOStudyArticlePage(
-                  articleId: state.studyArticleArgs.articleId,
-                ),
-              ),
-            ],
-          ),
-          GoRoute(
-            path: 'downloads',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) => const SHODownloadListPage(),
-          ),
-          GoRoute(
-            path: 'web-debug',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) => const SHOToolboxWebDebugPage(),
-          ),
-          GoRoute(
-            path: 'web',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) => const SHOToolboxWebPage(),
-          ),
-          GoRoute(
-            path: 'reader',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) => SHOTxtReaderRoutePage(
-              taskId: state.toolboxReaderArgs.taskId,
+            builder: (context, state) => SHOStudyArticlePage(
+              articleId: state.studyArticleArgs.articleId,
             ),
-          ),
-          GoRoute(
-            path: 'video',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final args = state.toolboxVideoArgs;
-              return SHOVideoPlayerRoutePage(
-                entryId: args.entryId,
-                taskId: args.taskId,
-              );
-            },
-          ),
-          GoRoute(
-            path: 'music',
-            parentNavigatorKey: rootKey,
-            builder: (context, state) {
-              final args = state.musicPlayerArgs;
-              return SHOMusicPlayerRoutePage(
-                trackId: args.trackId,
-                startIndex: args.startIndex,
-                fromDownloadPack: args.fromDownloadPack,
-              );
-            },
           ),
         ],
       ),
-    ];
+      GoRoute(
+        path: 'downloads',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SHODownloadListPage(),
+      ),
+      GoRoute(
+        path: 'web-debug',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SHOToolboxWebDebugPage(),
+      ),
+      GoRoute(
+        path: 'web',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SHOToolboxWebPage(),
+      ),
+      GoRoute(
+        path: 'reader',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) =>
+            SHOTxtReaderRoutePage(taskId: state.toolboxReaderArgs.taskId),
+      ),
+      GoRoute(
+        path: 'video',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) {
+          final args = state.toolboxVideoArgs;
+          return SHOVideoPlayerRoutePage(
+            entryId: args.entryId,
+            taskId: args.taskId,
+          );
+        },
+      ),
+      GoRoute(
+        path: 'music',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) {
+          final args = state.musicPlayerArgs;
+          return SHOMusicPlayerRoutePage(
+            trackId: args.trackId,
+            startIndex: args.startIndex,
+            fromDownloadPack: args.fromDownloadPack,
+          );
+        },
+      ),
+    ],
+  ),
+];

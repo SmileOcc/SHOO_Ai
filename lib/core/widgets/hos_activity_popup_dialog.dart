@@ -17,7 +17,10 @@ class SHOActivityPopupDialog extends StatelessWidget {
   static const int _maxScrollLines = 5;
   static const double _popupRadius = 12;
 
-  static Future<void> show(BuildContext context, {required SHOActivityPopup activity}) {
+  static Future<void> show(
+    BuildContext context, {
+    required SHOActivityPopup activity,
+  }) {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -50,7 +53,8 @@ class SHOActivityPopupDialog extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(_popupRadius),
         child: Material(
-          color: Theme.of(context).dialogTheme.backgroundColor ??
+          color:
+              Theme.of(context).dialogTheme.backgroundColor ??
               Theme.of(context).colorScheme.surface,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: maxDialogHeight),
@@ -80,12 +84,11 @@ class SHOActivityPopupDialog extends StatelessWidget {
                         if (activity.description.isNotEmpty) ...[
                           const SizedBox(height: SHOAppSpacing.md),
                           ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: maxDescHeight),
+                            constraints: BoxConstraints(
+                              maxHeight: maxDescHeight,
+                            ),
                             child: SingleChildScrollView(
-                              child: Text(
-                                activity.description,
-                                style: style,
-                              ),
+                              child: Text(activity.description, style: style),
                             ),
                           ),
                         ],

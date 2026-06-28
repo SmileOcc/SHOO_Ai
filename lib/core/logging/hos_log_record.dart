@@ -20,8 +20,7 @@ class SHOLogRecord {
 
   /// 项目统一前缀，例如 `[SHOO][INFO][AuthService]`。
   String get prefix {
-    final modulePart =
-        module == null || module!.isEmpty ? '' : '[$module]';
+    final modulePart = module == null || module!.isEmpty ? '' : '[$module]';
     return '[SHOO][${level.label}]$modulePart';
   }
 

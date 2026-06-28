@@ -22,49 +22,47 @@ class SHODownloadTaskStatus {
   final bool inMusicLibrary;
   final bool inBookshelf;
 
-  bool get showExtractedBadge =>
-      isMusicPack && isExtracted;
+  bool get showExtractedBadge => isMusicPack && isExtracted;
 
-  bool get showInMusicBadge =>
-      isMusicPack && inMusicLibrary;
+  bool get showInMusicBadge => isMusicPack && inMusicLibrary;
 
-  bool get showInBookshelfBadge =>
-      isTxtNovel && inBookshelf;
+  bool get showInBookshelfBadge => isTxtNovel && inBookshelf;
 }
 
 final downloadTaskStatusProvider =
     FutureProvider.family<SHODownloadTaskStatus, String>((ref, taskId) async {
-  ref.watch(musicLibraryRevisionProvider);
-  final tasks = ref.watch(downloadTasksProvider);
-  final task = tasks.cast<SHODownloadTask?>().firstWhere(
+      ref.watch(musicLibraryRevisionProvider);
+      final tasks = ref.watch(downloadTasksProvider);
+      final task = tasks.cast<SHODownloadTask?>().firstWhere(
         (item) => item?.id == taskId,
         orElse: () => null,
       );
-  if (task == null) return const SHODownloadTaskStatus();
+      if (task == null) return const SHODownloadTaskStatus();
 
-  final packService = ref.watch(musicPackServiceProvider);
-  final isMusicPack = packService.isMusicPackZip(task);
-  final isTxtNovel = isTxtNovelFile(task.fileName);
-  final libraryItems = await ref.watch(musicLibraryListProvider.future);
-  final inMusicLibrary = isMusicPack &&
-      musicPackItemsInLibrary(libraryItems, taskId).isNotEmpty;
-  final inBookshelf = ref
-      .watch(bookshelfEntriesProvider)
-      .any((entry) => entry.taskId == taskId);
+      final packService = ref.watch(musicPackServiceProvider);
+      final isMusicPack = packService.isMusicPackZip(task);
+      final isTxtNovel = isTxtNovelFile(task.fileName);
+      final libraryItems = await ref.watch(musicLibraryListProvider.future);
+      final inMusicLibrary =
+          isMusicPack &&
+          musicPackItemsInLibrary(libraryItems, taskId).isNotEmpty;
+      final inBookshelf = ref
+          .watch(bookshelfEntriesProvider)
+          .any((entry) => entry.taskId == taskId);
 
-  var isExtracted = false;
-  if (isMusicPack && task.status == SHODownloadStatus.completed) {
-    isExtracted = await packService.hasCachedSongsForPack(task);
-  }
+      var isExtracted = false;
+      if (isMusicPack && task.status == SHODownloadStatus.completed) {
+        isExtracted = await packService.hasCachedSongsForPack(task);
+      }
 
-  return SHODownloadTaskStatus(
-    isMusicPack: isMusicPack,
-    isTxtNovel: isTxtNovel,
-    isExtracted: isExtracted,
-    inMusicLibrary: inMusicLibrary,
-    inBookshelf: inBookshelf,
-  );
-});
+      return SHODownloadTaskStatus(
+        isMusicPack: isMusicPack,
+        isTxtNovel: isTxtNovel,
+        isExtracted: isExtracted,
+        inMusicLibrary: inMusicLibrary,
+        inBookshelf: inBookshelf,
+      );
+    });
 
 Future<bool> isMusicPackInLibrary(WidgetRef ref, String packTaskId) async {
   final items = await ref.read(musicLibraryListProvider.future);

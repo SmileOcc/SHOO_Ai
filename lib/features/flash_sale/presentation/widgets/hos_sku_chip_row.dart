@@ -103,7 +103,8 @@ class _SHOSkuChipRowState extends State<SHOSkuChipRow> {
   }
 
   double _measureChipWidth(BuildContext context, String label) {
-    final textMax = widget.maxChipWidth - _chipHorizontalPadding - _chipBorderWidth;
+    final textMax =
+        widget.maxChipWidth - _chipHorizontalPadding - _chipBorderWidth;
     final painter = TextPainter(
       text: TextSpan(text: label, style: _chipTextStyle),
       textDirection: Directionality.of(context),
@@ -116,10 +117,7 @@ class _SHOSkuChipRowState extends State<SHOSkuChipRow> {
 }
 
 class _CollapsedLayout {
-  const _CollapsedLayout({
-    required this.lines,
-    required this.showExpandArrow,
-  });
+  const _CollapsedLayout({required this.lines, required this.showExpandArrow});
 
   final List<List<String>> lines;
   final bool showExpandArrow;
@@ -156,7 +154,8 @@ _CollapsedLayout _computeCollapsedLayout({
     required double reserveTrailing,
   }) {
     final gap = line.isEmpty ? 0.0 : spacing;
-    return lineWidth(line) + gap + chipWidthFor(label) + reserveTrailing <= budget;
+    return lineWidth(line) + gap + chipWidthFor(label) + reserveTrailing <=
+        budget;
   }
 
   final lines = <List<String>>[];
@@ -244,18 +243,12 @@ class _SkuChipLine extends StatelessWidget {
 
     if (maxWidth == null) return line;
 
-    return SizedBox(
-      width: maxWidth,
-      child: line,
-    );
+    return SizedBox(width: maxWidth, child: line);
   }
 }
 
 class _ArrowButton extends StatelessWidget {
-  const _ArrowButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _ArrowButton({required this.icon, required this.onTap});
 
   final IconData icon;
   final VoidCallback onTap;
@@ -275,10 +268,7 @@ class _ArrowButton extends StatelessWidget {
 }
 
 class _SkuChip extends StatelessWidget {
-  const _SkuChip({
-    required this.label,
-    required this.maxWidth,
-  });
+  const _SkuChip({required this.label, required this.maxWidth});
 
   final String label;
   final double maxWidth;

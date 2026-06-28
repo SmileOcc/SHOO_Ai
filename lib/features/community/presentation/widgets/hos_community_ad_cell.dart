@@ -24,12 +24,15 @@ class SHOCommunityAdCell extends StatelessWidget {
       onTap: null,
       child: switch (item.adStyle) {
         SHOCommunityAdStyle.banner => _BannerAd(item: item, onTap: onTap),
-        SHOCommunityAdStyle.nativeProduct =>
-          _NativeProductAd(item: item, onTap: onTap),
-        SHOCommunityAdStyle.brandStory =>
-          _BrandStoryAd(item: item, onTap: onTap),
-        SHOCommunityAdStyle.carousel =>
-          _CarouselAd(item: item, onTap: onTap),
+        SHOCommunityAdStyle.nativeProduct => _NativeProductAd(
+          item: item,
+          onTap: onTap,
+        ),
+        SHOCommunityAdStyle.brandStory => _BrandStoryAd(
+          item: item,
+          onTap: onTap,
+        ),
+        SHOCommunityAdStyle.carousel => _CarouselAd(item: item, onTap: onTap),
         null => _BannerAd(item: item, onTap: onTap),
       },
     );
@@ -75,7 +78,10 @@ class _BannerAd extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -230,7 +236,10 @@ class _BrandStoryAd extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
                 item.title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -258,7 +267,9 @@ class _CarouselAd extends StatefulWidget {
 }
 
 class _CarouselAdState extends State<_CarouselAd> {
-  late final PageController _controller = PageController(viewportFraction: 0.82);
+  late final PageController _controller = PageController(
+    viewportFraction: 0.82,
+  );
   var _index = 0;
 
   @override
@@ -318,12 +329,16 @@ class _CarouselAdState extends State<_CarouselAd> {
                   return Padding(
                     padding: const EdgeInsets.only(right: SHOAppSpacing.md),
                     child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(SHOAppSpacing.cardRadius),
+                      borderRadius: BorderRadius.circular(
+                        SHOAppSpacing.cardRadius,
+                      ),
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          SHOAppNetworkImage(url: card.imageUrl, fit: BoxFit.cover),
+                          SHOAppNetworkImage(
+                            url: card.imageUrl,
+                            fit: BoxFit.cover,
+                          ),
                           Positioned(
                             left: 0,
                             right: 0,

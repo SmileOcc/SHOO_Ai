@@ -13,7 +13,8 @@ class SHOSettingsCachePage extends ConsumerStatefulWidget {
   const SHOSettingsCachePage({super.key});
 
   @override
-  ConsumerState<SHOSettingsCachePage> createState() => _SHOSettingsCachePageState();
+  ConsumerState<SHOSettingsCachePage> createState() =>
+      _SHOSettingsCachePageState();
 }
 
 class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
@@ -68,8 +69,9 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
 
   Future<void> _clearCategory(SHOCacheCategory category) async {
     final l10n = AppLocalizations.of(context);
-    final info = SHOCacheCleanupService.categories
-        .firstWhere((e) => e.category == category);
+    final info = SHOCacheCleanupService.categories.firstWhere(
+      (e) => e.category == category,
+    );
     final ok = await SHOAppDialog.confirm(
       context,
       title: l10n.settingsCacheClearTitle,
@@ -81,9 +83,9 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
     if (!ok || !mounted) return;
     await ref.read(cacheCleanupServiceProvider).clear(category);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.settingsCacheCleared)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.settingsCacheCleared)));
     await _reload();
   }
 
@@ -100,9 +102,9 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
     if (!ok || !mounted) return;
     await ref.read(cacheCleanupServiceProvider).clearAll();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.settingsCacheCleared)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.settingsCacheCleared)));
     await _reload();
   }
 
@@ -113,52 +115,52 @@ class _SHOSettingsCachePageState extends ConsumerState<SHOSettingsCachePage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsCacheTitle)),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.all(SHOAppSpacing.xl),
-              children: [
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.settingsCacheTotal),
-                  trailing: Text(
-                    SHOAppLogManager.formatSize(total),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
-                const SizedBox(height: SHOAppSpacing.md),
-                ...SHOCacheCleanupService.categories.map((info) {
-                  final bytes = _sizes?[info.category] ?? 0;
-                  return ListTile(
-                    title: Text(_title(l10n, info)),
-                    subtitle: Text(_subtitle(l10n, info)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          SHOAppLogManager.formatSize(bytes),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline, size: 20),
-                          onPressed: bytes == 0
-                              ? null
-                              : () => _clearCategory(info.category),
-                        ),
-                      ],
+        appBar: AppBar(title: Text(l10n.settingsCacheTitle)),
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                padding: const EdgeInsets.all(SHOAppSpacing.xl),
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.settingsCacheTotal),
+                    trailing: Text(
+                      SHOAppLogManager.formatSize(total),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                  );
-                }),
-                const SizedBox(height: SHOAppSpacing.xl),
-                FilledButton(
-                  onPressed: total == 0 ? null : _clearAll,
-                  child: Text(l10n.settingsCacheClearAll),
-                ),
-              ],
-            ),
+                  ),
+                  const SizedBox(height: SHOAppSpacing.md),
+                  ...SHOCacheCleanupService.categories.map((info) {
+                    final bytes = _sizes?[info.category] ?? 0;
+                    return ListTile(
+                      title: Text(_title(l10n, info)),
+                      subtitle: Text(_subtitle(l10n, info)),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            SHOAppLogManager.formatSize(bytes),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline, size: 20),
+                            onPressed: bytes == 0
+                                ? null
+                                : () => _clearCategory(info.category),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: SHOAppSpacing.xl),
+                  FilledButton(
+                    onPressed: total == 0 ? null : _clearAll,
+                    child: Text(l10n.settingsCacheClearAll),
+                  ),
+                ],
+              ),
       ),
-    onRetry: _reload,
+      onRetry: _reload,
     );
   }
 }

@@ -71,10 +71,10 @@ class SHOFlashSalePromoTag with _$SHOFlashSalePromoTag {
       _$SHOFlashSalePromoTagFromJson(json);
 
   SHOPromoBadgeTagData toBadgeData() => SHOPromoBadgeTagData(
-        type: SHOPromoBadgeTypeX.fromApi(type),
-        label: label,
-        enabled: enabled,
-      );
+    type: SHOPromoBadgeTypeX.fromApi(type),
+    label: label,
+    enabled: enabled,
+  );
 }
 
 @freezed
@@ -171,8 +171,9 @@ class SHOFlashSaleProduct with _$SHOFlashSaleProduct {
   factory SHOFlashSaleProduct.fromJson(Map<String, dynamic> json) =>
       _$SHOFlashSaleProductFromJson(json);
 
-  SHOPromoBadgeType? get primaryBadgeType =>
-      primaryPromoType != null ? SHOPromoBadgeTypeX.fromApi(primaryPromoType) : null;
+  SHOPromoBadgeType? get primaryBadgeType => primaryPromoType != null
+      ? SHOPromoBadgeTypeX.fromApi(primaryPromoType)
+      : null;
 
   List<SHOPromoBadgeTagData> get badgeTags =>
       promoTags.map((t) => t.toBadgeData()).toList();
@@ -236,8 +237,9 @@ class SHOFlashSaleProductActivity with _$SHOFlashSaleProductActivity {
   factory SHOFlashSaleProductActivity.fromJson(Map<String, dynamic> json) =>
       _$SHOFlashSaleProductActivityFromJson(json);
 
-  SHOPromoBadgeType? get primaryBadgeType =>
-      primaryPromoType != null ? SHOPromoBadgeTypeX.fromApi(primaryPromoType) : null;
+  SHOPromoBadgeType? get primaryBadgeType => primaryPromoType != null
+      ? SHOPromoBadgeTypeX.fromApi(primaryPromoType)
+      : null;
 
   int get displayPrice {
     if (status == SHOFlashSaleProductStatus.ongoing && stock > 0) {

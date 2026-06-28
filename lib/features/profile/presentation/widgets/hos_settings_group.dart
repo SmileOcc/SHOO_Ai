@@ -30,22 +30,22 @@ class SHOSettingsGroup extends StatelessWidget {
           child: Text(
             title,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: theme.textMuted,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: theme.textMuted,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: SHOAppSpacing.pagePadding,
+          ),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: context.shoSurface,
               borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
               border: Border.all(color: theme.border),
             ),
-            child: Column(
-              children: _withDividers(children, theme.divider),
-            ),
+            child: Column(children: _withDividers(children, theme.divider)),
           ),
         ),
       ],
@@ -58,7 +58,9 @@ class SHOSettingsGroup extends StatelessWidget {
     for (var i = 0; i < items.length; i++) {
       result.add(items[i]);
       if (i < items.length - 1) {
-        result.add(Divider(height: 1, thickness: 1, color: dividerColor, indent: 16));
+        result.add(
+          Divider(height: 1, thickness: 1, color: dividerColor, indent: 16),
+        );
       }
     }
     return result;
@@ -90,20 +92,20 @@ class SHOSettingsTile extends StatelessWidget {
       leading: leading,
       title: Text(
         title,
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 14,
-              color: titleColor,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyLarge?.copyWith(fontSize: 14, color: titleColor),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.shoTheme.textMuted,
-                  ),
+                color: context.shoTheme.textMuted,
+              ),
             )
           : null,
-      trailing: trailing ??
+      trailing:
+          trailing ??
           Icon(
             Icons.chevron_right,
             size: 18,

@@ -6,9 +6,7 @@ import 'package:shoo/core/theme/hos_colors.dart';
 ///
 /// 当前默认 [material]（系统 [RefreshIndicator]）。
 /// 若后续接入 easy_refresh / pull_to_refresh 等，在此扩展分支即可，业务页无需改动。
-enum SHOAppPullRefreshEngine {
-  material,
-}
+enum SHOAppPullRefreshEngine { material }
 
 /// 轻量下拉刷新封装：统一品牌样式与回调约定。
 ///

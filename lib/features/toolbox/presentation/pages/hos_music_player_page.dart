@@ -57,9 +57,9 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'track_id': widget.trackId,
-        if (widget.fromDownloadPack) 'from_download_pack': true,
-      };
+    'track_id': widget.trackId,
+    if (widget.fromDownloadPack) 'from_download_pack': true,
+  };
 
   @override
   void initState() {
@@ -125,7 +125,9 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
         packTask: task,
         downloadTasks: tasks,
       );
-      final index = cachedTracks.indexWhere((track) => track.id == widget.trackId);
+      final index = cachedTracks.indexWhere(
+        (track) => track.id == widget.trackId,
+      );
       if (index >= 0) return cachedTracks;
     }
 
@@ -156,7 +158,9 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
       final trackIndex = playlist.indexWhere((t) => t.id == widget.trackId);
       if (trackIndex >= 0) startIndex = trackIndex;
 
-      await ref.read(musicPlayerProvider.notifier).setPlaylist(
+      await ref
+          .read(musicPlayerProvider.notifier)
+          .setPlaylist(
             playlist,
             startIndex: startIndex,
             scope: SHOMusicPlaylistScope.library,
@@ -196,8 +200,9 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
       return;
     }
 
-    final ok =
-        await ref.read(musicPlayerProvider.notifier).downloadCurrentSong();
+    final ok = await ref
+        .read(musicPlayerProvider.notifier)
+        .downloadCurrentSong();
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -267,71 +272,71 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
         : ref.read(musicStatsStorageProvider).read(track.id).liked;
 
     final songKey = track?.resolvedSongKey ?? '';
-    final coverColor = track?.coverColor ??
-        SHOMusicColorUtils.colorForKey(songKey, salt: 11);
-    final bgColor = track?.bgColor ??
-        SHOMusicColorUtils.colorForKey(songKey, salt: 29);
+    final coverColor =
+        track?.coverColor ?? SHOMusicColorUtils.colorForKey(songKey, salt: 11);
+    final bgColor =
+        track?.bgColor ?? SHOMusicColorUtils.colorForKey(songKey, salt: 29);
     final bgPath = track?.bgPath;
 
     if (_bootstrapping && track == null) {
       return buildTrackedPage(
         const Scaffold(
-        backgroundColor: Color(0xFF14141F),
-        body: Center(child: CircularProgressIndicator()),
+          backgroundColor: Color(0xFF14141F),
+          body: Center(child: CircularProgressIndicator()),
         ),
       );
     }
 
     return buildTrackedPage(
       Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          _buildBackground(bgPath, bgColor),
-          SafeArea(
-            child: Column(
-              children: [
-                _buildTopBar(context, l10n, track),
-                Expanded(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _toggleLyricsCover(track),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 280),
-                      child: showLyrics
-                          ? SHOMusicLyricsView(
-                              key: const ValueKey('lyrics'),
-                              lines: playerState.currentLyrics,
-                              activeIndex: playerState.currentLyricIndex,
-                              emptyText: l10n.musicPlayerNoLyrics,
-                            )
-                          : Center(
-                              key: const ValueKey('cover'),
-                              child: SHOMusicRotatingCover(
-                                isPlaying: playerState.isPlaying,
-                                coverColor: coverColor,
-                                coverUrl: track?.coverUrl,
-                                coverPath: track?.coverPath,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            _buildBackground(bgPath, bgColor),
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildTopBar(context, l10n, track),
+                  Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _toggleLyricsCover(track),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 280),
+                        child: showLyrics
+                            ? SHOMusicLyricsView(
+                                key: const ValueKey('lyrics'),
+                                lines: playerState.currentLyrics,
+                                activeIndex: playerState.currentLyricIndex,
+                                emptyText: l10n.musicPlayerNoLyrics,
+                              )
+                            : Center(
+                                key: const ValueKey('cover'),
+                                child: SHOMusicRotatingCover(
+                                  isPlaying: playerState.isPlaying,
+                                  coverColor: coverColor,
+                                  coverUrl: track?.coverUrl,
+                                  coverPath: track?.coverPath,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-                _buildProgressSection(
-                  playerState: playerState,
-                  notifier: notifier,
-                  track: track,
-                  isLiked: isLiked,
-                ),
-                const SizedBox(height: SHOAppSpacing.md),
-                _buildControls(context, l10n, playerState, notifier),
-                const SizedBox(height: SHOAppSpacing.lg),
-              ],
+                  _buildProgressSection(
+                    playerState: playerState,
+                    notifier: notifier,
+                    track: track,
+                    isLiked: isLiked,
+                  ),
+                  const SizedBox(height: SHOAppSpacing.md),
+                  _buildControls(context, l10n, playerState, notifier),
+                  const SizedBox(height: SHOAppSpacing.lg),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -427,14 +432,11 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
             onPressed: track == null
                 ? null
                 : () => showSHOMusicPlayerMoreSheet(
-                      context: context,
-                      onDownload: () => _handleDownload(l10n),
-                      onMore: () => _handleMoreShare(l10n),
-                    ),
-            icon: const Icon(
-              Icons.ios_share_rounded,
-              color: Colors.white,
-            ),
+                    context: context,
+                    onDownload: () => _handleDownload(l10n),
+                    onMore: () => _handleMoreShare(l10n),
+                  ),
+            icon: const Icon(Icons.ios_share_rounded, color: Colors.white),
             tooltip: l10n.musicPlayerShare,
           ),
         ],
@@ -458,7 +460,9 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
               icon: Icon(
-                isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                isLiked
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
                 size: 22,
                 color: isLiked
                     ? SHOAppColors.accent
@@ -529,10 +533,8 @@ class _SHOMusicPlayerPageState extends ConsumerState<SHOMusicPlayerPage>
             icon: const Icon(Icons.skip_next_rounded, color: Colors.white),
           ),
           IconButton(
-            onPressed: () => showSHOMusicPlaylistSheet(
-              context: context,
-              ref: ref,
-            ),
+            onPressed: () =>
+                showSHOMusicPlaylistSheet(context: context, ref: ref),
             icon: Icon(
               Icons.queue_music_rounded,
               color: Colors.white.withValues(alpha: 0.9),

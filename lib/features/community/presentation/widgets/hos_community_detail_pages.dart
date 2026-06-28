@@ -31,9 +31,9 @@ class _SHOCommunityNewsDetailPageState
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'feed_id': widget.item.id,
-        'article_slug': widget.item.articleSlug,
-      };
+    'feed_id': widget.item.id,
+    'article_slug': widget.item.articleSlug,
+  };
 
   SHOCommunityFeedItem get item => widget.item;
 
@@ -41,110 +41,113 @@ class _SHOCommunityNewsDetailPageState
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          item.source.isNotEmpty ? item.source : '资讯',
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.ios_share_rounded),
-            onPressed: () => SHOAppToast.info('分享即将上线'),
+        appBar: AppBar(
+          title: Text(
+            item.source.isNotEmpty ? item.source : '资讯',
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (item.isPinned) const SHOCommunityPinnedBadge(),
-            if (item.isPinned) const SizedBox(height: SHOAppSpacing.sm),
-            Text(
-              item.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                height: 1.35,
-              ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.ios_share_rounded),
+              onPressed: () => SHOAppToast.info('分享即将上线'),
             ),
-            const SizedBox(height: SHOAppSpacing.md),
-            Row(
-              children: [
-                if (item.category.isNotEmpty)
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (item.isPinned) const SHOCommunityPinnedBadge(),
+              if (item.isPinned) const SizedBox(height: SHOAppSpacing.sm),
+              Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+              Row(
+                children: [
+                  if (item.category.isNotEmpty)
+                    Text(
+                      item.category,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: SHOAppColors.accent,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  if (item.category.isNotEmpty)
+                    const SizedBox(width: SHOAppSpacing.md),
                   Text(
-                    item.category,
+                    shoCommunityFormatRelativeTime(item.publishedAt),
                     style: const TextStyle(
                       fontSize: 12,
-                      color: SHOAppColors.accent,
-                      fontWeight: FontWeight.w600,
+                      color: SHOAppColors.textMuted,
                     ),
                   ),
-                if (item.category.isNotEmpty)
-                  const SizedBox(width: SHOAppSpacing.md),
-                Text(
-                  shoCommunityFormatRelativeTime(item.publishedAt),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: SHOAppColors.textMuted,
+                ],
+              ),
+              if (item.coverUrl.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.lg),
+                SHOCommunityCoverImage(
+                  url: item.coverUrl,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                ),
+              ],
+              const SizedBox(height: SHOAppSpacing.lg),
+              SHOAppExpandableText(
+                text: item.summary.isNotEmpty
+                    ? item.summary
+                    : '正文内容加载中，完整文章即将上线。',
+                fontSize: 15,
+                height: 1.7,
+                color: SHOAppColors.textPrimary,
+                maxLines: 6,
+              ),
+              const SizedBox(height: SHOAppSpacing.lg),
+              SHOCommunityTagRow(tags: item.tags),
+              const SizedBox(height: SHOAppSpacing.xl),
+              SHOCommunityStatsRow(
+                readCount: item.readCount,
+                likeCount: item.likeCount,
+                commentCount: item.commentCount,
+                shareCount: item.shareCount,
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => SHOAppToast.info('评论即将上线'),
+                    icon: const Icon(
+                      Icons.chat_bubble_outline_rounded,
+                      size: 18,
+                    ),
+                    label: Text(shoCommunityFormatCount(item.commentCount)),
+                  ),
+                ),
+                const SizedBox(width: SHOAppSpacing.md),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => SHOAppToast.success('已点赞'),
+                    icon: const Icon(Icons.favorite_border_rounded, size: 18),
+                    label: Text(shoCommunityFormatCount(item.likeCount)),
                   ),
                 ),
               ],
             ),
-            if (item.coverUrl.isNotEmpty) ...[
-              const SizedBox(height: SHOAppSpacing.lg),
-              SHOCommunityCoverImage(
-                url: item.coverUrl,
-                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-              ),
-            ],
-            const SizedBox(height: SHOAppSpacing.lg),
-            SHOAppExpandableText(
-              text: item.summary.isNotEmpty
-                  ? item.summary
-                  : '正文内容加载中，完整文章即将上线。',
-              fontSize: 15,
-              height: 1.7,
-              color: SHOAppColors.textPrimary,
-              maxLines: 6,
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-            SHOCommunityTagRow(tags: item.tags),
-            const SizedBox(height: SHOAppSpacing.xl),
-            SHOCommunityStatsRow(
-              readCount: item.readCount,
-              likeCount: item.likeCount,
-              commentCount: item.commentCount,
-              shareCount: item.shareCount,
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => SHOAppToast.info('评论即将上线'),
-                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
-                  label: Text(shoCommunityFormatCount(item.commentCount)),
-                ),
-              ),
-              const SizedBox(width: SHOAppSpacing.md),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () => SHOAppToast.success('已点赞'),
-                  icon: const Icon(Icons.favorite_border_rounded, size: 18),
-                  label: Text(shoCommunityFormatCount(item.likeCount)),
-                ),
-              ),
-            ],
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -167,9 +170,9 @@ class _SHOCommunityPostDetailPageState
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'feed_id': widget.item.id,
-        'post_style': widget.item.style,
-      };
+    'feed_id': widget.item.id,
+    'post_style': widget.item.style,
+  };
 
   SHOCommunityFeedItem get item => widget.item;
 
@@ -181,115 +184,117 @@ class _SHOCommunityPostDetailPageState
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          item.author.name.isNotEmpty ? item.author.name : '帖子',
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_horiz_rounded),
-            onPressed: () => SHOAppToast.info('更多操作即将上线'),
+        appBar: AppBar(
+          title: Text(
+            item.author.name.isNotEmpty ? item.author.name : '帖子',
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SHOCommunityAuthorRow(
-              author: item.author,
-              publishedAt: item.publishedAt,
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-            Text(
-              item.title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                height: 1.35,
-              ),
-            ),
-            if (item.summary.isNotEmpty) ...[
-              const SizedBox(height: SHOAppSpacing.md),
-              SHOAppExpandableText(
-                text: item.summary,
-                fontSize: 15,
-                height: 1.7,
-                color: SHOAppColors.textPrimary,
-                maxLines: 5,
-              ),
-            ],
-            if (images.isNotEmpty) ...[
-              const SizedBox(height: SHOAppSpacing.lg),
-              for (final url in images) ...[
-                SHOCommunityCoverImage(
-                  url: url,
-                  aspectRatio: 1,
-                  borderRadius:
-                      BorderRadius.circular(SHOAppSpacing.cardRadius),
-                ),
-                const SizedBox(height: SHOAppSpacing.sm),
-              ],
-            ],
-            if (item.pollOptions.isNotEmpty) ...[
-              const SizedBox(height: SHOAppSpacing.md),
-              for (final option in item.pollOptions)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: SHOAppSpacing.sm),
-                  child: _PollOptionRow(option: option),
-                ),
-            ],
-            if (item.product != null &&
-                item.product!.productId.isNotEmpty) ...[
-              const SizedBox(height: SHOAppSpacing.lg),
-              _LinkedProductCard(product: item.product!),
-            ],
-            const SizedBox(height: SHOAppSpacing.lg),
-            SHOCommunityTagRow(tags: item.tags),
-            const SizedBox(height: SHOAppSpacing.xl),
-            SHOCommunityStatsRow(
-              likeCount: item.likeCount,
-              commentCount: item.commentCount,
-              shareCount: item.shareCount,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.more_horiz_rounded),
+              onPressed: () => SHOAppToast.info('更多操作即将上线'),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: '说点什么...',
-                    isDense: true,
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(SHOAppSpacing.buttonRadius),
-                    ),
-                  ),
-                  onTap: () => SHOAppToast.info('评论即将上线'),
-                  readOnly: true,
+              SHOCommunityAuthorRow(
+                author: item.author,
+                publishedAt: item.publishedAt,
+              ),
+              const SizedBox(height: SHOAppSpacing.lg),
+              Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  height: 1.35,
                 ),
               ),
-              const SizedBox(width: SHOAppSpacing.md),
-              IconButton(
-                onPressed: () => SHOAppToast.success('已点赞'),
-                icon: const Icon(Icons.favorite_border_rounded),
-              ),
-              IconButton(
-                onPressed: () => SHOAppToast.info('分享即将上线'),
-                icon: const Icon(Icons.ios_share_rounded),
+              if (item.summary.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.md),
+                SHOAppExpandableText(
+                  text: item.summary,
+                  fontSize: 15,
+                  height: 1.7,
+                  color: SHOAppColors.textPrimary,
+                  maxLines: 5,
+                ),
+              ],
+              if (images.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.lg),
+                for (final url in images) ...[
+                  SHOCommunityCoverImage(
+                    url: url,
+                    aspectRatio: 1,
+                    borderRadius: BorderRadius.circular(
+                      SHOAppSpacing.cardRadius,
+                    ),
+                  ),
+                  const SizedBox(height: SHOAppSpacing.sm),
+                ],
+              ],
+              if (item.pollOptions.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.md),
+                for (final option in item.pollOptions)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: SHOAppSpacing.sm),
+                    child: _PollOptionRow(option: option),
+                  ),
+              ],
+              if (item.product != null &&
+                  item.product!.productId.isNotEmpty) ...[
+                const SizedBox(height: SHOAppSpacing.lg),
+                _LinkedProductCard(product: item.product!),
+              ],
+              const SizedBox(height: SHOAppSpacing.lg),
+              SHOCommunityTagRow(tags: item.tags),
+              const SizedBox(height: SHOAppSpacing.xl),
+              SHOCommunityStatsRow(
+                likeCount: item.likeCount,
+                commentCount: item.commentCount,
+                shareCount: item.shareCount,
               ),
             ],
           ),
         ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: '说点什么...',
+                      isDense: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          SHOAppSpacing.buttonRadius,
+                        ),
+                      ),
+                    ),
+                    onTap: () => SHOAppToast.info('评论即将上线'),
+                    readOnly: true,
+                  ),
+                ),
+                const SizedBox(width: SHOAppSpacing.md),
+                IconButton(
+                  onPressed: () => SHOAppToast.success('已点赞'),
+                  icon: const Icon(Icons.favorite_border_rounded),
+                ),
+                IconButton(
+                  onPressed: () => SHOAppToast.info('分享即将上线'),
+                  icon: const Icon(Icons.ios_share_rounded),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-    ),
     );
   }
 }

@@ -91,9 +91,9 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
                   child: Text(
                     AppLocalizations.of(context).recommendedTitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.6,
-                        ),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.6,
+                    ),
                   ),
                 ),
                 const SizedBox(height: SHOAppSpacing.md),
@@ -111,16 +111,13 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
                 crossAxisSpacing: SHOAppSpacing.lg,
                 childAspectRatio: SHOProductCard.gridChildAspectRatio,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final product = feed.products[index];
-                  return SHOProductCard(
-                    product: product,
-                    onTap: () => context.push(SHOAppRoutes.product(product.id)),
-                  );
-                },
-                childCount: feed.products.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final product = feed.products[index];
+                return SHOProductCard(
+                  product: product,
+                  onTap: () => context.push(SHOAppRoutes.product(product.id)),
+                );
+              }, childCount: feed.products.length),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: SHOAppSpacing.xxxl)),
@@ -131,8 +128,9 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
 }
 
 List<SHOCategoryItem> _homeQuickEntries(List<SHOCategoryItem> categories) {
-  final rest =
-      categories.length > 2 ? categories.sublist(2) : const <SHOCategoryItem>[];
+  final rest = categories.length > 2
+      ? categories.sublist(2)
+      : const <SHOCategoryItem>[];
   return [
     const SHOCategoryItem(id: 'home-flash', name: '抢购活动', icon: '⚡'),
     const SHOCategoryItem(id: 'home-discount', name: '折扣活动', icon: '🏷️'),
@@ -171,9 +169,13 @@ class _SHOHomeSkeleton extends StatelessWidget {
         SizedBox(height: SHOAppSpacing.md),
         Row(
           children: [
-            Expanded(child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox())),
+            Expanded(
+              child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox()),
+            ),
             SizedBox(width: SHOAppSpacing.gridGap),
-            Expanded(child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox())),
+            Expanded(
+              child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox()),
+            ),
           ],
         ),
       ],
@@ -226,9 +228,9 @@ class SHOHomeSearchBar extends StatelessWidget {
                     Text(
                       l10n.appName,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.2,
-                          ),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                      ),
                     ),
                   ],
                 ),
@@ -246,7 +248,9 @@ class SHOHomeSearchBar extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: context.shoTheme.surfaceMuted,
-                  borderRadius: BorderRadius.circular(SHOAppSpacing.buttonRadius),
+                  borderRadius: BorderRadius.circular(
+                    SHOAppSpacing.buttonRadius,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -258,9 +262,9 @@ class SHOHomeSearchBar extends StatelessWidget {
                     const SizedBox(width: SHOAppSpacing.sm),
                     Text(
                       l10n.searchHint,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 12,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(fontSize: 12),
                     ),
                   ],
                 ),

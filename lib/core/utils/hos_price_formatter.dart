@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 /// Formats integer cents into display currency strings.
 class SHOPriceFormatter {
   SHOPriceFormatter({String locale = 'en_US', String symbol = r'$'})
-      : _formatter = NumberFormat.currency(
-          locale: locale,
-          symbol: symbol,
-          decimalDigits: 2,
-        );
+    : _formatter = NumberFormat.currency(
+        locale: locale,
+        symbol: symbol,
+        decimalDigits: 2,
+      );
 
   final NumberFormat _formatter;
 

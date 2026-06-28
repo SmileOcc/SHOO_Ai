@@ -24,12 +24,11 @@ class SHODownloadPreviewAssessment {
   factory SHODownloadPreviewAssessment.blocked({
     required String title,
     String? message,
-  }) =>
-      SHODownloadPreviewAssessment._(
-        canOpen: false,
-        dialogTitle: title,
-        dialogMessage: message,
-      );
+  }) => SHODownloadPreviewAssessment._(
+    canOpen: false,
+    dialogTitle: title,
+    dialogMessage: message,
+  );
 }
 
 /// 书库 / 下载项点击打开前的统一预检（避免不支持格式进入阅读器卡死）。
@@ -83,11 +82,11 @@ Future<SHODownloadPreviewAssessment> assessDownloadTaskPreview(
   return switch (kind) {
     SHODownloadPreviewKind.pdf => await _assessPdf(file, failedTitle),
     SHODownloadPreviewKind.text => await _assessPlainText(
-        file,
-        failedTitle: failedTitle,
-        encodingUnsupportedTitle: encodingUnsupportedTitle,
-        encodingUnsupportedMessage: encodingUnsupportedMessage,
-      ),
+      file,
+      failedTitle: failedTitle,
+      encodingUnsupportedTitle: encodingUnsupportedTitle,
+      encodingUnsupportedMessage: encodingUnsupportedMessage,
+    ),
     SHODownloadPreviewKind.image => SHODownloadPreviewAssessment.ok(),
     SHODownloadPreviewKind.video => SHODownloadPreviewAssessment.ok(),
   };

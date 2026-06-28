@@ -17,16 +17,15 @@ class SHOMusicTrackStats {
     return SHOMusicTrackStats(
       playCount: playCount ?? this.playCount,
       liked: liked ?? this.liked,
-      lastPlayedAt:
-          lastPlayedAt != null ? lastPlayedAt() : this.lastPlayedAt,
+      lastPlayedAt: lastPlayedAt != null ? lastPlayedAt() : this.lastPlayedAt,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'playCount': playCount,
-        'liked': liked,
-        'lastPlayedAt': lastPlayedAt?.toIso8601String(),
-      };
+    'playCount': playCount,
+    'liked': liked,
+    'lastPlayedAt': lastPlayedAt?.toIso8601String(),
+  };
 
   factory SHOMusicTrackStats.fromJson(Map<String, dynamic> json) {
     return SHOMusicTrackStats(

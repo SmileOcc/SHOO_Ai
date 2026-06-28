@@ -62,7 +62,11 @@ class SHOTxtReaderPage extends ConsumerStatefulWidget {
 }
 
 class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
-    with TickerProviderStateMixin, SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+    with
+        TickerProviderStateMixin,
+        SHOPageRouteAnalyticsMixin,
+        SHOAppPageMixin,
+        SHOAppTrackedPageMixin {
   static const _fontSizes = [14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0];
   static const _readerPadding = EdgeInsets.fromLTRB(20, 12, 20, 4);
   static const _settingsRadius = 16.0;
@@ -199,7 +203,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
 
   void _setShowChrome(bool value) {
     if (value) {
-      if (_showChrome && _chromeController.status == AnimationStatus.completed) {
+      if (_showChrome &&
+          _chromeController.status == AnimationStatus.completed) {
         return;
       }
       final opening = !_showChrome;
@@ -235,10 +240,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   }
 
   TextStyle _navBarTitleStyle() {
-    return TextStyle(
-      color: _readerTheme.text,
-      fontSize: 13,
-    );
+    return TextStyle(color: _readerTheme.text, fontSize: 13);
   }
 
   (double width, double height) _contentTextBounds(
@@ -246,9 +248,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     BoxConstraints? constraints,
   }) {
     final resolved = constraints ?? _latestContentConstraints;
-    final widthBase =
-        resolved?.maxWidth ?? MediaQuery.sizeOf(context).width;
-    final heightBase = resolved?.maxHeight ??
+    final widthBase = resolved?.maxWidth ?? MediaQuery.sizeOf(context).width;
+    final heightBase =
+        resolved?.maxHeight ??
         (MediaQuery.sizeOf(context).height -
             _contentAreaTop(context) -
             _contentAreaBottom(context));
@@ -308,16 +310,17 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     });
 
     try {
-      final metas = await scanChapterMetasWithCache(_file!, (value) {
-        if (!mounted) return;
-        setState(() {
-          _progress = value * 0.85;
-          _phase = SHOTxtReaderLoadPhase.indexing;
-        });
-      }).timeout(
-        const Duration(seconds: 45),
-        onTimeout: () => throw StateError('chapter_scan_timeout'),
-      );
+      final metas =
+          await scanChapterMetasWithCache(_file!, (value) {
+            if (!mounted) return;
+            setState(() {
+              _progress = value * 0.85;
+              _phase = SHOTxtReaderLoadPhase.indexing;
+            });
+          }).timeout(
+            const Duration(seconds: 45),
+            onTimeout: () => throw StateError('chapter_scan_timeout'),
+          );
 
       if (!mounted) return;
       setState(() {
@@ -332,7 +335,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         metas.length,
       );
       final pageInChapter = saved?.pageIndexInChapter ?? 0;
-      final restoreReadingPosition = saved != null &&
+      final restoreReadingPosition =
+          saved != null &&
           (saved.chapterIndex > 0 || saved.pageIndexInChapter > 0);
       _restoredFromProgress = restoreReadingPosition;
 
@@ -340,14 +344,16 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
         await _beginChapterTransitionMask();
       }
 
-      await session.openAtChapter(
-        chapterIndex: chapterIndex,
-        pageIndexInChapter: pageInChapter,
-        pagination: pagination,
-      ).timeout(
-        const Duration(seconds: 30),
-        onTimeout: () => throw StateError('chapter_open_timeout'),
-      );
+      await session
+          .openAtChapter(
+            chapterIndex: chapterIndex,
+            pageIndexInChapter: pageInChapter,
+            pagination: pagination,
+          )
+          .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () => throw StateError('chapter_open_timeout'),
+          );
 
       if (!mounted) return;
       setState(() {
@@ -455,8 +461,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     final chapterPages = session.flatPages
         .where((item) => item.chapterIndex == page.chapterIndex)
         .toList();
-    final isLastInChapter =
-        page.pageIndexInChapter >= chapterPages.length - 1;
+    final isLastInChapter = page.pageIndexInChapter >= chapterPages.length - 1;
     final isFirstInChapter = page.pageIndexInChapter == 0;
 
     if (isLastInChapter) {
@@ -544,7 +549,10 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
     });
   }
 
-  Future<void> _jumpToChapter(int chapterIndex, {bool closeCatalog = true}) async {
+  Future<void> _jumpToChapter(
+    int chapterIndex, {
+    bool closeCatalog = true,
+  }) async {
     final session = _session;
     if (session == null || session.chapterMetas.isEmpty) return;
     chapterIndex = clampListIndex(chapterIndex, session.chapterMetas.length);
@@ -673,8 +681,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
 
     final pagination = _pagination(context);
     if (session.currentFlatIndex >= session.flatPages.length - 1) {
-      final firstIndex =
-          await session.tryAppendNextChapter(pagination: pagination);
+      final firstIndex = await session.tryAppendNextChapter(
+        pagination: pagination,
+      );
       if (firstIndex != null && mounted) {
         setState(() {});
         session.currentFlatIndex = firstIndex;
@@ -750,17 +759,17 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
       if (!ok || !mounted) return;
       await ref.read(bookshelfEntriesProvider.notifier).remove(widget.task.id);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.txtReaderRemovedBookshelf)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.txtReaderRemovedBookshelf)));
       return;
     }
 
     await ref.read(bookshelfEntriesProvider.notifier).add(widget.task.id);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.txtReaderAddedBookshelf)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.txtReaderAddedBookshelf)));
   }
 
   void _showMoreMenu() {
@@ -804,9 +813,7 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
 
   void _toggleDarkMode() {
     if (_readerTheme.isDark) {
-      _onThemeChanged(
-        SHOTxtReaderTheme.sepia(textColor: _readerTheme.text),
-      );
+      _onThemeChanged(SHOTxtReaderTheme.sepia(textColor: _readerTheme.text));
     } else {
       _onThemeChanged(
         SHOTxtReaderTheme.dark(textColor: const Color(0xFFB8B8B8)),
@@ -817,8 +824,10 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
   void _onCatalogDragUpdate(DragUpdateDetails details) {
     final drawerWidth = MediaQuery.sizeOf(context).width * _catalogWidthFactor;
     _catalogController.value =
-        (_catalogController.value + details.delta.dx / drawerWidth)
-            .clamp(0.0, 1.0);
+        (_catalogController.value + details.delta.dx / drawerWidth).clamp(
+          0.0,
+          1.0,
+        );
   }
 
   void _onCatalogDragEnd(DragEndDetails details) {
@@ -946,8 +955,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
             child: SizedBox(
               height: _chromeTopHeight,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: SHOAppSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.sm,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -1018,116 +1028,126 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  SHOAppSpacing.lg,
-                  SHOAppSpacing.sm,
-                  SHOAppSpacing.lg,
-                  0,
-                ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _goPrevChapter,
-                      child: Text(
-                        l10n.txtReaderPrevChapter,
-                        style: TextStyle(
-                          color: _readerTheme.text.withValues(alpha: 0.75),
-                          fontSize: 13,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    SHOAppSpacing.lg,
+                    SHOAppSpacing.sm,
+                    SHOAppSpacing.lg,
+                    0,
+                  ),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: _goPrevChapter,
+                        child: Text(
+                          l10n.txtReaderPrevChapter,
+                          style: TextStyle(
+                            color: _readerTheme.text.withValues(alpha: 0.75),
+                            fontSize: 13,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        value: _chapterSliderValue(session),
-                        onChanged: session.chapterMetas.length <= 1
-                            ? null
-                            : (value) {
-                                final idx = (value *
-                                        (session.chapterMetas.length - 1))
-                                    .round();
-                                setState(() => _sliderPreviewChapterIndex = idx);
-                              },
-                        onChangeEnd: session.chapterMetas.length <= 1
-                            ? null
-                            : (value) {
-                                final idx = (value *
-                                        (session.chapterMetas.length - 1))
-                                    .round();
-                                setState(() => _sliderPreviewChapterIndex = null);
-                                unawaited(
-                                  _jumpToChapter(idx, closeCatalog: false),
-                                );
-                              },
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: _goNextChapter,
-                      child: Text(
-                        l10n.txtReaderNextChapter,
-                        style: TextStyle(
-                          color: _readerTheme.text.withValues(alpha: 0.75),
-                          fontSize: 13,
+                      Expanded(
+                        child: Slider(
+                          value: _chapterSliderValue(session),
+                          onChanged: session.chapterMetas.length <= 1
+                              ? null
+                              : (value) {
+                                  final idx =
+                                      (value *
+                                              (session.chapterMetas.length - 1))
+                                          .round();
+                                  setState(
+                                    () => _sliderPreviewChapterIndex = idx,
+                                  );
+                                },
+                          onChangeEnd: session.chapterMetas.length <= 1
+                              ? null
+                              : (value) {
+                                  final idx =
+                                      (value *
+                                              (session.chapterMetas.length - 1))
+                                          .round();
+                                  setState(
+                                    () => _sliderPreviewChapterIndex = null,
+                                  );
+                                  unawaited(
+                                    _jumpToChapter(idx, closeCatalog: false),
+                                  );
+                                },
                         ),
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: _goNextChapter,
+                        child: Text(
+                          l10n.txtReaderNextChapter,
+                          style: TextStyle(
+                            color: _readerTheme.text.withValues(alpha: 0.75),
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.xl),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _bottomChromeChapterTitle(session, currentPage),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: SHOAppSpacing.xl,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _bottomChromeChapterTitle(session, currentPage),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: _readerTheme.text.withValues(alpha: 0.55),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        l10n.txtReaderChapterPageProgress(
+                          currentPage.pageIndexInChapter + 1,
+                          chapterPageCount,
+                        ),
                         style: TextStyle(
-                          color: _readerTheme.text.withValues(alpha: 0.55),
+                          color: _readerTheme.text.withValues(alpha: 0.45),
                           fontSize: 12,
                         ),
                       ),
-                    ),
-                    Text(
-                      l10n.txtReaderChapterPageProgress(
-                        currentPage.pageIndexInChapter + 1,
-                        chapterPageCount,
-                      ),
-                      style: TextStyle(
-                        color: _readerTheme.text.withValues(alpha: 0.45),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const Divider(height: 1),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
-                child: Row(
-                  children: [
-                    _buildToolbarItem(
-                      icon: Icons.format_list_bulleted,
-                      label: l10n.txtReaderChapters,
-                      onTap: _openCatalog,
-                    ),
-                    _buildToolbarItem(
-                      icon: _readerTheme.isDark
-                          ? Icons.wb_sunny_outlined
-                          : Icons.dark_mode_outlined,
-                      label: l10n.txtReaderNight,
-                      onTap: _toggleDarkMode,
-                    ),
-                    _buildToolbarItem(
-                      icon: Icons.tune,
-                      label: l10n.txtReaderSettingsLabel,
-                      onTap: _openSettings,
-                      highlighted: _showSettings,
-                    ),
-                  ],
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: SHOAppSpacing.sm,
+                  ),
+                  child: Row(
+                    children: [
+                      _buildToolbarItem(
+                        icon: Icons.format_list_bulleted,
+                        label: l10n.txtReaderChapters,
+                        onTap: _openCatalog,
+                      ),
+                      _buildToolbarItem(
+                        icon: _readerTheme.isDark
+                            ? Icons.wb_sunny_outlined
+                            : Icons.dark_mode_outlined,
+                        label: l10n.txtReaderNight,
+                        onTap: _toggleDarkMode,
+                      ),
+                      _buildToolbarItem(
+                        icon: Icons.tune,
+                        label: l10n.txtReaderSettingsLabel,
+                        onTap: _openSettings,
+                        highlighted: _showSettings,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
               ],
             ),
           ),
@@ -1249,8 +1269,9 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontWeight:
-                              selected ? FontWeight.w700 : FontWeight.w500,
+                          fontWeight: selected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                           color: selected
                               ? SHOAppColors.accent
                               : _readerTheme.text.withValues(alpha: 0.8),
@@ -1389,7 +1410,8 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
                         const SizedBox(height: SHOAppSpacing.sm),
                         Row(
                           children: [
-                            for (final bg in SHOTxtReaderTheme.backgroundPresets)
+                            for (final bg
+                                in SHOTxtReaderTheme.backgroundPresets)
                               Padding(
                                 padding: const EdgeInsets.only(
                                   right: SHOAppSpacing.md,
@@ -1418,18 +1440,20 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
                                       border: Border.all(
                                         color: _readerTheme.background == bg
                                             ? SHOAppColors.accent
-                                            : _readerTheme.text
-                                                .withValues(alpha: 0.2),
+                                            : _readerTheme.text.withValues(
+                                                alpha: 0.2,
+                                              ),
                                         width: 2,
                                       ),
                                     ),
-                                    child: bg ==
-                                            SHOTxtReaderTheme.darkBackground
+                                    child:
+                                        bg == SHOTxtReaderTheme.darkBackground
                                         ? Icon(
                                             Icons.dark_mode,
                                             size: 16,
-                                            color: Colors.white
-                                                .withValues(alpha: 0.8),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
                                           )
                                         : null,
                                   ),
@@ -1577,37 +1601,37 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
 
     return buildTrackedPage(
       PopScope(
-      onPopInvokedWithResult: (_, __) => _saveProgressSync(),
-      child: ColoredBox(
-        color: _readerTheme.background,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Scaffold(
-              backgroundColor: _readerTheme.background,
-              body: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (ready)
-                    _wrapContentArea(context, _buildReaderBody(pages))
-                  else
-                    _wrapContentArea(context, _buildLoadingBody(l10n)),
-                ],
+        onPopInvokedWithResult: (_, __) => _saveProgressSync(),
+        child: ColoredBox(
+          color: _readerTheme.background,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Scaffold(
+                backgroundColor: _readerTheme.background,
+                body: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    if (ready)
+                      _wrapContentArea(context, _buildReaderBody(pages))
+                    else
+                      _wrapContentArea(context, _buildLoadingBody(l10n)),
+                  ],
+                ),
               ),
-            ),
-            _buildPersistentNavBar(currentPage),
-            if (ready && currentPage != null && session != null) ...[
-              _buildTopChrome(l10n, inBookshelf),
-              _buildBottomChrome(l10n, session, pages, currentPage),
+              _buildPersistentNavBar(currentPage),
+              if (ready && currentPage != null && session != null) ...[
+                _buildTopChrome(l10n, inBookshelf),
+                _buildBottomChrome(l10n, session, pages, currentPage),
+              ],
+              if (_chapterMaskVisible) _buildChapterTransitionMask(),
+              _buildCatalogOverlay(l10n),
+              _buildSettingsOverlay(l10n),
             ],
-            if (_chapterMaskVisible) _buildChapterTransitionMask(),
-            _buildCatalogOverlay(l10n),
-            _buildSettingsOverlay(l10n),
-          ],
+          ),
         ),
       ),
-    ),
-    onRetry: _bootstrap,
+      onRetry: _bootstrap,
     );
   }
 
@@ -1663,16 +1687,12 @@ class _SHOTxtReaderPageState extends ConsumerState<SHOTxtReaderPage>
             const SizedBox(height: SHOAppSpacing.xl),
             Text(
               _phaseLabel(l10n),
-              style: TextStyle(
-                color: _readerTheme.text.withValues(alpha: 0.7),
-              ),
+              style: TextStyle(color: _readerTheme.text.withValues(alpha: 0.7)),
             ),
             const SizedBox(height: SHOAppSpacing.sm),
             Text(
               '${(_progress * 100).clamp(0, 100).toInt()}%',
-              style: TextStyle(
-                color: _readerTheme.text.withValues(alpha: 0.5),
-              ),
+              style: TextStyle(color: _readerTheme.text.withValues(alpha: 0.5)),
             ),
           ],
         ),

@@ -1,7 +1,4 @@
-enum SHOVideoLibrarySource {
-  local,
-  network,
-}
+enum SHOVideoLibrarySource { local, network }
 
 class SHOVideoLibraryEntry {
   const SHOVideoLibraryEntry({
@@ -51,14 +48,14 @@ class SHOVideoLibraryEntry {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'source': source.name,
-        'displayName': displayName,
-        'addedAt': addedAt.toIso8601String(),
-        'taskId': taskId,
-        'url': url,
-        'linkedDownloadTaskId': linkedDownloadTaskId,
-      };
+    'id': id,
+    'source': source.name,
+    'displayName': displayName,
+    'addedAt': addedAt.toIso8601String(),
+    'taskId': taskId,
+    'url': url,
+    'linkedDownloadTaskId': linkedDownloadTaskId,
+  };
 
   factory SHOVideoLibraryEntry.fromJson(Map<String, dynamic> json) {
     return SHOVideoLibraryEntry(

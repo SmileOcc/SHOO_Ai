@@ -26,9 +26,9 @@ Future<void> showSHOMusicPlayerMoreSheet({
         children: [
           Text(
             l10n.musicPlayerMoreTitle,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: SHOAppSpacing.xl),
           _MoreSheetTile(
@@ -84,14 +84,16 @@ class _MoreSheetTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.35),
               ),
             ],
           ),

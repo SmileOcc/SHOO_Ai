@@ -41,9 +41,6 @@ class SHOFlashTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SHOPromoTag(
-      label: 'FLASH',
-      color: SHOAppColors.flash,
-    );
+    return const SHOPromoTag(label: 'FLASH', color: SHOAppColors.flash);
   }
 }

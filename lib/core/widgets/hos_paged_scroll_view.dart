@@ -51,7 +51,8 @@ class SHOPagedScrollView extends StatelessWidget {
           physics: SHOAppPullRefresh.scrollPhysics,
           padding: padding ?? const EdgeInsets.all(SHOAppSpacing.pagePadding),
           itemCount: itemCount + 1,
-          separatorBuilder: separatorBuilder ?? (_, __) => const SizedBox.shrink(),
+          separatorBuilder:
+              separatorBuilder ?? (_, __) => const SizedBox.shrink(),
           itemBuilder: (context, index) {
             if (index < itemCount) {
               return itemBuilder(context, index);
@@ -133,7 +134,8 @@ class SHOPagedGridView extends StatelessWidget {
           physics: SHOAppPullRefresh.scrollPhysics,
           slivers: [
             SliverPadding(
-              padding: padding ?? const EdgeInsets.all(SHOAppSpacing.pagePadding),
+              padding:
+                  padding ?? const EdgeInsets.all(SHOAppSpacing.pagePadding),
               sliver: SliverGrid(
                 delegate: SliverChildBuilderDelegate(
                   itemBuilder,
@@ -155,16 +157,16 @@ class SHOPagedGridView extends StatelessWidget {
                       ),
                     )
                   : (!hasMore && itemCount > 0)
-                      ? Padding(
-                          padding: const EdgeInsets.all(SHOAppSpacing.xl),
-                          child: Center(
-                            child: Text(
-                              l10n.pagedListNoMore,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        )
-                      : const SizedBox(height: SHOAppSpacing.xxxl),
+                  ? Padding(
+                      padding: const EdgeInsets.all(SHOAppSpacing.xl),
+                      child: Center(
+                        child: Text(
+                          l10n.pagedListNoMore,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(height: SHOAppSpacing.xxxl),
             ),
           ],
         ),

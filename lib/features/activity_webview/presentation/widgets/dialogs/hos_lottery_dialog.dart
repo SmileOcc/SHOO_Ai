@@ -54,7 +54,10 @@ class _SHOLotteryDialogState extends ConsumerState<SHOLotteryDialog>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('幸运抽奖', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+            const Text(
+              '幸运抽奖',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            ),
             const SizedBox(height: 20),
             AnimatedBuilder(
               animation: _controller,
@@ -89,7 +92,10 @@ class _SHOLotteryDialogState extends ConsumerState<SHOLotteryDialog>
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child: const Text('GO', style: TextStyle(fontWeight: FontWeight.w800)),
+                  child: const Text(
+                    'GO',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
                 ),
               ),
             ),

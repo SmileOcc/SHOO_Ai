@@ -46,91 +46,97 @@ class _SHOOnboardingPageState extends ConsumerState<SHOOnboardingPage>
     final l10n = AppLocalizations.of(context);
     final slides = [
       (l10n.onboardingTitle1, l10n.onboardingDesc1, Icons.style),
-      (l10n.onboardingTitle2, l10n.onboardingDesc2, Icons.local_shipping_outlined),
+      (
+        l10n.onboardingTitle2,
+        l10n.onboardingDesc2,
+        Icons.local_shipping_outlined,
+      ),
       (l10n.onboardingTitle3, l10n.onboardingDesc3, Icons.savings_outlined),
     ];
 
     return buildTrackedPage(
       Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: _finish,
-                child: Text(l10n.onboardingSkip),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _finish,
+                  child: Text(l10n.onboardingSkip),
+                ),
               ),
-            ),
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: slides.length,
-                onPageChanged: (i) => setState(() => _index = i),
-                itemBuilder: (context, i) {
-                  final slide = slides[i];
-                  return Padding(
-                    padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(slide.$3, size: 80, color: SHOAppColors.accent),
-                        const SizedBox(height: SHOAppSpacing.xxxl),
-                        Text(
-                          slide.$1,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        const SizedBox(height: SHOAppSpacing.lg),
-                        Text(
-                          slide.$2,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+              Expanded(
+                child: PageView.builder(
+                  controller: _controller,
+                  itemCount: slides.length,
+                  onPageChanged: (i) => setState(() => _index = i),
+                  itemBuilder: (context, i) {
+                    final slide = slides[i];
+                    return Padding(
+                      padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(slide.$3, size: 80, color: SHOAppColors.accent),
+                          const SizedBox(height: SHOAppSpacing.xxxl),
+                          Text(
+                            slide.$1,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          const SizedBox(height: SHOAppSpacing.lg),
+                          Text(
+                            slide.$2,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(slides.length, (i) {
+                  return Container(
+                    width: i == _index ? 16 : 6,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(
+                      color: i == _index
+                          ? SHOAppColors.primary
+                          : SHOAppColors.border,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   );
-                },
+                }),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(slides.length, (i) {
-                return Container(
-                  width: i == _index ? 16 : 6,
-                  height: 4,
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  decoration: BoxDecoration(
-                    color: i == _index ? SHOAppColors.primary : SHOAppColors.border,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                );
-              }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-              child: SHOAppButton(
-                label: _index == slides.length - 1
-                    ? l10n.onboardingStart
-                    : l10n.onboardingNext,
-                isExpanded: true,
-                variant: SHOAppButtonVariant.accent,
-                onPressed: () {
-                  if (_index < slides.length - 1) {
-                    _controller.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
-                  } else {
-                    _finish();
-                  }
-                },
+              Padding(
+                padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+                child: SHOAppButton(
+                  label: _index == slides.length - 1
+                      ? l10n.onboardingStart
+                      : l10n.onboardingNext,
+                  isExpanded: true,
+                  variant: SHOAppButtonVariant.accent,
+                  onPressed: () {
+                    if (_index < slides.length - 1) {
+                      _controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                    } else {
+                      _finish();
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

@@ -15,19 +15,13 @@ extension SHOAsyncValueUI<T> on AsyncValue<T> {
     return when(
       data: data,
       loading: () =>
-          loading ??
-          const SHOAppLoadingState(
-            state: SHOLoadingState.loading,
-          ),
+          loading ?? const SHOAppLoadingState(state: SHOLoadingState.loading),
       error: (err, stack) {
         if (error != null) return error(err, stack);
         final message = err is SHOAppException
             ? userFacingMessage(err)
             : err.toString();
-        return SHOAppErrorView(
-          message: message,
-          onRetry: null,
-        );
+        return SHOAppErrorView(message: message, onRetry: null);
       },
     );
   }

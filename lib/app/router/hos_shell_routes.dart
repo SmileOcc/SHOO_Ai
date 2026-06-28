@@ -15,88 +15,85 @@ import 'package:shoo/app/router/hos_router_keys.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 
 List<RouteBase> shoShellRoutes() => [
+  GoRoute(
+    path: SHOAppRoutes.settings,
+    parentNavigatorKey: rootNavigatorKey,
+    builder: (context, state) => const SHOSettingsPage(),
+    routes: [
+      GoRoute(path: 'about', builder: (context, state) => const SHOAboutPage()),
       GoRoute(
-        path: SHOAppRoutes.settings,
-        parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const SHOSettingsPage(),
+        path: 'cache',
+        builder: (context, state) => const SHOSettingsCachePage(),
+      ),
+    ],
+  ),
+  GoRoute(
+    path: SHOAppRoutes.messages,
+    parentNavigatorKey: rootNavigatorKey,
+    builder: (context, state) => const SHOMessagePage(),
+  ),
+  // StatefulShellRoute 是专门为包含底部 导航栏 或侧边导航栏的应用设计的，
+  //它能够保持多个 Tab 页面的状态，同时支持在 Tab 之间切换时保持各页面的滚动位置和表单数据。
+  StatefulShellRoute.indexedStack(
+    builder: (context, state, navigationShell) {
+      return SHOMainShell(navigationShell: navigationShell);
+    },
+    branches: [
+      StatefulShellBranch(
+        navigatorKey: shellNavigatorHomeKey,
         routes: [
           GoRoute(
-            path: 'about',
-            builder: (context, state) => const SHOAboutPage(),
+            path: SHOAppRoutes.home,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SHOTabKeepAlivePage(child: SHOHomePage()),
+            ),
           ),
+        ],
+      ),
+      StatefulShellBranch(
+        navigatorKey: shellNavigatorCategoryKey,
+        routes: [
           GoRoute(
-            path: 'cache',
-            builder: (context, state) => const SHOSettingsCachePage(),
+            path: SHOAppRoutes.category,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SHOTabKeepAlivePage(child: SHOCategoryPage()),
+            ),
           ),
         ],
       ),
-      GoRoute(
-        path: SHOAppRoutes.messages,
-        parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const SHOMessagePage(),
-      ),
-      // StatefulShellRoute 是专门为包含底部 导航栏 或侧边导航栏的应用设计的，
-      //它能够保持多个 Tab 页面的状态，同时支持在 Tab 之间切换时保持各页面的滚动位置和表单数据。
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return SHOMainShell(navigationShell: navigationShell);
-        },
-        branches: [
-          StatefulShellBranch(
-            navigatorKey: shellNavigatorHomeKey,
-            routes: [
-              GoRoute(
-                path: SHOAppRoutes.home,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SHOTabKeepAlivePage(child: SHOHomePage()),
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: shellNavigatorCategoryKey,
-            routes: [
-              GoRoute(
-                path: SHOAppRoutes.category,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SHOTabKeepAlivePage(child: SHOCategoryPage()),
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: shellNavigatorCommunityKey,
-            routes: [
-              GoRoute(
-                path: SHOAppRoutes.community,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SHOTabKeepAlivePage(child: SHOCommunityPage()),
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: shellNavigatorCartKey,
-            routes: [
-              GoRoute(
-                path: SHOAppRoutes.cart,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SHOTabKeepAlivePage(child: SHOCartPage()),
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: shellNavigatorProfileKey,
-            routes: [
-              GoRoute(
-                path: SHOAppRoutes.profile,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SHOTabKeepAlivePage(child: SHOProfilePage()),
-                ),
-              ),
-            ],
+      StatefulShellBranch(
+        navigatorKey: shellNavigatorCommunityKey,
+        routes: [
+          GoRoute(
+            path: SHOAppRoutes.community,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SHOTabKeepAlivePage(child: SHOCommunityPage()),
+            ),
           ),
         ],
       ),
-    ];
+      StatefulShellBranch(
+        navigatorKey: shellNavigatorCartKey,
+        routes: [
+          GoRoute(
+            path: SHOAppRoutes.cart,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SHOTabKeepAlivePage(child: SHOCartPage()),
+            ),
+          ),
+        ],
+      ),
+      StatefulShellBranch(
+        navigatorKey: shellNavigatorProfileKey,
+        routes: [
+          GoRoute(
+            path: SHOAppRoutes.profile,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: SHOTabKeepAlivePage(child: SHOProfilePage()),
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+];

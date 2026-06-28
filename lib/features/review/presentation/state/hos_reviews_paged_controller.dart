@@ -31,15 +31,18 @@ class SHOReviewsPagedState implements SHOPagedContainer<SHOProductReview> {
   bool get pagedIsLoadingMore => isLoadingMore;
 }
 
-final reviewsPagedProvider = AutoDisposeAsyncNotifierProviderFamily<
-    ReviewsPagedNotifier, SHOReviewsPagedState, String>(
-  ReviewsPagedNotifier.new,
-);
+final reviewsPagedProvider =
+    AutoDisposeAsyncNotifierProviderFamily<
+      ReviewsPagedNotifier,
+      SHOReviewsPagedState,
+      String
+    >(ReviewsPagedNotifier.new);
 
 class ReviewsPagedNotifier
     extends AutoDisposeFamilyAsyncNotifier<SHOReviewsPagedState, String> {
   @override
-  Future<SHOReviewsPagedState> build(String productId) => _fetchPage(productId, 1);
+  Future<SHOReviewsPagedState> build(String productId) =>
+      _fetchPage(productId, 1);
 
   Future<void> refresh(String productId) async {
     state = const AsyncLoading();

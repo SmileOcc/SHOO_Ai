@@ -23,18 +23,15 @@ class SHOCartStackPage extends StatelessWidget {
           ),
         ),
       ),
-      body: SHOHybridEmbeddedUi.padBody(
-        context,
-        const SHOCartPage(),
-      ),
+      body: SHOHybridEmbeddedUi.padBody(context, const SHOCartPage()),
     );
   }
 }
 
 List<RouteBase> shoCartRoutes({required GlobalKey<NavigatorState> rootKey}) => [
-      GoRoute(
-        path: SHOAppRoutes.cartStack,
-        parentNavigatorKey: rootKey,
-        builder: (context, state) => const SHOCartStackPage(),
-      ),
-    ];
+  GoRoute(
+    path: SHOAppRoutes.cartStack,
+    parentNavigatorKey: rootKey,
+    builder: (context, state) => const SHOCartStackPage(),
+  ),
+];

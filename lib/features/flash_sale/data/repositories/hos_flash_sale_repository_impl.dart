@@ -22,21 +22,19 @@ class SHOFlashSaleRepository {
     required SHOFlashSaleSort sort,
     required int page,
     int pageSize = 4,
-  }) =>
-      _api.fetchPage(
-        activityId: activityId,
-        date: date,
-        sessionId: sessionId,
-        sort: sort,
-        page: page,
-        pageSize: pageSize,
-      );
+  }) => _api.fetchPage(
+    activityId: activityId,
+    date: date,
+    sessionId: sessionId,
+    sort: sort,
+    page: page,
+    pageSize: pageSize,
+  );
 
   Future<SHOFlashSaleProductActivity> getProductActivity({
     required String productId,
     required String sessionId,
-  }) =>
-      _api.fetchProductActivity(productId: productId, sessionId: sessionId);
+  }) => _api.fetchProductActivity(productId: productId, sessionId: sessionId);
 
   Future<List<SHOFlashSaleFollow>> getFollows() => _api.fetchFollows();
 
@@ -46,8 +44,7 @@ class SHOFlashSaleRepository {
   Future<void> unfollow({
     required String sessionId,
     required String productId,
-  }) =>
-      _api.unfollow(sessionId: sessionId, productId: productId);
+  }) => _api.unfollow(sessionId: sessionId, productId: productId);
 
   Future<void> claimCoupon(String couponId) => _api.claimCoupon(couponId);
 }

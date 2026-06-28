@@ -8,8 +8,10 @@ final searchHotKeywordsProvider = FutureProvider<List<String>>((ref) async {
   return repo.getHotKeywords();
 });
 
-final searchResultsProvider =
-    FutureProvider.family<List<SHOProduct>, String>((ref, query) async {
+final searchResultsProvider = FutureProvider.family<List<SHOProduct>, String>((
+  ref,
+  query,
+) async {
   if (query.trim().isEmpty) return [];
   final repo = ref.watch(searchRepositoryProvider);
   return repo.search(query);

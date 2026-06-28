@@ -63,8 +63,9 @@ mixin SHOPageRouteAnalyticsMixin<T extends StatefulWidget> on State<T>
     final info = SHOPageRouteInfo.tryFromContext(
       context,
       pageName: pageAnalyticsName,
-      previousRoutePath:
-          SHOPageAnalyticsReporter.resolvePreviousRoutePath(null),
+      previousRoutePath: SHOPageAnalyticsReporter.resolvePreviousRoutePath(
+        null,
+      ),
     );
     if (info == null) return;
     SHOPageAnalyticsReporter.reportPageAction(

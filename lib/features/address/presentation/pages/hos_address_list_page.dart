@@ -49,7 +49,8 @@ class _SHOAddressListPageState
     await ref.read(addressesProvider.notifier).delete(address.id);
     if (!mounted) return;
     final deleteMode = ref.read(addressListDeleteModeProvider);
-    if (deleteMode && (ref.read(addressesProvider).valueOrNull?.isEmpty ?? true)) {
+    if (deleteMode &&
+        (ref.read(addressesProvider).valueOrNull?.isEmpty ?? true)) {
       ref.read(addressListDeleteModeProvider.notifier).state = false;
     }
   }
@@ -131,8 +132,9 @@ class _SHOAddressListPageState
                 height: 48,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(SHOProfileSectionCard.radius),
+                  borderRadius: BorderRadius.circular(
+                    SHOProfileSectionCard.radius,
+                  ),
                   border: Border.all(
                     color: context.shoTheme.border,
                     width: SHOProfileSectionCard.borderWidth,
@@ -141,9 +143,9 @@ class _SHOAddressListPageState
                 child: Text(
                   l10n.addressAddNew,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: SHOAppColors.accent,
-                      ),
+                    fontWeight: FontWeight.w700,
+                    color: SHOAppColors.accent,
+                  ),
                 ),
               ),
             ),
@@ -166,12 +168,10 @@ class _SHOAddressListPageState
     final selectedId = ref.watch(selectedAddressIdProvider);
     final deleteMode = ref.watch(addressListDeleteModeProvider);
 
-    final activeId = selectedId ??
+    final activeId =
+        selectedId ??
         addresses
-            .firstWhere(
-              (item) => item.isDefault,
-              orElse: () => addresses.first,
-            )
+            .firstWhere((item) => item.isDefault, orElse: () => addresses.first)
             .id;
 
     return ListView.separated(
@@ -231,8 +231,9 @@ class _AddressCard extends StatelessWidget {
     final borderColor = selectMode && selected
         ? SHOAppColors.accent
         : theme.border;
-    final borderWidth =
-        selectMode && selected ? 1.5 : SHOProfileSectionCard.borderWidth;
+    final borderWidth = selectMode && selected
+        ? 1.5
+        : SHOProfileSectionCard.borderWidth;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -270,9 +271,7 @@ class _AddressCard extends StatelessWidget {
                     ],
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(
-                          right: deleteMode ? 22 : 0,
-                        ),
+                        padding: EdgeInsets.only(right: deleteMode ? 22 : 0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -298,8 +297,9 @@ class _AddressCard extends StatelessWidget {
                                       vertical: SHOAppSpacing.xxs,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: SHOAppColors.accent
-                                          .withValues(alpha: 0.12),
+                                      color: SHOAppColors.accent.withValues(
+                                        alpha: 0.12,
+                                      ),
                                       borderRadius: BorderRadius.circular(
                                         SHOAppSpacing.cardRadius,
                                       ),
@@ -321,9 +321,7 @@ class _AddressCard extends StatelessWidget {
                             const SizedBox(height: SHOAppSpacing.xs),
                             Text(
                               address.phone,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: theme.textSecondary,
                                     fontWeight: FontWeight.w500,
@@ -332,9 +330,7 @@ class _AddressCard extends StatelessWidget {
                             const SizedBox(height: SHOAppSpacing.xs),
                             Text(
                               address.fullLine,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
+                              style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: theme.textSecondary),
                             ),
                           ],
@@ -349,8 +345,9 @@ class _AddressCard extends StatelessWidget {
                     right: 0,
                     child: InkWell(
                       onTap: onDelete,
-                      borderRadius:
-                          BorderRadius.circular(SHOAppSpacing.cardRadius),
+                      borderRadius: BorderRadius.circular(
+                        SHOAppSpacing.cardRadius,
+                      ),
                       child: Icon(
                         Icons.close,
                         size: 18,

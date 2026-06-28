@@ -23,15 +23,16 @@ class SHOActivityRedirectPage extends ConsumerStatefulWidget {
       _SHOActivityRedirectPageState();
 }
 
-class _SHOActivityRedirectPageState extends ConsumerState<SHOActivityRedirectPage>
+class _SHOActivityRedirectPageState
+    extends ConsumerState<SHOActivityRedirectPage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   @override
   String get pageName => 'activity_redirect';
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'is_payment': widget.isPayment,
-      };
+    'is_payment': widget.isPayment,
+  };
 
   @override
   void initState() {
@@ -51,9 +52,7 @@ class _SHOActivityRedirectPageState extends ConsumerState<SHOActivityRedirectPag
   @override
   Widget build(BuildContext context) {
     return buildTrackedPage(
-      const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+      const Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }
 }

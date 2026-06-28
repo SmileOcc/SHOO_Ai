@@ -20,10 +20,9 @@ class SHOCategoryRepository {
     required String categoryId,
     int page = 1,
     int pageSize = 20,
-  }) =>
-      _api.fetchProductsByCategory(
-        categoryId: categoryId,
-        page: page,
-        pageSize: pageSize,
-      );
+  }) => _api.fetchProductsByCategory(
+    categoryId: categoryId,
+    page: page,
+    pageSize: pageSize,
+  );
 }

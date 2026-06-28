@@ -41,9 +41,9 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty)
-          'initial_query': widget.initialQuery,
-      };
+    if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty)
+      'initial_query': widget.initialQuery,
+  };
 
   @override
   void initState() {
@@ -85,13 +85,10 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
       final paged = await ref.read(searchPagedProvider(keyword).future);
       resultCount = paged.items.length;
     } catch (_) {}
-    await SHOAnalyticsManager.instance.trackEvent(
-      SHOAnalyticsRegistry.search,
-      {
-        'keyword': keyword,
-        'result_count': resultCount,
-      },
-    );
+    await SHOAnalyticsManager.instance.trackEvent(SHOAnalyticsRegistry.search, {
+      'keyword': keyword,
+      'result_count': resultCount,
+    });
   }
 
   @override
@@ -103,44 +100,44 @@ class _SHOSearchPageState extends ConsumerState<SHOSearchPage>
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        backgroundColor: context.shoSurface,
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.only(right: SHOAppSpacing.pagePadding),
-          child: SHOAppTextField(
-            controller: _controller,
-            hint: l10n.searchHint,
-            prefixIcon: const Icon(Icons.search, size: 18),
-            autofocus: true,
-            onChanged: _onQueryChanged,
-            onSubmitted: _submitSearch,
+        appBar: AppBar(
+          titleSpacing: 0,
+          backgroundColor: context.shoSurface,
+          surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+          title: Padding(
+            padding: const EdgeInsets.only(right: SHOAppSpacing.pagePadding),
+            child: SHOAppTextField(
+              controller: _controller,
+              hint: l10n.searchHint,
+              prefixIcon: const Icon(Icons.search, size: 18),
+              autofocus: true,
+              onChanged: _onQueryChanged,
+              onSubmitted: _submitSearch,
+            ),
           ),
         ),
+        body: trimmed.isEmpty
+            ? _SHOSearchSuggestions(
+                hotAsync: hotAsync,
+                historyAsync: historyAsync,
+                onKeywordTap: (keyword) {
+                  _controller.text = keyword;
+                  _submitSearch(keyword);
+                },
+                onClearHistory: () async {
+                  await ref.read(searchHistoryProvider.notifier).clear();
+                  SHOAppToast.info(l10n.searchHistoryCleared);
+                },
+              )
+            : SHOSearchResultsPane(
+                query: trimmed,
+                scrollController: _scrollController,
+              ),
       ),
-      body: trimmed.isEmpty
-          ? _SHOSearchSuggestions(
-              hotAsync: hotAsync,
-              historyAsync: historyAsync,
-              onKeywordTap: (keyword) {
-                _controller.text = keyword;
-                _submitSearch(keyword);
-              },
-              onClearHistory: () async {
-                await ref.read(searchHistoryProvider.notifier).clear();
-                SHOAppToast.info(l10n.searchHistoryCleared);
-              },
-            )
-          : SHOSearchResultsPane(
-              query: trimmed,
-              scrollController: _scrollController,
-            ),
-    ),
-    onRetry: trimmed.isEmpty
-        ? null
-        : () => ref.invalidate(searchPagedProvider(trimmed)),
+      onRetry: trimmed.isEmpty
+          ? null
+          : () => ref.invalidate(searchPagedProvider(trimmed)),
     );
   }
 }
@@ -177,9 +174,8 @@ class _SHOSearchSuggestions extends StatelessWidget {
                     Expanded(
                       child: Text(
                         l10n.searchHistoryTitle,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
                       ),
                     ),
                     TextButton(
@@ -213,13 +209,14 @@ class _SHOSearchSuggestions extends StatelessWidget {
         ),
         Text(
           l10n.searchHotTitle,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: SHOAppSpacing.md),
         hotAsync.when(
-          loading: () => const SHOAppLoadingState(state: SHOLoadingState.loading),
+          loading: () =>
+              const SHOAppLoadingState(state: SHOLoadingState.loading),
           error: (_, __) => SHOAppLoadingState(
             state: SHOLoadingState.error,
             message: l10n.loadFailed,
@@ -256,12 +253,21 @@ class SHOSearchResultsPane extends SHOPagedDataPage<SHOProduct> {
   final ScrollController scrollController;
 
   @override
-  SHOPagedDataPageState<SHOProduct, SHOPagedListState<SHOProduct>,
-      SHOSearchResultsPane> createState() => _SHOSearchResultsPaneState();
+  SHOPagedDataPageState<
+    SHOProduct,
+    SHOPagedListState<SHOProduct>,
+    SHOSearchResultsPane
+  >
+  createState() => _SHOSearchResultsPaneState();
 }
 
-class _SHOSearchResultsPaneState extends SHOPagedDataPageState<SHOProduct,
-    SHOPagedListState<SHOProduct>, SHOSearchResultsPane> {
+class _SHOSearchResultsPaneState
+    extends
+        SHOPagedDataPageState<
+          SHOProduct,
+          SHOPagedListState<SHOProduct>,
+          SHOSearchResultsPane
+        > {
   @override
   bool get embedInParentShell => true;
 
@@ -272,8 +278,8 @@ class _SHOSearchResultsPaneState extends SHOPagedDataPageState<SHOProduct,
   String get pageName => 'search_results';
 
   @override
-  ProviderListenable<AsyncValue<SHOPagedListState<SHOProduct>>> get pagedProvider =>
-      searchPagedProvider(widget.query);
+  ProviderListenable<AsyncValue<SHOPagedListState<SHOProduct>>>
+  get pagedProvider => searchPagedProvider(widget.query);
 
   @override
   ScrollController? get scrollController => widget.scrollController;
@@ -288,12 +294,14 @@ class _SHOSearchResultsPaneState extends SHOPagedDataPageState<SHOProduct,
       );
 
   @override
-  void refreshPaged(WidgetRef ref) =>
-      ref.read(searchPagedProvider(widget.query).notifier).refresh(widget.query);
+  void refreshPaged(WidgetRef ref) => ref
+      .read(searchPagedProvider(widget.query).notifier)
+      .refresh(widget.query);
 
   @override
-  void loadMorePaged(WidgetRef ref) =>
-      ref.read(searchPagedProvider(widget.query).notifier).loadMore(widget.query);
+  void loadMorePaged(WidgetRef ref) => ref
+      .read(searchPagedProvider(widget.query).notifier)
+      .loadMore(widget.query);
 
   @override
   String? emptyMessage(BuildContext context) =>

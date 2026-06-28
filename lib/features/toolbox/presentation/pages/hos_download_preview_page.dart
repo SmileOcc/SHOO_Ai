@@ -66,9 +66,9 @@ class _SHODownloadPreviewPageState extends ConsumerState<SHODownloadPreviewPage>
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
-        'file_name': widget.fileName,
-        'kind': widget.kind.name,
-      };
+    'file_name': widget.fileName,
+    'kind': widget.kind.name,
+  };
 
   @override
   void initState() {
@@ -126,15 +126,15 @@ class _SHODownloadPreviewPageState extends ConsumerState<SHODownloadPreviewPage>
   Widget build(BuildContext context) {
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.fileName,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+        appBar: AppBar(
+          title: Text(
+            widget.fileName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
-      ),
-      body: _buildBody(),
+        body: _buildBody(),
       ),
       onRetry: _initPreview,
     );
@@ -147,55 +147,55 @@ class _SHODownloadPreviewPageState extends ConsumerState<SHODownloadPreviewPage>
 
     return switch (widget.kind) {
       SHODownloadPreviewKind.image => InteractiveViewer(
-          minScale: 0.5,
-          maxScale: 4,
-          child: Center(
-            child: Image.file(
-              File(widget.localPath),
-              fit: BoxFit.contain,
-            ),
-          ),
+        minScale: 0.5,
+        maxScale: 4,
+        child: Center(
+          child: Image.file(File(widget.localPath), fit: BoxFit.contain),
         ),
-      SHODownloadPreviewKind.text => _textContent == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-              child: SelectableText(_textContent!),
-            ),
-      SHODownloadPreviewKind.video => !_videoReady || _videoController == null
-          ? const Center(child: CircularProgressIndicator())
-          : Center(
-              child: AspectRatio(
-                aspectRatio: _videoController!.value.aspectRatio,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    VideoPlayer(_videoController!),
-                    IconButton(
-                      iconSize: 56,
-                      color: Colors.white70,
-                      icon: Icon(
-                        _videoController!.value.isPlaying
-                            ? Icons.pause_circle_filled
-                            : Icons.play_circle_filled,
+      ),
+      SHODownloadPreviewKind.text =>
+        _textContent == null
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
+                child: SelectableText(_textContent!),
+              ),
+      SHODownloadPreviewKind.video =>
+        !_videoReady || _videoController == null
+            ? const Center(child: CircularProgressIndicator())
+            : Center(
+                child: AspectRatio(
+                  aspectRatio: _videoController!.value.aspectRatio,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      VideoPlayer(_videoController!),
+                      IconButton(
+                        iconSize: 56,
+                        color: Colors.white70,
+                        icon: Icon(
+                          _videoController!.value.isPlaying
+                              ? Icons.pause_circle_filled
+                              : Icons.play_circle_filled,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (_videoController!.value.isPlaying) {
+                              _videoController!.pause();
+                            } else {
+                              _videoController!.play();
+                            }
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          if (_videoController!.value.isPlaying) {
-                            _videoController!.pause();
-                          } else {
-                            _videoController!.play();
-                          }
-                        });
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-      SHODownloadPreviewKind.pdf => !_pdfReady || _pdfController == null
-          ? const Center(child: CircularProgressIndicator())
-          : PdfViewPinch(controller: _pdfController!),
+      SHODownloadPreviewKind.pdf =>
+        !_pdfReady || _pdfController == null
+            ? const Center(child: CircularProgressIndicator())
+            : PdfViewPinch(controller: _pdfController!),
     };
   }
 }

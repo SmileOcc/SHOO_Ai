@@ -42,7 +42,8 @@ class SHOGenericWebViewContainer extends ConsumerStatefulWidget {
   final void Function(bool canGoBack)? onCanGoBackChanged;
   final void Function(String url)? onPageLoadStarted;
   final void Function(String url)? onPageLoadFinished;
-  final void Function(String url, int? errorCode, String? message)? onPageLoadFailed;
+  final void Function(String url, int? errorCode, String? message)?
+  onPageLoadFailed;
   final void Function(WebViewController controller)? onControllerReady;
 
   @override
@@ -247,7 +248,8 @@ class _SHOGenericWebViewContainerState
   }
 
   Future<NavigationDecision> _resolveNavigation(String url) async {
-    if (widget.config.navigationPolicy == SHOWebViewNavigationPolicy.whitelist) {
+    if (widget.config.navigationPolicy ==
+        SHOWebViewNavigationPolicy.whitelist) {
       return SHOActivityWebViewBridge.resolveNavigation(
         context,
         ref,
@@ -315,8 +317,7 @@ class _SHOGenericWebViewContainerState
     await controller.loadRequest(Uri.parse(url), headers: headers);
   }
 
-  String _currentUrl() =>
-      _lastUrl.isNotEmpty ? _lastUrl : widget.config.url;
+  String _currentUrl() => _lastUrl.isNotEmpty ? _lastUrl : widget.config.url;
 
   void _startTimeout() {
     _cancelTimeout();

@@ -68,12 +68,7 @@ abstract final class SHOAppLogger {
       _engine.log(SHOLogLevel.warn, message, error: error);
 
   static void e(String message, [Object? error, StackTrace? stack]) =>
-      _engine.log(
-        SHOLogLevel.error,
-        message,
-        error: error,
-        stackTrace: stack,
-      );
+      _engine.log(SHOLogLevel.error, message, error: error, stackTrace: stack);
 
   // ── 兼容旧 API（逐步迁移到 d/i/w/e 或 module）──────────
 

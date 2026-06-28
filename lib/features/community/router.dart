@@ -7,32 +7,27 @@ import 'package:shoo/features/community/presentation/widgets/hos_community_detai
 
 List<RouteBase> shoCommunityRoutes({
   required GlobalKey<NavigatorState> rootKey,
-}) =>
-    [
-      GoRoute(
-        path: SHOAppRoutes.communityNewsDetail,
-        parentNavigatorKey: rootKey,
-        builder: (context, state) {
-          final item = state.extra;
-          if (item is SHOCommunityFeedItem) {
-            return SHOCommunityNewsDetailPage(item: item);
-          }
-          return const Scaffold(
-            body: Center(child: Text('Content not found')),
-          );
-        },
-      ),
-      GoRoute(
-        path: SHOAppRoutes.communityPostDetail,
-        parentNavigatorKey: rootKey,
-        builder: (context, state) {
-          final item = state.extra;
-          if (item is SHOCommunityFeedItem) {
-            return SHOCommunityPostDetailPage(item: item);
-          }
-          return const Scaffold(
-            body: Center(child: Text('Content not found')),
-          );
-        },
-      ),
-    ];
+}) => [
+  GoRoute(
+    path: SHOAppRoutes.communityNewsDetail,
+    parentNavigatorKey: rootKey,
+    builder: (context, state) {
+      final item = state.extra;
+      if (item is SHOCommunityFeedItem) {
+        return SHOCommunityNewsDetailPage(item: item);
+      }
+      return const Scaffold(body: Center(child: Text('Content not found')));
+    },
+  ),
+  GoRoute(
+    path: SHOAppRoutes.communityPostDetail,
+    parentNavigatorKey: rootKey,
+    builder: (context, state) {
+      final item = state.extra;
+      if (item is SHOCommunityFeedItem) {
+        return SHOCommunityPostDetailPage(item: item);
+      }
+      return const Scaffold(body: Center(child: Text('Content not found')));
+    },
+  ),
+];

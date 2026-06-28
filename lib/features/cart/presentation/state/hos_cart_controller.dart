@@ -61,11 +61,7 @@ class SHOCartNotifier extends Notifier<SHOCartSnapshot> {
     await _persist();
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.addToCart,
-      {
-        'product_id': product.id,
-        'sku_id': lineId,
-        'quantity': quantity,
-      },
+      {'product_id': product.id, 'sku_id': lineId, 'quantity': quantity},
     );
   }
 
@@ -91,7 +87,10 @@ class SHOCartNotifier extends Notifier<SHOCartSnapshot> {
     state = SHOCartSnapshot(
       items: [
         for (final item in state.items)
-          if (item.id == lineId) item.copyWith(selected: !item.selected) else item,
+          if (item.id == lineId)
+            item.copyWith(selected: !item.selected)
+          else
+            item,
       ],
     );
     await _persist();
@@ -99,7 +98,9 @@ class SHOCartNotifier extends Notifier<SHOCartSnapshot> {
 
   Future<void> selectAll(bool selected) async {
     state = SHOCartSnapshot(
-      items: [for (final item in state.items) item.copyWith(selected: selected)],
+      items: [
+        for (final item in state.items) item.copyWith(selected: selected),
+      ],
     );
     await _persist();
   }

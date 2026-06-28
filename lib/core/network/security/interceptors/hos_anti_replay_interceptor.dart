@@ -12,16 +12,17 @@ class SHOAntiReplayInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers.putIfAbsent(
-      'X-Request-Id',
-      () => _crypto.generateNonce(),
-    );
+    options.headers.putIfAbsent('X-Request-Id', () => _crypto.generateNonce());
     handler.next(options);
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
-    final timestamp = response.requestOptions.headers['X-Timestamp']?.toString();
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    final timestamp = response.requestOptions.headers['X-Timestamp']
+        ?.toString();
     if (timestamp != null) {
       final requestTime = int.tryParse(timestamp);
       if (requestTime != null) {

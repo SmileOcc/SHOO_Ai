@@ -4,8 +4,8 @@ import 'package:shoo/features/search/data/datasources/local/hos_search_history_s
 
 final searchHistoryProvider =
     AsyncNotifierProvider<SearchHistoryNotifier, List<String>>(
-  SearchHistoryNotifier.new,
-);
+      SearchHistoryNotifier.new,
+    );
 
 class SearchHistoryNotifier extends AsyncNotifier<List<String>> {
   @override

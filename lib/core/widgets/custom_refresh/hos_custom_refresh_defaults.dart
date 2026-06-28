@@ -65,8 +65,8 @@ abstract final class SHOAppCustomRefreshDefaults {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: SHOAppColors.textMuted,
-                            ),
+                          color: SHOAppColors.textMuted,
+                        ),
                       ),
                     ],
                   ],
@@ -106,9 +106,9 @@ abstract final class SHOAppCustomRefreshDefaults {
           child: Center(
             child: Text(
               l10n.pagedListNoMore,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: SHOAppColors.textMuted,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: SHOAppColors.textMuted),
             ),
           ),
         );
@@ -127,9 +127,9 @@ abstract final class SHOAppCustomRefreshDefaults {
                 child: Text(
                   l10n.customRefreshLoadFailed,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: SHOAppColors.accent,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: SHOAppColors.accent,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -140,9 +140,7 @@ abstract final class SHOAppCustomRefreshDefaults {
 
   static Widget empty(BuildContext context, {String? message}) {
     final l10n = AppLocalizations.of(context);
-    return SHOEmptyState(
-      title: message ?? l10n.noData,
-    );
+    return SHOEmptyState(title: message ?? l10n.noData);
   }
 
   static Widget error(

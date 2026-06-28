@@ -8,7 +8,9 @@ import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 const _storageKey = 'profile_activity_v1';
 const _maxFootprints = 50;
 
-final profileActivityStorageProvider = Provider<SHOProfileActivityStorage>((ref) {
+final profileActivityStorageProvider = Provider<SHOProfileActivityStorage>((
+  ref,
+) {
   return SHOProfileActivityStorage(ref.watch(sharedPreferencesProvider));
 });
 
@@ -41,13 +43,13 @@ class SHOProfileProductCache {
   }
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'imageUrl': imageUrl,
-        'price': price,
-        'originalPrice': originalPrice,
-        'rating': rating,
-        'soldCount': soldCount,
-      };
+    'title': title,
+    'imageUrl': imageUrl,
+    'price': price,
+    'originalPrice': originalPrice,
+    'rating': rating,
+    'soldCount': soldCount,
+  };
 }
 
 class SHOProfileActivityStorage {
@@ -84,7 +86,9 @@ class SHOProfileActivityStorage {
       productId,
       ...current.footprints.where((id) => id != productId),
     ].take(_maxFootprints).toList();
-    final caches = Map<String, SHOProfileProductCache>.from(current.productCache);
+    final caches = Map<String, SHOProfileProductCache>.from(
+      current.productCache,
+    );
     if (cache != null) {
       caches[productId] = cache;
     }
@@ -97,7 +101,9 @@ class SHOProfileActivityStorage {
   }) async {
     final current = read();
     final favorites = [...current.favorites];
-    final caches = Map<String, SHOProfileProductCache>.from(current.productCache);
+    final caches = Map<String, SHOProfileProductCache>.from(
+      current.productCache,
+    );
     if (favorites.contains(productId)) {
       favorites.remove(productId);
     } else {
@@ -116,7 +122,9 @@ class SHOProfileActivityStorage {
     final removeSet = productIds.toSet();
     return save(
       current.copyWith(
-        footprints: current.footprints.where((id) => !removeSet.contains(id)).toList(),
+        footprints: current.footprints
+            .where((id) => !removeSet.contains(id))
+            .toList(),
       ),
     );
   }
@@ -128,7 +136,9 @@ class SHOProfileActivityStorage {
     final removeSet = productIds.toSet();
     return save(
       current.copyWith(
-        favorites: current.favorites.where((id) => !removeSet.contains(id)).toList(),
+        favorites: current.favorites
+            .where((id) => !removeSet.contains(id))
+            .toList(),
       ),
     );
   }
@@ -137,10 +147,7 @@ class SHOProfileActivityStorage {
     String categoryId,
   ) async {
     final current = read();
-    final next = {
-      categoryId,
-      ...current.followedCategories,
-    }.toList();
+    final next = {categoryId, ...current.followedCategories}.toList();
     return save(current.copyWith(followedCategories: next));
   }
 }
@@ -195,13 +202,13 @@ class SHOProfileActivitySnapshot {
   }
 
   Map<String, dynamic> toJson() => {
-        'footprints': footprints,
-        'favorites': favorites,
-        'followedCategories': followedCategories,
-        'productCache': productCache.map(
-          (key, value) => MapEntry(key, value.toJson()),
-        ),
-      };
+    'footprints': footprints,
+    'favorites': favorites,
+    'followedCategories': followedCategories,
+    'productCache': productCache.map(
+      (key, value) => MapEntry(key, value.toJson()),
+    ),
+  };
 
   static List<String> _readStringList(Object? raw) {
     if (raw is! List) return const [];

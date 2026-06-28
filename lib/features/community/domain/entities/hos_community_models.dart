@@ -10,19 +10,9 @@ enum SHOCommunityNewsStyle {
   topicCard,
 }
 
-enum SHOCommunityPostStyle {
-  standard,
-  multiImage,
-  poll,
-  productShare,
-}
+enum SHOCommunityPostStyle { standard, multiImage, poll, productShare }
 
-enum SHOCommunityAdStyle {
-  banner,
-  nativeProduct,
-  brandStory,
-  carousel,
-}
+enum SHOCommunityAdStyle { banner, nativeProduct, brandStory, carousel }
 
 class SHOCommunityMenuItem {
   const SHOCommunityMenuItem({
@@ -72,10 +62,7 @@ class SHOCommunityAuthor {
 }
 
 class SHOCommunityPollOption {
-  const SHOCommunityPollOption({
-    required this.label,
-    required this.percent,
-  });
+  const SHOCommunityPollOption({required this.label, required this.percent});
 
   final String label;
   final int percent;
@@ -254,7 +241,8 @@ class SHOCommunityFeedItem {
       title: json['title'] as String? ?? '',
       summary: json['summary'] as String? ?? '',
       coverUrl: json['coverUrl'] as String? ?? '',
-      imageUrls: (json['imageUrls'] as List<dynamic>?)
+      imageUrls:
+          (json['imageUrls'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
@@ -267,9 +255,8 @@ class SHOCommunityFeedItem {
       hotScore: json['hotScore'] as int? ?? 0,
       isPinned: json['isPinned'] as bool? ?? false,
       category: json['category'] as String? ?? '',
-      tags: (json['tags'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
           const [],
       author: SHOCommunityAuthor.fromJson(
         json['author'] as Map<String, dynamic>?,
@@ -277,13 +264,17 @@ class SHOCommunityFeedItem {
       videoDuration: json['videoDuration'] as String? ?? '',
       topicDiscussCount: json['topicDiscussCount'] as int? ?? 0,
       topicPostCount: json['topicPostCount'] as int? ?? 0,
-      topicAvatars: (json['topicAvatars'] as List<dynamic>?)
+      topicAvatars:
+          (json['topicAvatars'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
-      pollOptions: (json['pollOptions'] as List<dynamic>?)
-              ?.map((e) =>
-                  SHOCommunityPollOption.fromJson(e as Map<String, dynamic>))
+      pollOptions:
+          (json['pollOptions'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    SHOCommunityPollOption.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
       pollParticipants: json['pollParticipants'] as int? ?? 0,
@@ -297,9 +288,13 @@ class SHOCommunityFeedItem {
       brandName: json['brandName'] as String? ?? '',
       brandLogoUrl: json['brandLogoUrl'] as String? ?? '',
       brandSlogan: json['brandSlogan'] as String? ?? '',
-      carouselCards: (json['carouselCards'] as List<dynamic>?)
-              ?.map((e) =>
-                  SHOCommunityCarouselCard.fromJson(e as Map<String, dynamic>))
+      carouselCards:
+          (json['carouselCards'] as List<dynamic>?)
+              ?.map(
+                (e) => SHOCommunityCarouselCard.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
               .toList() ??
           const [],
       link: json['link'] as String? ?? '',
@@ -328,18 +323,22 @@ class SHOCommunityFeedPage {
   factory SHOCommunityFeedPage.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>? ?? json;
     return SHOCommunityFeedPage(
-      items: (data['items'] as List<dynamic>?)
-              ?.map((e) =>
-                  SHOCommunityFeedItem.fromJson(e as Map<String, dynamic>))
+      items:
+          (data['items'] as List<dynamic>?)
+              ?.map(
+                (e) => SHOCommunityFeedItem.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
       page: data['page'] as int? ?? 1,
       pageSize: data['pageSize'] as int? ?? 20,
       total: data['total'] as int? ?? 0,
       hasMore: data['hasMore'] as bool? ?? false,
-      menuItems: (data['menuItems'] as List<dynamic>?)
-              ?.map((e) =>
-                  SHOCommunityMenuItem.fromJson(e as Map<String, dynamic>))
+      menuItems:
+          (data['menuItems'] as List<dynamic>?)
+              ?.map(
+                (e) => SHOCommunityMenuItem.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );

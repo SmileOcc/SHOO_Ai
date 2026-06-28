@@ -7,14 +7,11 @@ import 'package:shoo/features/toolbox/presentation/state/hos_download_controller
 
 final bookshelfEntriesProvider =
     NotifierProvider<SHOBookshelfNotifier, List<SHOBookshelfEntry>>(
-  SHOBookshelfNotifier.new,
-);
+      SHOBookshelfNotifier.new,
+    );
 
 class SHOBookshelfListItem {
-  const SHOBookshelfListItem({
-    required this.entry,
-    required this.task,
-  });
+  const SHOBookshelfListItem({required this.entry, required this.task});
 
   final SHOBookshelfEntry entry;
   final SHODownloadTask? task;

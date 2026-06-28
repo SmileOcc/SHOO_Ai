@@ -43,8 +43,8 @@ class SHOAppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = borderRadius ??
-        BorderRadius.circular(SHOAppSpacing.cardRadius);
+    final radius =
+        borderRadius ?? BorderRadius.circular(SHOAppSpacing.cardRadius);
 
     final content = Padding(
       padding: padding ?? const EdgeInsets.all(SHOAppSpacing.lg),
@@ -68,11 +68,7 @@ class SHOAppCard extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: radius,
-        child: card,
-      ),
+      child: InkWell(onTap: onTap, borderRadius: radius, child: card),
     );
   }
 }

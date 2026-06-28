@@ -37,14 +37,18 @@ class _SHOVideoOnlinePlayDialogBodyState
   void _submit() {
     final url = _controller.text.trim();
     if (url.isEmpty) {
-      setState(() => _errorText = AppLocalizations.of(context).videoLibraryInvalidUrl);
+      setState(
+        () => _errorText = AppLocalizations.of(context).videoLibraryInvalidUrl,
+      );
       return;
     }
     final uri = Uri.tryParse(url);
     if (uri == null ||
         !uri.hasScheme ||
         !{'http', 'https'}.contains(uri.scheme)) {
-      setState(() => _errorText = AppLocalizations.of(context).videoLibraryInvalidUrl);
+      setState(
+        () => _errorText = AppLocalizations.of(context).videoLibraryInvalidUrl,
+      );
       return;
     }
     Navigator.of(context).pop(url);
@@ -74,15 +78,18 @@ class _SHOVideoOnlinePlayDialogBodyState
                   child: Text(
                     l10n.videoLibraryOnlinePlayTitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  constraints: const BoxConstraints(
+                    minWidth: 32,
+                    minHeight: 32,
+                  ),
                 ),
               ],
             ),

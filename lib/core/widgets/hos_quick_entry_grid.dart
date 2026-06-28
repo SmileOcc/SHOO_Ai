@@ -5,11 +5,7 @@ import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 
 class SHOQuickEntryGrid extends StatelessWidget {
-  const SHOQuickEntryGrid({
-    super.key,
-    required this.items,
-    this.onTap,
-  });
+  const SHOQuickEntryGrid({super.key, required this.items, this.onTap});
 
   final List<SHOCategoryItem> items;
   final void Function(SHOCategoryItem item)? onTap;
@@ -17,7 +13,9 @@ class SHOQuickEntryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
+      padding: const EdgeInsets.symmetric(
+        horizontal: SHOAppSpacing.pagePadding,
+      ),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -41,7 +39,9 @@ class SHOQuickEntryGrid extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: context.shoTheme.surfaceMuted,
-                    borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                    borderRadius: BorderRadius.circular(
+                      SHOAppSpacing.cardRadius,
+                    ),
                   ),
                   child: Text(item.icon, style: const TextStyle(fontSize: 20)),
                 ),
@@ -51,9 +51,9 @@ class SHOQuickEntryGrid extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                    fontSize: 10,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),

@@ -72,11 +72,7 @@ abstract final class SHOWebViewBridgeHandler {
     }
   }
 
-  static void _openDeepLink(
-    BuildContext context,
-    WidgetRef ref,
-    String url,
-  ) {
+  static void _openDeepLink(BuildContext context, WidgetRef ref, String url) {
     SHODeepLinkNavigator.openFromWebView(
       context,
       url,

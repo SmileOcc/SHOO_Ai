@@ -25,7 +25,8 @@ class _SHODebugTapDetectorState extends State<SHODebugTapDetector> {
     if (!SHOAppConfig.instance.isDebugPanelEnabled) return;
 
     final now = DateTime.now();
-    if (_firstTap == null || now.difference(_firstTap!) > const Duration(seconds: 3)) {
+    if (_firstTap == null ||
+        now.difference(_firstTap!) > const Duration(seconds: 3)) {
       _tapCount = 0;
       _firstTap = now;
     }

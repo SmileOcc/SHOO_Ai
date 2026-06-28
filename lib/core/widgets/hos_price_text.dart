@@ -21,20 +21,20 @@ class SHOAppPriceText extends StatelessWidget {
   Widget build(BuildContext context) {
     final priceStyle = switch (size) {
       SHOAppPriceSize.large => const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: SHOAppColors.sale,
-        ),
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        color: SHOAppColors.sale,
+      ),
       SHOAppPriceSize.medium => const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: SHOAppColors.sale,
-        ),
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: SHOAppColors.sale,
+      ),
       SHOAppPriceSize.small => const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: SHOAppColors.sale,
-        ),
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        color: SHOAppColors.sale,
+      ),
     };
 
     final originalStyle = TextStyle(
@@ -48,8 +48,13 @@ class SHOAppPriceText extends StatelessWidget {
       spacing: 4,
       children: [
         Text(priceFormatter.formatCents(priceCents), style: priceStyle),
-        if (showOriginal && originalCents != null && originalCents! > priceCents)
-          Text(priceFormatter.formatCents(originalCents!), style: originalStyle),
+        if (showOriginal &&
+            originalCents != null &&
+            originalCents! > priceCents)
+          Text(
+            priceFormatter.formatCents(originalCents!),
+            style: originalStyle,
+          ),
       ],
     );
   }

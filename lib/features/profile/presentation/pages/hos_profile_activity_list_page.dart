@@ -19,10 +19,7 @@ import 'package:shoo/features/profile/presentation/widgets/hos_profile_activity_
 import 'package:shoo/features/profile/presentation/state/hos_profile_controller.dart';
 
 class SHOProfileActivityListPage extends ConsumerStatefulWidget {
-  const SHOProfileActivityListPage({
-    super.key,
-    required this.kind,
-  });
+  const SHOProfileActivityListPage({super.key, required this.kind});
 
   final SHOProfileActivityListKind kind;
 
@@ -41,11 +38,10 @@ class _SHOProfileActivityListPageState
   String get pageName => 'profile_activity_list';
 
   @override
-  Map<String, Object?> get pageAnalyticsExtra => {
-        'kind': widget.kind.name,
-      };
+  Map<String, Object?> get pageAnalyticsExtra => {'kind': widget.kind.name};
 
-  bool get _isFootprints => widget.kind == SHOProfileActivityListKind.footprints;
+  bool get _isFootprints =>
+      widget.kind == SHOProfileActivityListKind.footprints;
 
   void _invalidateItems() {
     if (_isFootprints) {
@@ -58,9 +54,8 @@ class _SHOProfileActivityListPageState
   String _title(AppLocalizations l10n) =>
       _isFootprints ? l10n.profileFootprints : l10n.profileFavorites;
 
-  String _emptyMessage(AppLocalizations l10n) => _isFootprints
-      ? l10n.profileFootprintsEmpty
-      : l10n.profileFavoritesEmpty;
+  String _emptyMessage(AppLocalizations l10n) =>
+      _isFootprints ? l10n.profileFootprintsEmpty : l10n.profileFavoritesEmpty;
 
   void _enterEditMode() {
     setState(() {
@@ -124,106 +119,102 @@ class _SHOProfileActivityListPageState
 
     return buildTrackedPage(
       Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _editing
-              ? l10n.profileActivitySelected(_selected.length)
-              : _title(l10n),
-          style: const TextStyle(fontWeight: FontWeight.w800),
-        ),
-        leading: _editing
-            ? IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: _exitEditMode,
-              )
-            : null,
-        actions: [
-          if (_editing)
-            TextButton(
-              onPressed: itemsAsync.maybeWhen(
-                data: (items) => items.isEmpty
-                    ? null
-                    : () => _toggleSelectAll(
-                          items.map((e) => e.id).toList(),
-                        ),
-                orElse: () => null,
-              ),
-              child: Text(l10n.profileActivitySelectAll),
-            )
-          else
-            TextButton(
-              onPressed: itemsAsync.maybeWhen(
-                data: (items) => items.isEmpty ? null : _enterEditMode,
-                orElse: () => null,
-              ),
-              child: Text(l10n.profileActivityDelete),
-            ),
-        ],
-      ),
-      body: itemsAsync.when(
-        loading: () => ListView.separated(
-          itemCount: 6,
-          separatorBuilder: (_, __) => Divider(height: 1, color: theme.divider),
-          itemBuilder: (_, __) => const Padding(
-            padding: EdgeInsets.all(SHOAppSpacing.pagePadding),
-            child: SHOSkeletonBox(height: 88),
+        appBar: AppBar(
+          title: Text(
+            _editing
+                ? l10n.profileActivitySelected(_selected.length)
+                : _title(l10n),
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
-        ),
-        error: (error, _) => SHOAppErrorView(
-          message: error.toString(),
-          onRetry: _invalidateItems,
-        ),
-        data: (List<SHOProfileActivityProduct> items) {
-          if (items.isEmpty) {
-            return SHOEmptyState(
-              title: _emptyMessage(l10n),
-              actionLabel: l10n.cartEmptyAction,
-              onAction: () => context.go(SHOAppRoutes.home),
-            );
-          }
-
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.separated(
-                  itemCount: items.length,
-                  separatorBuilder: (_, __) =>
-                      Divider(height: 1, color: theme.divider),
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return SHOProfileActivityProductTile(
-                      item: item,
-                      editing: _editing,
-                      selected: _selected.contains(item.id),
-                      onToggleSelect: () => _toggleSelect(item.id),
-                      onTap: () {
-                        if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                        context.push(SHOAppRoutes.product(item.id));
-                      },
-                    );
-                  },
+          leading: _editing
+              ? IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: _exitEditMode,
+                )
+              : null,
+          actions: [
+            if (_editing)
+              TextButton(
+                onPressed: itemsAsync.maybeWhen(
+                  data: (items) => items.isEmpty
+                      ? null
+                      : () => _toggleSelectAll(items.map((e) => e.id).toList()),
+                  orElse: () => null,
                 ),
+                child: Text(l10n.profileActivitySelectAll),
+              )
+            else
+              TextButton(
+                onPressed: itemsAsync.maybeWhen(
+                  data: (items) => items.isEmpty ? null : _enterEditMode,
+                  orElse: () => null,
+                ),
+                child: Text(l10n.profileActivityDelete),
               ),
-              if (_editing)
-                _DeleteBar(
-                  count: _selected.length,
-                  onDelete: _selected.isEmpty ? null : _deleteSelected,
+          ],
+        ),
+        body: itemsAsync.when(
+          loading: () => ListView.separated(
+            itemCount: 6,
+            separatorBuilder: (_, __) =>
+                Divider(height: 1, color: theme.divider),
+            itemBuilder: (_, __) => const Padding(
+              padding: EdgeInsets.all(SHOAppSpacing.pagePadding),
+              child: SHOSkeletonBox(height: 88),
+            ),
+          ),
+          error: (error, _) => SHOAppErrorView(
+            message: error.toString(),
+            onRetry: _invalidateItems,
+          ),
+          data: (List<SHOProfileActivityProduct> items) {
+            if (items.isEmpty) {
+              return SHOEmptyState(
+                title: _emptyMessage(l10n),
+                actionLabel: l10n.cartEmptyAction,
+                onAction: () => context.go(SHOAppRoutes.home),
+              );
+            }
+
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: items.length,
+                    separatorBuilder: (_, __) =>
+                        Divider(height: 1, color: theme.divider),
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return SHOProfileActivityProductTile(
+                        item: item,
+                        editing: _editing,
+                        selected: _selected.contains(item.id),
+                        onToggleSelect: () => _toggleSelect(item.id),
+                        onTap: () {
+                          if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                          context.push(SHOAppRoutes.product(item.id));
+                        },
+                      );
+                    },
+                  ),
                 ),
-            ],
-          );
-        },
+                if (_editing)
+                  _DeleteBar(
+                    count: _selected.length,
+                    onDelete: _selected.isEmpty ? null : _deleteSelected,
+                  ),
+              ],
+            );
+          },
+        ),
       ),
-    ),
-    onRetry: _invalidateItems,
+      onRetry: _invalidateItems,
     );
   }
 }
 
 class _DeleteBar extends StatelessWidget {
-  const _DeleteBar({
-    required this.count,
-    required this.onDelete,
-  });
+  const _DeleteBar({required this.count, required this.onDelete});
 
   final int count;
   final VoidCallback? onDelete;
@@ -247,8 +238,9 @@ class _DeleteBar extends StatelessWidget {
             child: FilledButton(
               onPressed: onDelete,
               style: FilledButton.styleFrom(
-                backgroundColor:
-                    onDelete == null ? theme.textMuted : SHOAppColors.error,
+                backgroundColor: onDelete == null
+                    ? theme.textMuted
+                    : SHOAppColors.error,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.lg),
                 shape: RoundedRectangleBorder(

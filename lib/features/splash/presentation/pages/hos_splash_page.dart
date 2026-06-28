@@ -52,30 +52,30 @@ class _SHOSplashPageState extends ConsumerState<SHOSplashPage>
 
     return buildTrackedPage(
       Scaffold(
-      backgroundColor: SHOAppColors.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SHOAppLoading(
-              size: 96,
-              showAppName: true,
-              appNameColor: Colors.white,
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-            Text(
-              l10n.splashTagline,
-              style: const TextStyle(color: Colors.white70, fontSize: 13),
-            ),
-            const SizedBox(height: SHOAppSpacing.xxxl),
-            Text(
-              '${SHOAppConstants.appVersion}',
-              style: const TextStyle(color: Colors.white38, fontSize: 10),
-            ),
-          ],
+        backgroundColor: SHOAppColors.primary,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SHOAppLoading(
+                size: 96,
+                showAppName: true,
+                appNameColor: Colors.white,
+              ),
+              const SizedBox(height: SHOAppSpacing.lg),
+              Text(
+                l10n.splashTagline,
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+              const SizedBox(height: SHOAppSpacing.xxxl),
+              Text(
+                '${SHOAppConstants.appVersion}',
+                style: const TextStyle(color: Colors.white38, fontSize: 10),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

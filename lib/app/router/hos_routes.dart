@@ -143,6 +143,7 @@ abstract final class SHOAppRoutes {
     if (activityId == null || activityId.isEmpty) return flashSale;
     return '$flashSale?activityId=${Uri.encodeComponent(activityId)}';
   }
+
   static const checkout = '/checkout';
 
   static String checkoutWithContext({bool fromCartStack = false}) {

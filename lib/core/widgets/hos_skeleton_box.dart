@@ -9,12 +9,7 @@ import 'package:shoo/core/theme/hos_theme_extension.dart';
 /// const SHOProductCardSkeleton()  // 商品卡专用骨架
 /// ```
 class SHOSkeletonBox extends StatefulWidget {
-  const SHOSkeletonBox({
-    super.key,
-    this.width,
-    this.height,
-    this.borderRadius,
-  });
+  const SHOSkeletonBox({super.key, this.width, this.height, this.borderRadius});
 
   final double? width;
   final double? height;

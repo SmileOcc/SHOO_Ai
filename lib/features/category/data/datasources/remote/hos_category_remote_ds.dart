@@ -19,14 +19,14 @@ class SHOCategoryApi {
     return _dio.getData<List<SHOCategoryItem>>(
       '/categories',
       parser: (data) => normalizeCategoryItems(
-            (data as List<dynamic>)
-                .map(
-                  (e) => parseCategoryItemFromJson(
-                    Map<String, dynamic>.from(e as Map),
-                  ),
-                )
-                .toList(),
-          ),
+        (data as List<dynamic>)
+            .map(
+              (e) => parseCategoryItemFromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 

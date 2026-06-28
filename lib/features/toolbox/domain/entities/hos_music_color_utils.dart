@@ -30,5 +30,6 @@ abstract final class SHOMusicColorUtils {
 
   static Color coverColorFor(String key) => Color(colorForKey(key, salt: 11));
 
-  static Color backgroundColorFor(String key) => Color(colorForKey(key, salt: 29));
+  static Color backgroundColorFor(String key) =>
+      Color(colorForKey(key, salt: 29));
 }

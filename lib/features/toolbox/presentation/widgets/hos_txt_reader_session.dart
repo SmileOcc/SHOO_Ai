@@ -5,10 +5,7 @@ import 'package:shoo/features/toolbox/domain/entities/hos_txt_novel_parser.dart'
 import 'package:shoo/features/toolbox/presentation/widgets/hos_txt_reader_pagination.dart';
 
 class SHOTxtReaderSession {
-  SHOTxtReaderSession({
-    required this.file,
-    required this.chapterMetas,
-  });
+  SHOTxtReaderSession({required this.file, required this.chapterMetas});
 
   final File file;
   final List<SHONovelChapterMeta> chapterMetas;
@@ -37,8 +34,10 @@ class SHOTxtReaderSession {
       maxWidth: pagination.pageWidth,
       textScaler: pagination.textScaler,
     );
-    return (pagination.pageHeight - titleHeight)
-        .clamp(0, pagination.pageHeight);
+    return (pagination.pageHeight - titleHeight).clamp(
+      0,
+      pagination.pageHeight,
+    );
   }
 
   Future<List<SHONovelPage>> loadChapter({
@@ -78,8 +77,8 @@ class SHOTxtReaderSession {
     final globalStart = prepend
         ? 0
         : append
-            ? flatPages.length
-            : 0;
+        ? flatPages.length
+        : 0;
     final pages = buildPagesForChapter(
       meta: meta,
       pageTexts: pageTexts,

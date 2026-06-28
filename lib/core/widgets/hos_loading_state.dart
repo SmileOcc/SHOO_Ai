@@ -66,48 +66,51 @@ class SHOAppLoadingState extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return switch (state) {
-      SHOLoadingState.loading => loadingWidget ??
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 28,
-                  height: 28,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(SHOAppColors.accent),
+      SHOLoadingState.loading =>
+        loadingWidget ??
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        SHOAppColors.accent,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: SHOAppSpacing.lg),
-                Text(
-                  message ?? l10n.loading,
-                  style: SHOAppTypography.textTheme.bodyMedium,
-                ),
-              ],
+                  const SizedBox(height: SHOAppSpacing.lg),
+                  Text(
+                    message ?? l10n.loading,
+                    style: SHOAppTypography.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
             ),
-          ),
       SHOLoadingState.empty => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(emptyIcon, size: 48, color: SHOAppColors.textMuted),
-                const SizedBox(height: SHOAppSpacing.lg),
-                Text(
-                  message ?? l10n.noData,
-                  textAlign: TextAlign.center,
-                  style: SHOAppTypography.textTheme.titleMedium,
-                ),
-              ],
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(SHOAppSpacing.xxxl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(emptyIcon, size: 48, color: SHOAppColors.textMuted),
+              const SizedBox(height: SHOAppSpacing.lg),
+              Text(
+                message ?? l10n.noData,
+                textAlign: TextAlign.center,
+                style: SHOAppTypography.textTheme.titleMedium,
+              ),
+            ],
           ),
         ),
+      ),
       SHOLoadingState.error => SHOAppErrorView(
-          message: message ?? l10n.loadFailed,
-          onRetry: onRetry,
-        ),
+        message: message ?? l10n.loadFailed,
+        onRetry: onRetry,
+      ),
       SHOLoadingState.success => child ?? const SizedBox.shrink(),
     };
   }
@@ -137,7 +140,8 @@ extension SHOAsyncValueLoadingState<T> on AsyncValue<T> {
       ),
       error: (error, _) => SHOAppLoadingState(
         state: SHOLoadingState.error,
-        message: errorMessage?.call(error) ??
+        message:
+            errorMessage?.call(error) ??
             (error is SHOAppException
                 ? userFacingMessage(error)
                 : error.toString()),

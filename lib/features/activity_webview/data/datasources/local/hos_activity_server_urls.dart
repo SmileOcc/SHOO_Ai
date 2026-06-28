@@ -11,7 +11,10 @@ abstract final class SHOActivityServerUrls {
   }
 
   static int get port {
-    const fromEnv = String.fromEnvironment('LOCAL_SERVER_PORT', defaultValue: '');
+    const fromEnv = String.fromEnvironment(
+      'LOCAL_SERVER_PORT',
+      defaultValue: '',
+    );
     final parsed = int.tryParse(fromEnv);
     return parsed ?? SHOAppConstants.localMockServerPort;
   }

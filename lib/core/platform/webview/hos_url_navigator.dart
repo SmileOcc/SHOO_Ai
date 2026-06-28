@@ -42,9 +42,7 @@ class SHOURLNavigator {
     String? title,
   }) async {
     if (!context.mounted) return;
-    await context.push(
-      SHOAppRoutes.activityWebviewFor(url, title: title),
-    );
+    await context.push(SHOAppRoutes.activityWebviewFor(url, title: title));
   }
 
   static Future<void> openInExternalBrowser(String url) async {

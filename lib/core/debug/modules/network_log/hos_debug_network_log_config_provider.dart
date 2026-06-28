@@ -5,11 +5,13 @@ import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
 
 final debugNetworkLogConfigProvider =
-    NotifierProvider<SHODebugNetworkLogConfigNotifier, SHODebugNetworkLogConfig>(
-  SHODebugNetworkLogConfigNotifier.new,
-);
+    NotifierProvider<
+      SHODebugNetworkLogConfigNotifier,
+      SHODebugNetworkLogConfig
+    >(SHODebugNetworkLogConfigNotifier.new);
 
-class SHODebugNetworkLogConfigNotifier extends Notifier<SHODebugNetworkLogConfig> {
+class SHODebugNetworkLogConfigNotifier
+    extends Notifier<SHODebugNetworkLogConfig> {
   late final SHODebugConfigRepository _repo;
 
   @override

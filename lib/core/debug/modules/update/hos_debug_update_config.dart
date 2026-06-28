@@ -3,7 +3,8 @@ class SHODebugUpdateConfig {
   const SHODebugUpdateConfig({
     this.overrideEnabled = false,
     this.latestVersion = '0.2.0',
-    this.releaseNotes = '• New checkout flow\n• Performance improvements\n• Bug fixes',
+    this.releaseNotes =
+        '• New checkout flow\n• Performance improvements\n• Bug fixes',
     this.forceUpdate = false,
     this.updateUrl = 'https://shoo.app/download',
   });
@@ -31,18 +32,19 @@ class SHODebugUpdateConfig {
   }
 
   Map<String, dynamic> toJson() => {
-        'overrideEnabled': overrideEnabled,
-        'latestVersion': latestVersion,
-        'releaseNotes': releaseNotes,
-        'forceUpdate': forceUpdate,
-        'updateUrl': updateUrl,
-      };
+    'overrideEnabled': overrideEnabled,
+    'latestVersion': latestVersion,
+    'releaseNotes': releaseNotes,
+    'forceUpdate': forceUpdate,
+    'updateUrl': updateUrl,
+  };
 
   factory SHODebugUpdateConfig.fromJson(Map<String, dynamic> json) {
     return SHODebugUpdateConfig(
       overrideEnabled: json['overrideEnabled'] as bool? ?? false,
       latestVersion: json['latestVersion'] as String? ?? '0.2.0',
-      releaseNotes: json['releaseNotes'] as String? ??
+      releaseNotes:
+          json['releaseNotes'] as String? ??
           '• New checkout flow\n• Performance improvements\n• Bug fixes',
       forceUpdate: json['forceUpdate'] as bool? ?? false,
       updateUrl: json['updateUrl'] as String? ?? 'https://shoo.app/download',

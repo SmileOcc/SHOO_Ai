@@ -42,8 +42,8 @@ class _SHOStudyHomePageState extends ConsumerState<SHOStudyHomePage>
             Text(
               l10n.studyHomeSubtitle,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: context.shoTheme.textSecondary,
-                  ),
+                color: context.shoTheme.textSecondary,
+              ),
             ),
             const SizedBox(height: SHOAppSpacing.lg),
             _StudySection(
@@ -51,7 +51,8 @@ class _SHOStudyHomePageState extends ConsumerState<SHOStudyHomePage>
               articles: SHOStudyCatalog.articles
                   .where(
                     (article) =>
-                        article.category == SHOStudyCatalog.flutterMobileCategory,
+                        article.category ==
+                        SHOStudyCatalog.flutterMobileCategory,
                   )
                   .toList(),
             ),
@@ -63,10 +64,7 @@ class _SHOStudyHomePageState extends ConsumerState<SHOStudyHomePage>
 }
 
 class _StudySection extends StatelessWidget {
-  const _StudySection({
-    required this.title,
-    required this.articles,
-  });
+  const _StudySection({required this.title, required this.articles});
 
   final String title;
   final List<SHOStudyArticle> articles;
@@ -83,9 +81,9 @@ class _StudySection extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         SHOProfileSectionCard(
@@ -122,7 +120,8 @@ class _StudyArticleTile extends StatelessWidget {
       ),
       subtitle: Text(article.subtitle),
       trailing: const Icon(Icons.chevron_right_rounded),
-      onTap: () => context.push(SHOAppRoutes.toolboxStudyArticleFor(article.id)),
+      onTap: () =>
+          context.push(SHOAppRoutes.toolboxStudyArticleFor(article.id)),
     );
   }
 }

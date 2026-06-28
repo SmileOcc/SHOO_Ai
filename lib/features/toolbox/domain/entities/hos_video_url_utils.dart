@@ -1,18 +1,8 @@
 import 'package:shoo/features/toolbox/domain/entities/hos_download_task.dart';
 
-const _directVideoExtensions = {
-  'mp4',
-  'mov',
-  'avi',
-  'mkv',
-  'webm',
-};
+const _directVideoExtensions = {'mp4', 'mov', 'avi', 'mkv', 'webm'};
 
-const _unsupportedStreamHints = {
-  'm3u8',
-  'mpd',
-  'ism',
-};
+const _unsupportedStreamHints = {'m3u8', 'mpd', 'ism'};
 
 String normalizeVideoUrl(String url) => url.trim();
 

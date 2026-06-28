@@ -62,19 +62,19 @@ class SHODebugActivityConfig {
   }
 
   Map<String, dynamic> toJson() => {
-        'overrideEnabled': overrideEnabled,
-        'id': id,
-        'delaySeconds': delaySeconds,
-        'title': title,
-        'description': description,
-        'imageUrl': imageUrl,
-        'link': link,
-        'buttonText': buttonText,
-        'startAt': startAt?.toIso8601String(),
-        'endAt': endAt?.toIso8601String(),
-        'prefetchEnabled': prefetchEnabled,
-        'maxDailyShows': maxDailyShows,
-      };
+    'overrideEnabled': overrideEnabled,
+    'id': id,
+    'delaySeconds': delaySeconds,
+    'title': title,
+    'description': description,
+    'imageUrl': imageUrl,
+    'link': link,
+    'buttonText': buttonText,
+    'startAt': startAt?.toIso8601String(),
+    'endAt': endAt?.toIso8601String(),
+    'prefetchEnabled': prefetchEnabled,
+    'maxDailyShows': maxDailyShows,
+  };
 
   factory SHODebugActivityConfig.fromJson(Map<String, dynamic> json) {
     return SHODebugActivityConfig(
@@ -83,7 +83,8 @@ class SHODebugActivityConfig {
       delaySeconds: json['delaySeconds'] as int? ?? 3,
       title: json['title'] as String? ?? 'DEBUG — Flash Sale',
       description: json['description'] as String? ?? '',
-      imageUrl: json['imageUrl'] as String? ??
+      imageUrl:
+          json['imageUrl'] as String? ??
           'https://picsum.photos/seed/debug_activity/600/800',
       link: json['link'] as String? ?? '/flash-sale',
       buttonText: json['buttonText'] as String? ?? 'Shop Now',

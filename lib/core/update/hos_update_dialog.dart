@@ -40,7 +40,8 @@ class _SHOUpdateDialogBody extends ConsumerStatefulWidget {
   final SHOAppUpdateInfo info;
 
   @override
-  ConsumerState<_SHOUpdateDialogBody> createState() => _SHOUpdateDialogBodyState();
+  ConsumerState<_SHOUpdateDialogBody> createState() =>
+      _SHOUpdateDialogBodyState();
 }
 
 class _SHOUpdateDialogBodyState extends ConsumerState<_SHOUpdateDialogBody> {
@@ -68,21 +69,23 @@ class _SHOUpdateDialogBodyState extends ConsumerState<_SHOUpdateDialogBody> {
         .read(appUpdateDownloadServiceProvider)
         .watchProgress()
         .listen((state) async {
-      if (!mounted) return;
-      setState(() {
-        _progress = state.progress;
-        _statusMessage = state.message;
-      });
-      if (state.isCompleted) {
-        _downloadSub?.cancel();
-        await ref.read(appUpdateServiceProvider).openUpdateUrl(widget.info.updateUrl);
-        if (!widget.info.forceUpdate && mounted) {
-          Navigator.pop(context);
-        } else if (mounted) {
-          setState(() => _downloading = false);
-        }
-      }
-    });
+          if (!mounted) return;
+          setState(() {
+            _progress = state.progress;
+            _statusMessage = state.message;
+          });
+          if (state.isCompleted) {
+            _downloadSub?.cancel();
+            await ref
+                .read(appUpdateServiceProvider)
+                .openUpdateUrl(widget.info.updateUrl);
+            if (!widget.info.forceUpdate && mounted) {
+              Navigator.pop(context);
+            } else if (mounted) {
+              setState(() => _downloading = false);
+            }
+          }
+        });
   }
 
   @override
@@ -104,7 +107,9 @@ class _SHOUpdateDialogBodyState extends ConsumerState<_SHOUpdateDialogBody> {
               Text(info.releaseNotes),
               if (_downloading) ...[
                 const SizedBox(height: SHOAppSpacing.lg),
-                LinearProgressIndicator(value: _progress > 0 ? _progress : null),
+                LinearProgressIndicator(
+                  value: _progress > 0 ? _progress : null,
+                ),
                 const SizedBox(height: SHOAppSpacing.sm),
                 Text(
                   _statusMessage ??

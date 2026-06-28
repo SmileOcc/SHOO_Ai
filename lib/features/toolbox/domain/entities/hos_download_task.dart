@@ -1,18 +1,6 @@
-enum SHODownloadStatus {
-  downloading,
-  paused,
-  completed,
-}
+enum SHODownloadStatus { downloading, paused, completed }
 
-enum SHODownloadFileType {
-  doc,
-  pdf,
-  excel,
-  zip,
-  video,
-  audio,
-  other,
-}
+enum SHODownloadFileType { doc, pdf, excel, zip, video, audio, other }
 
 class SHODownloadTask {
   const SHODownloadTask({
@@ -72,31 +60,34 @@ class SHODownloadTask {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'url': url,
-        'fileName': fileName,
-        'fileType': fileType.name,
-        'status': status.name,
-        'downloadedBytes': downloadedBytes,
-        'totalBytes': totalBytes,
-        'priority': priority,
-        'createdAt': createdAt.toIso8601String(),
-        'localPath': localPath,
-      };
+    'id': id,
+    'url': url,
+    'fileName': fileName,
+    'fileType': fileType.name,
+    'status': status.name,
+    'downloadedBytes': downloadedBytes,
+    'totalBytes': totalBytes,
+    'priority': priority,
+    'createdAt': createdAt.toIso8601String(),
+    'localPath': localPath,
+  };
 
   factory SHODownloadTask.fromJson(Map<String, dynamic> json) {
     return SHODownloadTask(
       id: json['id'] as String? ?? '',
       url: json['url'] as String? ?? '',
       fileName: json['fileName'] as String? ?? '',
-      fileType: SHODownloadFileType.values.asNameMap()[json['fileType']] ??
+      fileType:
+          SHODownloadFileType.values.asNameMap()[json['fileType']] ??
           SHODownloadFileType.other,
-      status: SHODownloadStatus.values.asNameMap()[json['status']] ??
+      status:
+          SHODownloadStatus.values.asNameMap()[json['status']] ??
           SHODownloadStatus.paused,
       downloadedBytes: json['downloadedBytes'] as int? ?? 0,
       totalBytes: json['totalBytes'] as int?,
       priority: json['priority'] as bool? ?? false,
-      createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
+      createdAt:
+          DateTime.tryParse(json['createdAt'] as String? ?? '') ??
           DateTime.now(),
       localPath: json['localPath'] as String? ?? '',
     );
@@ -113,7 +104,12 @@ SHODownloadFileType detectDownloadFileType(String fileName) {
     'xls' || 'xlsx' || 'csv' => SHODownloadFileType.excel,
     'zip' || 'rar' || '7z' => SHODownloadFileType.zip,
     'mp4' || 'mov' || 'avi' || 'mkv' || 'webm' => SHODownloadFileType.video,
-    'mp3' || 'm4a' || 'flac' || 'wav' || 'aac' || 'ogg' => SHODownloadFileType.audio,
+    'mp3' ||
+    'm4a' ||
+    'flac' ||
+    'wav' ||
+    'aac' ||
+    'ogg' => SHODownloadFileType.audio,
     _ => SHODownloadFileType.other,
   };
 }
@@ -136,12 +132,7 @@ String inferDownloadFileName({required String url, String? custom}) {
   return safeDecodeUriComponent(segments.last);
 }
 
-enum SHODownloadPreviewKind {
-  image,
-  text,
-  pdf,
-  video,
-}
+enum SHODownloadPreviewKind { image, text, pdf, video }
 
 String downloadFileExtension(String fileName) {
   if (!fileName.contains('.')) return '';
@@ -150,7 +141,12 @@ String downloadFileExtension(String fileName) {
 
 SHODownloadPreviewKind? previewKindForFileName(String fileName) {
   return switch (downloadFileExtension(fileName)) {
-    'png' || 'jpg' || 'jpeg' || 'gif' || 'webp' || 'bmp' => SHODownloadPreviewKind.image,
+    'png' ||
+    'jpg' ||
+    'jpeg' ||
+    'gif' ||
+    'webp' ||
+    'bmp' => SHODownloadPreviewKind.image,
     'txt' || 'json' || 'csv' || 'log' || 'md' => SHODownloadPreviewKind.text,
     'pdf' => SHODownloadPreviewKind.pdf,
     'mp4' || 'mov' || 'avi' || 'mkv' || 'webm' => SHODownloadPreviewKind.video,

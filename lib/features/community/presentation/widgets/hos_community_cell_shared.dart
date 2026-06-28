@@ -23,9 +23,7 @@ class SHOCommunityFeedCard extends StatelessWidget {
     final content = Padding(padding: padding, child: child);
     return Material(
       color: SHOAppColors.surface,
-      child: onTap == null
-          ? content
-          : InkWell(onTap: onTap, child: content),
+      child: onTap == null ? content : InkWell(onTap: onTap, child: content),
     );
   }
 }
@@ -111,8 +109,9 @@ class SHOCommunityAuthorRow extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: SHOAppColors.accent.withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(SHOAppSpacing.tagRadius),
+                        borderRadius: BorderRadius.circular(
+                          SHOAppSpacing.tagRadius,
+                        ),
                       ),
                       child: Text(
                         author.badge,

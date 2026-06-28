@@ -132,7 +132,9 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
           return Padding(
             padding: widget.edgeToEdge
                 ? EdgeInsets.zero
-                : const EdgeInsets.symmetric(horizontal: SHOAppSpacing.pagePadding),
+                : const EdgeInsets.symmetric(
+                    horizontal: SHOAppSpacing.pagePadding,
+                  ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -153,7 +155,10 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
                         left: SHOAppSpacing.md,
                         bottom: SHOAppSpacing.md,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           color: SHOAppColors.primary.withValues(alpha: 0.72),
                           child: Text(
                             banner.title,

@@ -44,7 +44,10 @@ abstract final class SHOFlashSaleReminderNav {
     return current == target;
   }
 
-  static void openActivity(GoRouter router, SHOFlashSaleReminderPayload payload) {
+  static void openActivity(
+    GoRouter router,
+    SHOFlashSaleReminderPayload payload,
+  ) {
     router.push(routeFor(payload));
   }
 }

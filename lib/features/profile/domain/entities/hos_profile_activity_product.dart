@@ -55,11 +55,11 @@ class SHOProfileActivityProduct {
 
 extension SHOProductDetailActivityX on SHOProductDetail {
   SHOProfileProductCache toActivityCache() => SHOProfileProductCache(
-        title: title,
-        imageUrl: imageUrl,
-        price: price,
-        originalPrice: originalPrice,
-        rating: rating,
-        soldCount: soldCount,
-      );
+    title: title,
+    imageUrl: imageUrl,
+    price: price,
+    originalPrice: originalPrice,
+    rating: rating,
+    soldCount: soldCount,
+  );
 }

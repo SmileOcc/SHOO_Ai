@@ -18,10 +18,7 @@ class SHOLoggerService {
   SHOLogLevel _minLevel = SHOLogLevel.debug;
   bool _consolePrintEnabled = true;
   SHOLogCrashReporter _crashReporter = const SHONoopCrashReporter();
-  final List<SHOLogSink> _sinks = [
-    SHOLogConsoleSink(),
-    SHOLogFileSink(),
-  ];
+  final List<SHOLogSink> _sinks = [SHOLogConsoleSink(), SHOLogFileSink()];
 
   SHOLogLevel get minLevel => _minLevel;
   bool get consolePrintEnabled => _consolePrintEnabled;
@@ -88,8 +85,7 @@ class SHOLoggerService {
     String? module,
     String brand = _defaultBrand,
   }) {
-    final modulePart =
-        module == null || module.isEmpty ? '' : '[$module]';
+    final modulePart = module == null || module.isEmpty ? '' : '[$module]';
     return '[$brand][${level.label}]$modulePart';
   }
 }
@@ -109,12 +105,8 @@ class SHOLogger {
   void w(String message, [Object? error]) =>
       _log(SHOLogLevel.warn, message, error: error);
 
-  void e(String message, [Object? error, StackTrace? stack]) => _log(
-        SHOLogLevel.error,
-        message,
-        error: error,
-        stackTrace: stack,
-      );
+  void e(String message, [Object? error, StackTrace? stack]) =>
+      _log(SHOLogLevel.error, message, error: error, stackTrace: stack);
 
   void _log(
     SHOLogLevel level,
