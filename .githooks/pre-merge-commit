@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# 合并进当前分支时：若当前分支为 main/master，运行 CI 检查。
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+BRANCH="$(git branch --show-current 2>/dev/null || true)"
+
+if [[ "$BRANCH" != "main" && "$BRANCH" != "master" ]]; then
+  exit 0
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Git Hook：即将合并到「${BRANCH}」，运行 CI 检查"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+if ! "$ROOT/scripts/ci_check.sh"; then
+  echo ""
+  echo "❌ CI 检查失败，已阻止创建合并提交。" >&2
+  echo "   修复问题后重新 merge，或使用：git merge --no-verify" >&2
+  exit 1
+fi

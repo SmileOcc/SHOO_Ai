@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# push 到 main/master 远程分支前运行 CI 检查。
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+RUN=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ "$remote_ref" =~ ^refs/heads/(main|master)$ ]]; then
+    RUN=1
+    TARGET="${BASH_REMATCH[1]}"
+    break
+  fi
+done
+
+if [[ "$RUN" -eq 0 ]]; then
+  exit 0
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Git Hook：即将 push 到 origin/${TARGET}，运行 CI 检查"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+if ! "$ROOT/scripts/ci_check.sh"; then
+  echo ""
+  echo "❌ CI 检查失败，已阻止 push 到 ${TARGET}。" >&2
+  echo "   修复问题后重新 push，或使用：git push --no-verify" >&2
+  exit 1
+fi
