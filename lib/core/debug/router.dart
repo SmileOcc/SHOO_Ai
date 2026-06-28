@@ -4,6 +4,7 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config_page.dart';
 import 'package:shoo/core/debug/modules/analytics/hos_debug_analytics_page.dart';
 import 'package:shoo/core/debug/modules/brand/hos_debug_brand_page.dart';
+import 'package:shoo/core/debug/modules/ci_failure/hos_debug_ci_failure_page.dart';
 import 'package:shoo/core/debug/modules/dependencies/hos_debug_dependencies_page.dart';
 import 'package:shoo/core/debug/modules/flash_sale/hos_debug_flash_sale_reminder_page.dart';
 import 'package:shoo/core/debug/modules/feedback/hos_debug_feedback_page.dart';
@@ -26,6 +27,10 @@ List<RouteBase> shoDebugRoutes({required GlobalKey<NavigatorState> rootKey}) =>
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SHODebugPanelPage(),
         routes: [
+          GoRoute(
+            path: 'ci-failure',
+            builder: (context, state) => const SHODebugCiFailurePage(),
+          ),
           GoRoute(
             path: 'update',
             builder: (context, state) => const SHODebugUpdateConfigPage(),

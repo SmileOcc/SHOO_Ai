@@ -102,6 +102,13 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
           ),
           const SizedBox(height: SHOAppSpacing.md),
           ListTile(
+            leading: const Icon(Icons.rule_folder_outlined),
+            title: const Text('CI 失败演示'),
+            subtitle: const Text('format / analyze / test 流水线验证用'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(SHOAppRoutes.debugCiFailure),
+          ),
+          ListTile(
             leading: const Icon(Icons.system_update),
             title: Text(l10n.debugUpdateEntry),
             subtitle: Text(l10n.debugUpdateEntryHint),
