@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:shoo/core/theme/hos_colors.dart';
 
 class SHOFlashSaleCountdown extends StatefulWidget {
@@ -42,10 +41,14 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
   }
 
   void _tick() {
+    // 1. 解析目标时间（ISO 格式）
     final target = DateTime.tryParse(widget.targetIso)?.toLocal();
     if (target == null) return;
+    // 2. 实时计算剩余时间
     final diff = target.difference(DateTime.now());
     if (!mounted) return;
+    //表示时间差是否为负数 判断目标时间是否已经过去
+    //一个 边界条件检查 ，确保倒计时结束后不会显示负数时间
     if (diff.isNegative) {
       _timer?.cancel();
       setState(() => _remaining = Duration.zero);
@@ -69,7 +72,7 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
     if (_remaining <= Duration.zero) {
       return Text(
         widget.prefix,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: SHOAppColors.textMuted,

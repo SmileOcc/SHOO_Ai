@@ -17,7 +17,11 @@ abstract final class SHOListUtils {
     return list.where((e) => seen.add(key(e))).toList();
   }
 
-  static List<T> paginate<T>(List<T> list, {required int page, required int pageSize}) {
+  static List<T> paginate<T>(
+    List<T> list, {
+    required int page,
+    required int pageSize,
+  }) {
     final start = (page - 1) * pageSize;
     if (start >= list.length) return [];
     final end = (start + pageSize).clamp(0, list.length);
@@ -31,5 +35,14 @@ abstract final class SHOListUtils {
       result.add(list.sublist(i, (i + size).clamp(0, list.length)));
     }
     return result;
+  }
+
+  /// 安全地查找第一个满足条件的元素，找不到时返回 null。
+
+  static T? firstWhereOrNull<T>(List<T> list, bool Function(T item) test) {
+    for (final item in list) {
+      if (test(item)) return item;
+    }
+    return null;
   }
 }
