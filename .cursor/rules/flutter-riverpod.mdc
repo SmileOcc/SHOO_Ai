@@ -1,0 +1,35 @@
+---
+description: Riverpod 状态管理规范
+globs: lib/**/*controller*.dart,lib/**/*provider*.dart,lib/**/state/**
+alwaysApply: false
+---
+
+# Riverpod 规范
+
+## 读写
+
+```dart
+// UI 响应式
+ref.watch(provider.select((s) => s.field));
+
+// 一次性 / 回调
+ref.read(provider.notifier).refresh();
+
+// ❌ build 内
+ref.read(cartProvider.notifier).add(item);
+```
+
+## Controller
+
+- 不持有 `BuildContext`；异步后检查 `ref.mounted`
+- 状态用 immutable + `copyWith`；加载/错误字段显式建模
+- 分页复用 `SHOPagedListState` 模式
+
+## Provider 位置
+
+- 定义在 `presentation/state/`，靠近 Feature
+- 生成文件（`.g.dart`）与源文件一并提交
+
+## 依赖
+
+- core 通过 Provider 注入 Token，不 import auth Feature

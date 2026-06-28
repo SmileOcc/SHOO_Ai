@@ -73,7 +73,9 @@ class SHOFlashSaleReminderService {
     SHOFlashSaleReminderBootstrap.onNotificationTapped = _onNotificationTapped;
 
     _initialized = true;
-    _startForegroundWatcher();
+    if (!SHOFlashSaleReminderBootstrap.isTestMode) {
+      _startForegroundWatcher();
+    }
     await _ref.read(pushNotificationServiceProvider).initialize();
     _drainBootstrapPendingPayloads();
   }

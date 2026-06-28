@@ -49,7 +49,7 @@ Map<String, dynamic> resolveFlashSalePage(
   final data = catalogEnvelope['data'] as Map<String, dynamic>? ?? {};
   final templates = (data['sessionTemplates'] as List<dynamic>?) ?? [];
   final allProducts = (data['products'] as List<dynamic>?) ?? [];
-  final promoEntries = data['promoEntries'] ?? [];
+  final promoEntries = data['promoEntries'] ?? <dynamic>[];
   final couponsBySuffix = data['couponsBySessionSuffix'] as Map<String, dynamic>? ?? {};
   final activityId = query['activityId']?.toString() ?? '';
   final activity = _resolveActivity(data, activityId);
@@ -66,7 +66,7 @@ Map<String, dynamic> resolveFlashSalePage(
 
   final session = sessions.cast<Map<String, dynamic>?>().firstWhere(
         (s) => s!['id'] == sessionId,
-        orElse: () => sessions.isNotEmpty ? sessions.first as Map<String, dynamic> : null,
+        orElse: () => sessions.isNotEmpty ? sessions.first : null,
       );
   sessionId = session?['id'] as String? ?? sessionId;
 
@@ -143,7 +143,7 @@ Map<String, dynamic> resolveFlashSaleProductActivity(
   final sessions = _buildSessionsForDay(day, templates, now);
   final session = sessions.cast<Map<String, dynamic>?>().firstWhere(
         (s) => s!['id'] == sessionId,
-        orElse: () => sessions.isNotEmpty ? sessions.first as Map<String, dynamic> : null,
+        orElse: () => sessions.isNotEmpty ? sessions.first : null,
       );
 
   final status = _resolveProductStatus(
@@ -164,7 +164,8 @@ Map<String, dynamic> resolveFlashSaleProductActivity(
       'activityPrice': activityBase['activityPrice'] ?? product['activityPrice'] ?? 0,
       'primaryPromoType': activityBase['primaryPromoType'] ?? product['primaryPromoType'],
       'primaryPromoLabel': activityBase['primaryPromoLabel'] ?? product['primaryPromoLabel'],
-      'promoTags': activityBase['promoTags'] ?? product['promoTags'] ?? [],
+      'promoTags':
+          activityBase['promoTags'] ?? product['promoTags'] ?? <dynamic>[],
       'sessionStartAt': session?['startAt'],
       'sessionEndAt': session?['endAt'],
       'overlayLabel': overlay,

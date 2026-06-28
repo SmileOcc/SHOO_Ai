@@ -29,7 +29,7 @@ class SHOHybridEncryptInterceptor extends Interceptor {
     }
 
     try {
-      final envelope = await _crypto.encryptHybrid(options.data!);
+      final envelope = await _crypto.encryptHybrid(options.data! as Object);
       options.data = envelope;
       options.headers['X-Encrypted'] = 'hybrid';
       handler.next(options);

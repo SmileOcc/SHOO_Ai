@@ -50,7 +50,7 @@ void main() {
         'status': 'shipped',
         'totalCents': 1000,
         'createdAt': '2026-05-01',
-        'items': [],
+        'items': <Map<String, dynamic>>[],
       });
       expect(order.status, SHOOrderStatus.shipped);
     });

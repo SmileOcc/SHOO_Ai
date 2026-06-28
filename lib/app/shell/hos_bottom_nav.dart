@@ -6,7 +6,6 @@ import 'package:shoo/core/analytics/hos_tab_analytics.dart';
 import 'package:shoo/core/navigation/hos_tab_badge_provider.dart';
 import 'package:shoo/core/widgets/hos_tab_badge_icon.dart';
 import 'package:shoo/l10n/app_localizations.dart';
-import 'package:shoo/app/router/hos_routes.dart';
 
 class SHOAppBottomNav extends ConsumerWidget {
   const SHOAppBottomNav({

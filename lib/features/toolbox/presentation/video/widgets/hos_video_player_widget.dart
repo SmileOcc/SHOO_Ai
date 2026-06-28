@@ -371,19 +371,16 @@ class _SHOVideoPlayerWidgetState extends State<SHOVideoPlayerWidget> {
 }
 
 class _ScalingSliderThumbShape extends SliderComponentShape {
-  const _ScalingSliderThumbShape({
-    required this.isDragging,
-    this.normalRadius = 5,
-    this.draggingRadius = 9,
-  });
+  const _ScalingSliderThumbShape({required this.isDragging});
 
   final bool isDragging;
-  final double normalRadius;
-  final double draggingRadius;
+
+  static const _normalRadius = 5.0;
+  static const _draggingRadius = 9.0;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    final radius = isDragging ? draggingRadius : normalRadius;
+    final radius = isDragging ? _draggingRadius : _normalRadius;
     return Size.fromRadius(radius);
   }
 
@@ -402,7 +399,7 @@ class _ScalingSliderThumbShape extends SliderComponentShape {
     required double textScaleFactor,
     required Size sizeWithOverflow,
   }) {
-    final radius = isDragging ? draggingRadius : normalRadius;
+    final radius = isDragging ? _draggingRadius : _normalRadius;
     final color = sliderTheme.thumbColor ?? const Color(0xFFFF4657);
     context.canvas.drawCircle(center, radius, Paint()..color = color);
   }

@@ -30,7 +30,7 @@ class SHORsaEncryptInterceptor extends Interceptor {
     }
 
     try {
-      final envelope = await _crypto.encryptRsa(options.data!);
+      final envelope = await _crypto.encryptRsa(options.data! as Object);
       options.data = envelope;
       options.headers['X-Encrypted'] = 'rsa';
       handler.next(options);

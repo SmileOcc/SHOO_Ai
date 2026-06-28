@@ -194,7 +194,8 @@ class _SHOGenericWebViewContainerState
       );
     }
 
-    for (final channel in widget.config.javaScriptChannels ?? const []) {
+    for (final channel
+        in widget.config.javaScriptChannels ?? const <SHOJavaScriptChannel>[]) {
       controller.addJavaScriptChannel(
         channel.name,
         onMessageReceived: (msg) => channel.onMessage?.call(msg.message),

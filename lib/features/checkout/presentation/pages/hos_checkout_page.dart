@@ -98,8 +98,6 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
 
     final activityLines = ref.read(checkoutActivityLinesProvider);
     final subtotal = _subtotalCents(items, activityLines);
-    final activitySaved = _activitySavedCents(items, activityLines);
-    final fullReductionTiers = mergedFullReductionTiers(activityLines);
 
     setState(() => _submitting = true);
     try {

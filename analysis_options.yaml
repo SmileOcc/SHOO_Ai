@@ -1,13 +1,43 @@
-include: package:flutter_lints/flutter.yaml
+# SHOO Flutter 静态分析配置
+# 规范说明：docs/Flutter开发代码规范.md
+#
+# P1：基线 + 异步/资源/Widget 安全
+# P2（当前）：strict 类型 + 扩展 lint（warning 已清零）
+# P3：可选 dev_dependencies 加入 very_good_analysis 后替换 include
 
-linter:
-  rules:
-    prefer_const_constructors: true # 建议使用 const
-    prefer_const_declarations: true
-    avoid_print: true
-    require_trailing_commas: true
-    prefer_const_literals_to_create_immutables: true  # 字面量使用 const
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   errors:
     invalid_annotation_target: ignore
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+linter:
+  rules:
+    # --- P1 基线 ---
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_print: true
+    require_trailing_commas: true
+
+    # --- P1 异步 / 资源 / Widget 安全 ---
+    unawaited_futures: true
+    cancel_subscriptions: true
+    close_sinks: true
+    use_build_context_synchronously: true
+
+    # --- P2 类型与 API 清晰度 ---
+    always_declare_return_types: true
+    type_annotate_public_apis: true
+    avoid_dynamic_calls: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    sort_pub_dependencies: true
+    unnecessary_await_in_return: true
+    avoid_redundant_argument_values: true
+    avoid_empty_else: true

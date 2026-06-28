@@ -29,7 +29,7 @@ class SHOAesEncryptInterceptor extends Interceptor {
     }
 
     try {
-      final envelope = await _crypto.encryptAes(options.data!);
+      final envelope = await _crypto.encryptAes(options.data! as Object);
       options.data = envelope;
       options.headers['X-Encrypted'] = 'aes';
       handler.next(options);
@@ -47,7 +47,7 @@ class SHOAesEncryptInterceptor extends Interceptor {
 
   @override
   Future<void> onResponse(
-    Response response,
+    Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) async {
     final data = response.data;

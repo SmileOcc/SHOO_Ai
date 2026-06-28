@@ -133,26 +133,19 @@ class SHOWidgetWithCustomHitTest2 extends StatelessWidget {
 // ============================================
 
 class _CustomHitTestStack22 extends MultiChildRenderObjectWidget {
-  final bool debugMode;
-
-  _CustomHitTestStack22({
-    required List<Widget> children,
-    this.debugMode = false,
-    super.key,
-  }) : super(children: children);
+  _CustomHitTestStack22({required List<Widget> children})
+      : super(children: children);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _CustomHitTestRenderStack22(debugMode: debugMode);
+    return _CustomHitTestRenderStack22();
   }
 
   @override
   void updateRenderObject(
     BuildContext context,
     _CustomHitTestRenderStack22 renderObject,
-  ) {
-    renderObject.debugMode = debugMode;
-  }
+  ) {}
 }
 
 // ============================================
@@ -163,34 +156,13 @@ class _CustomHitTestRenderStack22 extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, StackParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, StackParentData> {
-  bool debugMode;
-
-  _CustomHitTestRenderStack22({this.debugMode = false});
-
-  // set debugMode(bool value) {
-  //   if (debugMode != value) {
-  //     debugMode = value;
-  //     markNeedsPaint();
-  //   }
-  // }
-
   @override
   bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    if (debugMode) {
-      debugPrint(
-        '═══ Stack hitTest start, position=(${position.dx.toStringAsFixed(1)}, ${position.dy.toStringAsFixed(1)}) ═══',
-      );
-    }
-
     var hitChild = false;
 
     // 从上层到下层遍历（倒序）
     for (var child = lastChild; child != null; child = childBefore(child)) {
       final childParentData = child.parentData as StackParentData;
-
-      if (debugMode) {
-        debugPrint('  Testing: ${child.runtimeType}');
-      }
 
       final isHit = result.addWithPaintOffset(
         offset: childParentData.offset,
@@ -202,20 +174,9 @@ class _CustomHitTestRenderStack22 extends RenderBox
 
       if (isHit) {
         hitChild = true;
-        if (debugMode) {
-          debugPrint('  ✅ Hit!');
-        }
         // 不 break，继续测试下层
         // 这样 A 和 B 都能收到事件
-      } else {
-        if (debugMode) {
-          debugPrint('  ❌ Miss (穿透)');
-        }
       }
-    }
-
-    if (debugMode) {
-      debugPrint('═══ Stack hitTest end, hitChild=$hitChild ═══');
     }
 
     return hitChild;
@@ -281,12 +242,6 @@ class _CustomHitTestBox extends LeafRenderObjectWidget {
   /// 命中测试过滤器
   final bool Function(Size size, Offset position)? hitTestFilter;
 
-  /// 是否阻止事件穿透
-  final bool blockHit;
-
-  /// 是否显示调试信息
-  final bool debug;
-
   /// 调试标签
   final String? debugLabel;
 
@@ -298,10 +253,7 @@ class _CustomHitTestBox extends LeafRenderObjectWidget {
     required this.color,
     this.onTap,
     this.hitTestFilter,
-    this.blockHit = true,
-    this.debug = false,
     this.debugLabel,
-    super.key,
   });
 
   @override
@@ -314,8 +266,6 @@ class _CustomHitTestBox extends LeafRenderObjectWidget {
       color: color,
       onTap: onTap,
       hitTestFilter: hitTestFilter,
-      blockHit: blockHit,
-      debug: debug,
       debugLabel: debugLabel,
     );
   }
@@ -333,8 +283,6 @@ class _CustomHitTestBox extends LeafRenderObjectWidget {
       ..color = color
       ..onTap = onTap
       ..hitTestFilter = hitTestFilter
-      ..blockHit = blockHit
-      ..debug = debug
       ..debugLabel = debugLabel;
   }
 
@@ -567,8 +515,6 @@ class _CustomHitTestRenderBox22 extends RenderBox {
 
   /// 绘制调试信息
   void _paintDebugInfo(PaintingContext context, Offset offset) {
-    final paintRect = offset & size;
-
     // 绘制绿色虚线边框
     final dashWidth = 5.0;
     final dashSpace = 3.0;

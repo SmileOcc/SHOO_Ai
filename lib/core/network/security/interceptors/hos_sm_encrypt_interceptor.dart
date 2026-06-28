@@ -29,7 +29,7 @@ class SHOSmEncryptInterceptor extends Interceptor {
     }
 
     try {
-      final envelope = await _crypto.encryptSm4(options.data!);
+      final envelope = await _crypto.encryptSm4(options.data! as Object);
       options.data = envelope;
       options.headers['X-Encrypted'] = 'sm4';
       handler.next(options);
@@ -47,7 +47,7 @@ class SHOSmEncryptInterceptor extends Interceptor {
 
   @override
   Future<void> onResponse(
-    Response response,
+    Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) async {
     final data = response.data;

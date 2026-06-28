@@ -29,7 +29,6 @@ class _DebugAllDependenciesWidgetState
   Brightness _lastBrightness = Brightness.light;
   double _lastTextScaleFactor = 1.0;
   Locale? _lastLocale;
-  String _lastRouteName = '';
 
   @override
   void didChangeDependencies() {
@@ -144,8 +143,7 @@ class _DebugAllDependenciesWidgetState
 
     // ========== 6. Navigator ==========
     try {
-      final navigator = Navigator.of(context);
-      buffer.writeln('│ [Navigator] 可以访问 Navigator');
+      buffer.writeln('│ [Navigator] canPop: ${Navigator.canPop(context)}');
     } catch (e) {
       buffer.writeln('│ [Navigator] 无法访问');
     }

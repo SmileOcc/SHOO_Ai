@@ -1,0 +1,32 @@
+---
+description: Feature 模块结构与数据层规范
+globs: lib/features/**/*.dart
+alwaysApply: false
+---
+
+# Feature 模块规范
+
+## 目录
+
+```
+features/{name}/
+  domain/entities/      # 纯 Entity、Repository 接口
+  data/datasources/     # API、本地源
+  data/repositories/    # Repository 实现
+  presentation/pages/   # 页面
+  presentation/widgets/ # 业务组件
+  presentation/state/   # Controller / Provider
+  router.dart           # 本 Feature 路由片段（可选）
+```
+
+## 数据
+
+- 页面/Controller **不直接** `Dio.get`；经 Repository
+- DTO 放 data 层，Domain 不依赖 Dio/json_annotation
+- 错误映射为业务异常，UI 不解析 Dio 原始错误
+
+## 页面
+
+- 文案走 l10n（`AppLocalizations`），禁止用户可见硬编码
+- 颜色/间距用 `SHOAppColors`、`SHOAppSpacing`
+- 列表用 builder/sliver，禁止长列表全量 Column

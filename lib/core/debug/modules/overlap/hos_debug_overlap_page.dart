@@ -42,12 +42,7 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
   final _entries = <_LogEntry>[];
   final _scrollController = ScrollController();
 
-  String? _activeCase;
-  final _pointerDownOrder = <String>[];
-  final _tapLayers = <String>[];
-  Timer? _finalizeTimer;
   var _seq = 0;
-  var _tapId = 0;
 
   final GlobalKey _bKey = GlobalKey();
   final GlobalKey _aKey = GlobalKey();
@@ -193,48 +188,10 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
     return clickableAreas;
   }
 
-  /// 判断点击位置是否在 B 的可点击区域内
-  bool _isInBClickableArea(Offset globalPosition) {
-    return _bClickableAreas.any((rect) => rect.contains(globalPosition));
-  }
-
   @override
   void dispose() {
-    _finalizeTimer?.cancel();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _beginCase(String caseId) {
-    if (_activeCase != caseId) {
-      _finalizeSession();
-      _activeCase = caseId;
-      _pointerDownOrder.clear();
-      _tapLayers.clear();
-      _tapId++;
-      _push(
-        '━━━━━━━━ 点击 #${_tapId.toString().padLeft(2, '0')} [$caseId] ━━━━━━━━',
-        _LogKind.header,
-      );
-    }
-  }
-
-  void _onPointerDown(String caseId, String layer) {
-    _beginCase(caseId);
-    if (!_pointerDownOrder.contains(layer)) {
-      _pointerDownOrder.add(layer);
-    }
-    _logDetail(caseId, layer, 'Listener', 'pointerDown');
-    _scheduleFinalize();
-  }
-
-  void _onTap(String caseId, String layer) {
-    _beginCase(caseId);
-    if (!_tapLayers.contains(layer)) {
-      _tapLayers.add(layer);
-    }
-    _logDetail(caseId, layer, 'GestureDetector', 'onTap ✅');
-    _scheduleFinalize();
   }
 
   void _logDetail(String caseId, String layer, String source, String event) {
@@ -244,68 +201,14 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
     _push(line, _LogKind.detail);
   }
 
-  void _scheduleFinalize() {
-    _finalizeTimer?.cancel();
-    _finalizeTimer = Timer(const Duration(milliseconds: 180), _finalizeSession);
-  }
-
-  void _finalizeSession() {
-    if (_activeCase == null) return;
-
-    final caseId = _activeCase!;
-    final pointer = _pointerDownOrder.isEmpty
-        ? '（无）'
-        : _pointerDownOrder.join(' → ');
-    final taps = _tapLayers.isEmpty ? '（无）' : _tapLayers.join(' → ');
-
-    final summary =
-        '''
-📋 总结 [$caseId]
-  pointerDown 顺序: $pointer
-  onTap  响应层: $taps
-  规则核对: ${_ruleCheck(caseId)}''';
-
-    debugPrint('[Overlap]\n$summary');
-    for (final line in summary.split('\n')) {
-      if (line.trim().isEmpty) continue;
-      _push(line, _LogKind.summary);
-    }
-    _push('', _LogKind.summary);
-
-    _activeCase = null;
-    _pointerDownOrder.clear();
-    _tapLayers.clear();
-  }
-
-  String _ruleCheck(String caseId) {
-    final onlyA = _tapLayers.length == 1 && _tapLayers.first == 'A';
-    final onlyB = _tapLayers.length == 1 && _tapLayers.first == 'B';
-    final none = _tapLayers.isEmpty;
-
-    return switch (caseId) {
-      '场景7' =>
-        onlyA
-            ? '✅ 重叠区 → A（B 自定义命中排除）'
-            : onlyB
-            ? '✅ B 独占区 → B（自定义命中区域内）'
-            : '⚠️ 预期重叠区 A / B 独占区 B',
-      _ => '—',
-    };
-  }
-
   void _push(String text, _LogKind kind) {
     setState(() => _entries.insert(0, _LogEntry(text, kind)));
   }
 
   void _clearLogs() {
-    _finalizeTimer?.cancel();
     setState(() {
       _entries.clear();
-      _activeCase = null;
-      _pointerDownOrder.clear();
-      _tapLayers.clear();
       _seq = 0;
-      _tapId = 0;
     });
   }
 
@@ -389,7 +292,7 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
     );
   }
 
-  /// B 在上层完整绘制；[_RegionHitTestWidget] 使 B 的 GestureDetector 仅在独占区命中。
+  /// B 在上层完整绘制；自定义命中区域使 B 的 GestureDetector 仅在独占区命中。
   Widget _partialOverlapCustomHitTestLayout({
     required String caseId,
     required Color aColor,
@@ -564,222 +467,6 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
     );
   }
 
-  /// A 先绘制（底层），B 后绘制压在 A 上。
-  /// B 整块为视觉层 [IgnorePointer]；场景5 在 B 独占段再叠一层可点击区域。
-  Widget _partialOverlapLayout({
-    required String caseId,
-    required bool aHasTap,
-    required bool bHasTap,
-    required Color aColor,
-    required Color bColor,
-  }) {
-    const top = 24.0;
-    const boxHeight = 90.0;
-    const aWidth = 200.0;
-    const bLeft = 120.0;
-    const bWidth = 180.0;
-    const overlapEnd = aWidth;
-    const bExclusiveWidth = bLeft + bWidth - overlapEnd;
-
-    return SizedBox(
-      height: 130,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // ① A 底层
-          Positioned(
-            left: 0,
-            top: top,
-            child: _overlapLayer(
-              caseId: caseId,
-              layer: 'A',
-              hasTap: aHasTap,
-              width: aWidth,
-              height: boxHeight,
-              color: aColor.withValues(alpha: 0.9),
-              label: 'A 底层\n有 onTap',
-            ),
-          ),
-          // ② B 视觉层（后添加，盖住 A；不参与命中）
-          Positioned(
-            left: bLeft,
-            top: top,
-            child: _overlapVisualLayer(
-              width: bWidth,
-              height: boxHeight,
-              color: bColor.withValues(alpha: 0.72),
-              label: 'B 上层\n(仅视觉)',
-            ),
-          ),
-          // ③ B 独占区点击层（最上层，仅场景5）
-          if (bHasTap)
-            Positioned(
-              left: overlapEnd,
-              top: top,
-              child: _overlapLayer(
-                caseId: caseId,
-                layer: 'B',
-                hasTap: true,
-                width: bExclusiveWidth,
-                height: boxHeight,
-                color: bColor.withValues(alpha: 0.35),
-                label: 'B 独占\nonTap',
-              ),
-            ),
-          Positioned(
-            left: 150,
-            top: 4,
-            child: _zoneMarker(
-              label: '重叠',
-              hint: '点这里 → A',
-              color: Colors.amber.shade200,
-            ),
-          ),
-          Positioned(
-            right: 0,
-            top: 52,
-            child: _zoneMarker(
-              label: 'B独占',
-              hint: bHasTap ? '点这里 → B' : '点这里 → 无',
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// B 压在 A 上的纯视觉层，不拦截点击（重叠区事件落到 A）。
-  Widget _overlapVisualLayer({
-    required double width,
-    required double height,
-    required Color color,
-    required String label,
-  }) {
-    return IgnorePointer(
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: color,
-          border: Border.all(color: Colors.white, width: 2),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x44000000),
-              blurRadius: 4,
-              offset: Offset(2, 2),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 11,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _zoneMarker({
-    required String label,
-    required String hint,
-    required Color color,
-  }) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.black26),
-          ),
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          hint,
-          style: TextStyle(
-            fontSize: 9,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _overlapStack({
-    required String caseId,
-    required Color bColor,
-    required Widget Function(String caseId) aBuilder,
-  }) {
-    return Stack(
-      children: [
-        _overlapLayer(
-          caseId: caseId,
-          layer: 'B',
-          hasTap: true,
-          height: 100,
-          color: bColor,
-          label: 'B 底层\n有 onTap',
-        ),
-        Positioned(left: 20, top: 20, right: 20, child: aBuilder(caseId)),
-      ],
-    );
-  }
-
-  Widget _overlapLayer({
-    required String caseId,
-    required String layer,
-    required bool hasTap,
-    required Color color,
-    required String label,
-    double? width,
-    double? height,
-  }) {
-    Widget box = Container(
-      width: width,
-      height: height ?? 60,
-      color: color == Colors.transparent ? null : color,
-      alignment: label.isEmpty ? null : Alignment.center,
-      child: label.isEmpty
-          ? null
-          : Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: layer == 'B' ? 12 : 11,
-              ),
-            ),
-    );
-
-    box = Listener(
-      behavior: HitTestBehavior.opaque,
-      onPointerDown: (_) => _onPointerDown(caseId, layer),
-      child: box,
-    );
-
-    if (hasTap) {
-      box = GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => _onTap(caseId, layer),
-        child: box,
-      );
-    }
-
-    return box;
-  }
-
   Widget _buildDemoCard({
     required String title,
     required String subtitle,
@@ -890,45 +577,5 @@ class _SHODebugOverlapPageState extends ConsumerState<SHODebugOverlapPage>
         ],
       ),
     );
-  }
-}
-
-/// 仅在 [hitTestRegion]（本地坐标）内参与命中测试，其余点击穿透到下层。
-class _RegionHitTestWidget extends SingleChildRenderObjectWidget {
-  const _RegionHitTestWidget({
-    required this.hitTestRegion,
-    required super.child,
-  });
-
-  final Rect hitTestRegion;
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _RegionHitTestRenderBox()..hitTestRegion = hitTestRegion;
-  }
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    _RegionHitTestRenderBox renderObject,
-  ) {
-    renderObject.hitTestRegion = hitTestRegion;
-  }
-}
-
-class _RegionHitTestRenderBox extends RenderProxyBox {
-  Rect hitTestRegion = Rect.zero;
-
-  @override
-  bool hitTest(BoxHitTestResult result, {required Offset position}) {
-    if (!size.contains(position)) return false;
-    if (!hitTestRegion.contains(position)) return false;
-    return super.hitTest(result, position: position);
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Rect>('hitTestRegion', hitTestRegion));
   }
 }

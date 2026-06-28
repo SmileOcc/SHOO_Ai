@@ -17,6 +17,8 @@ abstract final class SHOFlashSaleReminderBootstrap {
   static String? pendingLaunchPayload;
   static final List<String> pendingTapPayloads = [];
 
+  static bool get isTestMode => _testMode;
+
   static void Function(String payload)? tapHandler;
 
   /// 通知点击后通知 Service 处理 pending payload（可为 null 直到 Service 初始化）。

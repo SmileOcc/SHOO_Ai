@@ -1,0 +1,34 @@
+---
+description: SHOO Flutter 核心规范（架构、依赖、Dart 风格）
+alwaysApply: true
+---
+
+# Flutter 核心规范
+
+完整文档：`docs/Flutter开发代码规范.md`
+
+## 架构
+
+- 分层：`app → features → core`；**禁止** `core` import `features`
+- Feature 内：`presentation → domain ← data`；禁止 Feature 互相 import
+- 新代码放 `features/{name}/`，禁止在 `lib/` 根目录堆业务文件
+
+## Dart
+
+- 公共 API 声明返回类型；可空显式处理，避免滥用 `!`
+- 禁止 `print`，用 `SHOLogger`；禁止空 `catch`
+- 禁止在 `build` 里 `await`、改 Provider、发起副作用
+- 模型用 freezed；Widget 字段 `final`，能 `const` 则 `const`
+
+## 命名
+
+- 文件 `snake_case.dart`；类 `UpperCamelCase`
+- 基建 `SHO`/`SHOApp` 前缀；页面 `*_page.dart`，控制器 `*_controller.dart`
+
+## 提交前
+
+```bash
+dart format .
+dart analyze
+flutter test
+```

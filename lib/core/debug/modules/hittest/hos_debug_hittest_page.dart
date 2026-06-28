@@ -630,7 +630,7 @@ class _BehaviorDemoCard extends StatelessWidget {
     );
   }
 
-  testBuilder() {
+  Widget testBuilder() {
     return Container(
       width: 300,
       height: 350,

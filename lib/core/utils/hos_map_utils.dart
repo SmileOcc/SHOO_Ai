@@ -1,8 +1,9 @@
 /// 常用字典/Map 工具。
 abstract final class SHOMapUtils {
-  static bool isEmpty(Map? map) => map == null || map.isEmpty;
+  static bool isEmpty(Map<dynamic, dynamic>? map) =>
+      map == null || map.isEmpty;
 
-  static bool isNotEmpty(Map? map) => !isEmpty(map);
+  static bool isNotEmpty(Map<dynamic, dynamic>? map) => !isEmpty(map);
 
   static Map<K, V> safe<K, V>(Map<K, V>? map) => map ?? {};
 

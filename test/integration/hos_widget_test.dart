@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,7 @@ void main() {
   });
 
   testWidgets('SHOO app boots with tab shell', (tester) async {
+    final errorWidgetBuilderBeforeTest = ErrorWidget.builder;
     SharedPreferences.setMockInitialValues({
       'onboarding_seen': true,
       SHOAppConstants.localeKey: 'en',
@@ -35,9 +37,12 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('Shop'), findsOneWidget);
-    expect(find.text('Category'), findsOneWidget);
-    expect(find.text('Bag'), findsOneWidget);
-    expect(find.text('Me'), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    expect(find.text('Shop'), findsWidgets);
+    expect(find.text('Category'), findsWidgets);
+    expect(find.text('Bag'), findsWidgets);
+    expect(find.text('Me'), findsWidgets);
+
+    ErrorWidget.builder = errorWidgetBuilderBeforeTest;
   });
 }

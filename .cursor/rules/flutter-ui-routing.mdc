@@ -1,0 +1,37 @@
+---
+description: UI 组件、路由与刷新组件规范
+globs: lib/core/widgets/**,lib/features/**/pages/**,lib/features/**/widgets/**,lib/core/router/**
+alwaysApply: false
+---
+
+# UI & 路由规范
+
+## 组件分层
+
+- 通用组件 → `core/widgets/`（经 `hos_widgets.dart` 导出）
+- 业务组件 → `features/*/presentation/widgets/`
+
+## 路由
+
+- 路径常量在 `SHOAppRoutes`；禁止魔法字符串 `'/orders/$id'`
+- 深链走 `SHODeepLinkNavigator`，页面不自行解析 URL
+
+## 刷新 / 分页
+
+```dart
+SHOAppCustomRefresh(
+  controller: ctrl,
+  onRefresh: ...,
+  child: CustomScrollView(
+    physics: shoAppCustomRefreshScrollPhysics,
+    slivers: [
+      SHOAppCustomRefresh.headerSliver(ctrl), // 首位
+      ...content,
+      SHOAppCustomRefresh.footerSliver(ctrl),
+    ],
+  ),
+)
+```
+
+- 轻量下拉：`SHOAppPullRefresh`（勿改其实现）
+- 页面埋点：`SHOAppTrackedPageMixin` + `pageName`

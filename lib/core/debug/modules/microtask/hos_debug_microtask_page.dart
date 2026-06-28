@@ -56,7 +56,7 @@ class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage>
     });
 
     // 4. Future.value - 立即 resolved 的 Future，then 也在 microtask 执行
-    Future.value().then((_) {
+    Future<void>.value().then((_) {
       _log('microtask', '5. Future.value().then (microtask)');
     });
 
@@ -83,7 +83,7 @@ class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage>
     _log('sync', '--- runDemo #$_runCount 同步部分完成 ---');
 
     // 等待所有异步任务完成
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     _log('sync', '>>> runDemo #$_runCount 完成');
   }
 
@@ -106,7 +106,7 @@ class _SHODebugMicrotaskPageState extends ConsumerState<SHODebugMicrotaskPage>
     _log('sync', '6. Provider 构建完成，返回 router');
     _log('sync', '--- 同步部分结束，等待事件循环 ---');
 
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     _log('sync', '>>> routerProvider 场景模拟 #$_runCount 完成');
   }
 

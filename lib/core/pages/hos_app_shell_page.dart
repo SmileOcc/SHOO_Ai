@@ -27,7 +27,7 @@ class SHOAppShellPage extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Color? backgroundColor;
   final bool canPop;
-  final PopInvokedWithResultCallback? onPopInvokedWithResult;
+  final PopInvokedWithResultCallback<Object?>? onPopInvokedWithResult;
 
   PreferredSizeWidget? _resolveAppBar() {
     if (appBar != null) return appBar;

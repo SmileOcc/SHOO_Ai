@@ -37,7 +37,7 @@ class SHODebugCustomInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     _onEvent(
       '[Custom:onResponse] ${response.statusCode} ${response.requestOptions.path}',
     );
