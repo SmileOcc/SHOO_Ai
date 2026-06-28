@@ -1,21 +1,10 @@
 name: CI
 
-# 触发时机（仅 main / master）：
-# 1. pull_request → 向 main/master 提 PR、更新 PR 分支时（合并前检查）
-# 2. push        → 直接 push 到 main/master，或 PR 合并完成后 push 到 main/master
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - master
-    types:
-      - opened
-      - synchronize
-      - reopened
+    branches: [main, master]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}

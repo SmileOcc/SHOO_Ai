@@ -190,7 +190,6 @@ abstract final class SHOAppRoutes {
   static const debugDependencies = '/debug/dependencies';
   static const debugSecureNetwork = '/debug/secure-network';
   static const debugMixin = '/debug/mixin';
-  static const debugCiFailure = '/debug/ci-failure';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 
