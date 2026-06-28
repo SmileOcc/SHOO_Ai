@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/debug/core/hos_debug_config_repository.dart';
 import 'package:shoo/core/debug/modules/update/hos_debug_update_config.dart';
-import 'package:shoo/core/network/hos_dio_client.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/core/network/hos_dio_client.dart';
 import 'package:shoo/core/utils/hos_version_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final appUpdateServiceProvider = Provider<SHOAppUpdateService>((ref) {
   return SHOAppUpdateService(ref.watch(dioProvider), ref);
@@ -80,10 +79,12 @@ class SHOAppUpdateService {
   Future<SHODebugUpdateConfig?> _loadActiveDebugOverride() async {
     if (!SHOAppConfig.instance.isDebugPanelEnabled) return null;
 
-    final config = await _ref.read(debugConfigRepositoryProvider).loadUpdateConfig();
+    final config = await _ref
+        .read(debugConfigRepositoryProvider)
+        .loadUpdateConfig();
     if (!config.overrideEnabled) return null;
 
-    SHOAppLogger.debug(
+    SHOAppLogger.d(
       'Update check using debug override: ${config.latestVersion}, force=${config.forceUpdate}',
     );
     return config;
@@ -94,7 +95,7 @@ class SHOAppUpdateService {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      SHOAppLogger.warn('Cannot launch update url: $url');
+      SHOAppLogger.w('Cannot launch update url: $url');
     }
   }
 }

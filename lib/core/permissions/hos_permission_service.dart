@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 
 final permissionServiceProvider = Provider<SHOPermissionService>((ref) {
@@ -20,12 +19,12 @@ class SHOPermissionService {
     if (status.isGranted) return true;
 
     if (status.isPermanentlyDenied) {
-      SHOAppLogger.warn('Permission permanently denied: $permission');
+      SHOAppLogger.w('Permission permanently denied: $permission');
       return false;
     }
 
     final result = await permission.request();
-    SHOAppLogger.info('Permission $permission → $result');
+    SHOAppLogger.i('Permission $permission → $result');
     return result.isGranted;
   }
 

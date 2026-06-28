@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_target.dart';
@@ -23,7 +22,7 @@ abstract final class SHODeepLinkNavigator {
   }) async {
     final target = SHODeepLinkResolver.resolveLink(link);
     if (target == null) {
-      SHOAppLogger.warn('Unsupported deep link: $link');
+      SHOAppLogger.w('Unsupported deep link: $link');
       if (context.mounted) {
         context.showToast('不支持的链接');
       }
@@ -47,7 +46,7 @@ abstract final class SHODeepLinkNavigator {
     final router = GoRouter.of(context);
 
     if (target.requiresAuth && !session.isAuthenticated) {
-      SHOAppLogger.info('Deep link requires auth → login');
+      SHOAppLogger.i('Deep link requires auth → login');
       await router.push(
         '${SHOAppRoutes.login}?redirect=${Uri.encodeComponent(target.appPath)}',
       );
@@ -55,7 +54,7 @@ abstract final class SHODeepLinkNavigator {
     }
 
     final path = target.appPath;
-    SHOAppLogger.info('Deep link navigate → $path');
+    SHOAppLogger.i('Deep link navigate → $path');
 
     if (closeCurrentPage && router.canPop()) {
       router.pop();
@@ -76,14 +75,14 @@ abstract final class SHODeepLinkNavigator {
     required SHOSessionState session,
   }) {
     if (target.requiresAuth && !session.isAuthenticated) {
-      SHOAppLogger.info('Deep link requires auth → login');
+      SHOAppLogger.i('Deep link requires auth → login');
       router.push(
         '${SHOAppRoutes.login}?redirect=${Uri.encodeComponent(target.appPath)}',
       );
       return;
     }
 
-    SHOAppLogger.info('Deep link navigate → ${target.appPath}');
+    SHOAppLogger.i('Deep link navigate → ${target.appPath}');
     final path = target.appPath;
     if (SHOAppRoutes.isShellTabRoute(path)) {
       router.go(path);

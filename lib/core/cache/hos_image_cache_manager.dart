@@ -7,9 +7,8 @@ import 'package:file/local.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:sqflite/sqflite.dart';
 
 const _cacheKey = 'shoo_image_cache';
 
@@ -85,7 +84,7 @@ class SHOImageCacheManager extends CacheManager with ImageCacheManager {
       return;
     }
     _lastRecoveryLog = now;
-    SHOAppLogger.warn('Image cache DB readonly, resetting cache: $error');
+    SHOAppLogger.w('Image cache DB readonly, resetting cache: $error');
   }
 
   static Future<void> _hardReset({Object? logError}) async {
@@ -114,7 +113,7 @@ class SHOImageCacheManager extends CacheManager with ImageCacheManager {
       await _instance!.config.repo.open();
       CachedNetworkImageProvider.defaultCacheManager = _instance!;
     } catch (error, stack) {
-      SHOAppLogger.error('Image cache hard reset failed', error, stack);
+      SHOAppLogger.e('Image cache hard reset failed', error, stack);
       _instance ??= _createDefault();
     } finally {
       _recovering = false;

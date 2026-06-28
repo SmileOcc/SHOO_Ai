@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/logging/hos_remote_log_client.dart';
@@ -43,7 +42,7 @@ abstract final class SHORemoteLogUploader {
     } on DioException catch (error, stack) {
       final status = error.response?.statusCode;
       if (status == 404) {
-        SHOAppLogger.warn(
+        SHOAppLogger.w(
           'Remote log upload 404: $path — restart local server (cd server && npm run dev)',
         );
         return;
@@ -52,19 +51,19 @@ abstract final class SHORemoteLogUploader {
         _warnLocalServerOnce();
         return;
       }
-      SHOAppLogger.warn('Remote log upload failed: $path', error.message);
+      SHOAppLogger.w('Remote log upload failed: $path', error.message);
       if (kDebugMode) {
-        SHOAppLogger.debug('Remote log upload stack', stack);
+        SHOAppLogger.d('Remote log upload stack', stack);
       }
     } catch (error, stack) {
-      SHOAppLogger.error('Remote log upload failed: $path', error, stack);
+      SHOAppLogger.e('Remote log upload failed: $path', error, stack);
     }
   }
 
   static void _warnLocalServerOnce() {
     if (_localServerWarned) return;
     _localServerWarned = true;
-    SHOAppLogger.warn(
+    SHOAppLogger.w(
       'Local server unreachable — skip remote log upload. '
       'Start: cd server && npm run dev',
     );

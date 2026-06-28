@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-
 import 'package:shoo/core/constants/hos_constants.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 
@@ -19,15 +18,16 @@ Future<String?> ensureActivityMockServerStarted() async {
       SHOAppConstants.activityMockServerPort,
       shared: true,
     );
-    _server!.listen(_handleRequest, onError: (Object error, StackTrace stack) {
-      SHOAppLogger.warn('Activity mock server error: $error');
-    });
-    SHOAppLogger.info(
-      'Activity mock server started at ${_baseUrl()}',
+    _server!.listen(
+      _handleRequest,
+      onError: (Object error, StackTrace stack) {
+        SHOAppLogger.w('Activity mock server error: $error');
+      },
     );
+    SHOAppLogger.i('Activity mock server started at ${_baseUrl()}');
     return _baseUrl();
   } catch (error, stack) {
-    SHOAppLogger.error('Activity mock server bind failed', error, stack);
+    SHOAppLogger.e('Activity mock server bind failed', error, stack);
     return null;
   }
 }
@@ -55,17 +55,11 @@ Future<void> _handleRequest(HttpRequest request) async {
       return;
     }
     if (request.method == 'GET' && path == '/api/v1/activity/data') {
-      await _writeMockEnvelopeData(
-        request,
-        'assets/mock/activity_data.json',
-      );
+      await _writeMockEnvelopeData(request, 'assets/mock/activity_data.json');
       return;
     }
     if (request.method == 'GET' && path == '/api/v1/activity/detail') {
-      await _writeMockEnvelopeData(
-        request,
-        'assets/mock/activity_detail.json',
-      );
+      await _writeMockEnvelopeData(request, 'assets/mock/activity_detail.json');
       return;
     }
     if (request.method == 'GET' && path == '/api/v1/activity/detail/level3') {
@@ -83,10 +77,7 @@ Future<void> _handleRequest(HttpRequest request) async {
       return;
     }
     if (request.method == 'GET' && path == '/api/activity/data') {
-      await _writeMockEnvelopeData(
-        request,
-        'assets/mock/activity_data.json',
-      );
+      await _writeMockEnvelopeData(request, 'assets/mock/activity_data.json');
       return;
     }
     if (request.method == 'GET' && path == '/api/user/check') {
@@ -106,7 +97,7 @@ Future<void> _handleRequest(HttpRequest request) async {
     request.response.statusCode = HttpStatus.notFound;
     request.response.write('Not Found');
   } catch (error, stack) {
-    SHOAppLogger.error('Activity mock server request failed', error, stack);
+    SHOAppLogger.e('Activity mock server request failed', error, stack);
     request.response.statusCode = HttpStatus.internalServerError;
     request.response.write('Internal Server Error');
   } finally {

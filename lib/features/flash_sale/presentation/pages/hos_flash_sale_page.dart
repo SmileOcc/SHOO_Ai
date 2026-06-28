@@ -6,8 +6,8 @@ import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/utils/hos_list_utils.dart';
+import 'package:shoo/core/widgets/custom_refresh/hos_custom_refresh.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
-import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
 import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
@@ -29,6 +29,7 @@ class SHOFlashSalePage extends ConsumerStatefulWidget {
 class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   final _scrollController = ScrollController();
+  final _refreshCtrl = SHOAppCustomRefreshController();
 
   @override
   String get pageName => 'flash_sale';
@@ -38,28 +39,66 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
     'activity_id': widget.activityId,
   };
 
-  // 获取闪购控制器（通过 ref.read 获取 notifier）
   SHOFlashSaleController get _controller =>
       ref.read(flashSaleControllerProvider(widget.activityId).notifier);
 
   @override
   void initState() {
     super.initState();
-    // 使用 Future.microtask 延迟执行初始化，避免在构建期间修改状态
-    Future.microtask(_controller.initialize);
-    _scrollController.addListener(_onScroll);
+    Future.microtask(() async {
+      await _controller.initialize();
+      if (mounted) _syncLoadFooter();
+    });
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      _controller.loadMore();
+  void _syncLoadFooter() {
+    final data =
+        ref.read(flashSaleControllerProvider(widget.activityId)).pageData;
+    if (data != null && !data.hasMore) {
+      _refreshCtrl.loadNoMore();
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    await _controller.refresh();
+    if (!mounted) return;
+    final state = ref.read(flashSaleControllerProvider(widget.activityId));
+    if (state.error != null) {
+      throw Exception(state.error);
+    }
+    _syncLoadFooter();
+  }
+
+  Future<void> _onLoadMore() async {
+    final before =
+        ref.read(flashSaleControllerProvider(widget.activityId)).pageData;
+    if (before == null || !before.hasMore) {
+      _refreshCtrl.loadNoMore();
+      return;
+    }
+    final beforeLen = before.products.length;
+    await _controller.loadMore();
+    if (!mounted) return;
+    final afterState =
+        ref.read(flashSaleControllerProvider(widget.activityId));
+    final after = afterState.pageData;
+    if (after == null) {
+      _refreshCtrl.loadFailed();
+      return;
+    }
+    if (afterState.error != null && after.products.length == beforeLen) {
+      _refreshCtrl.loadFailed();
+    } else if (!after.hasMore) {
+      _refreshCtrl.loadNoMore();
+    } else {
+      _refreshCtrl.loadCompleted();
     }
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _refreshCtrl.dispose();
     super.dispose();
   }
 
@@ -85,14 +124,18 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
             style: const TextStyle(fontWeight: FontWeight.w800),
           ),
         ),
-        body: SHOAppPullRefresh(
-          onRefresh: _controller.refresh,
+        body: SHOAppCustomRefresh(
+          controller: _refreshCtrl,
+          onRefresh: _onRefresh,
+          onLoadMore: _onLoadMore,
+          enableLoadMore: pageData?.hasMore ?? false,
           child: state.calendar == null && state.isRefreshing
               ? const Center(child: CircularProgressIndicator())
               : CustomScrollView(
                   controller: _scrollController,
-                  physics: SHOAppPullRefresh.scrollPhysics,
+                  physics: shoAppCustomRefreshScrollPhysics,
                   slivers: [
+                    SHOAppCustomRefresh.headerSliver(_refreshCtrl),
                     // 日期选择栏（如果日历数据存在）
                     if (state.calendar != null)
                       SliverToBoxAdapter(
@@ -149,20 +192,6 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
                         sliver: SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
-                              // 加载更多指示器
-                              if (index >= products.length) {
-                                return state.isLoadingMore
-                                    ? const Padding(
-                                        padding: EdgeInsets.all(
-                                          SHOAppSpacing.xl,
-                                        ),
-                                        child: Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      )
-                                    : const SizedBox.shrink();
-                              }
-                              // 商品卡片
                               final isLast = index >= products.length - 1;
                               return Padding(
                                 padding: EdgeInsets.only(
@@ -174,11 +203,14 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
                                 ),
                               );
                             },
-                            childCount:
-                                products.length + (state.isLoadingMore ? 1 : 0),
+                            childCount: products.length,
                           ),
                         ),
                       ),
+                    SHOAppCustomRefresh.footerSliver(
+                      _refreshCtrl,
+                      onLoadRetry: _onLoadMore,
+                    ),
                   ],
                 ),
         ),

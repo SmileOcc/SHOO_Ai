@@ -1,22 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/core/constants/hos_constants.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/features/community/data/datasources/remote/hos_community_remote_ds.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 
-final communitySortProvider =
-    StateProvider<SHOCommunitySort>((ref) => SHOCommunitySort.all);
+final communitySortProvider = StateProvider<SHOCommunitySort>(
+  (ref) => SHOCommunitySort.all,
+);
 
-final communityMenuProvider = FutureProvider<List<SHOCommunityMenuItem>>((ref) async {
+final communityMenuProvider = FutureProvider<List<SHOCommunityMenuItem>>((
+  ref,
+) async {
   final page = await ref.watch(communityFeedProvider(1).future);
   return page.menuItems;
 });
 
-final communityFeedProvider =
-    FutureProvider.family<SHOCommunityFeedPage, int>((ref, page) async {
+final communityFeedProvider = FutureProvider.family<SHOCommunityFeedPage, int>((
+  ref,
+  page,
+) async {
   final sort = ref.watch(communitySortProvider);
   return ref.read(communityApiProvider).fetchFeed(sort: sort, page: page);
 });
@@ -71,16 +75,17 @@ class SHOCommunityFeedListState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       menuItems: menuItems ?? this.menuItems,
       error: clearError ? null : (error ?? this.error),
-      loadMoreError:
-          clearLoadMoreError ? null : (loadMoreError ?? this.loadMoreError),
+      loadMoreError: clearLoadMoreError
+          ? null
+          : (loadMoreError ?? this.loadMoreError),
     );
   }
 }
 
 final communityFeedListProvider =
     NotifierProvider<SHOCommunityFeedListNotifier, SHOCommunityFeedListState>(
-  SHOCommunityFeedListNotifier.new,
-);
+      SHOCommunityFeedListNotifier.new,
+    );
 
 class SHOCommunityFeedListNotifier extends Notifier<SHOCommunityFeedListState> {
   int _requestGen = 0;
@@ -112,7 +117,9 @@ class SHOCommunityFeedListNotifier extends Notifier<SHOCommunityFeedListState> {
 
     try {
       final sort = ref.read(communitySortProvider);
-      final page = await ref.read(communityApiProvider).fetchFeed(
+      final page = await ref
+          .read(communityApiProvider)
+          .fetchFeed(
             sort: sort,
             page: 1,
             pageSize: SHOAppConstants.defaultPageSize,
@@ -128,7 +135,7 @@ class SHOCommunityFeedListNotifier extends Notifier<SHOCommunityFeedListState> {
       );
     } catch (error, stack) {
       if (gen != _requestGen) return;
-      SHOAppLogger.error('Community feed refresh failed', error, stack);
+      SHOAppLogger.e('Community feed refresh failed', error, stack);
       state = state.copyWith(
         isInitialLoading: false,
         isRefreshing: false,
@@ -151,7 +158,9 @@ class SHOCommunityFeedListNotifier extends Notifier<SHOCommunityFeedListState> {
     try {
       final sort = ref.read(communitySortProvider);
       final nextPage = state.page + 1;
-      final page = await ref.read(communityApiProvider).fetchFeed(
+      final page = await ref
+          .read(communityApiProvider)
+          .fetchFeed(
             sort: sort,
             page: nextPage,
             pageSize: SHOAppConstants.defaultPageSize,
@@ -162,15 +171,11 @@ class SHOCommunityFeedListNotifier extends Notifier<SHOCommunityFeedListState> {
         page: nextPage,
         hasMore: page.hasMore,
         isLoadingMore: false,
-        menuItems:
-            state.menuItems.isEmpty ? page.menuItems : state.menuItems,
+        menuItems: state.menuItems.isEmpty ? page.menuItems : state.menuItems,
       );
     } catch (error, stack) {
-      SHOAppLogger.error('Community feed load more failed', error, stack);
-      state = state.copyWith(
-        isLoadingMore: false,
-        loadMoreError: error,
-      );
+      SHOAppLogger.e('Community feed load more failed', error, stack);
+      state = state.copyWith(isLoadingMore: false, loadMoreError: error);
     }
   }
 }

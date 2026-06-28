@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/logging/hos_remote_log_uploader.dart';
@@ -40,13 +39,16 @@ class SHONetworkLogInterceptor extends Interceptor {
     buffer.writeln(_border);
 
     final text = buffer.toString();
-    SHOAppLogger.debug(text);
+    SHOAppLogger.d(text);
     _uploadRemote(config, kind: 'request', message: text);
     handler.next(options);
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     final config = _readConfig();
     if (!_shouldLog(response.requestOptions.uri.path, config)) {
       handler.next(response);
@@ -68,7 +70,7 @@ class SHONetworkLogInterceptor extends Interceptor {
     buffer.writeln(_border);
 
     final text = buffer.toString();
-    SHOAppLogger.debug(text);
+    SHOAppLogger.d(text);
     _uploadRemote(config, kind: 'response', message: text);
     handler.next(response);
   }
@@ -79,7 +81,7 @@ class SHONetworkLogInterceptor extends Interceptor {
     if (_shouldLog(err.requestOptions.uri.path, config)) {
       final text =
           '[HTTP ERROR] ${err.requestOptions.method} ${err.requestOptions.uri} | ${err.message}';
-      SHOAppLogger.warn(text);
+      SHOAppLogger.w(text);
       _uploadRemote(config, kind: 'error', message: text);
     }
     handler.next(err);

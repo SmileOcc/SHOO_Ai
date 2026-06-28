@@ -1,19 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/core/analytics/hos_analytics.dart';
 import 'package:shoo/core/errors/hos_exception.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
-import 'package:shoo/features/auth/domain/repositories/hos_auth_repository.dart';
 import 'package:shoo/features/auth/data/repositories/hos_auth_repository_impl.dart';
 import 'package:shoo/features/auth/domain/entities/hos_auth_user.dart';
+import 'package:shoo/features/auth/domain/repositories/hos_auth_repository.dart';
 import 'package:shoo/features/auth/presentation/state/hos_auth_token_provider.dart';
 
 class SHOSessionState {
-  const SHOSessionState({
-    this.token,
-    this.user,
-    this.isRestoring = false,
-  });
+  const SHOSessionState({this.token, this.user, this.isRestoring = false});
 
   final String? token;
   final SHOAuthUser? user;
@@ -67,15 +62,15 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
         user: session.user,
         isRestoring: false,
       );
-      SHOAppLogger.info('Session restored for ${session.user.nickname}');
+      SHOAppLogger.i('Session restored for ${session.user.nickname}');
     } on SHONetworkException catch (error) {
-      SHOAppLogger.warn(
+      SHOAppLogger.w(
         'Session restore skipped — API unreachable (${error.message}). '
         'If using local env, run: cd server && npm run dev',
       );
       state = const SHOSessionState(isRestoring: false);
     } catch (error, stack) {
-      SHOAppLogger.error('Session restore failed', error, stack);
+      SHOAppLogger.e('Session restore failed', error, stack);
       await _repository.logout();
       _syncToken(null);
       state = const SHOSessionState(isRestoring: false);
@@ -93,13 +88,10 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
   Future<void> commitLogin(SHOAuthSession session) async {
     _syncToken(session.token);
     state = SHOSessionState(token: session.token, user: session.user);
-    SHOAppLogger.info('User logged in: ${session.user.nickname}');
+    SHOAppLogger.i('User logged in: ${session.user.nickname}');
     await SHOAnalyticsManager.instance.trackEvent(
       SHOAnalyticsRegistry.loginSuccess,
-      {
-        'user_id': session.user.id,
-        'method': 'phone_password',
-      },
+      {'user_id': session.user.id, 'method': 'phone_password'},
     );
   }
 
@@ -113,7 +105,7 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
     await _repository.logout();
     _syncToken(null);
     state = const SHOSessionState();
-    SHOAppLogger.info('User logged out');
+    SHOAppLogger.i('User logged out');
     if (userId != null) {
       await SHOAnalyticsManager.instance.trackEvent(
         SHOAnalyticsRegistry.logout,

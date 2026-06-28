@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
 import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
@@ -55,6 +54,6 @@ abstract final class SHONativeMessageBridge {
     required Future<dynamic> Function(dynamic message)? handler,
   }) {
     channel(channelName).setMessageHandler(handler);
-    SHOAppLogger.debug('NativeMessageBridge handler set: $channelName');
+    SHOAppLogger.d('NativeMessageBridge handler set: $channelName');
   }
 }

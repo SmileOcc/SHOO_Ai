@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
 import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
@@ -26,7 +25,11 @@ abstract final class SHONativeBridge {
     String channelName = SHOChannelNames.nativeBridge,
     Map<String, dynamic>? args,
   }) async {
-    final result = await _invoke(channelName: channelName, method: method, args: args);
+    final result = await _invoke(
+      channelName: channelName,
+      method: method,
+      args: args,
+    );
     if (result == null) {
       throw SHONativeBridgeException(
         channel: channelName,
@@ -38,7 +41,7 @@ abstract final class SHONativeBridge {
     try {
       return SHONativeTypeCaster.cast<T>(result);
     } catch (e, st) {
-      SHOAppLogger.error('NativeBridge cast failed: $channelName.$method', e, st);
+      SHOAppLogger.e('NativeBridge cast failed: $channelName.$method', e, st);
       throw SHONativeBridgeException(
         channel: channelName,
         method: method,
@@ -55,7 +58,11 @@ abstract final class SHONativeBridge {
     String channelName = SHOChannelNames.nativeBridge,
     Map<String, dynamic>? args,
   }) async {
-    final result = await _invoke(channelName: channelName, method: method, args: args);
+    final result = await _invoke(
+      channelName: channelName,
+      method: method,
+      args: args,
+    );
     if (result == null) return null;
     return SHONativeTypeCaster.cast<T>(result);
   }
@@ -75,7 +82,7 @@ abstract final class SHONativeBridge {
     Map<String, dynamic>? args,
   }) async {
     try {
-      SHOAppLogger.debug('NativeBridge → $channelName.$method');
+      SHOAppLogger.d('NativeBridge → $channelName.$method');
       return await channel(channelName).invokeMethod<dynamic>(method, args);
     } on PlatformException catch (e) {
       final ex = SHONativeBridgeException(
@@ -85,7 +92,7 @@ abstract final class SHONativeBridge {
         code: e.code,
         details: e.details,
       );
-      SHOAppLogger.warn('$ex');
+      SHOAppLogger.w('$ex');
       throw ex;
     } on MissingPluginException catch (e) {
       final ex = SHONativeBridgeException(
@@ -94,7 +101,7 @@ abstract final class SHONativeBridge {
         message: e.message ?? 'No native implementation registered',
         code: 'missing_plugin',
       );
-      SHOAppLogger.warn('$ex');
+      SHOAppLogger.w('$ex');
       throw ex;
     }
   }

@@ -77,12 +77,12 @@ abstract final class SHOAppLogger {
 
   // ── 兼容旧 API（逐步迁移到 d/i/w/e 或 module）──────────
 
-  static void debug(String message, [Object? detail]) => d(message, detail);
+  // static void debug(String message, [Object? detail]) => d(message, detail);
 
-  static void info(String message) => i(message);
+  // static void info(String message) => i(message);
 
-  static void warn(String message, [Object? error]) => w(message, error);
+  // static void warn(String message, [Object? error]) => w(message, error);
 
-  static void error(String message, [Object? error, StackTrace? stack]) =>
-      e(message, error, stack);
+  // static void error(String message, [Object? error, StackTrace? stack]) =>
+  //     e(message, error, stack);
 }

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/permissions/hos_permission_service.dart';
 
@@ -32,7 +31,7 @@ class SHOImagePickerService {
     if (!granted) return [];
 
     final files = await _picker.pickMultiImage(imageQuality: 85);
-    SHOAppLogger.info('Picked ${files.length} images from gallery');
+    SHOAppLogger.i('Picked ${files.length} images from gallery');
     return files.take(maxCount).toList();
   }
 }

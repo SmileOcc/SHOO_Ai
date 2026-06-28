@@ -3,17 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_router_keys.dart';
 import 'package:shoo/app/router/hos_routes.dart';
-import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/analytics/hos_analytics_manager.dart';
-import 'package:shoo/core/widgets/hos_dialog.dart';
-import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_protocol.dart';
-import 'package:shoo/core/platform/hybrid/hos_hybrid_native_overlay_coordinator.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/platform/bridge/hos_native_device_service.dart';
 import 'package:shoo/core/platform/bridge/hos_native_event_bridge.dart';
 import 'package:shoo/core/platform/bridge/hos_native_message_bridge.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_bridge_protocol.dart';
+import 'package:shoo/core/platform/hybrid/hos_hybrid_native_overlay_coordinator.dart';
+import 'package:shoo/core/widgets/hos_dialog.dart';
 
 /// 处理 Native → Flutter 的宿主能力（导航、弹窗、Channel 学习示例）。
 abstract final class SHONativeHostActions {
@@ -25,16 +24,20 @@ abstract final class SHONativeHostActions {
       SHOHybridBridgeMethods.navigate => _navigate(args),
       SHOHybridBridgeMethods.showDialog => _showDialog(args),
       SHOHybridBridgeMethods.runMethodChannelDemo => _runMethodChannelDemo(),
-      SHOHybridBridgeMethods.runMessageChannelDemo =>
-        _runMessageChannelDemo(args),
+      SHOHybridBridgeMethods.runMessageChannelDemo => _runMessageChannelDemo(
+        args,
+      ),
       SHOHybridBridgeMethods.runEventChannelDemo => _runEventChannelDemo(args),
-      SHOHybridBridgeMethods.abandonNativeOverlaySession => _abandonNativeOverlaySession(),
+      SHOHybridBridgeMethods.abandonNativeOverlaySession =>
+        _abandonNativeOverlaySession(),
       SHOHybridBridgeMethods.onHybridFlutterPopped => _onHybridFlutterPopped(),
-      SHOHybridBridgeMethods.trackNativeAnalytics => _trackNativeAnalytics(args),
+      SHOHybridBridgeMethods.trackNativeAnalytics => _trackNativeAnalytics(
+        args,
+      ),
       _ => throw PlatformException(
-          code: 'not_implemented',
-          message: 'Unknown host method: ${call.method}',
-        ),
+        code: 'not_implemented',
+        message: 'Unknown host method: ${call.method}',
+      ),
     };
   }
 
@@ -53,7 +56,9 @@ abstract final class SHONativeHostActions {
     return GoRouter.maybeOf(ctx);
   }
 
-  static Future<Map<String, dynamic>> _navigate(Map<String, dynamic> args) async {
+  static Future<Map<String, dynamic>> _navigate(
+    Map<String, dynamic> args,
+  ) async {
     final route = args['route'] as String? ?? '';
     if (route.isEmpty) {
       return {'ok': false, 'error': 'route is empty'};
@@ -149,11 +154,7 @@ abstract final class SHONativeHostActions {
             ),
           ),
         );
-        return {
-          'ok': true,
-          'kind': kind,
-          'action': action ?? 'dismiss',
-        };
+        return {'ok': true, 'kind': kind, 'action': action ?? 'dismiss'};
       case SHOHybridDialogKind.actionSheet:
         final action = await showModalBottomSheet<String>(
           context: ctx,
@@ -178,11 +179,7 @@ abstract final class SHONativeHostActions {
             ),
           ),
         );
-        return {
-          'ok': true,
-          'kind': kind,
-          'action': action ?? 'dismiss',
-        };
+        return {'ok': true, 'kind': kind, 'action': action ?? 'dismiss'};
       case SHOHybridDialogKind.alert:
       default:
         await SHOAppDialog.alert(
@@ -259,7 +256,7 @@ abstract final class SHONativeHostActions {
         if (events.length < maxTicks) 'timeout': true,
       };
     } catch (error, stack) {
-      SHOAppLogger.error('Event demo failed', error, stack);
+      SHOAppLogger.e('Event demo failed', error, stack);
       return {'ok': false, 'error': error.toString()};
     }
   }

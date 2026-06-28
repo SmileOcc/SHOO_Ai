@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gal/gal.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/permissions/hos_permission_service.dart';
 
@@ -42,13 +40,17 @@ class SHOGallerySaverService {
       );
       return SHOGallerySaveResult.success;
     } on MissingPluginException catch (error, stack) {
-      SHOAppLogger.error('Gal plugin not registered — rebuild the app', error, stack);
+      SHOAppLogger.e(
+        'Gal plugin not registered — rebuild the app',
+        error,
+        stack,
+      );
       return SHOGallerySaveResult.pluginUnavailable;
     } on GalException catch (error, stack) {
-      SHOAppLogger.error('Save image to gallery failed', error, stack);
+      SHOAppLogger.e('Save image to gallery failed', error, stack);
       return SHOGallerySaveResult.failed;
     } catch (error, stack) {
-      SHOAppLogger.error('Save image to gallery failed', error, stack);
+      SHOAppLogger.e('Save image to gallery failed', error, stack);
       return SHOGallerySaveResult.failed;
     }
   }
@@ -72,7 +74,11 @@ class SHOGallerySaverService {
     } on MissingPluginException {
       rethrow;
     } catch (error, stack) {
-      SHOAppLogger.error('Gal.hasAccess failed, fallback to permission_handler', error, stack);
+      SHOAppLogger.e(
+        'Gal.hasAccess failed, fallback to permission_handler',
+        error,
+        stack,
+      );
     }
 
     final granted = await _permissions.requestPhotos();
@@ -83,7 +89,7 @@ class SHOGallerySaverService {
     } on MissingPluginException {
       rethrow;
     } catch (error, stack) {
-      SHOAppLogger.error('Gal.requestAccess failed', error, stack);
+      SHOAppLogger.e('Gal.requestAccess failed', error, stack);
       return false;
     }
   }

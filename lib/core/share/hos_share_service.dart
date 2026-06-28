@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
-import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
-import 'package:shoo/core/utils/hos_widget_capture.dart';
 import 'package:shoo/core/share/hos_share_card.dart';
+import 'package:shoo/core/utils/hos_widget_capture.dart';
+import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
 
-final shareServiceProvider = Provider<SHOShareService>((ref) => const SHOShareService());
+final shareServiceProvider = Provider<SHOShareService>(
+  (ref) => const SHOShareService(),
+);
 
 /// 三方分享管理（系统分享面板 + 商品卡片图 + 链接复制）。
 class SHOShareService {
@@ -21,12 +22,12 @@ class SHOShareService {
 
   Future<void> shareText(String text, {String? subject}) async {
     await Share.share(text, subject: subject);
-    SHOAppLogger.info('Shared text');
+    SHOAppLogger.i('Shared text');
   }
 
   Future<void> copyLink(String link) async {
     await Clipboard.setData(ClipboardData(text: link));
-    SHOAppLogger.info('Copied link');
+    SHOAppLogger.i('Copied link');
   }
 
   Future<void> shareProduct({
@@ -39,17 +40,17 @@ class SHOShareService {
     } else {
       await Share.share('$title\n$link', subject: title);
     }
-    SHOAppLogger.info('Shared product: $title');
+    SHOAppLogger.i('Shared product: $title');
     final productId = link.contains('/product/')
         ? link.split('/product/').last.split('?').first
         : 'unknown';
-    await SHOAnalyticsManager.instance.trackEvent(
-      SHOAnalyticsRegistry.shareProduct,
-      {
-        'product_id': productId,
-        'channel': files != null && files.isNotEmpty ? 'card_share' : 'text_share',
-      },
-    );
+    await SHOAnalyticsManager.instance
+        .trackEvent(SHOAnalyticsRegistry.shareProduct, {
+          'product_id': productId,
+          'channel': files != null && files.isNotEmpty
+              ? 'card_share'
+              : 'text_share',
+        });
   }
 
   Future<void> shareProductCard({

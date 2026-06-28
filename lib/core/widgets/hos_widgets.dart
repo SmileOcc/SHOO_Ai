@@ -26,6 +26,7 @@ export 'hos_image_view.dart';
 export 'hos_network_image.dart';
 export 'hos_price_text.dart';
 export 'hos_pull_refresh.dart';
+export 'custom_refresh/hos_custom_refresh.dart';
 export 'hos_responsive.dart';
 export 'hos_tab_bar.dart';
 export 'hos_text_field.dart';

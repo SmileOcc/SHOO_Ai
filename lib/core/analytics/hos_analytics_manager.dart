@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
-
-import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/analytics/hos_analytics_backend.dart';
 import 'package:shoo/core/analytics/hos_analytics_backends.dart';
 import 'package:shoo/core/analytics/hos_analytics_event.dart';
 import 'package:shoo/core/analytics/hos_analytics_registry.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 
 /// 业务上报管理器：统一 key、字段校验、多通道分发，支持扩展 Backend。
 class SHOAnalyticsManager {
@@ -59,21 +58,18 @@ class SHOAnalyticsManager {
     bool validate = true,
   }) async {
     final registered = SHOAnalyticsRegistry.find(eventKey);
-    final event = registered ??
-        SHOAnalyticsEventDef(
-          key: eventKey,
-          title: eventKey,
-          fields: const [],
-        );
+    final event =
+        registered ??
+        SHOAnalyticsEventDef(key: eventKey, title: eventKey, fields: const []);
 
     if (registered == null) {
-      SHOAppLogger.warn('Unknown analytics event: $eventKey');
+      SHOAppLogger.w('Unknown analytics event: $eventKey');
     }
 
     if (validate && registered != null) {
       final error = registered.validateParams(params);
       if (error != null) {
-        SHOAppLogger.warn('Analytics validation failed: $error');
+        SHOAppLogger.w('Analytics validation failed: $error');
         _pushHistory(
           SHOAnalyticsRecord(
             eventKey: eventKey,
@@ -95,7 +91,7 @@ class SHOAnalyticsManager {
         await backend.report(event, params);
         backendIds.add(backend.id);
       } catch (error, stack) {
-        SHOAppLogger.error('Analytics backend ${backend.id} failed', error, stack);
+        SHOAppLogger.e('Analytics backend ${backend.id} failed', error, stack);
       }
     }
 

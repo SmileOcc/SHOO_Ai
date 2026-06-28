@@ -346,6 +346,11 @@
   "searchHistoryCleared": "已清空搜索历史",
   "searchNoResults": "没有找到相关商品",
   "pagedListNoMore": "没有更多了",
+  "customRefreshPull": "下拉刷新",
+  "customRefreshRelease": "松开刷新",
+  "customRefreshLoading": "刷新中…",
+  "customRefreshDone": "刷新完成",
+  "customRefreshLoadFailed": "加载失败，点击重试",
   "reviewsCount": "{count} 条评价",
   "@reviewsCount": {
     "placeholders": {

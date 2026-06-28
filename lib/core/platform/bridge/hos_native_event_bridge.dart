@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/platform/bridge/hos_channel_names.dart';
 import 'package:shoo/core/platform/bridge/hos_native_bridge_exception.dart';
@@ -30,9 +29,7 @@ abstract final class SHONativeEventBridge {
       await subscription.cancel();
     } on PlatformException catch (e) {
       if (_isInactiveStreamCancelError(e)) {
-        SHOAppLogger.debug(
-          'NativeEventBridge: stream already inactive on cancel',
-        );
+        SHOAppLogger.d('NativeEventBridge: stream already inactive on cancel');
         return;
       }
       rethrow;
@@ -41,8 +38,7 @@ abstract final class SHONativeEventBridge {
 
   static bool _isInactiveStreamCancelError(PlatformException e) {
     final message = e.message ?? '';
-    return e.code == 'error' &&
-        message.contains('No active stream to cancel');
+    return e.code == 'error' && message.contains('No active stream to cancel');
   }
 
   /// 收集指定条数的事件后自动结束（用于 Demo / 一次性订阅）。
@@ -57,23 +53,24 @@ abstract final class SHONativeEventBridge {
     final events = <T>[];
     final completer = Completer<List<T>>();
 
-    sub = broadcast<T>(
-      channelName: channelName,
-      arguments: arguments,
-      mapper: mapper,
-    ).listen(
-      (event) {
-        events.add(event);
-        if (events.length >= maxEvents && !completer.isCompleted) {
-          completer.complete(List<T>.from(events));
-        }
-      },
-      onError: (Object error, StackTrace stackTrace) {
-        if (!completer.isCompleted) {
-          completer.completeError(error, stackTrace);
-        }
-      },
-    );
+    sub =
+        broadcast<T>(
+          channelName: channelName,
+          arguments: arguments,
+          mapper: mapper,
+        ).listen(
+          (event) {
+            events.add(event);
+            if (events.length >= maxEvents && !completer.isCompleted) {
+              completer.complete(List<T>.from(events));
+            }
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            if (!completer.isCompleted) {
+              completer.completeError(error, stackTrace);
+            }
+          },
+        );
 
     try {
       return await completer.future.timeout(timeout, onTimeout: () => events);
@@ -88,11 +85,13 @@ abstract final class SHONativeEventBridge {
     required T Function(dynamic event) mapper,
     void Function(Object error, StackTrace stackTrace)? onError,
   }) {
-    return channel(channelName)
-        .receiveBroadcastStream(arguments)
-        .map(mapper)
-        .handleError((Object error, StackTrace stackTrace) {
-      SHOAppLogger.warn('NativeEventBridge stream error [$channelName]: $error');
+    return channel(
+      channelName,
+    ).receiveBroadcastStream(arguments).map(mapper).handleError((
+      Object error,
+      StackTrace stackTrace,
+    ) {
+      SHOAppLogger.w('NativeEventBridge stream error [$channelName]: $error');
       if (onError != null) {
         onError(error, stackTrace);
         return;

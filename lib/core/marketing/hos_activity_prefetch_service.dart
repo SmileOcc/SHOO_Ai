@@ -1,18 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:shoo/core/config/hos_config.dart';
-import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/cache/hos_image_cache_manager.dart';
-import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
+import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/debug/modules/activity/hos_debug_activity_config.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/marketing/hos_activity_popup_service.dart';
+import 'package:shoo/core/storage/key_value/hos_local_storage.dart';
 
 const activityPrefetchConfigPrefix = 'activity_prefetch_config_';
 const activityPrefetchImagePrefix = 'activity_prefetch_image_';
 
-final activityPrefetchServiceProvider = Provider<SHOActivityPrefetchService>((ref) {
+final activityPrefetchServiceProvider = Provider<SHOActivityPrefetchService>((
+  ref,
+) {
   return SHOActivityPrefetchService(ref.watch(localStorageProvider));
 });
 
@@ -31,11 +32,16 @@ class SHOActivityPrefetchService {
     );
 
     try {
-      final file = await SHOImageCacheManager.instance.downloadFile(activity.imageUrl);
-      await _storage.write('$activityPrefetchImagePrefix${activity.id}', file.file.path);
-      SHOAppLogger.info('Activity prefetch ok: ${activity.id}');
+      final file = await SHOImageCacheManager.instance.downloadFile(
+        activity.imageUrl,
+      );
+      await _storage.write(
+        '$activityPrefetchImagePrefix${activity.id}',
+        file.file.path,
+      );
+      SHOAppLogger.i('Activity prefetch ok: ${activity.id}');
     } catch (e) {
-      SHOAppLogger.warn('Activity prefetch image failed: $e');
+      SHOAppLogger.w('Activity prefetch image failed: $e');
     }
   }
 
@@ -48,8 +54,12 @@ class SHOActivityPrefetchService {
     final raw = await _storage.read<String>('$activityPrefetchConfigPrefix$id');
     if (raw == null) return null;
     try {
-      final popup = SHOActivityPopup.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-      final localPath = await _storage.read<String>('$activityPrefetchImagePrefix$id');
+      final popup = SHOActivityPopup.fromJson(
+        jsonDecode(raw) as Map<String, dynamic>,
+      );
+      final localPath = await _storage.read<String>(
+        '$activityPrefetchImagePrefix$id',
+      );
       if (localPath != null) {
         return popup.copyWith(cachedImagePath: localPath);
       }

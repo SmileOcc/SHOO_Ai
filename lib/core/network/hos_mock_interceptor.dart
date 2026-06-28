@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-
 import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/network/hos_flash_sale_mock_dynamic.dart';
@@ -30,7 +29,7 @@ class SHOMockInterceptor extends Interceptor {
 
     final entry = SHOMockRouteRegistry.match(options.method, path);
     if (entry == null) {
-      SHOAppLogger.warn('Mock route not found: ${options.method} $path');
+      SHOAppLogger.w('Mock route not found: ${options.method} $path');
       handler.reject(
         DioException(
           requestOptions: options,
@@ -52,7 +51,7 @@ class SHOMockInterceptor extends Interceptor {
         final orderId = mockPathParam(entry.path, path, 'id');
         final cached = orderId == null ? null : SHOMockOrderStore.get(orderId);
         if (cached != null) {
-          SHOAppLogger.debug('Mock hit', '${options.method} $path → order store');
+          SHOAppLogger.d('Mock hit', '${options.method} $path → order store');
           handler.resolve(
             Response(
               requestOptions: options,
@@ -72,11 +71,15 @@ class SHOMockInterceptor extends Interceptor {
       Map<String, dynamic>? flashSaleCatalogEnvelope;
       if (entry.path == '/products/{id}') {
         catalogEnvelope = envelope;
-        final fsRaw = await rootBundle.loadString('assets/mock/flash_sale_catalog.json');
+        final fsRaw = await rootBundle.loadString(
+          'assets/mock/flash_sale_catalog.json',
+        );
         flashSaleCatalogEnvelope = jsonDecode(fsRaw) as Map<String, dynamic>;
       } else if (entry.path == '/products/{id}/reviews') {
         reviewsCatalogEnvelope = envelope;
-        final fsRaw = await rootBundle.loadString('assets/mock/flash_sale_catalog.json');
+        final fsRaw = await rootBundle.loadString(
+          'assets/mock/flash_sale_catalog.json',
+        );
         flashSaleCatalogEnvelope = jsonDecode(fsRaw) as Map<String, dynamic>;
       }
 
@@ -101,7 +104,11 @@ class SHOMockInterceptor extends Interceptor {
           Response(
             requestOptions: options,
             statusCode: 200,
-            data: {'code': 0, 'message': 'ok', 'data': {'success': true}},
+            data: {
+              'code': 0,
+              'message': 'ok',
+              'data': {'success': true},
+            },
           ),
         );
         return;
@@ -119,7 +126,11 @@ class SHOMockInterceptor extends Interceptor {
           Response(
             requestOptions: options,
             statusCode: 200,
-            data: {'code': 0, 'message': 'ok', 'data': {'success': true}},
+            data: {
+              'code': 0,
+              'message': 'ok',
+              'data': {'success': true},
+            },
           ),
         );
         return;
@@ -128,13 +139,13 @@ class SHOMockInterceptor extends Interceptor {
       if (entry.method == 'POST' && entry.path == '/orders') {
         final body = _requestBodyMap(options.data);
         if (body != null) {
-          final fsRaw =
-              await rootBundle.loadString('assets/mock/flash_sale_catalog.json');
+          final fsRaw = await rootBundle.loadString(
+            'assets/mock/flash_sale_catalog.json',
+          );
           final fsCatalog = jsonDecode(fsRaw) as Map<String, dynamic>;
           final items = body['items'];
           if (items is List) {
-            final validation =
-                validateFlashSaleCheckoutItems(fsCatalog, items);
+            final validation = validateFlashSaleCheckoutItems(fsCatalog, items);
             if (validation != null) {
               handler.reject(
                 DioException(
@@ -165,7 +176,7 @@ class SHOMockInterceptor extends Interceptor {
         if (orderId != null) SHOMockOrderStore.markPaid(orderId);
       }
 
-      SHOAppLogger.debug('Mock hit', '${options.method} $path → ${entry.asset}');
+      SHOAppLogger.d('Mock hit', '${options.method} $path → ${entry.asset}');
       if (statusCode == 404) {
         handler.reject(
           DioException(
@@ -185,7 +196,7 @@ class SHOMockInterceptor extends Interceptor {
         Response(requestOptions: options, statusCode: statusCode, data: data),
       );
     } catch (error, stack) {
-      SHOAppLogger.error('Mock asset load failed', error, stack);
+      SHOAppLogger.e('Mock asset load failed', error, stack);
       handler.reject(
         DioException(
           requestOptions: options,

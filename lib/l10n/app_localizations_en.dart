@@ -1008,6 +1008,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pagedListNoMore => 'No more items';
 
   @override
+  String get customRefreshPull => 'Pull to refresh';
+
+  @override
+  String get customRefreshRelease => 'Release to refresh';
+
+  @override
+  String get customRefreshLoading => 'Refreshing…';
+
+  @override
+  String get customRefreshDone => 'Updated';
+
+  @override
+  String get customRefreshLoadFailed => 'Load failed, tap to retry';
+
+  @override
   String reviewsCount(int count) {
     return '$count reviews';
   }

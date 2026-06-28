@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-
+import 'package:shoo/core/analytics/hos_analytics_backend.dart';
+import 'package:shoo/core/analytics/hos_analytics_event.dart';
 import 'package:shoo/core/debug/modules/network_log/hos_debug_network_log_config_bridge.dart';
 import 'package:shoo/core/logging/hos_log_manager.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/logging/hos_remote_log_base_url.dart';
 import 'package:shoo/core/logging/hos_remote_log_uploader.dart';
-import 'package:shoo/core/analytics/hos_analytics_backend.dart';
-import 'package:shoo/core/analytics/hos_analytics_event.dart';
 
 /// 控制台输出（Debug 构建默认启用）。
 class SHOAnalyticsConsoleBackend extends SHOAnalyticsBackend {
@@ -25,7 +24,10 @@ class SHOAnalyticsConsoleBackend extends SHOAnalyticsBackend {
   bool get enabled => kDebugMode;
 
   @override
-  Future<void> report(SHOAnalyticsEventDef event, Map<String, Object?> params) async {
+  Future<void> report(
+    SHOAnalyticsEventDef event,
+    Map<String, Object?> params,
+  ) async {
     SHOAppLogger.i('[ANALYTICS] ${event.key} $params');
   }
 }
@@ -47,7 +49,10 @@ class SHOAnalyticsLogCacheBackend extends SHOAnalyticsBackend {
   bool get enabled => true;
 
   @override
-  Future<void> report(SHOAnalyticsEventDef event, Map<String, Object?> params) async {
+  Future<void> report(
+    SHOAnalyticsEventDef event,
+    Map<String, Object?> params,
+  ) async {
     await SHOAppLogManager.instance.append(
       'INFO',
       '[ANALYTICS] ${event.key} $params',
@@ -75,14 +80,19 @@ class SHOAnalyticsMockRemoteBackend extends SHOAnalyticsBackend {
       kDebugMode && SHODebugNetworkLogConfigBridge.config.useMockRemoteLog;
 
   @override
-  Future<void> report(SHOAnalyticsEventDef event, Map<String, Object?> params) async {
+  Future<void> report(
+    SHOAnalyticsEventDef event,
+    Map<String, Object?> params,
+  ) async {
     sent.add({
       'event': event.key,
       'params': params,
       'ts': DateTime.now().toIso8601String(),
     });
     // ignore: avoid_print
-    print('[SHOO][ANALYTICS][MOCK_REMOTE] POST /v1/analytics/events ${event.key}');
+    print(
+      '[SHOO][ANALYTICS][MOCK_REMOTE] POST /v1/analytics/events ${event.key}',
+    );
   }
 }
 
@@ -104,12 +114,15 @@ class SHOAnalyticsRemoteBackend extends SHOAnalyticsBackend {
       kDebugMode && !SHODebugNetworkLogConfigBridge.config.useMockRemoteLog;
 
   @override
-  Future<void> report(SHOAnalyticsEventDef event, Map<String, Object?> params) async {
+  Future<void> report(
+    SHOAnalyticsEventDef event,
+    Map<String, Object?> params,
+  ) async {
     await SHORemoteLogUploader.uploadAnalytics(
       eventKey: event.key,
       params: params,
     );
-    SHOAppLogger.debug(
+    SHOAppLogger.d(
       'Analytics remote upload',
       '${event.key} → ${SHORemoteLogBaseUrl.resolve()}${SHORemoteLogUploader.analyticsPath}',
     );

@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/network/hos_dio_client.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
@@ -23,7 +22,7 @@ class SHOPushNotificationService {
     if (kIsWeb) return;
     _token = await _resolveDeviceToken();
     if (_token == null || _token!.isEmpty) {
-      SHOAppLogger.info('Push: FCM/APNs 未配置，使用本地通知降级');
+      SHOAppLogger.i('Push: FCM/APNs 未配置，使用本地通知降级');
       return;
     }
     try {
@@ -34,9 +33,9 @@ class SHOPushNotificationService {
           'platform': Platform.isIOS ? 'apns' : 'android',
         },
       );
-      SHOAppLogger.info('Push: token registered (mock)');
+      SHOAppLogger.i('Push: token registered (mock)');
     } catch (error) {
-      SHOAppLogger.warn('Push: token register failed', error);
+      SHOAppLogger.w('Push: token register failed', error);
     }
   }
 
@@ -73,11 +72,7 @@ class SHOPushNotificationService {
     try {
       await _dio.post<void>(
         '/push/flash-sale/cancel',
-        data: {
-          'token': _token,
-          'sessionId': sessionId,
-          'productId': productId,
-        },
+        data: {'token': _token, 'sessionId': sessionId, 'productId': productId},
       );
     } catch (_) {}
   }

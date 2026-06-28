@@ -1958,6 +1958,36 @@ abstract class AppLocalizations {
   /// **'No more items'**
   String get pagedListNoMore;
 
+  /// No description provided for @customRefreshPull.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull to refresh'**
+  String get customRefreshPull;
+
+  /// No description provided for @customRefreshRelease.
+  ///
+  /// In en, this message translates to:
+  /// **'Release to refresh'**
+  String get customRefreshRelease;
+
+  /// No description provided for @customRefreshLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing…'**
+  String get customRefreshLoading;
+
+  /// No description provided for @customRefreshDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get customRefreshDone;
+
+  /// No description provided for @customRefreshLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Load failed, tap to retry'**
+  String get customRefreshLoadFailed;
+
   /// No description provided for @reviewsCount.
   ///
   /// In en, this message translates to:

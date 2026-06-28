@@ -976,6 +976,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pagedListNoMore => '没有更多了';
 
   @override
+  String get customRefreshPull => '下拉刷新';
+
+  @override
+  String get customRefreshRelease => '松开刷新';
+
+  @override
+  String get customRefreshLoading => '刷新中…';
+
+  @override
+  String get customRefreshDone => '刷新完成';
+
+  @override
+  String get customRefreshLoadFailed => '加载失败，点击重试';
+
+  @override
   String reviewsCount(int count) {
     return '$count 条评价';
   }

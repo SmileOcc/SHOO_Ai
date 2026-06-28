@@ -4,71 +4,75 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:shoo/core/analytics/hos_app_startup_timer.dart';
-import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/app/root/hos_app_restart.dart';
+import 'package:shoo/core/analytics/hos_app_startup_timer.dart';
+import 'package:shoo/core/cache/hos_image_cache_manager.dart';
+import 'package:shoo/core/config/hos_config.dart';
 import 'package:shoo/core/feedback/hos_global_error.dart';
 import 'package:shoo/core/logging/hos_log_manager.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
-import 'package:shoo/core/cache/hos_image_cache_manager.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_bootstrap.dart';
 
 Future<void> bootstrap() async {
   // 运行 Zone 捕获未处理的异步错误
-  await runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SHOAppStartupTimer.markProcessStart();
+  await runZonedGuarded(
+        () async {
+          WidgetsFlutterBinding.ensureInitialized();
+          SHOAppStartupTimer.markProcessStart();
 
-    await SHOAppConfig.init();
-    await SHOAppLogManager.instance.init();
-    await SHOImageCacheManager.ensureReady();
-    CachedNetworkImageProvider.defaultCacheManager =
-        SHOImageCacheManager.instance;
-    await SHOFlashSaleReminderBootstrap.ensureInitialized();
+          await SHOAppConfig.init();
+          await SHOAppLogManager.instance.init();
+          await SHOImageCacheManager.ensureReady();
+          CachedNetworkImageProvider.defaultCacheManager =
+              SHOImageCacheManager.instance;
+          await SHOFlashSaleReminderBootstrap.ensureInitialized();
 
-    final previousPlatformErrorHandler = PlatformDispatcher.instance.onError;
-    PlatformDispatcher.instance.onError = (error, stack) {
-      if (SHOImageCacheManager.isReadonlyDbError(error)) {
-        unawaited(
-          SHOImageCacheManager.recoverFromReadonlyError(error: error),
-        );
-        return true;
-      }
-      SHOAppLogger.error('Uncaught platform error', error, stack);
-      SHOGlobalError.report(error);
-      return previousPlatformErrorHandler?.call(error, stack) ?? true;
-    };
+          final previousPlatformErrorHandler =
+              PlatformDispatcher.instance.onError;
+          PlatformDispatcher.instance.onError = (error, stack) {
+            if (SHOImageCacheManager.isReadonlyDbError(error)) {
+              unawaited(
+                SHOImageCacheManager.recoverFromReadonlyError(error: error),
+              );
+              return true;
+            }
+            SHOAppLogger.e('Uncaught platform error', error, stack);
+            SHOGlobalError.report(error);
+            return previousPlatformErrorHandler?.call(error, stack) ?? true;
+          };
 
-    final previousFlutterErrorHandler = FlutterError.onError;
-    FlutterError.onError = (details) {
-      if (kDebugMode) {
-        FlutterError.presentError(details);
-      }
-      SHOAppLogger.error(
-        'Flutter framework error',
-        details.exception,
-        details.stack,
-      );
-      if (!details.silent) {
-        SHOGlobalError.report(details.exception);
-      }
-      previousFlutterErrorHandler?.call(details);
-    };
+          final previousFlutterErrorHandler = FlutterError.onError;
+          FlutterError.onError = (details) {
+            if (kDebugMode) {
+              FlutterError.presentError(details);
+            }
+            SHOAppLogger.e(
+              'Flutter framework error',
+              details.exception,
+              details.stack,
+            );
+            if (!details.silent) {
+              SHOGlobalError.report(details.exception);
+            }
+            previousFlutterErrorHandler?.call(details);
+          };
 
-    final sharedPreferences = await SharedPreferences.getInstance();
-    await prepareRuntimeAfterEnvChange(sharedPreferences);
-    SHOAppStartupTimer.markBootstrapEnd();
+          final sharedPreferences = await SharedPreferences.getInstance();
+          await prepareRuntimeAfterEnvChange(sharedPreferences);
+          SHOAppStartupTimer.markBootstrapEnd();
 
-    runApp(SHOAppRestart(sharedPreferences: sharedPreferences));
-  }, (error, stack) {
-    // 所有未捕获的异步异常都会走到这里
-    SHOAppLogger.e('全局捕获到异常: $error');
-    SHOAppLogger.e('堆栈: $stack');
+          runApp(SHOAppRestart(sharedPreferences: sharedPreferences));
+        },
+        (error, stack) {
+          // 所有未捕获的异步异常都会走到这里
+          SHOAppLogger.e('全局捕获到异常: $error');
+          SHOAppLogger.e('堆栈: $stack');
 
-    SHOAppLogger.error('Uncaught zone error', error, stack);
-    SHOGlobalError.report(error);
-  }) ?? Future<void>.value();
+          SHOAppLogger.e('Uncaught zone error', error, stack);
+          SHOGlobalError.report(error);
+        },
+      ) ??
+      Future<void>.value();
 }
 
 /**

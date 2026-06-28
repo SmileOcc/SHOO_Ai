@@ -367,6 +367,11 @@
   "searchHistoryCleared": "Search history cleared",
   "searchNoResults": "No products found",
   "pagedListNoMore": "No more items",
+  "customRefreshPull": "Pull to refresh",
+  "customRefreshRelease": "Release to refresh",
+  "customRefreshLoading": "Refreshing…",
+  "customRefreshDone": "Updated",
+  "customRefreshLoadFailed": "Load failed, tap to retry",
   "reviewsCount": "{count} reviews",
   "@reviewsCount": {
     "placeholders": {
