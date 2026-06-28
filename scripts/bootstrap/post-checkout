@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# 引导 hook：clone / checkout 完成后自动配置项目 hooks。
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [[ -z "$ROOT" || ! -f "$ROOT/scripts/ensure_git_hooks.sh" ]]; then
+  exit 0
+fi
+
+bash "$ROOT/scripts/ensure_git_hooks.sh" --quiet

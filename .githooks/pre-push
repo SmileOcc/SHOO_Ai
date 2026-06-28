@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# push 到 main/master 远程分支前运行 CI 检查。
+# push 到受保护远程分支前运行 CI 检查。
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
-RUN=0
+# shellcheck source=ci_protected_branches.sh
+source "$ROOT/scripts/ci_protected_branches.sh"
 
+TARGET=""
 while read -r local_ref local_sha remote_ref remote_sha; do
-  if [[ "$remote_ref" =~ ^refs/heads/(main|master)$ ]]; then
-    RUN=1
-    TARGET="${BASH_REMATCH[1]}"
+  branch="$(ci_protected_branch_from_remote_ref "$remote_ref" || true)"
+  if [[ -n "$branch" ]]; then
+    TARGET="$branch"
     break
   fi
 done
 
-if [[ "$RUN" -eq 0 ]]; then
+if [[ -z "$TARGET" ]]; then
   exit 0
 fi
 

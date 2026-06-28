@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# 切换分支 / clone 首次检出后维护 hooks（不跑 CI，仅 ensure）。
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+bash "$ROOT/scripts/ensure_git_hooks.sh" --quiet

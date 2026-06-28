@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# git pull 完成后维护 hooks（不跑 CI，仅 ensure）。
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+bash "$ROOT/scripts/ensure_git_hooks.sh" --quiet

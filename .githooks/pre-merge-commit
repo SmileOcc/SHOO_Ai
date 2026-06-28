@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# 合并进当前分支时：若当前分支为 main/master，运行 CI 检查。
+# 合并进当前分支时：若当前分支受 CI 保护，运行 CI 检查。
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
+# shellcheck source=ci_protected_branches.sh
+source "$ROOT/scripts/ci_protected_branches.sh"
+
 BRANCH="$(git branch --show-current 2>/dev/null || true)"
 
-if [[ "$BRANCH" != "main" && "$BRANCH" != "master" ]]; then
+if ! ci_is_protected_branch "$BRANCH"; then
   exit 0
 fi
 

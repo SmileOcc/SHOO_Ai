@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# 在 main/master 上直接 commit 时运行 CI 检查（防止绕过 merge 直接提交）。
+# 在受保护分支上直接 commit 时运行 CI 检查。
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
+# shellcheck source=ci_protected_branches.sh
+source "$ROOT/scripts/ci_protected_branches.sh"
+
 BRANCH="$(git branch --show-current 2>/dev/null || true)"
 
-if [[ "$BRANCH" != "main" && "$BRANCH" != "master" ]]; then
+if ! ci_is_protected_branch "$BRANCH"; then
   exit 0
 fi
 
