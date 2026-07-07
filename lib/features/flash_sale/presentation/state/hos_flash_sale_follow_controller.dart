@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
 import 'package:shoo/features/flash_sale/data/datasources/local/hos_flash_sale_follow_storage.dart';
 import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
-import 'package:shoo/core/notifications/hos_flash_sale_reminder_service.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_product.dart';
 
 // 用户关注本地存储状态
 final flashSaleFollowStorageProvider =

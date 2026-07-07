@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/features/flash_sale/data/datasources/remote/hos_flash_sale_remote_ds.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_page.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_product.dart';
 
 final flashSaleRepositoryProvider = Provider<SHOFlashSaleRepository>((ref) {
   return SHOFlashSaleRepository(ref.watch(flashSaleApiProvider));

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/core/pricing/hos_full_reduction.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_product.dart';
 
 final checkoutActivityLinesProvider =
     StateProvider<Map<String, SHOCheckoutActivityLine>>((ref) => {});

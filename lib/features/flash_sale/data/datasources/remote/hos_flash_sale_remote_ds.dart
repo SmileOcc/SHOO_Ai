@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:shoo/core/network/hos_dio_client.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_page.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_product.dart';
 
 final flashSaleApiProvider = Provider<SHOFlashSaleApi>((ref) {
   return SHOFlashSaleApi(ref.watch(dioProvider));

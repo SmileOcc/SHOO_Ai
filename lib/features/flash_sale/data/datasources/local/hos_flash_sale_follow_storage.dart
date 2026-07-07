@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
 
 /// 抢购关注本地缓存，登录后与服务器同步。
 class SHOFlashSaleFollowStorage {

@@ -1,16 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
+import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
-import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shoo/core/theme/hos_colors.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/core/widgets/hos_pull_refresh.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 

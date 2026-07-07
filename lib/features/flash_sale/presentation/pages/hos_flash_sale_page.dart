@@ -9,7 +9,11 @@ import 'package:shoo/core/utils/hos_list_utils.dart';
 import 'package:shoo/core/widgets/custom_refresh/hos_custom_refresh.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_coupon.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_page.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_promo.dart';
 import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
 import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_countdown.dart';
@@ -105,14 +109,14 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
   @override
   Widget build(BuildContext context) {
     final isInitialLoading = ref.watch(
-      flashSaleControllerProvider(widget.activityId).select(
-        (s) => s.calendar == null && s.isRefreshing,
-      ),
+      flashSaleControllerProvider(
+        widget.activityId,
+      ).select((s) => s.calendar == null && s.isRefreshing),
     );
     final hasMore = ref.watch(
-      flashSaleControllerProvider(widget.activityId).select(
-        (s) => s.pageData?.hasMore ?? false,
-      ),
+      flashSaleControllerProvider(
+        widget.activityId,
+      ).select((s) => s.pageData?.hasMore ?? false),
     );
 
     return buildTrackedPage(
@@ -214,14 +218,14 @@ class _SessionCountdownSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessions = ref.watch(
-      flashSaleControllerProvider(activityId).select(
-        (s) => s.pageData?.sessions,
-      ),
+      flashSaleControllerProvider(
+        activityId,
+      ).select((s) => s.pageData?.sessions),
     );
     final selectedSessionId = ref.watch(
-      flashSaleControllerProvider(activityId).select(
-        (s) => s.selectedSessionId,
-      ),
+      flashSaleControllerProvider(
+        activityId,
+      ).select((s) => s.selectedSessionId),
     );
     if (sessions == null) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -243,9 +247,9 @@ class _PromoEntriesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entries = ref.watch(
-      flashSaleControllerProvider(activityId).select(
-        (s) => s.pageData?.promoEntries,
-      ),
+      flashSaleControllerProvider(
+        activityId,
+      ).select((s) => s.pageData?.promoEntries),
     );
     if (entries == null || entries.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -299,8 +303,9 @@ class _DayTabs extends ConsumerWidget {
                       : SHOAppColors.surfaceMuted,
                   borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
                   border: Border.all(
-                    color:
-                        selected ? SHOAppColors.primary : SHOAppColors.border,
+                    color: selected
+                        ? SHOAppColors.primary
+                        : SHOAppColors.border,
                   ),
                 ),
                 child: Column(
@@ -369,14 +374,14 @@ class _SessionBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 获取场次列表
     final sessions = ref.watch(
-      flashSaleControllerProvider(activityId).select(
-        (s) => s.pageData?.sessions,
-      ),
+      flashSaleControllerProvider(
+        activityId,
+      ).select((s) => s.pageData?.sessions),
     );
     final selectedSessionId = ref.watch(
-      flashSaleControllerProvider(activityId).select(
-        (s) => s.selectedSessionId,
-      ),
+      flashSaleControllerProvider(
+        activityId,
+      ).select((s) => s.selectedSessionId),
     );
     if (sessions == null || sessions.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -422,7 +427,7 @@ class _SessionBar extends ConsumerWidget {
             return GestureDetector(
               onTap: () => ref
                   .read(flashSaleControllerProvider(activityId).notifier)
-                  .selectSession(session.id),// 点击切换场次
+                  .selectSession(session.id), // 点击切换场次
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: SHOAppSpacing.md,
@@ -433,7 +438,8 @@ class _SessionBar extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(color: borderColor),
                 ),
-                child: Text(// 场次标签（如"10:00场"）
+                child: Text(
+                  // 场次标签（如"10:00场"）
                   session.label,
                   style: TextStyle(
                     fontSize: 12,
@@ -618,7 +624,7 @@ class _SessionCountdown extends StatelessWidget {
 class _PromoEntries extends ConsumerWidget {
   const _PromoEntries({required this.entries});
 
-  final List<SHOFlashSalePromoEntry> entries;// 促销入口列表
+  final List<SHOFlashSalePromoEntry> entries; // 促销入口列表
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -641,7 +647,7 @@ class _PromoEntries extends ConsumerWidget {
             onTap: () => SHODeepLinkNavigator.openLink(
               context,
               entry.deeplink,
-              session: ref.read(sessionProvider),// 点击跳转深度链接
+              session: ref.read(sessionProvider), // 点击跳转深度链接
             ),
             child: SizedBox(
               width: 64,
@@ -722,8 +728,7 @@ class _CouponSection extends ConsumerWidget {
                     l10n: l10n,
                     onClaim: () async {
                       // 领取优惠券（如果状态为可领取）
-                      if (coupon.status ==
-                          SHOFlashSaleCouponStatus.claimable) {
+                      if (coupon.status == SHOFlashSaleCouponStatus.claimable) {
                         await ref
                             .read(
                               flashSaleControllerProvider(activityId).notifier,

@@ -659,6 +659,25 @@ Listener是Flutter中比较重要的功能性组件，它主要的功能是用�
 事件回调可以获取对应的属性来个性化定制app功能。
 ```
 
+Freezed 是 Dart 语言的一个代码生成库，用于快速创建不可变数据类。它极大地减少了手写 copyWith、== / hashCode、toString、JSON 序列化、联合类型（Sealed Classes）等样板代码。
+
+一、Freezed 能做什么？
+
+功能	手写成本	使用 Freezed
+不可变类 + copyWith	几十行	自动生成
+== 和 hashCode	易出错	自动生成（值相等）
+toString	需手动维护	自动生成
+JSON 序列化 / 反序列化	需配合 json_serializable	无缝集成
+联合类型 / Sealed Class	非常复杂	一行 @freezed 搞定
+模式匹配（when/map/maybeWhen）	不可能手写	自动生成
+核心价值：一行 @freezed 注解 + 一个工厂构造函数，即可获得以上全部功能。
+
+
+final user = User(name: 'Alice', age: 30);
+final olderUser = user.copyWith(age: 31);   // 新对象，原对象不变
+
+使用 @Default 注解指定字段默认值，避免写 const factory 时出现 required 字段必须提供的问题
+
 
 
 #### ============== Riverpod ============#####

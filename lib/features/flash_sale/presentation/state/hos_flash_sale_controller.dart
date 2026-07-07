@@ -2,7 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_coupon.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_page.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_product.dart';
 import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 
@@ -97,9 +102,9 @@ List<SHOFlashSaleProduct> mergeFlashSaleProducts(
 final flashSaleMergedProductsProvider =
     Provider.family<List<SHOFlashSaleProduct>, String>((ref, activityId) {
       final products = ref.watch(
-        flashSaleControllerProvider(activityId).select(
-          (s) => s.pageData?.products,
-        ),
+        flashSaleControllerProvider(
+          activityId,
+        ).select((s) => s.pageData?.products),
       );
       if (products == null) return const [];
       final follows = ref.watch(
@@ -118,9 +123,9 @@ final flashSaleMergedCouponsProvider =
         flashSaleControllerProvider(activityId).select((s) => s.pageData),
       );
       final claimedIds = ref.watch(
-        flashSaleControllerProvider(activityId).select(
-          (s) => s.claimedCouponIds,
-        ),
+        flashSaleControllerProvider(
+          activityId,
+        ).select((s) => s.claimedCouponIds),
       );
       if (pageData == null) return const [];
       return pageData.coupons.map((c) {

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/core/network/hos_dio_client.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
 
 final pushNotificationServiceProvider = Provider<SHOPushNotificationService>(
   (ref) => SHOPushNotificationService(ref.watch(dioProvider)),

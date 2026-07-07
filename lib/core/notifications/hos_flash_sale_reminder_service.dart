@@ -13,7 +13,7 @@ import 'package:shoo/core/notifications/hos_flash_sale_reminder_analytics.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_bootstrap.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_nav.dart';
 import 'package:shoo/core/notifications/hos_push_notification_service.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
 
 class SHOFlashSaleReminderPayload {
   const SHOFlashSaleReminderPayload({

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/auth/hos_auth_guard.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
-import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/share/hos_share_panel.dart';
 import 'package:shoo/core/share/hos_share_service.dart';
@@ -23,21 +21,21 @@ import 'package:shoo/core/widgets/hos_price_text.dart';
 import 'package:shoo/core/widgets/hos_promo_badge.dart';
 import 'package:shoo/core/widgets/hos_promo_tag.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
-import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/cart/presentation/state/hos_cart_badge_provider.dart';
 import 'package:shoo/features/cart/presentation/widgets/hos_sku_sheet.dart';
+import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_enums.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
+import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
 import 'package:shoo/features/home/domain/entities/hos_banner.dart';
-import 'package:shoo/features/review/presentation/state/hos_review_controller.dart';
-import 'package:shoo/features/review/presentation/widgets/hos_review_tile.dart';
 import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
-import 'package:shoo/features/profile/presentation/state/hos_profile_controller.dart';
 import 'package:shoo/features/product/presentation/state/hos_product_controller.dart';
 import 'package:shoo/features/product/presentation/state/hos_product_footprint_recorder.dart';
 import 'package:shoo/features/product/presentation/state/hos_product_view_reporter.dart';
 import 'package:shoo/features/profile/domain/entities/hos_profile_activity_product.dart';
-import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
-import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
-import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
+import 'package:shoo/features/profile/presentation/state/hos_profile_controller.dart';
+import 'package:shoo/features/review/presentation/state/hos_review_controller.dart';
+import 'package:shoo/features/review/presentation/widgets/hos_review_tile.dart';
+import 'package:shoo/l10n/app_localizations.dart';
 
 class SHOProductDetailPage extends ConsumerStatefulWidget {
   const SHOProductDetailPage({
