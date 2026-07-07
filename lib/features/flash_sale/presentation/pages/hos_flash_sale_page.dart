@@ -12,7 +12,6 @@ import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart'
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_models.dart';
 import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_controller.dart';
-import 'package:shoo/features/flash_sale/presentation/state/hos_flash_sale_follow_controller.dart';
 import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_countdown.dart';
 import 'package:shoo/features/flash_sale/presentation/widgets/hos_flash_sale_product_card.dart';
 import 'package:shoo/l10n/app_localizations.dart';
@@ -105,17 +104,16 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    // 监听闪购状态（自动响应状态变化重建 UI）
-    final state = ref.watch(flashSaleControllerProvider(widget.activityId));
-    // 监听关注状态（用于更新商品关注按钮）
-    ref.watch(flashSaleFollowControllerProvider);
-    // 获取合并后的商品列表
-    final products = ref
-        .read(flashSaleControllerProvider(widget.activityId).notifier)
-        .mergedProducts();
-    // 获取页面数据
-    final pageData = state.pageData;
+    final isInitialLoading = ref.watch(
+      flashSaleControllerProvider(widget.activityId).select(
+        (s) => s.calendar == null && s.isRefreshing,
+      ),
+    );
+    final hasMore = ref.watch(
+      flashSaleControllerProvider(widget.activityId).select(
+        (s) => s.pageData?.hasMore ?? false,
+      ),
+    );
 
     return buildTrackedPage(
       Scaffold(
@@ -129,83 +127,21 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
           controller: _refreshCtrl,
           onRefresh: _onRefresh,
           onLoadMore: _onLoadMore,
-          enableLoadMore: pageData?.hasMore ?? false,
-          child: state.calendar == null && state.isRefreshing
+          enableLoadMore: hasMore,
+          child: isInitialLoading
               ? const Center(child: CircularProgressIndicator())
               : CustomScrollView(
                   controller: _scrollController,
                   physics: shoAppCustomRefreshScrollPhysics,
                   slivers: [
                     SHOAppCustomRefresh.headerSliver(_refreshCtrl),
-                    // 日期选择栏（如果日历数据存在）
-                    if (state.calendar != null)
-                      SliverToBoxAdapter(
-                        child: _DayTabs(
-                          state: state,
-                          activityId: widget.activityId,
-                        ),
-                      ),
-                    // 场次选择栏（如果页面数据存在）
-                    if (pageData != null)
-                      SliverToBoxAdapter(
-                        child: _SessionBar(
-                          state: state,
-                          activityId: widget.activityId,
-                        ),
-                      ),
-                    // 场次倒计时（如果页面数据存在）
-                    if (pageData != null)
-                      SliverToBoxAdapter(
-                        child: _SessionCountdown(
-                          sessions: pageData.sessions,
-                          selectedSessionId: state.selectedSessionId,
-                        ),
-                      ),
-                    // 促销入口（如果有促销数据）
-                    if (pageData != null && pageData.promoEntries.isNotEmpty)
-                      SliverToBoxAdapter(
-                        child: _PromoEntries(entries: pageData.promoEntries),
-                      ),
-                    // 优惠券区域（如果页面数据存在）
-                    if (pageData != null)
-                      SliverToBoxAdapter(
-                        child: _CouponSection(
-                          state: state,
-                          activityId: widget.activityId,
-                        ),
-                      ),
-                    // 排序栏
-                    SliverToBoxAdapter(
-                      child: _SortBar(
-                        state: state,
-                        activityId: widget.activityId,
-                      ),
-                    ),
-                    // 商品列表或空状态
-                    if (products.isEmpty && !state.isRefreshing)
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Center(child: Text(l10n.noData)),
-                      )
-                    else
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate((
-                            context,
-                            index,
-                          ) {
-                            final isLast = index >= products.length - 1;
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: isLast ? 0 : 8),
-                              child: SHOFlashSaleProductCard(
-                                product: products[index],
-                                activityId: widget.activityId,
-                              ),
-                            );
-                          }, childCount: products.length),
-                        ),
-                      ),
+                    _DayTabs(activityId: widget.activityId),
+                    _SessionBar(activityId: widget.activityId),
+                    _SessionCountdownSection(activityId: widget.activityId),
+                    _PromoEntriesSection(activityId: widget.activityId),
+                    _CouponSection(activityId: widget.activityId),
+                    _SortBar(activityId: widget.activityId),
+                    _FlashSaleProductListSliver(activityId: widget.activityId),
                     SHOAppCustomRefresh.footerSliver(
                       _refreshCtrl,
                       onLoadRetry: _onLoadMore,
@@ -219,78 +155,192 @@ class _SHOFlashSalePageState extends ConsumerState<SHOFlashSalePage>
   }
 }
 
-class _DayTabs extends ConsumerWidget {
-  const _DayTabs({required this.state, required this.activityId});
+/// 商品列表 Sliver：独立监听 merged products，避免头部区域无谓重建。
+class _FlashSaleProductListSliver extends ConsumerWidget {
+  const _FlashSaleProductListSliver({required this.activityId});
 
-  final SHOFlashSalePageState state;
   final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final days = state.calendar!.days;
+    final products = ref.watch(flashSaleMergedProductsProvider(activityId));
+    final isRefreshing = ref.watch(
+      flashSaleControllerProvider(activityId).select((s) => s.isRefreshing),
+    );
 
-    return SizedBox(
-      height: 72,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-          horizontal: SHOAppSpacing.pagePadding,
-        ),
-        itemCount: days.length,
-        separatorBuilder: (_, __) => const SizedBox(width: SHOAppSpacing.sm),
-        itemBuilder: (context, index) {
-          final day = days[index];
-          final selected = day.date == state.selectedDate;
-          return GestureDetector(
-            onTap: () => ref
-                .read(flashSaleControllerProvider(activityId).notifier)
-                .selectDate(day.date), // 点击切换日期
-            child: Container(
-              width: 64,
-              padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
-              decoration: BoxDecoration(
-                color: selected
-                    ? SHOAppColors.primary
-                    : SHOAppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-                border: Border.all(
-                  color: selected ? SHOAppColors.primary : SHOAppColors.border,
+    if (products.isEmpty && !isRefreshing) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: Text(l10n.noData)),
+      );
+    }
+
+    if (products.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final product = products[index];
+            final isLast = index >= products.length - 1;
+            return Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 8),
+              child: RepaintBoundary(
+                child: SHOFlashSaleProductCard(
+                  key: ValueKey('${product.sessionId}:${product.id}'),
+                  product: product,
+                  activityId: activityId,
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // 日期标签（如"12月25日"）
-                  Text(
-                    day.label,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: selected ? Colors.white : SHOAppColors.textPrimary,
+            );
+          },
+          childCount: products.length,
+          addRepaintBoundaries: false,
+        ),
+      ),
+    );
+  }
+}
+
+class _SessionCountdownSection extends ConsumerWidget {
+  const _SessionCountdownSection({required this.activityId});
+
+  final String activityId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sessions = ref.watch(
+      flashSaleControllerProvider(activityId).select(
+        (s) => s.pageData?.sessions,
+      ),
+    );
+    final selectedSessionId = ref.watch(
+      flashSaleControllerProvider(activityId).select(
+        (s) => s.selectedSessionId,
+      ),
+    );
+    if (sessions == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    return SliverToBoxAdapter(
+      child: _SessionCountdown(
+        sessions: sessions,
+        selectedSessionId: selectedSessionId,
+      ),
+    );
+  }
+}
+
+class _PromoEntriesSection extends ConsumerWidget {
+  const _PromoEntriesSection({required this.activityId});
+
+  final String activityId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entries = ref.watch(
+      flashSaleControllerProvider(activityId).select(
+        (s) => s.pageData?.promoEntries,
+      ),
+    );
+    if (entries == null || entries.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    return SliverToBoxAdapter(child: _PromoEntries(entries: entries));
+  }
+}
+
+class _DayTabs extends ConsumerWidget {
+  const _DayTabs({required this.activityId});
+
+  final String activityId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final calendar = ref.watch(
+      flashSaleControllerProvider(activityId).select((s) => s.calendar),
+    );
+    final selectedDate = ref.watch(
+      flashSaleControllerProvider(activityId).select((s) => s.selectedDate),
+    );
+    if (calendar == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    final days = calendar.days;
+
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 72,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(
+            horizontal: SHOAppSpacing.pagePadding,
+          ),
+          itemCount: days.length,
+          separatorBuilder: (_, __) => const SizedBox(width: SHOAppSpacing.sm),
+          itemBuilder: (context, index) {
+            final day = days[index];
+            final selected = day.date == selectedDate;
+            return GestureDetector(
+              onTap: () => ref
+                  .read(flashSaleControllerProvider(activityId).notifier)
+                  .selectDate(day.date),
+              child: Container(
+                width: 64,
+                padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? SHOAppColors.primary
+                      : SHOAppColors.surfaceMuted,
+                  borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
+                  border: Border.all(
+                    color:
+                        selected ? SHOAppColors.primary : SHOAppColors.border,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // 日期标签（如"12月25日"）
+                    Text(
+                      day.label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: selected
+                            ? Colors.white
+                            : SHOAppColors.textPrimary,
+                      ),
                     ),
-                  ),
-                  // 星期（如"周三"）
-                  Text(
-                    day.weekday,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: selected ? Colors.white70 : SHOAppColors.textMuted,
+                    // 星期（如"周三"）
+                    Text(
+                      day.weekday,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: selected
+                            ? Colors.white70
+                            : SHOAppColors.textMuted,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  // 状态徽章（未开始/进行中/即将结束/已结束）
-                  SHOPromoBadge(
-                    type: SHOPromoBadgeType.status,
-                    label: _dayStatusLabel(day.status, l10n),
-                    preset: SHOPromoBadgePreset.wrapTag,
-                    enabled: day.status != SHOFlashSaleDayStatus.ended,
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    // 状态徽章（未开始/进行中/即将结束/已结束）
+                    SHOPromoBadge(
+                      type: SHOPromoBadgeType.status,
+                      label: _dayStatusLabel(day.status, l10n),
+                      preset: SHOPromoBadgePreset.wrapTag,
+                      enabled: day.status != SHOFlashSaleDayStatus.ended,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -311,81 +361,90 @@ class _DayTabs extends ConsumerWidget {
 
 // 场次选择 Widget（横向场次栏）
 class _SessionBar extends ConsumerWidget {
-  const _SessionBar({required this.state, required this.activityId});
+  const _SessionBar({required this.activityId});
 
-  final SHOFlashSalePageState state;
   final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 获取场次列表
-    final sessions = state.pageData?.sessions ?? [];
-    if (sessions.isEmpty) return const SizedBox.shrink();
+    final sessions = ref.watch(
+      flashSaleControllerProvider(activityId).select(
+        (s) => s.pageData?.sessions,
+      ),
+    );
+    final selectedSessionId = ref.watch(
+      flashSaleControllerProvider(activityId).select(
+        (s) => s.selectedSessionId,
+      ),
+    );
+    if (sessions == null || sessions.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
-    return SizedBox(
-      height: 42,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.fromLTRB(
-          SHOAppSpacing.pagePadding,
-          SHOAppSpacing.sm,
-          SHOAppSpacing.pagePadding,
-          SHOAppSpacing.sm,
-        ),
-        itemCount: sessions.length,
-        separatorBuilder: (_, __) => const SizedBox(width: SHOAppSpacing.sm),
-        itemBuilder: (context, index) {
-          final session = sessions[index];
-          final selected = session.id == state.selectedSessionId;
-          final isEnded = session.status == SHOFlashSaleDayStatus.ended;
-          final isOngoing =
-              session.status == SHOFlashSaleDayStatus.ongoing; // 是否进行中
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 42,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.fromLTRB(
+            SHOAppSpacing.pagePadding,
+            SHOAppSpacing.sm,
+            SHOAppSpacing.pagePadding,
+            SHOAppSpacing.sm,
+          ),
+          itemCount: sessions.length,
+          separatorBuilder: (_, __) => const SizedBox(width: SHOAppSpacing.sm),
+          itemBuilder: (context, index) {
+            final session = sessions[index];
+            final selected = session.id == selectedSessionId;
+            final isEnded = session.status == SHOFlashSaleDayStatus.ended;
+            final isOngoing = session.status == SHOFlashSaleDayStatus.ongoing;
+            // 动态计算颜色
+            final bgColor = selected
+                ? SHOAppColors.primary
+                : isOngoing
+                ? SHOAppColors.accent.withValues(alpha: 0.08)
+                : SHOAppColors.surfaceMuted;
+            final textColor = selected
+                ? Colors.white
+                : isEnded
+                ? SHOAppColors.textMuted
+                : isOngoing
+                ? SHOAppColors.accent
+                : SHOAppColors.textPrimary;
+            final borderColor = selected
+                ? SHOAppColors.primary
+                : isOngoing
+                ? SHOAppColors.accent.withValues(alpha: 0.4)
+                : SHOAppColors.border;
 
-          // 动态计算颜色
-          final bgColor = selected
-              ? SHOAppColors.primary
-              : isOngoing
-              ? SHOAppColors.accent.withValues(alpha: 0.08)
-              : SHOAppColors.surfaceMuted;
-          final textColor = selected
-              ? Colors.white
-              : isEnded
-              ? SHOAppColors.textMuted
-              : isOngoing
-              ? SHOAppColors.accent
-              : SHOAppColors.textPrimary;
-          final borderColor = selected
-              ? SHOAppColors.primary
-              : isOngoing
-              ? SHOAppColors.accent.withValues(alpha: 0.4)
-              : SHOAppColors.border;
-
-          return GestureDetector(
-            onTap: () => ref
-                .read(flashSaleControllerProvider(activityId).notifier)
-                .selectSession(session.id), // 点击切换场次
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: SHOAppSpacing.md,
-                vertical: SHOAppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: borderColor),
-              ),
-              child: Text(
-                // 场次标签（如"10:00场"）
-                session.label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
+            return GestureDetector(
+              onTap: () => ref
+                  .read(flashSaleControllerProvider(activityId).notifier)
+                  .selectSession(session.id),// 点击切换场次
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.md,
+                  vertical: SHOAppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Text(// 场次标签（如"10:00场"）
+                  session.label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -559,12 +618,14 @@ class _SessionCountdown extends StatelessWidget {
 class _PromoEntries extends ConsumerWidget {
   const _PromoEntries({required this.entries});
 
-  final List<SHOFlashSalePromoEntry> entries; // 促销入口列表
+  final List<SHOFlashSalePromoEntry> entries;// 促销入口列表
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final session = ref.watch(sessionProvider); // 用户会话信息
+    // 会监听 provider 状态变化
+    //final session = ref.watch(sessionProvider); // 用户会话信息
 
+    // 而使用 ref.read ，只在用户 实际点击时 才读取一次 session 值，状态变化不会影响这个 Widget 的构建。
     return SizedBox(
       height: 88,
       child: ListView.separated(
@@ -580,8 +641,8 @@ class _PromoEntries extends ConsumerWidget {
             onTap: () => SHODeepLinkNavigator.openLink(
               context,
               entry.deeplink,
-              session: session,
-            ), // 点击跳转深度链接
+              session: ref.read(sessionProvider),// 点击跳转深度链接
+            ),
             child: SizedBox(
               width: 64,
               child: Column(
@@ -617,56 +678,65 @@ class _PromoEntries extends ConsumerWidget {
 
 // 优惠券区域（包含标题和横向优惠券列表）
 class _CouponSection extends ConsumerWidget {
-  const _CouponSection({required this.state, required this.activityId});
+  const _CouponSection({required this.activityId});
 
-  final SHOFlashSalePageState state;
   final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final pageData = state.pageData!;
-    final coupons = state.mergedCoupons; // 合后的优惠券列表
+    final pageData = ref.watch(
+      flashSaleControllerProvider(activityId).select((s) => s.pageData),
+    );
+    // 合后的优惠券列表
+    final coupons = ref.watch(flashSaleMergedCouponsProvider(activityId));
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        SHOAppSpacing.pagePadding,
-        SHOAppSpacing.sm,
-        SHOAppSpacing.pagePadding,
-        SHOAppSpacing.md,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _CouponHeader(pageData: pageData, coupons: coupons, l10n: l10n),
-          const SizedBox(height: SHOAppSpacing.sm),
-          SizedBox(
-            height: 88,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: coupons.length,
-              separatorBuilder: (_, __) =>
-                  const SizedBox(width: SHOAppSpacing.sm),
-              itemBuilder: (context, index) {
-                final coupon = coupons[index];
-                return _CouponTile(
-                  coupon: coupon,
-                  l10n: l10n,
-                  onClaim: () async {
-                    // 领取优惠券（如果状态为可领取）
-                    if (coupon.status == SHOFlashSaleCouponStatus.claimable) {
-                      await ref
-                          .read(
-                            flashSaleControllerProvider(activityId).notifier,
-                          )
-                          .claimCoupon(coupon.id);
-                    }
-                  },
-                );
-              },
+    if (pageData == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          SHOAppSpacing.pagePadding,
+          SHOAppSpacing.sm,
+          SHOAppSpacing.pagePadding,
+          SHOAppSpacing.md,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _CouponHeader(pageData: pageData, coupons: coupons, l10n: l10n),
+            const SizedBox(height: SHOAppSpacing.sm),
+            SizedBox(
+              height: 88,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: coupons.length,
+                separatorBuilder: (_, __) =>
+                    const SizedBox(width: SHOAppSpacing.sm),
+                itemBuilder: (context, index) {
+                  final coupon = coupons[index];
+                  return _CouponTile(
+                    coupon: coupon,
+                    l10n: l10n,
+                    onClaim: () async {
+                      // 领取优惠券（如果状态为可领取）
+                      if (coupon.status ==
+                          SHOFlashSaleCouponStatus.claimable) {
+                        await ref
+                            .read(
+                              flashSaleControllerProvider(activityId).notifier,
+                            )
+                            .claimCoupon(coupon.id);
+                      }
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -821,52 +891,56 @@ class _CouponTile extends StatelessWidget {
 }
 
 class _SortBar extends ConsumerWidget {
-  const _SortBar({required this.state, required this.activityId});
+  const _SortBar({required this.activityId});
 
-  final SHOFlashSalePageState state;
   final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final sort = ref.watch(
+      flashSaleControllerProvider(activityId).select((s) => s.sort),
+    );
     final items = [
       (SHOFlashSaleSort.hot, l10n.flashSaleSortHot),
       (SHOFlashSaleSort.priceAsc, l10n.flashSaleSortPrice),
       (SHOFlashSaleSort.newest, l10n.flashSaleSortNewest),
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: SHOAppSpacing.pagePadding,
-        vertical: SHOAppSpacing.sm,
-      ),
-      child: Row(
-        children: [
-          for (final item in items) ...[
-            _SortChip(
-              label: item.$2,
-              selected:
-                  state.sort == item.$1 ||
-                  (item.$1 == SHOFlashSaleSort.priceAsc &&
-                      state.sort == SHOFlashSaleSort.priceDesc),
-              onTap: () {
-                if (item.$1 == SHOFlashSaleSort.priceAsc) {
-                  final next = state.sort == SHOFlashSaleSort.priceAsc
-                      ? SHOFlashSaleSort.priceDesc
-                      : SHOFlashSaleSort.priceAsc;
-                  ref
-                      .read(flashSaleControllerProvider(activityId).notifier)
-                      .selectSort(next);
-                } else {
-                  ref
-                      .read(flashSaleControllerProvider(activityId).notifier)
-                      .selectSort(item.$1);
-                }
-              },
-            ),
-            const SizedBox(width: SHOAppSpacing.sm),
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SHOAppSpacing.pagePadding,
+          vertical: SHOAppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            for (final item in items) ...[
+              _SortChip(
+                label: item.$2,
+                selected:
+                    sort == item.$1 ||
+                    (item.$1 == SHOFlashSaleSort.priceAsc &&
+                        sort == SHOFlashSaleSort.priceDesc),
+                onTap: () {
+                  if (item.$1 == SHOFlashSaleSort.priceAsc) {
+                    final next = sort == SHOFlashSaleSort.priceAsc
+                        ? SHOFlashSaleSort.priceDesc
+                        : SHOFlashSaleSort.priceAsc;
+                    ref
+                        .read(flashSaleControllerProvider(activityId).notifier)
+                        .selectSort(next);
+                  } else {
+                    ref
+                        .read(flashSaleControllerProvider(activityId).notifier)
+                        .selectSort(item.$1);
+                  }
+                },
+              ),
+              const SizedBox(width: SHOAppSpacing.sm),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

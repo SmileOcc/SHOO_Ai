@@ -54,17 +54,6 @@ class SHOFlashSalePageState {
     );
   }
 
-  List<SHOFlashSaleCoupon> get mergedCoupons {
-    final data = pageData;
-    if (data == null) return const [];
-    return data.coupons.map((c) {
-      if (claimedCouponIds.contains(c.id)) {
-        return c.copyWith(status: SHOFlashSaleCouponStatus.claimed);
-      }
-      return c;
-    }).toList();
-  }
-
   String? sessionStartAtFor(String sessionId) {
     final sessions = pageData?.sessions ?? const [];
     for (final session in sessions) {
@@ -81,6 +70,68 @@ final flashSaleControllerProvider =
       String
     >((ref, activityId) => SHOFlashSaleController(ref, activityId));
 
+String _flashSaleFollowKey(String sessionId, String productId) =>
+    '$sessionId:$productId';
+
+Set<String> flashSaleFollowKeySet(List<SHOFlashSaleFollow> follows) {
+  return {
+    for (final f in follows) _flashSaleFollowKey(f.sessionId, f.productId),
+  };
+}
+
+/// 将关注状态合并进商品列表（O(n) + Set 查找）。
+List<SHOFlashSaleProduct> mergeFlashSaleProducts(
+  List<SHOFlashSaleProduct> products,
+  Set<String> followKeys,
+) {
+  return products.map((p) {
+    final followed = followKeys.contains(
+      _flashSaleFollowKey(p.sessionId, p.id),
+    );
+    if (followed == p.isFollowed) return p;
+    return p.copyWith(isFollowed: followed);
+  }).toList();
+}
+
+/// 合并关注后的商品列表（仅在 pageData.products 或 follows 变化时重算）。
+final flashSaleMergedProductsProvider =
+    Provider.family<List<SHOFlashSaleProduct>, String>((ref, activityId) {
+      final products = ref.watch(
+        flashSaleControllerProvider(activityId).select(
+          (s) => s.pageData?.products,
+        ),
+      );
+      if (products == null) return const [];
+      final follows = ref.watch(
+        flashSaleFollowControllerProvider.select((a) => a.valueOrNull),
+      );
+      return mergeFlashSaleProducts(
+        products,
+        flashSaleFollowKeySet(follows ?? const []),
+      );
+    });
+
+/// 合并已领取状态后的优惠券列表。
+final flashSaleMergedCouponsProvider =
+    Provider.family<List<SHOFlashSaleCoupon>, String>((ref, activityId) {
+      final pageData = ref.watch(
+        flashSaleControllerProvider(activityId).select((s) => s.pageData),
+      );
+      final claimedIds = ref.watch(
+        flashSaleControllerProvider(activityId).select(
+          (s) => s.claimedCouponIds,
+        ),
+      );
+      if (pageData == null) return const [];
+      return pageData.coupons.map((c) {
+        if (claimedIds.contains(c.id) &&
+            c.status != SHOFlashSaleCouponStatus.claimed) {
+          return c.copyWith(status: SHOFlashSaleCouponStatus.claimed);
+        }
+        return c;
+      }).toList();
+    });
+
 class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
   SHOFlashSaleController(this._ref, this._activityId)
     : super(const SHOFlashSalePageState());
@@ -92,20 +143,6 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
       _activityId.isEmpty ? SHOFlashSaleActivities.defaults : _activityId;
 
   SHOFlashSaleRepository get _repo => _ref.read(flashSaleRepositoryProvider);
-
-  List<SHOFlashSaleProduct> mergedProducts() {
-    final data = state.pageData;
-    if (data == null) return const [];
-    //如果状态是 loading 或 error ，返回空列表
-    final follows =
-        _ref.read(flashSaleFollowControllerProvider).valueOrNull ?? const [];
-    return data.products.map((p) {
-      final followed = follows.any(
-        (f) => f.sessionId == p.sessionId && f.productId == p.id,
-      );
-      return p.copyWith(isFollowed: followed);
-    }).toList();
-  }
 
   Future<void> initialize() async {
     state = state.copyWith(isRefreshing: true, clearError: true);

@@ -658,3 +658,9 @@ flutter: 文字点击事件回调
 Listener是Flutter中比较重要的功能性组件，它主要的功能是用来监听屏幕触摸事件，
 事件回调可以获取对应的属性来个性化定制app功能。
 ```
+
+
+
+#### ============== Riverpod ============#####
+## family 的作用解析
+family 是 Riverpod 中的 参数化 Provider 修饰器 ，允许你创建带参数的 Provider。
