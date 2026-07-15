@@ -31,6 +31,7 @@ abstract final class SHOAppRoutes {
   static const profileMusicLibrary = '/profile/music';
   static const toolbox = '/toolbox';
   static const toolboxDownloads = '/toolbox/downloads';
+  static const toolboxContacts = '/toolbox/contacts';
   static const toolboxStudy = '/toolbox/study';
   static const toolboxStudyArticle = '/toolbox/study/article';
 

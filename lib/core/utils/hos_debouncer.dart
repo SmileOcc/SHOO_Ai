@@ -14,5 +14,7 @@ class SHODebouncer {
     _timer = Timer(_duration, action);
   }
 
-  void dispose() => _timer?.cancel();
+  void cancel() => _timer?.cancel();
+
+  void dispose() => cancel();
 }

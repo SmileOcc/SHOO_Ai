@@ -119,6 +119,12 @@ class _SHOToolboxPageState extends ConsumerState<SHOToolboxPage>
             onTap: () => context.push(SHOAppRoutes.flashSale),
           ),
           _ToolboxMenuItem(
+            icon: Icons.contacts_outlined,
+            color: const Color(0xFF1E88E5),
+            label: l10n.toolboxContacts,
+            onTap: () => context.push(SHOAppRoutes.toolboxContacts),
+          ),
+          _ToolboxMenuItem(
             icon: Icons.download_outlined,
             color: const Color(0xFF4A90E2),
             label: l10n.toolboxFileDownload,

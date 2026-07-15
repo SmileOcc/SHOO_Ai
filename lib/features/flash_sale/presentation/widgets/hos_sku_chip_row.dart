@@ -5,6 +5,40 @@ import 'package:flutter/material.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 
+// SHOSkuChipRow（主组件）
+// ├── _SHOSkuChipRowState（状态管理）
+// ├── _computeCollapsedLayout（核心布局算法）
+// │   └── _CollapsedLayout（布局结果模型）
+// ├── _SkuChipLine（标签行）
+// │   ├── _SkuChip（单个标签）
+// │   └── _ArrowButton（展开/收起按钮）
+
+// ###  核心布局算法 _computeCollapsedLayout
+// 这是组件的 核心逻辑 ，负责计算标签如何排列才能在指定行数内最优展示。
+// ┌─────────────────────────────────────────────────────────────┐
+// │  输入：attributes, maxWidth, maxLines, maxChipWidth          │
+// └─────────────────────────────────────────────────────────────┘
+//                               │
+//                               ▼
+// ┌─────────────────────────────────────────────────────────────┐
+// │  步骤1：逐行填充标签                                          │
+// │  - 当前行剩余空间能容纳下一个标签 → 添加到当前行                 │
+// │  - 当前行放不下，但当前行为空 → 强制放入（保证单个标签一定显示）   │
+// │  - 当前行放不下且非空 → 换行                                   │
+// └─────────────────────────────────────────────────────────────┘
+//                               │
+//                               ▼
+// ┌─────────────────────────────────────────────────────────────┐
+// │  步骤2：最后一行预留展开箭头空间                                │
+// │  - 如果有隐藏标签，计算最后一行需要腾出多少空间给箭头             │
+// │  - 从后往前移除标签，直到箭头能放下                            │
+// └─────────────────────────────────────────────────────────────┘
+//                               │
+//                               ▼
+// ┌─────────────────────────────────────────────────────────────┐
+// │  输出：_CollapsedLayout(lines, showExpandArrow)              │
+// └─────────────────────────────────────────────────────────────┘
+
 /// SKU 属性标签行：可配置默认展示行数、单标签最大宽度；不配置行数时展示全部。
 class SHOSkuChipRow extends StatefulWidget {
   const SHOSkuChipRow({
@@ -102,6 +136,7 @@ class _SHOSkuChipRowState extends State<SHOSkuChipRow> {
     );
   }
 
+  // 标签宽度测量 方法通过 TextPainter 精确计算文本宽度
   double _measureChipWidth(BuildContext context, String label) {
     final textMax =
         widget.maxChipWidth - _chipHorizontalPadding - _chipBorderWidth;
@@ -123,21 +158,24 @@ class _CollapsedLayout {
   final bool showExpandArrow;
 }
 
+// 贪心布局算法 ，核心目标是：在给定的宽度和行数限制下，最优地排列标签，并正确预留展开箭头的空间
 _CollapsedLayout _computeCollapsedLayout({
   required List<String> attributes,
-  required double maxWidth,
-  required int maxLines,
-  required double maxChipWidth,
-  required double Function(String label) measureChipWidth,
+  required double maxWidth,// 容器最大宽度
+  required int maxLines,// 最大展示行数
+  required double maxChipWidth,// 单个 SKU 标签最大宽度。
+  required double Function(String label) measureChipWidth,// 标签宽度测量函数
 }) {
-  const spacing = _SHOSkuChipRowState._chipSpacing;
-  const arrowBlock = _SHOSkuChipRowState._arrowSize + spacing;
-  const slop = _SHOSkuChipRowState._layoutSlop;
-  final budget = math.max(0.0, maxWidth - slop);
+  const spacing = _SHOSkuChipRowState._chipSpacing;// 标签间距
+  const arrowBlock = _SHOSkuChipRowState._arrowSize + spacing;// 16+4=20px（箭头+间距）
+  const slop = _SHOSkuChipRowState._layoutSlop;// 6px（布局容差，避免边缘溢出）
+  final budget = math.max(0.0, maxWidth - slop);// 实际可用宽度 = 最大宽度 - 容差
 
+  // 获取标签宽度 通过 clamp 限制在 [0, maxChipWidth] 范围内
   double chipWidthFor(String label) =>
       measureChipWidth(label).clamp(0.0, maxChipWidth);
 
+  // 计算整行宽度
   double lineWidth(List<String> line) {
     if (line.isEmpty) return 0;
     var used = 0.0;
@@ -147,11 +185,12 @@ _CollapsedLayout _computeCollapsedLayout({
     }
     return used;
   }
-
+  // 判断标签是否能放入当前行
+  // 判断公式 ： 当前行宽度 + 间距 + 新标签宽度 + 预留空间 ≤ 预算宽度
   bool fitsOnLine({
     required List<String> line,
     required String label,
-    required double reserveTrailing,
+    required double reserveTrailing,// 预留空间（箭头或0）
   }) {
     final gap = line.isEmpty ? 0.0 : spacing;
     return lineWidth(line) + gap + chipWidthFor(label) + reserveTrailing <=
@@ -161,10 +200,11 @@ _CollapsedLayout _computeCollapsedLayout({
   final lines = <List<String>>[];
   var attrIndex = 0;
 
+  // 外层循环：逐行处理
   while (attrIndex < attributes.length && lines.length < maxLines) {
     final line = <String>[];
     final isLastAllowedLine = lines.length == maxLines - 1;
-
+    // 内层循环：填充当前行
     while (attrIndex < attributes.length) {
       final label = attributes[attrIndex];
       final hasMoreAfter = attrIndex < attributes.length - 1;
@@ -175,9 +215,9 @@ _CollapsedLayout _computeCollapsedLayout({
         attrIndex++;
         continue;
       }
-
+      // 当前行已满，无法添加更多标签,就换行
       if (line.isNotEmpty) break;
-
+      // 当前行为空，强制放入（保底逻辑）
       line.add(label);
       attrIndex++;
       break;

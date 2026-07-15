@@ -1423,6 +1423,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxFileDownload => '文件下载';
 
   @override
+  String get toolboxContacts => '联系人';
+
+  @override
+  String get contactSearchHint => '搜索联系人';
+
+  @override
+  String get contactListEmpty => '暂无联系人';
+
+  @override
+  String get contactListLoadFailed => '联系人加载失败';
+
+  @override
   String get toolboxGroupLearning => '学习';
 
   @override

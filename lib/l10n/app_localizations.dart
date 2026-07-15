@@ -2816,6 +2816,30 @@ abstract class AppLocalizations {
   /// **'Downloads'**
   String get toolboxFileDownload;
 
+  /// No description provided for @toolboxContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get toolboxContacts;
+
+  /// No description provided for @contactSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search contacts'**
+  String get contactSearchHint;
+
+  /// No description provided for @contactListEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No contacts'**
+  String get contactListEmpty;
+
+  /// No description provided for @contactListLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load contacts'**
+  String get contactListLoadFailed;
+
   /// No description provided for @toolboxGroupLearning.
   ///
   /// In en, this message translates to:

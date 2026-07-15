@@ -122,6 +122,11 @@ abstract final class SHOMockRouteRegistry {
       asset: 'assets/mock/addresses.json',
     ),
     const SHOMockRouteEntry(
+      method: 'GET',
+      path: '/contacts',
+      asset: 'assets/mock/contacts.json',
+    ),
+    const SHOMockRouteEntry(
       method: 'POST',
       path: '/orders',
       asset: 'assets/mock/order_create.json',

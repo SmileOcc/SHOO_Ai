@@ -100,6 +100,10 @@ Map<String, dynamic> applyMockDynamic(
   Map<String, dynamic>? reviewsCatalogEnvelope,
   Map<String, dynamic>? flashSaleCatalogEnvelope,
 }) {
+  if (routePath == '/contacts') {
+    return filterContactsByQuery(envelope, query: query);
+  }
+
   if (routePath == '/products') {
     final categoryId = query['categoryId']?.toString();
     if (categoryId != null && categoryId.isNotEmpty) {
@@ -216,6 +220,33 @@ Map<String, dynamic> sortCommunityFeedEnvelope(
     result = paginateMockEnvelope(result, page: page, pageSize: pageSize);
   }
   return result;
+}
+
+Map<String, dynamic> filterContactsByQuery(
+  Map<String, dynamic> envelope, {
+  required Map<String, dynamic> query,
+}) {
+  final q = query['q']?.toString().trim().toLowerCase();
+  if (q == null || q.isEmpty) return envelope;
+
+  final data = envelope['data'];
+  if (data is! List) return envelope;
+
+  final filtered = data.whereType<Map<String, dynamic>>().where((item) {
+    final name = item['name']?.toString().toLowerCase() ?? '';
+    final phone = item['phone']?.toString() ?? '';
+    final pinyin = item['pinyin']?.toString().toLowerCase() ?? '';
+    final company = item['company']?.toString().toLowerCase() ?? '';
+    return name.contains(q) ||
+        phone.contains(q) ||
+        pinyin.contains(q) ||
+        company.contains(q);
+  }).toList();
+
+  return {
+    ...envelope,
+    'data': filtered,
+  };
 }
 
 Map<String, dynamic> _productNotFound(String productId) {

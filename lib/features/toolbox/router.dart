@@ -5,6 +5,7 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/pages/hos_route_args.dart';
 import 'package:shoo/features/study/presentation/pages/study_article_page.dart';
 import 'package:shoo/features/study/presentation/pages/study_home_page.dart';
+import 'package:shoo/features/toolbox/presentation/pages/hos_contact_list_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_download_list_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_web_debug_page.dart';
@@ -34,6 +35,11 @@ List<RouteBase> shoToolboxRoutes({
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: 'contacts',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SHOContactListPage(),
       ),
       GoRoute(
         path: 'downloads',

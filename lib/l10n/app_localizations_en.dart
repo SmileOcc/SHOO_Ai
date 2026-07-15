@@ -1461,6 +1461,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxFileDownload => 'Downloads';
 
   @override
+  String get toolboxContacts => 'Contacts';
+
+  @override
+  String get contactSearchHint => 'Search contacts';
+
+  @override
+  String get contactListEmpty => 'No contacts';
+
+  @override
+  String get contactListLoadFailed => 'Failed to load contacts';
+
+  @override
   String get toolboxGroupLearning => 'Learning';
 
   @override

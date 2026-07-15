@@ -56,7 +56,10 @@ class SHOAppTextField extends StatefulWidget {
     this.maxLines = 1,
     this.readOnly = false,
     this.autofocus = false,
+    this.focusNode,
     this.inputFormatters,
+    this.enabledBorderColor,
+    this.fieldBorderRadius,
   });
 
   final String? label;
@@ -74,7 +77,10 @@ class SHOAppTextField extends StatefulWidget {
   final int maxLines;
   final bool readOnly;
   final bool autofocus;
+  final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
+  final Color? enabledBorderColor;
+  final BorderRadius? fieldBorderRadius;
 
   @override
   State<SHOAppTextField> createState() => _SHOAppTextFieldState();
@@ -99,10 +105,15 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(SHOAppSpacing.buttonRadius);
     final theme = context.shoTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final borderRadius =
+        widget.fieldBorderRadius ??
+        BorderRadius.circular(SHOAppSpacing.buttonRadius);
+    final enabledBorderSide = BorderSide(
+      color: widget.enabledBorderColor ?? theme.border,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,6 +124,7 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
         ],
         TextFormField(
           controller: widget.controller,
+          focusNode: widget.focusNode,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
           maxLength: widget.maxLength,
@@ -142,11 +154,11 @@ class _SHOAppTextFieldState extends State<SHOAppTextField> {
             ),
             border: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: theme.border),
+              borderSide: enabledBorderSide,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: theme.border),
+              borderSide: enabledBorderSide,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: borderRadius,
