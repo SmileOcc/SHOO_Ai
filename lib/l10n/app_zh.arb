@@ -372,10 +372,57 @@
       "changed": { "type": "int" }
     }
   },
-  "cartUnavailableBanner": "部分商品已失效，请移除后再结算",
+  "cartUnavailableBanner": "部分商品已失效，仍可结算已选有效商品",
   "cartRemoveUnavailable": "移除失效商品",
   "cartItemUnavailable": "已失效",
   "cartItemPriceUpdated": "价格已更新",
+  "cartChangeSku": "改规格",
+  "cartConfirmSku": "确认修改",
+  "cartStockLeft": "仅剩 {count} 件",
+  "@cartStockLeft": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartStockClamped": "{count} 件商品数量已按库存调整",
+  "@cartStockClamped": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartMaxStockReached": "已达库存上限",
+  "cartSavedHint": "已优惠 {amount}",
+  "@cartSavedHint": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "cartFullReductionProgress": "再买 {amount} 可享{label}",
+  "@cartFullReductionProgress": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "label": { "type": "String" }
+    }
+  },
+  "cartCouponPreview": "优惠券",
+  "cartEstimatedTotal": "预估合计",
+  "cartRecommendTitle": "为你推荐",
+  "cartManage": "管理",
+  "cartManageDone": "完成",
+  "cartSectionAvailable": "有效商品",
+  "cartSectionUnavailable": "失效商品",
+  "cartDeleteSelected": "删除",
+  "cartActivityBadge": "活动价",
+  "cartActivityExpired": "活动已结束，已恢复原价",
+  "cartShippingLabel": "运费",
+  "cartShippingFree": "免运费",
+  "cartShippingProgress": "再买 {amount} 可包邮",
+  "@cartShippingProgress": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "cartDeliverTo": "送达 {city}",
+  "@cartDeliverTo": {
+    "placeholders": { "city": { "type": "String" } }
+  },
+  "cartNoAddressShipping": "添加地址后预估运费",
+  "cartActivityExpiredToast": "{count} 件活动价已过期",
+  "@cartActivityExpiredToast": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "paymentPollingStatus": "正在确认支付状态...",
   "productDetailTitle": "商品详情",
   "productDetailLoading": "正在加载商品，请稍候...",

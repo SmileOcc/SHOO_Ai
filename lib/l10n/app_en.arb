@@ -393,10 +393,57 @@
       "changed": { "type": "int" }
     }
   },
-  "cartUnavailableBanner": "Some items are unavailable. Remove them to checkout.",
+  "cartUnavailableBanner": "Some items are unavailable. You can still checkout selected valid items.",
   "cartRemoveUnavailable": "Remove unavailable",
   "cartItemUnavailable": "Unavailable",
   "cartItemPriceUpdated": "Price updated",
+  "cartChangeSku": "Edit options",
+  "cartConfirmSku": "Update",
+  "cartStockLeft": "Only {count} left",
+  "@cartStockLeft": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartStockClamped": "{count} item(s) qty adjusted to stock",
+  "@cartStockClamped": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cartMaxStockReached": "Max stock reached",
+  "cartSavedHint": "Saved {amount}",
+  "@cartSavedHint": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "cartFullReductionProgress": "Spend {amount} more for {label}",
+  "@cartFullReductionProgress": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "label": { "type": "String" }
+    }
+  },
+  "cartCouponPreview": "Coupon",
+  "cartEstimatedTotal": "Est. total",
+  "cartRecommendTitle": "Recommended for you",
+  "cartManage": "Manage",
+  "cartManageDone": "Done",
+  "cartSectionAvailable": "Available",
+  "cartSectionUnavailable": "Unavailable",
+  "cartDeleteSelected": "Delete",
+  "cartActivityBadge": "Sale",
+  "cartActivityExpired": "Sale ended — price restored",
+  "cartShippingLabel": "Shipping",
+  "cartShippingFree": "Free shipping",
+  "cartShippingProgress": "Spend {amount} more for free shipping",
+  "@cartShippingProgress": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "cartDeliverTo": "Deliver to {city}",
+  "@cartDeliverTo": {
+    "placeholders": { "city": { "type": "String" } }
+  },
+  "cartNoAddressShipping": "Add an address to estimate shipping",
+  "cartActivityExpiredToast": "{count} sale price(s) expired",
+  "@cartActivityExpiredToast": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "paymentPollingStatus": "Confirming payment status...",
   "productDetailTitle": "Product",
   "productDetailLoading": "Loading product details...",

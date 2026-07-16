@@ -358,7 +358,19 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                         },
                         onAddToBag: () {
                           if (!SHOAuthGuard.requireAuth(context, ref)) return;
-                          SHOSkuSheet.show(context, detail, ref: ref);
+                          final activityLine = activity != null
+                              ? buildCheckoutActivityLineFromActivity(
+                                  productId: widget.productId,
+                                  activity: activity,
+                                )
+                              : null;
+                          SHOSkuSheet.show(
+                            context,
+                            detail,
+                            ref: ref,
+                            checkoutActivityLine: activityLine,
+                            sessionEndAt: activity?.sessionEndAt,
+                          );
                         },
                         onBuyNow: () {
                           if (!SHOAuthGuard.requireAuth(context, ref)) return;
@@ -374,6 +386,7 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                             ref: ref,
                             intent: SHOSkuSheetIntent.buyNow,
                             checkoutActivityLine: activityLine,
+                            sessionEndAt: activity?.sessionEndAt,
                           );
                         },
                       ),

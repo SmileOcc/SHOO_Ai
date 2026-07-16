@@ -18,6 +18,10 @@ _$SHOCartItemImpl _$$SHOCartItemImplFromJson(Map<String, dynamic> json) =>
       selected: json['selected'] as bool? ?? true,
       unavailable: json['unavailable'] as bool? ?? false,
       priceChanged: json['priceChanged'] as bool? ?? false,
+      stock: (json['stock'] as num?)?.toInt() ?? kSHOCartDefaultStock,
+      listPrice: (json['listPrice'] as num?)?.toInt() ?? 0,
+      sessionId: json['sessionId'] as String? ?? '',
+      sessionEndAt: json['sessionEndAt'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$SHOCartItemImplToJson(_$SHOCartItemImpl instance) =>
@@ -32,6 +36,10 @@ Map<String, dynamic> _$$SHOCartItemImplToJson(_$SHOCartItemImpl instance) =>
       'selected': instance.selected,
       'unavailable': instance.unavailable,
       'priceChanged': instance.priceChanged,
+      'stock': instance.stock,
+      'listPrice': instance.listPrice,
+      'sessionId': instance.sessionId,
+      'sessionEndAt': instance.sessionEndAt,
     };
 
 _$SHOCartSnapshotImpl _$$SHOCartSnapshotImplFromJson(

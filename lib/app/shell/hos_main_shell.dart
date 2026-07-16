@@ -10,6 +10,9 @@ import 'package:shoo/features/home/presentation/widgets/hos_home_side_drawer.dar
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'hos_bottom_nav.dart';
+import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
+import 'package:shoo/features/cart/presentation/state/hos_cart_manage_provider.dart';
+import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 
 class SHOMainShell extends ConsumerWidget {
   const SHOMainShell({super.key, required this.navigationShell});
@@ -64,6 +67,29 @@ class SHOMainShell extends ConsumerWidget {
     final categoryTitle = ref.watch(categoryAppBarTitleProvider);
 
     final isProfileTab = current == 4;
+    final isCartTab = current == 3;
+
+    if (!isCartTab && ref.watch(cartManageModeProvider)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(cartManageModeProvider)) {
+          ref.read(cartManageModeProvider.notifier).state = false;
+        }
+      });
+    }
+
+    final cartManaging = ref.watch(cartManageModeProvider);
+    final cartHasItems = ref.watch(cartProvider).items.isNotEmpty;
+    final showCartManage = isCartTab &&
+        ref.watch(sessionProvider).isAuthenticated &&
+        cartHasItems;
+
+    if (isCartTab && cartManaging && !cartHasItems) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(cartManageModeProvider)) {
+          ref.read(cartManageModeProvider.notifier).state = false;
+        }
+      });
+    }
 
     return SHOHomeSideDrawerHost(
       child: Scaffold(
@@ -111,6 +137,20 @@ class SHOMainShell extends ConsumerWidget {
                             letterSpacing: 0.5,
                           ),
                         ),
+                        actions: [
+                          if (showCartManage)
+                            TextButton(
+                              onPressed: () {
+                                ref.read(cartManageModeProvider.notifier).state =
+                                    !cartManaging;
+                              },
+                              child: Text(
+                                cartManaging
+                                    ? l10n.cartManageDone
+                                    : l10n.cartManage,
+                              ),
+                            ),
+                        ],
                       ),
               ),
         body: navigationShell,

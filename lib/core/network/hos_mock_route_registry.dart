@@ -56,6 +56,12 @@ abstract final class SHOMockRouteRegistry {
       path: '/products/{id}',
       asset: 'assets/mock/product_catalog.json',
     ),
+    // 必须注册在 `/products/{id}` 之后：matcher 逆序匹配，避免 batch 被当成 id。
+    const SHOMockRouteEntry(
+      method: 'GET',
+      path: '/products/batch',
+      asset: 'assets/mock/product_catalog.json',
+    ),
     const SHOMockRouteEntry(
       method: 'GET',
       path: '/cart',

@@ -2015,7 +2015,7 @@ abstract class AppLocalizations {
   /// No description provided for @cartUnavailableBanner.
   ///
   /// In en, this message translates to:
-  /// **'Some items are unavailable. Remove them to checkout.'**
+  /// **'Some items are unavailable. You can still checkout selected valid items.'**
   String get cartUnavailableBanner;
 
   /// No description provided for @cartRemoveUnavailable.
@@ -2035,6 +2035,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Price updated'**
   String get cartItemPriceUpdated;
+
+  /// No description provided for @cartChangeSku.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit options'**
+  String get cartChangeSku;
+
+  /// No description provided for @cartConfirmSku.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get cartConfirmSku;
+
+  /// No description provided for @cartStockLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {count} left'**
+  String cartStockLeft(int count);
+
+  /// No description provided for @cartStockClamped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item(s) qty adjusted to stock'**
+  String cartStockClamped(int count);
+
+  /// No description provided for @cartMaxStockReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Max stock reached'**
+  String get cartMaxStockReached;
+
+  /// No description provided for @cartSavedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {amount}'**
+  String cartSavedHint(String amount);
+
+  /// No description provided for @cartFullReductionProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend {amount} more for {label}'**
+  String cartFullReductionProgress(String amount, String label);
+
+  /// No description provided for @cartCouponPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon'**
+  String get cartCouponPreview;
+
+  /// No description provided for @cartEstimatedTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. total'**
+  String get cartEstimatedTotal;
+
+  /// No description provided for @cartRecommendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get cartRecommendTitle;
+
+  /// No description provided for @cartManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get cartManage;
+
+  /// No description provided for @cartManageDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get cartManageDone;
+
+  /// No description provided for @cartSectionAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get cartSectionAvailable;
+
+  /// No description provided for @cartSectionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get cartSectionUnavailable;
+
+  /// No description provided for @cartDeleteSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get cartDeleteSelected;
+
+  /// No description provided for @cartActivityBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale'**
+  String get cartActivityBadge;
+
+  /// No description provided for @cartActivityExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale ended — price restored'**
+  String get cartActivityExpired;
+
+  /// No description provided for @cartShippingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get cartShippingLabel;
+
+  /// No description provided for @cartShippingFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free shipping'**
+  String get cartShippingFree;
+
+  /// No description provided for @cartShippingProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend {amount} more for free shipping'**
+  String cartShippingProgress(String amount);
+
+  /// No description provided for @cartDeliverTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliver to {city}'**
+  String cartDeliverTo(String city);
+
+  /// No description provided for @cartNoAddressShipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an address to estimate shipping'**
+  String get cartNoAddressShipping;
+
+  /// No description provided for @cartActivityExpiredToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sale price(s) expired'**
+  String cartActivityExpiredToast(int count);
 
   /// No description provided for @paymentPollingStatus.
   ///

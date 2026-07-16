@@ -1044,7 +1044,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cartUnavailableBanner =>
-      'Some items are unavailable. Remove them to checkout.';
+      'Some items are unavailable. You can still checkout selected valid items.';
 
   @override
   String get cartRemoveUnavailable => 'Remove unavailable';
@@ -1054,6 +1054,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cartItemPriceUpdated => 'Price updated';
+
+  @override
+  String get cartChangeSku => 'Edit options';
+
+  @override
+  String get cartConfirmSku => 'Update';
+
+  @override
+  String cartStockLeft(int count) {
+    return 'Only $count left';
+  }
+
+  @override
+  String cartStockClamped(int count) {
+    return '$count item(s) qty adjusted to stock';
+  }
+
+  @override
+  String get cartMaxStockReached => 'Max stock reached';
+
+  @override
+  String cartSavedHint(String amount) {
+    return 'Saved $amount';
+  }
+
+  @override
+  String cartFullReductionProgress(String amount, String label) {
+    return 'Spend $amount more for $label';
+  }
+
+  @override
+  String get cartCouponPreview => 'Coupon';
+
+  @override
+  String get cartEstimatedTotal => 'Est. total';
+
+  @override
+  String get cartRecommendTitle => 'Recommended for you';
+
+  @override
+  String get cartManage => 'Manage';
+
+  @override
+  String get cartManageDone => 'Done';
+
+  @override
+  String get cartSectionAvailable => 'Available';
+
+  @override
+  String get cartSectionUnavailable => 'Unavailable';
+
+  @override
+  String get cartDeleteSelected => 'Delete';
+
+  @override
+  String get cartActivityBadge => 'Sale';
+
+  @override
+  String get cartActivityExpired => 'Sale ended — price restored';
+
+  @override
+  String get cartShippingLabel => 'Shipping';
+
+  @override
+  String get cartShippingFree => 'Free shipping';
+
+  @override
+  String cartShippingProgress(String amount) {
+    return 'Spend $amount more for free shipping';
+  }
+
+  @override
+  String cartDeliverTo(String city) {
+    return 'Deliver to $city';
+  }
+
+  @override
+  String get cartNoAddressShipping => 'Add an address to estimate shipping';
+
+  @override
+  String cartActivityExpiredToast(int count) {
+    return '$count sale price(s) expired';
+  }
 
   @override
   String get paymentPollingStatus => 'Confirming payment status...';

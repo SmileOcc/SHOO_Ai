@@ -69,7 +69,7 @@ class SHOMockInterceptor extends Interceptor {
       Map<String, dynamic>? catalogEnvelope;
       Map<String, dynamic>? reviewsCatalogEnvelope;
       Map<String, dynamic>? flashSaleCatalogEnvelope;
-      if (entry.path == '/products/{id}') {
+      if (entry.path == '/products/{id}' || entry.path == '/products/batch') {
         catalogEnvelope = envelope;
         final fsRaw = await rootBundle.loadString(
           'assets/mock/flash_sale_catalog.json',

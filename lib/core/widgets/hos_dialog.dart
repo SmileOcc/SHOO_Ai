@@ -105,11 +105,14 @@ abstract final class SHOAppDialog {
     required Widget child,
     bool isDismissible = true,
     bool isScrollControlled = false,
+    /// 默认走根 Navigator，盖住主壳 AppBar / 底 Tab。
+    bool useRootNavigator = true,
   }) {
     return showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
       isScrollControlled: isScrollControlled,
+      useRootNavigator: useRootNavigator,
       backgroundColor: context.shoSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(

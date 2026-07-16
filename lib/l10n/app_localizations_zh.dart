@@ -1011,7 +1011,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get cartUnavailableBanner => '部分商品已失效，请移除后再结算';
+  String get cartUnavailableBanner => '部分商品已失效，仍可结算已选有效商品';
 
   @override
   String get cartRemoveUnavailable => '移除失效商品';
@@ -1021,6 +1021,89 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cartItemPriceUpdated => '价格已更新';
+
+  @override
+  String get cartChangeSku => '改规格';
+
+  @override
+  String get cartConfirmSku => '确认修改';
+
+  @override
+  String cartStockLeft(int count) {
+    return '仅剩 $count 件';
+  }
+
+  @override
+  String cartStockClamped(int count) {
+    return '$count 件商品数量已按库存调整';
+  }
+
+  @override
+  String get cartMaxStockReached => '已达库存上限';
+
+  @override
+  String cartSavedHint(String amount) {
+    return '已优惠 $amount';
+  }
+
+  @override
+  String cartFullReductionProgress(String amount, String label) {
+    return '再买 $amount 可享$label';
+  }
+
+  @override
+  String get cartCouponPreview => '优惠券';
+
+  @override
+  String get cartEstimatedTotal => '预估合计';
+
+  @override
+  String get cartRecommendTitle => '为你推荐';
+
+  @override
+  String get cartManage => '管理';
+
+  @override
+  String get cartManageDone => '完成';
+
+  @override
+  String get cartSectionAvailable => '有效商品';
+
+  @override
+  String get cartSectionUnavailable => '失效商品';
+
+  @override
+  String get cartDeleteSelected => '删除';
+
+  @override
+  String get cartActivityBadge => '活动价';
+
+  @override
+  String get cartActivityExpired => '活动已结束，已恢复原价';
+
+  @override
+  String get cartShippingLabel => '运费';
+
+  @override
+  String get cartShippingFree => '免运费';
+
+  @override
+  String cartShippingProgress(String amount) {
+    return '再买 $amount 可包邮';
+  }
+
+  @override
+  String cartDeliverTo(String city) {
+    return '送达 $city';
+  }
+
+  @override
+  String get cartNoAddressShipping => '添加地址后预估运费';
+
+  @override
+  String cartActivityExpiredToast(int count) {
+    return '$count 件活动价已过期';
+  }
 
   @override
   String get paymentPollingStatus => '正在确认支付状态...';

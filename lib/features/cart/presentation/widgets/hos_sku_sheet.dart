@@ -13,30 +13,46 @@ import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/core/widgets/hos_price_text.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/product/domain/entities/hos_product_detail.dart';
+import 'package:shoo/features/cart/data/repositories/hos_cart_reconcile_service.dart';
 import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
 import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
 
-enum SHOSkuSheetIntent { addToCart, buyNow }
+enum SHOSkuSheetIntent { addToCart, buyNow, changeCartLine }
 
-/// SKU 选择底部面板：尺码 + 数量 + 加入购物袋 / 立即购买。
+/// SKU 选择底部面板：尺码 + 数量 + 加入购物袋 / 立即购买 / 改规格。
 class SHOSkuSheet extends ConsumerStatefulWidget {
   const SHOSkuSheet({
     super.key,
     required this.product,
     this.intent = SHOSkuSheetIntent.addToCart,
     this.checkoutActivityLine,
+    this.sessionEndAt,
+    this.replaceLineId,
+    this.initialSize,
+    this.initialQuantity = 1,
+    this.maxStock,
   });
 
   final SHOProductDetail product;
   final SHOSkuSheetIntent intent;
   final SHOCheckoutActivityLine? checkoutActivityLine;
+  final String? sessionEndAt;
+  final String? replaceLineId;
+  final String? initialSize;
+  final int initialQuantity;
+  final int? maxStock;
 
   static Future<void> show(
     BuildContext context,
     SHOProductDetail product, {
     SHOSkuSheetIntent intent = SHOSkuSheetIntent.addToCart,
     SHOCheckoutActivityLine? checkoutActivityLine,
+    String? sessionEndAt,
+    String? replaceLineId,
+    String? initialSize,
+    int initialQuantity = 1,
+    int? maxStock,
     required WidgetRef ref,
   }) {
     if (!SHOAuthGuard.requireAuth(context, ref)) {
@@ -45,12 +61,28 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
 
     return SHOAppDialog.showBottomSheet(
       context,
+      isScrollControlled: true,
       child: SHOSkuSheet(
         product: product,
         intent: intent,
         checkoutActivityLine: checkoutActivityLine,
+        sessionEndAt: sessionEndAt,
+        replaceLineId: replaceLineId,
+        initialSize: initialSize,
+        initialQuantity: initialQuantity,
+        maxStock: maxStock,
       ),
     );
+  }
+
+  /// 从「尺码 M」/「Size M」解析尺码码。
+  static String? parseSizeFromVariantLabel(String variantLabel) {
+    final trimmed = variantLabel.trim();
+    if (trimmed.isEmpty) return null;
+    final parts = trimmed.split(RegExp(r'\s+'));
+    final last = parts.isEmpty ? trimmed : parts.last;
+    if (SHOAppConstants.defaultSkuSizes.contains(last)) return last;
+    return null;
   }
 
   @override
@@ -59,23 +91,48 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
 
 class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
   late String _size;
-  int _quantity = 1;
+  late int _quantity;
+  late int _maxStock;
 
   @override
   void initState() {
     super.initState();
-    _size = SHOAppConstants.defaultSkuSizes[1];
+    final preferred = widget.initialSize;
+    _size = preferred != null &&
+            SHOAppConstants.defaultSkuSizes.contains(preferred)
+        ? preferred
+        : SHOAppConstants.defaultSkuSizes[1];
+    _maxStock = (widget.maxStock != null && widget.maxStock! > 0)
+        ? widget.maxStock!
+        : SHOCartReconcileService.mockStockFor(widget.product.id);
+    _quantity = widget.initialQuantity.clamp(1, _maxStock);
   }
 
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
     final variantLabel = '${l10n.skuSizeLabel} $_size';
-    await ref
-        .read(cartProvider.notifier)
-        .addProduct(
+
+    if (widget.intent == SHOSkuSheetIntent.changeCartLine) {
+      final lineId = widget.replaceLineId;
+      if (lineId == null || lineId.isEmpty) return;
+      await ref.read(cartProvider.notifier).changeVariant(
+            lineId: lineId,
+            newVariantLabel: variantLabel,
+            quantity: _quantity,
+            expectedProductId: widget.product.id,
+          );
+      if (!mounted) return;
+      Navigator.pop(context);
+      return;
+    }
+
+    await ref.read(cartProvider.notifier).addProduct(
           product: widget.product,
           variantLabel: variantLabel,
           quantity: _quantity,
+          stock: _maxStock,
+          activity: widget.checkoutActivityLine,
+          sessionEndAt: widget.sessionEndAt,
         );
     if (!mounted) return;
     Navigator.pop(context);
@@ -85,7 +142,7 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
       if (line != null) {
         setCheckoutActivityLine(ref, line);
       }
-      context.push(SHOAppRoutes.checkout);
+      await context.push(SHOAppRoutes.checkout);
       return;
     }
 
@@ -98,6 +155,7 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final product = widget.product;
+    final isChange = widget.intent == SHOSkuSheetIntent.changeCartLine;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -119,7 +177,6 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
                   height: 88,
                   child: SHOAppNetworkImage(
                     url: product.imageUrl,
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -136,6 +193,13 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
                     ),
                     const SizedBox(height: SHOAppSpacing.sm),
                     SHOAppPriceText(priceCents: product.price),
+                    const SizedBox(height: SHOAppSpacing.xs),
+                    Text(
+                      l10n.cartStockLeft(_maxStock),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: SHOAppColors.textMuted,
+                          ),
+                    ),
                   ],
                 ),
               ),
@@ -185,7 +249,7 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
-                    onPressed: _quantity < 99
+                    onPressed: _quantity < _maxStock
                         ? () => setState(() => _quantity++)
                         : null,
                     icon: const Icon(Icons.add_circle_outline, size: 22),
@@ -196,9 +260,11 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
           ),
           const SizedBox(height: SHOAppSpacing.xl),
           SHOAppButton(
-            label: widget.intent == SHOSkuSheetIntent.buyNow
-                ? l10n.productBuyNow
-                : l10n.productAddToBag,
+            label: isChange
+                ? l10n.cartConfirmSku
+                : widget.intent == SHOSkuSheetIntent.buyNow
+                    ? l10n.productBuyNow
+                    : l10n.productAddToBag,
             variant: widget.intent == SHOSkuSheetIntent.buyNow
                 ? SHOAppButtonVariant.accent
                 : SHOAppButtonVariant.primary,

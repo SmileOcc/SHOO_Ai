@@ -25,12 +25,26 @@ mixin _$SHOCartItem {
   String get productId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+
+  /// 当前成交单价（可能是活动价）。
   int get price => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   String get variantLabel => throw _privateConstructorUsedError;
   bool get selected => throw _privateConstructorUsedError;
   bool get unavailable => throw _privateConstructorUsedError;
   bool get priceChanged => throw _privateConstructorUsedError;
+
+  /// 当前可购库存（对账/加购写入）。
+  int get stock => throw _privateConstructorUsedError;
+
+  /// 吊牌/原价，用于划线展示；0 表示无划线。
+  int get listPrice => throw _privateConstructorUsedError;
+
+  /// 闪购等活动场次；空表示普通行。
+  String get sessionId => throw _privateConstructorUsedError;
+
+  /// 活动结束时间 ISO8601；空表示不自动过期。
+  String get sessionEndAt => throw _privateConstructorUsedError;
 
   /// Serializes this SHOCartItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -60,6 +74,10 @@ abstract class $SHOCartItemCopyWith<$Res> {
     bool selected,
     bool unavailable,
     bool priceChanged,
+    int stock,
+    int listPrice,
+    String sessionId,
+    String sessionEndAt,
   });
 }
 
@@ -88,6 +106,10 @@ class _$SHOCartItemCopyWithImpl<$Res, $Val extends SHOCartItem>
     Object? selected = null,
     Object? unavailable = null,
     Object? priceChanged = null,
+    Object? stock = null,
+    Object? listPrice = null,
+    Object? sessionId = null,
+    Object? sessionEndAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -131,6 +153,22 @@ class _$SHOCartItemCopyWithImpl<$Res, $Val extends SHOCartItem>
                 ? _value.priceChanged
                 : priceChanged // ignore: cast_nullable_to_non_nullable
                       as bool,
+            stock: null == stock
+                ? _value.stock
+                : stock // ignore: cast_nullable_to_non_nullable
+                      as int,
+            listPrice: null == listPrice
+                ? _value.listPrice
+                : listPrice // ignore: cast_nullable_to_non_nullable
+                      as int,
+            sessionId: null == sessionId
+                ? _value.sessionId
+                : sessionId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            sessionEndAt: null == sessionEndAt
+                ? _value.sessionEndAt
+                : sessionEndAt // ignore: cast_nullable_to_non_nullable
+                      as String,
           )
           as $Val,
     );
@@ -157,6 +195,10 @@ abstract class _$$SHOCartItemImplCopyWith<$Res>
     bool selected,
     bool unavailable,
     bool priceChanged,
+    int stock,
+    int listPrice,
+    String sessionId,
+    String sessionEndAt,
   });
 }
 
@@ -184,6 +226,10 @@ class __$$SHOCartItemImplCopyWithImpl<$Res>
     Object? selected = null,
     Object? unavailable = null,
     Object? priceChanged = null,
+    Object? stock = null,
+    Object? listPrice = null,
+    Object? sessionId = null,
+    Object? sessionEndAt = null,
   }) {
     return _then(
       _$SHOCartItemImpl(
@@ -227,6 +273,22 @@ class __$$SHOCartItemImplCopyWithImpl<$Res>
             ? _value.priceChanged
             : priceChanged // ignore: cast_nullable_to_non_nullable
                   as bool,
+        stock: null == stock
+            ? _value.stock
+            : stock // ignore: cast_nullable_to_non_nullable
+                  as int,
+        listPrice: null == listPrice
+            ? _value.listPrice
+            : listPrice // ignore: cast_nullable_to_non_nullable
+                  as int,
+        sessionId: null == sessionId
+            ? _value.sessionId
+            : sessionId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        sessionEndAt: null == sessionEndAt
+            ? _value.sessionEndAt
+            : sessionEndAt // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -234,7 +296,7 @@ class __$$SHOCartItemImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SHOCartItemImpl implements _SHOCartItem {
+class _$SHOCartItemImpl extends _SHOCartItem {
   const _$SHOCartItemImpl({
     required this.id,
     required this.productId,
@@ -246,7 +308,11 @@ class _$SHOCartItemImpl implements _SHOCartItem {
     this.selected = true,
     this.unavailable = false,
     this.priceChanged = false,
-  });
+    this.stock = kSHOCartDefaultStock,
+    this.listPrice = 0,
+    this.sessionId = '',
+    this.sessionEndAt = '',
+  }) : super._();
 
   factory _$SHOCartItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$SHOCartItemImplFromJson(json);
@@ -259,6 +325,8 @@ class _$SHOCartItemImpl implements _SHOCartItem {
   final String title;
   @override
   final String imageUrl;
+
+  /// 当前成交单价（可能是活动价）。
   @override
   final int price;
   @override
@@ -277,9 +345,29 @@ class _$SHOCartItemImpl implements _SHOCartItem {
   @JsonKey()
   final bool priceChanged;
 
+  /// 当前可购库存（对账/加购写入）。
+  @override
+  @JsonKey()
+  final int stock;
+
+  /// 吊牌/原价，用于划线展示；0 表示无划线。
+  @override
+  @JsonKey()
+  final int listPrice;
+
+  /// 闪购等活动场次；空表示普通行。
+  @override
+  @JsonKey()
+  final String sessionId;
+
+  /// 活动结束时间 ISO8601；空表示不自动过期。
+  @override
+  @JsonKey()
+  final String sessionEndAt;
+
   @override
   String toString() {
-    return 'SHOCartItem(id: $id, productId: $productId, title: $title, imageUrl: $imageUrl, price: $price, quantity: $quantity, variantLabel: $variantLabel, selected: $selected, unavailable: $unavailable, priceChanged: $priceChanged)';
+    return 'SHOCartItem(id: $id, productId: $productId, title: $title, imageUrl: $imageUrl, price: $price, quantity: $quantity, variantLabel: $variantLabel, selected: $selected, unavailable: $unavailable, priceChanged: $priceChanged, stock: $stock, listPrice: $listPrice, sessionId: $sessionId, sessionEndAt: $sessionEndAt)';
   }
 
   @override
@@ -303,7 +391,14 @@ class _$SHOCartItemImpl implements _SHOCartItem {
             (identical(other.unavailable, unavailable) ||
                 other.unavailable == unavailable) &&
             (identical(other.priceChanged, priceChanged) ||
-                other.priceChanged == priceChanged));
+                other.priceChanged == priceChanged) &&
+            (identical(other.stock, stock) || other.stock == stock) &&
+            (identical(other.listPrice, listPrice) ||
+                other.listPrice == listPrice) &&
+            (identical(other.sessionId, sessionId) ||
+                other.sessionId == sessionId) &&
+            (identical(other.sessionEndAt, sessionEndAt) ||
+                other.sessionEndAt == sessionEndAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -320,6 +415,10 @@ class _$SHOCartItemImpl implements _SHOCartItem {
     selected,
     unavailable,
     priceChanged,
+    stock,
+    listPrice,
+    sessionId,
+    sessionEndAt,
   );
 
   /// Create a copy of SHOCartItem
@@ -336,7 +435,7 @@ class _$SHOCartItemImpl implements _SHOCartItem {
   }
 }
 
-abstract class _SHOCartItem implements SHOCartItem {
+abstract class _SHOCartItem extends SHOCartItem {
   const factory _SHOCartItem({
     required final String id,
     required final String productId,
@@ -348,7 +447,12 @@ abstract class _SHOCartItem implements SHOCartItem {
     final bool selected,
     final bool unavailable,
     final bool priceChanged,
+    final int stock,
+    final int listPrice,
+    final String sessionId,
+    final String sessionEndAt,
   }) = _$SHOCartItemImpl;
+  const _SHOCartItem._() : super._();
 
   factory _SHOCartItem.fromJson(Map<String, dynamic> json) =
       _$SHOCartItemImpl.fromJson;
@@ -361,6 +465,8 @@ abstract class _SHOCartItem implements SHOCartItem {
   String get title;
   @override
   String get imageUrl;
+
+  /// 当前成交单价（可能是活动价）。
   @override
   int get price;
   @override
@@ -373,6 +479,22 @@ abstract class _SHOCartItem implements SHOCartItem {
   bool get unavailable;
   @override
   bool get priceChanged;
+
+  /// 当前可购库存（对账/加购写入）。
+  @override
+  int get stock;
+
+  /// 吊牌/原价，用于划线展示；0 表示无划线。
+  @override
+  int get listPrice;
+
+  /// 闪购等活动场次；空表示普通行。
+  @override
+  String get sessionId;
+
+  /// 活动结束时间 ISO8601；空表示不自动过期。
+  @override
+  String get sessionEndAt;
 
   /// Create a copy of SHOCartItem
   /// with the given fields replaced by the non-null parameter values.

@@ -117,6 +117,14 @@ Map<String, dynamic> applyMockDynamic(
     return envelope;
   }
 
+  if (routePath == '/products/batch' && catalogEnvelope != null) {
+    return lookupProductsBatch(
+      catalogEnvelope,
+      query: query,
+      flashSaleCatalogEnvelope: flashSaleCatalogEnvelope,
+    );
+  }
+
   if (routePath == '/products/{id}' && catalogEnvelope != null) {
     final productId = mockPathParam(routePath, requestPath, 'id');
     if (productId == null) return _productNotFound('');
@@ -247,6 +255,141 @@ Map<String, dynamic> filterContactsByQuery(
     ...envelope,
     'data': filtered,
   };
+}
+
+Map<String, dynamic> lookupProductsBatch(
+  Map<String, dynamic> catalogEnvelope, {
+  required Map<String, dynamic> query,
+  Map<String, dynamic>? flashSaleCatalogEnvelope,
+}) {
+  final idsRaw = query['ids']?.toString() ?? '';
+  final skuRaw = query['skuIds']?.toString() ?? '';
+  final productIds = idsRaw
+      .split(',')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toSet()
+      .toList();
+  final requestedSkuIds = skuRaw
+      .split(',')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toSet();
+
+  final byId = <String, Map<String, dynamic>>{};
+  final catalogItems = catalogEnvelope['data'];
+  if (catalogItems is Map<String, dynamic>) {
+    final items = catalogItems['items'];
+    if (items is List) {
+      for (final raw in items) {
+        if (raw is Map<String, dynamic>) {
+          final id = raw['id']?.toString();
+          if (id != null && id.isNotEmpty) byId[id] = raw;
+        }
+      }
+    }
+  }
+
+  if (flashSaleCatalogEnvelope != null) {
+    final fsData = flashSaleCatalogEnvelope['data'];
+    if (fsData is Map<String, dynamic>) {
+      final products = fsData['products'];
+      if (products is List) {
+        for (final raw in products) {
+          if (raw is! Map<String, dynamic>) continue;
+          final id = raw['id']?.toString();
+          if (id == null || id.isEmpty || byId.containsKey(id)) continue;
+          byId[id] = {
+            'id': id,
+            'title': raw['title'] ?? '',
+            'imageUrl': raw['imageUrl'] ?? '',
+            'price': raw['activityPrice'] ?? raw['price'] ?? 0,
+            'originalPrice': raw['originalPrice'] ?? raw['price'] ?? 0,
+            'stock': raw['stock'],
+          };
+        }
+      }
+    }
+  }
+
+  const sizes = ['S', 'M', 'L', 'XL'];
+  final found = <Map<String, dynamic>>[];
+  final missing = <String>[];
+
+  for (final productId in productIds) {
+    final product = byId[productId];
+    if (product == null) {
+      missing.add(productId);
+      continue;
+    }
+
+    final price = (product['price'] as num?)?.toInt() ?? 0;
+    final original =
+        (product['originalPrice'] as num?)?.toInt() ?? price;
+    final productStock = product['stock'] is num
+        ? (product['stock'] as num).toInt()
+        : _mockStockFor(productId);
+
+    final skus = <Map<String, dynamic>>[];
+    for (final size in sizes) {
+      for (final label in ['Size $size', '尺码 $size']) {
+        final skuId = '$productId::$label';
+        final stock = _mockSkuStockFor(skuId, productStock);
+        skus.add({
+          'skuId': skuId,
+          'variantLabel': label,
+          'stock': stock,
+          'available': stock > 0,
+        });
+      }
+    }
+
+    // 请求里带了未知 sku：仍返回该 sku，标记不可用，便于购物车对账。
+    for (final skuId in requestedSkuIds) {
+      if (!skuId.startsWith('$productId::')) continue;
+      final exists = skus.any((s) => s['skuId'] == skuId);
+      if (exists) continue;
+      final variant = skuId.substring(productId.length + 2);
+      skus.add({
+        'skuId': skuId,
+        'variantLabel': variant,
+        'stock': 0,
+        'available': false,
+      });
+    }
+
+    found.add({
+      'productId': productId,
+      'id': productId,
+      'title': product['title'] ?? '',
+      'imageUrl': product['imageUrl'] ?? '',
+      'price': price,
+      'originalPrice': original,
+      'stock': productStock,
+      'available': productStock > 0,
+      'skus': skus,
+    });
+  }
+
+  return {
+    'code': 0,
+    'message': 'ok',
+    'data': {
+      'items': found,
+      'missingIds': missing,
+    },
+  };
+}
+
+int _mockStockFor(String productId) {
+  final hash = productId.hashCode.abs();
+  return 5 + (hash % 20);
+}
+
+int _mockSkuStockFor(String skuId, int productStock) {
+  final hash = skuId.hashCode.abs();
+  final share = 1 + (hash % 6);
+  return (productStock ~/ 2 + share).clamp(0, productStock);
 }
 
 Map<String, dynamic> _productNotFound(String productId) {
