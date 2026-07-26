@@ -16,6 +16,7 @@ export '../brand/hos_app_icon.dart';
 export '../brand/hos_app_icon_style.dart';
 export '../brand/hos_brand_config.dart';
 export 'hos_app_loading.dart';
+export 'hos_add_to_cart_fly.dart';
 export 'hos_button.dart';
 export 'hos_card.dart';
 export 'hos_dialog.dart';

@@ -1229,3 +1229,78 @@ final sumQuantity = items.map((i) => i.quantity).reduce((a, b) => a + b);
 空集合 - 返回初始值 - 抛出异常 
 返回类型 - 可以与元素类型不同  - 必须与元素类型相同 
 适用场景 - 通用累加、类型转换 - 简单求和（非空集合）
+
+
+
+### Overlay 是什么？
+Overlay 是 Flutter 的一个特殊组件，允许你在现有组件树之上 叠加 新的组件，常见用途包括：
+
+- 弹窗（Dialog、BottomSheet）
+- Toast 提示
+- 引导遮罩
+- 飞入动画 （如本代码）
+### rootOverlay: true 的作用
+rootOverlay: false （默认） 查找最近的 Overlay（可能是某个子页面的 Overlay） 
+rootOverlay: true 查找 根 Overlay （整个应用最顶层的 Overlay）
+
+## OverlayEntry 是什么？
+### 核心概念
+OverlayEntry 是 Overlay 层中的一个"条目" ，可以理解为一个 悬浮在所有组件之上的独立 Widget 。
+
+### 为什么使用 OverlayEntry？
+层级最高 可以覆盖所有组件，包括导航栏、TabBar 等
+独立生命周期 不受页面跳转影响，动画可以完整播放
+灵活控制 可以随时插入、更新、移除
+不干扰布局 悬浮层不参与正常的布局计算
+
+### 与普通 Widget 的区别
+对比项 普通 Widget OverlayEntry 
+位置 - 在 Widget Tree 中 - 在 Overlay 层（独立于 Tree） 
+层级 - 由父组件决定  - 始终在最顶层 
+生命周期 - 跟随父组件  - 手动控制（insert/remove） 
+布局影响 - 参与布局计算 - 不影响其他组件布局
+
+### 总结
+OverlayEntry 的作用 ：
+
+1. 创建一个 悬浮在所有组件之上 的独立 Widget
+2. 通过 overlayState.insert() 插入到 Overlay 层显示动画
+3. 通过 entry.remove() 在动画完成后清理资源
+4. 使用 late 关键字解决闭包中的循环引用问题
+这是实现 全局动画 （如加购飞入效果）的标准方式。
+
+## IgnorePointer 的含义
+### 核心作用
+让子 Widget 忽略所有指针事件 （点击、触摸、拖动等），使其"穿透"可点击，用户可以直接操作其下方的组件。
+
+### IgnorePointer vs AbsorbPointer
+对比项 IgnorePointer AbsorbPointer 
+指针事件 - 忽略并 穿透 到下方 - 吸收并 阻止 穿透 
+下方组件 - 可以响应事件 - 无法响应事件 
+场景 - 纯视觉效果（如动画） - 需要遮挡交互（如遮罩）
+
+## lerpDouble(widget.startSize, widget.endSize, t)! 的含义
+### 核心作用
+在两个数值之间进行线性插值 ，根据动画进度 t 计算出当前的尺寸。
+
+### lerpDouble 是什么？
+lerpDouble 是 Flutter 提供的 线性插值函数 ，全称是 L inear Int erp olation。
+
+参数 说明 a 起始值 b 结束值 t 插值因子，范围 0.0 ~ 1.0
+
+### 计算公式
+```
+结果 = a + (b - a) * t
+```
+### 代码分析
+
+尺寸(px)
+  80 ┤ ●
+     │  ●
+     │   ●
+  52 ┤    ●
+     │     ●
+     │      ●
+  24 ┤       ●
+     └────────●──→ 时间(t)
+       0    0.5  1.0

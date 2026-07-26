@@ -115,94 +115,117 @@ class _SHOBannerCarouselState extends State<SHOBannerCarousel> {
     final len = widget.banners.length;
     final looped = len > 1;
 
-    final pageView = SizedBox(
-      height: widget.height,
-      child: PageView.builder(
-        controller: _controller,
-        itemCount: looped ? _loopCycles * len * 2 : len,
-        onPageChanged: (i) => setState(() => _index = _realIndex(i)),
-        itemBuilder: (context, index) {
-          final banner = widget.banners[_realIndex(index)];
-          final hasLink = banner.link.trim().isNotEmpty;
+    final pageView = PageView.builder(
+      controller: _controller,
+      itemCount: looped ? _loopCycles * len * 2 : len,
+      onPageChanged: (i) => setState(() => _index = _realIndex(i)),
+      itemBuilder: (context, index) {
+        final banner = widget.banners[_realIndex(index)];
+        final hasLink = banner.link.trim().isNotEmpty;
 
-          final radius = widget.edgeToEdge
-              ? BorderRadius.zero
-              : BorderRadius.circular(SHOAppSpacing.cardRadius);
+        final radius = widget.edgeToEdge
+            ? BorderRadius.zero
+            : BorderRadius.circular(SHOAppSpacing.cardRadius);
 
-          return Padding(
-            padding: widget.edgeToEdge
-                ? EdgeInsets.zero
-                : const EdgeInsets.symmetric(
-                    horizontal: SHOAppSpacing.pagePadding,
+        return Padding(
+          padding: widget.edgeToEdge
+              ? EdgeInsets.zero
+              : const EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.pagePadding,
+                ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: hasLink
+                  ? () => SHORouteNavigator.followLink(context, banner.link)
+                  : null,
+              borderRadius: radius,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  SHOAppNetworkImage(
+                    url: banner.imageUrl,
+                    borderRadius: radius,
+                    fit: BoxFit.cover,
                   ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: hasLink
-                    ? () => SHORouteNavigator.followLink(context, banner.link)
-                    : null,
-                borderRadius: radius,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    SHOAppNetworkImage(
-                      url: banner.imageUrl,
-                      borderRadius: radius,
-                      fit: BoxFit.cover,
-                    ),
-                    if (widget.showTitleOverlay)
-                      Positioned(
-                        left: SHOAppSpacing.md,
-                        bottom: SHOAppSpacing.md,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          color: SHOAppColors.primary.withValues(alpha: 0.72),
-                          child: Text(
-                            banner.title,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.8,
-                            ),
+                  if (widget.showTitleOverlay)
+                    Positioned(
+                      left: SHOAppSpacing.md,
+                      bottom: SHOAppSpacing.md,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        color: SHOAppColors.primary.withValues(alpha: 0.72),
+                        child: Text(
+                          banner.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.8,
                           ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
 
-    if (!widget.showIndicators) return pageView;
+    final indicators = widget.showIndicators && len > 1
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(len, (i) {
+              final active = i == _index;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                width: active ? 14 : 6,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: active ? SHOAppColors.accent : theme.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              );
+            }),
+          )
+        : null;
+
+    // edgeToEdge：指示器叠在图内，总高度严格等于 [height]（避免外层约束溢出）。
+    if (widget.edgeToEdge) {
+      return SizedBox(
+        height: widget.height,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            pageView,
+            if (indicators != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: SHOAppSpacing.md,
+                child: indicators,
+              ),
+          ],
+        ),
+      );
+    }
+
+    if (indicators == null) {
+      return SizedBox(height: widget.height, child: pageView);
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        pageView,
+        SizedBox(height: widget.height, child: pageView),
         const SizedBox(height: SHOAppSpacing.xs),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(len, (i) {
-            final active = i == _index;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.symmetric(horizontal: 2),
-              width: active ? 14 : 6,
-              height: 3,
-              decoration: BoxDecoration(
-                color: active ? SHOAppColors.accent : theme.border,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            );
-          }),
-        ),
+        indicators,
       ],
     );
   }

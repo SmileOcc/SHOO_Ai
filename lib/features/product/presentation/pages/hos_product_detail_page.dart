@@ -12,6 +12,7 @@ import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/utils/hos_async_value_ui.dart';
+import 'package:shoo/core/widgets/hos_add_to_cart_fly.dart';
 import 'package:shoo/core/widgets/hos_app_loading.dart';
 import 'package:shoo/core/widgets/hos_banner_carousel.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
@@ -54,8 +55,18 @@ class SHOProductDetailPage extends ConsumerStatefulWidget {
 
 class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
+  final _cartIconKey = GlobalKey();
+
   @override
   String get pageName => 'product_detail';
+
+  Future<void> _playAddToCartFly(String imageUrl) async {
+    await SHOAddToCartFlyAnimation.play(
+      context: context,
+      imageUrl: imageUrl,
+      toKey: _cartIconKey,
+    );
+  }
 
   @override
   Map<String, Object?> get pageAnalyticsExtra => {
@@ -137,51 +148,55 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                           CustomScrollView(
                             slivers: [
                               SliverToBoxAdapter(
-                                child: Stack(
-                                  children: [
-                                    SHOBannerCarousel(
-                                      banners: banners,
-                                      height: heroHeight,
-                                      edgeToEdge: true,
-                                      showTitleOverlay: false,
-                                      showIndicators: banners.length > 1,
-                                      autoPlay: false,
-                                    ),
-                                    if (activity?.overlayLabel != null)
-                                      Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        child: SHOPromoBadge(
-                                          type: SHOPromoBadgeType.status,
-                                          label: activity!.overlayLabel!,
-                                          preset:
-                                              SHOPromoBadgePreset.overlayBanner,
-                                          enabled:
-                                              activity.status ==
-                                              SHOFlashSaleProductStatus.ongoing,
-                                        ),
+                                child: SizedBox(
+                                  height: heroHeight,
+                                  child: Stack(
+                                    children: [
+                                      SHOBannerCarousel(
+                                        banners: banners,
+                                        height: heroHeight,
+                                        edgeToEdge: true,
+                                        showTitleOverlay: false,
+                                        showIndicators: banners.length > 1,
+                                        autoPlay: false,
                                       ),
-                                    if (activity?.primaryBadgeType != null &&
-                                        activity?.primaryPromoLabel != null)
-                                      Positioned(
-                                        left: SHOAppSpacing.pagePadding,
-                                        top: topInset + SHOAppSpacing.sm,
-                                        child: SHOPromoBadge(
-                                          type: activity!.primaryBadgeType!,
-                                          label: activity.primaryPromoLabel!,
-                                          preset:
-                                              SHOPromoBadgePreset.cornerOnImage,
-                                          enabled:
-                                              activity.status ==
-                                                  SHOFlashSaleProductStatus
-                                                      .ongoing ||
-                                              activity.status ==
-                                                  SHOFlashSaleProductStatus
-                                                      .notStarted,
+                                      if (activity?.overlayLabel != null)
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          child: SHOPromoBadge(
+                                            type: SHOPromoBadgeType.status,
+                                            label: activity!.overlayLabel!,
+                                            preset: SHOPromoBadgePreset
+                                                .overlayBanner,
+                                            enabled:
+                                                activity.status ==
+                                                SHOFlashSaleProductStatus
+                                                    .ongoing,
+                                          ),
                                         ),
-                                      ),
-                                  ],
+                                      if (activity?.primaryBadgeType != null &&
+                                          activity?.primaryPromoLabel != null)
+                                        Positioned(
+                                          left: SHOAppSpacing.pagePadding,
+                                          top: topInset + SHOAppSpacing.sm,
+                                          child: SHOPromoBadge(
+                                            type: activity!.primaryBadgeType!,
+                                            label: activity.primaryPromoLabel!,
+                                            preset: SHOPromoBadgePreset
+                                                .cornerOnImage,
+                                            enabled:
+                                                activity.status ==
+                                                    SHOFlashSaleProductStatus
+                                                        .ongoing ||
+                                                activity.status ==
+                                                    SHOFlashSaleProductStatus
+                                                        .notStarted,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SliverPadding(
@@ -349,6 +364,7 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                         ],
                       ),
                       bottomNavigationBar: _SHOProductDetailFooter(
+                        cartIconKey: _cartIconKey,
                         cartCount: ref.watch(cartBadgeCountProvider),
                         onCustomerService: () =>
                             SHOAppToast.info(l10n.productCustomerServiceHint),
@@ -356,7 +372,7 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                           if (!SHOAuthGuard.requireAuth(context, ref)) return;
                           context.push(SHOAppRoutes.cartStack);
                         },
-                        onAddToBag: () {
+                        onAddToBag: () async {
                           if (!SHOAuthGuard.requireAuth(context, ref)) return;
                           final activityLine = activity != null
                               ? buildCheckoutActivityLineFromActivity(
@@ -364,13 +380,17 @@ class _SHOProductDetailPageState extends ConsumerState<SHOProductDetailPage>
                                   activity: activity,
                                 )
                               : null;
-                          SHOSkuSheet.show(
+                          final added = await SHOSkuSheet.show(
                             context,
                             detail,
                             ref: ref,
                             checkoutActivityLine: activityLine,
                             sessionEndAt: activity?.sessionEndAt,
                           );
+                          if (!mounted || !added) return;
+                          await _playAddToCartFly(detail.imageUrl);
+                          if (!mounted) return;
+                          SHOAppToast.success(l10n.productAddToBagSuccess);
                         },
                         onBuyNow: () {
                           if (!SHOAuthGuard.requireAuth(context, ref)) return;
@@ -553,6 +573,7 @@ class _SHOProductDetailTopBarState
 
 class _SHOProductDetailFooter extends StatelessWidget {
   const _SHOProductDetailFooter({
+    required this.cartIconKey,
     required this.cartCount,
     required this.onCustomerService,
     required this.onCart,
@@ -560,6 +581,7 @@ class _SHOProductDetailFooter extends StatelessWidget {
     required this.onBuyNow,
   });
 
+  final GlobalKey cartIconKey;
   final int cartCount;
   final VoidCallback onCustomerService;
   final VoidCallback onCart;
@@ -593,6 +615,7 @@ class _SHOProductDetailFooter extends StatelessWidget {
               ),
               const SizedBox(width: SHOAppSpacing.xs),
               SHOFooterIconAction(
+                key: cartIconKey,
                 icon: Icons.shopping_bag_outlined,
                 label: l10n.productCartShort,
                 badge: cartCount,

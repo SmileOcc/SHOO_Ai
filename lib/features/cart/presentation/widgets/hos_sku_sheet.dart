@@ -43,7 +43,8 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
   final int initialQuantity;
   final int? maxStock;
 
-  static Future<void> show(
+  /// 展示 SKU 面板。加入购物袋成功时返回 `true`（立即购买 / 改规格返回 `false`）。
+  static Future<bool> show(
     BuildContext context,
     SHOProductDetail product, {
     SHOSkuSheetIntent intent = SHOSkuSheetIntent.addToCart,
@@ -54,12 +55,12 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
     int initialQuantity = 1,
     int? maxStock,
     required WidgetRef ref,
-  }) {
+  }) async {
     if (!SHOAuthGuard.requireAuth(context, ref)) {
-      return Future.value();
+      return false;
     }
 
-    return SHOAppDialog.showBottomSheet(
+    final result = await SHOAppDialog.showBottomSheet<bool>(
       context,
       isScrollControlled: true,
       child: SHOSkuSheet(
@@ -73,6 +74,7 @@ class SHOSkuSheet extends ConsumerStatefulWidget {
         maxStock: maxStock,
       ),
     );
+    return result ?? false;
   }
 
   /// 从「尺码 M」/「Size M」解析尺码码。
@@ -122,7 +124,7 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
             expectedProductId: widget.product.id,
           );
       if (!mounted) return;
-      Navigator.pop(context);
+      Navigator.pop(context, false);
       return;
     }
 
@@ -135,9 +137,9 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
           sessionEndAt: widget.sessionEndAt,
         );
     if (!mounted) return;
-    Navigator.pop(context);
 
     if (widget.intent == SHOSkuSheetIntent.buyNow) {
+      Navigator.pop(context, false);
       final line = widget.checkoutActivityLine;
       if (line != null) {
         setCheckoutActivityLine(ref, line);
@@ -146,9 +148,8 @@ class _SHOSkuSheetState extends ConsumerState<SHOSkuSheet> {
       return;
     }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.productAddToBagSuccess)));
+    // 加购成功：交给调用方播放飞入动画后再提示。
+    Navigator.pop(context, true);
   }
 
   @override
