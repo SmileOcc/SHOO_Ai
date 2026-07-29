@@ -463,6 +463,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareWechatMock => 'WeChat share (mock)';
 
   @override
+  String get shareMoments => 'Moments';
+
+  @override
+  String get shareWeibo => 'Weibo';
+
+  @override
+  String get shareQQ => 'QQ';
+
+  @override
+  String get shareFacebook => 'Facebook';
+
+  @override
+  String get shareTwitter => 'Twitter';
+
+  @override
+  String get shareSaveImage => 'Save image';
+
+  @override
+  String get shareCancel => 'Cancel';
+
+  @override
+  String get shareFailed => 'Share failed. Please try again.';
+
+  @override
   String get shareMore => 'More options';
 
   @override

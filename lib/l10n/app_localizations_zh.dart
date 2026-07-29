@@ -453,6 +453,30 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareWechatMock => '微信分享（Mock）';
 
   @override
+  String get shareMoments => '朋友圈';
+
+  @override
+  String get shareWeibo => '微博';
+
+  @override
+  String get shareQQ => 'QQ';
+
+  @override
+  String get shareFacebook => 'Facebook';
+
+  @override
+  String get shareTwitter => 'Twitter';
+
+  @override
+  String get shareSaveImage => '保存图片';
+
+  @override
+  String get shareCancel => '取消';
+
+  @override
+  String get shareFailed => '分享失败，请稍后重试';
+
+  @override
   String get shareMore => '更多';
 
   @override

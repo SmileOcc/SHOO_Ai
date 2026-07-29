@@ -25,6 +25,40 @@ class SHOShareService {
     SHOAppLogger.i('Shared text');
   }
 
+  /// 调起系统原生分享面板（标题 + 链接）。
+  Future<void> shareViaSystem({
+    required String title,
+    required String link,
+  }) async {
+    await Share.share('$title\n$link', subject: title);
+    SHOAppLogger.i('Shared via system: $title');
+    final productId = _productIdFromLink(link);
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.shareProduct,
+      {'product_id': productId, 'channel': 'system'},
+    );
+  }
+
+  /// 「更多」：同样走系统分享，附带更完整文案，便于挑任意 App。
+  Future<void> shareMoreOptions({
+    required String title,
+    required String link,
+  }) async {
+    final text = '$title\n$link';
+    await Share.share(text, subject: title);
+    SHOAppLogger.i('Shared more options: $title');
+    final productId = _productIdFromLink(link);
+    await SHOAnalyticsManager.instance.trackEvent(
+      SHOAnalyticsRegistry.shareProduct,
+      {'product_id': productId, 'channel': 'more'},
+    );
+  }
+
+  String _productIdFromLink(String link) {
+    if (!link.contains('/product/')) return 'unknown';
+    return link.split('/product/').last.split('?').first;
+  }
+
   Future<void> copyLink(String link) async {
     await Clipboard.setData(ClipboardData(text: link));
     SHOAppLogger.i('Copied link');
@@ -38,18 +72,15 @@ class SHOShareService {
     if (files != null && files.isNotEmpty) {
       await Share.shareXFiles(files, text: '$title\n$link', subject: title);
     } else {
-      await Share.share('$title\n$link', subject: title);
+      await shareViaSystem(title: title, link: link);
+      return;
     }
     SHOAppLogger.i('Shared product: $title');
-    final productId = link.contains('/product/')
-        ? link.split('/product/').last.split('?').first
-        : 'unknown';
+    final productId = _productIdFromLink(link);
     await SHOAnalyticsManager.instance
         .trackEvent(SHOAnalyticsRegistry.shareProduct, {
           'product_id': productId,
-          'channel': files != null && files.isNotEmpty
-              ? 'card_share'
-              : 'text_share',
+          'channel': 'card_share',
         });
   }
 

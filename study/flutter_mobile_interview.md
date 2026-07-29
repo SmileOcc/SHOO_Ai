@@ -1304,3 +1304,32 @@ lerpDouble 是 Flutter 提供的 线性插值函数 ，全称是 L inear Int erp
   24 ┤       ●
      └────────●──→ 时间(t)
        0    0.5  1.0
+
+### 设计底部弹出时 Material 的作用
+属性 作用 说明 
+color 设置背景色 使用 context.shoSurface 获取主题定义的表面色，保持视觉一致性 
+borderRadius 设置圆角 顶部两个角使用 24px 圆角，符合底部弹出面板的设计规范 
+clipBehavior 设置裁剪方式 Clip.antiAlias 确保圆角边缘平滑，避免锯齿
+
+### 为什么不用 Container？
+对比项  - Material  - Container 
+阴影 - 自动支持 elevation  - 需要手动配置 boxShadow 
+主题集成 - 自动继承主题颜色  - 需要手动指定颜色 
+Material 特性 - 支持 type 、 elevation - 不支持 
+圆角裁剪 - 内置裁剪支持  -  需要配合 ClipRRect
+
+### 为什么使用 LayoutBuilder？
+### 核心原因
+LayoutBuilder 提供父组件的布局约束信息 ，用于 动态计算分享入口的尺寸 ，实现响应式布局。
+```dart
+return LayoutBuilder(
+  builder: (context, constraints) {
+    final itemWidth = (constraints.maxWidth - hPad) / visibleSlots;
+    final iconSize = (itemWidth * 0.52).clamp(40.0, 56.0);
+    final rowHeight = iconSize + 8 + 32;
+```
+### LayoutBuilder 的工作原理
+属性 说明 
+constraints 父组件传递的布局约束，包含 maxWidth 、 maxHeight 等 
+constraints.maxWidth 父组件允许的最大宽度（即屏幕可用宽度） 
+builder 回调函数，接收约束信息并返回子组件

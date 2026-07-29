@@ -55,10 +55,11 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
 
   Future<void> _reportLogs(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     if (_logBytes == 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.settingsReportLogsEmpty)));
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsReportLogsEmpty)),
+      );
       return;
     }
     final ok = await SHOAppDialog.confirm(
@@ -69,13 +70,19 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
       cancelLabel: l10n.dialogCancel,
     );
     if (!ok || !mounted) return;
-    final shared = await ref.read(logReportServiceProvider).reportLogs();
+    final shared = await ref
+        .read(logReportServiceProvider)
+        .reportLogs(context: this.context);
     if (!mounted) return;
-    if (shared) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.settingsReportLogsSuccess)));
-    }
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          shared
+              ? l10n.settingsReportLogsSuccess
+              : l10n.settingsReportLogsEmpty,
+        ),
+      ),
+    );
   }
 
   String _themeLabel(AppLocalizations l10n, ThemeMode mode) {

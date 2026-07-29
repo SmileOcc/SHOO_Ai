@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 
 /// 本地日志缓存与导出（开发包缓存全部级别；正式包不缓存 DEBUG）。
 class SHOAppLogManager {
@@ -25,13 +25,19 @@ class SHOAppLogManager {
     _ready = true;
   }
 
+  Future<void> _ensureReady() async {
+    if (_ready && _file != null) return;
+    await init();
+  }
+
   bool shouldCacheLevel(String level) {
     if (kReleaseMode && level == 'DEBUG') return false;
     return true;
   }
 
   Future<void> append(String level, String message) async {
-    if (!_ready || _file == null || !shouldCacheLevel(level)) return;
+    await _ensureReady();
+    if (_file == null || !shouldCacheLevel(level)) return;
     try {
       final line = '${DateTime.now().toIso8601String()} [$level] $message\n';
       await _rotateIfNeeded(line.length);
@@ -50,6 +56,7 @@ class SHOAppLogManager {
   }
 
   Future<int> cachedByteSize() async {
+    await _ensureReady();
     if (_file == null || !await _file!.exists()) return 0;
     var total = await _file!.length();
     final backup = File('${_file!.path}.1');
@@ -57,12 +64,38 @@ class SHOAppLogManager {
     return total;
   }
 
+  /// 导出到临时目录副本，避免直接分享应用沙盒内正在写入的文件。
   Future<File?> exportFile() async {
+    await _ensureReady();
     if (_file == null || !await _file!.exists()) return null;
-    return _file;
+
+    final tempDir = await getTemporaryDirectory();
+    final stamp = DateTime.now()
+        .toIso8601String()
+        .replaceAll(':', '-')
+        .replaceAll('.', '-');
+    final out = File('${tempDir.path}/shoo_app_logs_$stamp.txt');
+
+    final sink = out.openWrite();
+    try {
+      final backup = File('${_file!.path}.1');
+      if (await backup.exists()) {
+        await sink.addStream(backup.openRead());
+        sink.writeln();
+        sink.writeln('----- rotated backup above / current below -----');
+        sink.writeln();
+      }
+      await sink.addStream(_file!.openRead());
+    } finally {
+      await sink.close();
+    }
+
+    if (!await out.exists() || await out.length() == 0) return null;
+    return out;
   }
 
   Future<void> clear() async {
+    await _ensureReady();
     if (_file == null) return;
     if (await _file!.exists()) await _file!.delete();
     final backup = File('${_file!.path}.1');

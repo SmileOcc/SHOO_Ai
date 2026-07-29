@@ -962,6 +962,54 @@ abstract class AppLocalizations {
   /// **'WeChat share (mock)'**
   String get shareWechatMock;
 
+  /// No description provided for @shareMoments.
+  ///
+  /// In en, this message translates to:
+  /// **'Moments'**
+  String get shareMoments;
+
+  /// No description provided for @shareWeibo.
+  ///
+  /// In en, this message translates to:
+  /// **'Weibo'**
+  String get shareWeibo;
+
+  /// No description provided for @shareQQ.
+  ///
+  /// In en, this message translates to:
+  /// **'QQ'**
+  String get shareQQ;
+
+  /// No description provided for @shareFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get shareFacebook;
+
+  /// No description provided for @shareTwitter.
+  ///
+  /// In en, this message translates to:
+  /// **'Twitter'**
+  String get shareTwitter;
+
+  /// No description provided for @shareSaveImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Save image'**
+  String get shareSaveImage;
+
+  /// No description provided for @shareCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get shareCancel;
+
+  /// No description provided for @shareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Share failed. Please try again.'**
+  String get shareFailed;
+
   /// No description provided for @shareMore.
   ///
   /// In en, this message translates to:
