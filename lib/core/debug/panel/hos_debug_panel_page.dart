@@ -28,8 +28,10 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final buildConfig = SHOAppConfig.instance;
     final config = ref.watch(effectiveConfigProvider);
     final override = ref.watch(runtimeEnvOverrideProvider);
+    final isBuildDefault = override == null;
     final showEnvBadge = ref.watch(showEnvBadgeProvider);
     final consoleLogEnabled = ref.watch(consoleLogEnabledProvider);
     final pageLoadRecords = ref
@@ -50,21 +52,46 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: SHOAppSpacing.xl),
+            _SHOCurrentCallCard(
+              title: l10n.debugCurrentCallTitle,
+              sourceLabel: isBuildDefault
+                  ? l10n.debugCurrentCallSourceBuild
+                  : l10n.debugCurrentCallSourceOverride,
+              isBuildDefault: isBuildDefault,
+              envLabel: l10n.debugCurrentCallEnv,
+              envValue:
+                  '${config.environment.label} (${config.environment.badgeLabel})',
+              apiLabel: l10n.debugCurrentCallApi,
+              apiValue: config.apiBaseUrl,
+              mockLabel: l10n.debugCurrentCallMock,
+              mockValue: '${config.useMockApi}',
+              buildDefaultHint: isBuildDefault
+                  ? null
+                  : l10n.debugBuildDefaultHint(
+                      buildConfig.environment.label,
+                      buildConfig.apiBaseUrl,
+                    ),
+            ),
+            const SizedBox(height: SHOAppSpacing.xl),
             Text(
               l10n.debugEnvSection,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: SHOAppSpacing.xs),
             Text(
-              l10n.debugEnvRestarting,
+              l10n.debugEnvPresetHint,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: SHOAppSpacing.md),
             ...SHOAppEnvironment.values.map((env) {
               final selected = (override ?? config.environment) == env;
+              final presetUrl = SHOAppConfig.defaultApiBaseUrl(env);
+              final subtitle = selected && isBuildDefault
+                  ? config.apiBaseUrl
+                  : presetUrl;
               return RadioListTile<SHOAppEnvironment>(
                 title: Text('${env.label} (${env.badgeLabel})'),
-                subtitle: Text(SHOAppConfig.defaultApiBaseUrl(env)),
+                subtitle: Text(subtitle),
                 value: env,
                 groupValue: override ?? config.environment,
                 onChanged: (v) {
@@ -79,6 +106,10 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
             }),
             ListTile(
               title: Text(l10n.debugResetEnv),
+              subtitle: Text(
+                '${buildConfig.environment.label} · ${buildConfig.apiBaseUrl}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
               trailing: const Icon(Icons.restore),
               onTap: () =>
                   ref.read(runtimeEnvOverrideProvider.notifier).resetOverride(),
@@ -267,6 +298,95 @@ class _SHOInfoTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title: Text(label),
       trailing: Text(value, style: Theme.of(context).textTheme.bodySmall),
+    );
+  }
+}
+
+class _SHOCurrentCallCard extends StatelessWidget {
+  const _SHOCurrentCallCard({
+    required this.title,
+    required this.sourceLabel,
+    required this.isBuildDefault,
+    required this.envLabel,
+    required this.envValue,
+    required this.apiLabel,
+    required this.apiValue,
+    required this.mockLabel,
+    required this.mockValue,
+    this.buildDefaultHint,
+  });
+
+  final String title;
+  final String sourceLabel;
+  final bool isBuildDefault;
+  final String envLabel;
+  final String envValue;
+  final String apiLabel;
+  final String apiValue;
+  final String mockLabel;
+  final String mockValue;
+  final String? buildDefaultHint;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final titleStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
+      fontWeight: FontWeight.w700,
+    );
+    final labelStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: scheme.onSurfaceVariant,
+    );
+    final valueStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w600,
+    );
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(SHOAppSpacing.lg),
+      decoration: BoxDecoration(
+        color: isBuildDefault
+            ? scheme.surfaceContainerHighest
+            : scheme.primaryContainer,
+        borderRadius: BorderRadius.circular(SHOAppSpacing.sm),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isBuildDefault ? Icons.cloud_outlined : Icons.bug_report,
+                size: 18,
+                color: isBuildDefault
+                    ? scheme.onSurfaceVariant
+                    : scheme.onPrimaryContainer,
+              ),
+              const SizedBox(width: SHOAppSpacing.sm),
+              Expanded(child: Text(title, style: titleStyle)),
+              Text(
+                sourceLabel,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isBuildDefault
+                      ? scheme.onSurfaceVariant
+                      : scheme.onPrimaryContainer,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: SHOAppSpacing.md),
+          Text('$envLabel · $envValue', style: valueStyle),
+          const SizedBox(height: SHOAppSpacing.xs),
+          Text(apiLabel, style: labelStyle),
+          SelectableText(apiValue, style: valueStyle),
+          const SizedBox(height: SHOAppSpacing.xs),
+          Text('$mockLabel · $mockValue', style: labelStyle),
+          if (buildDefaultHint != null) ...[
+            const SizedBox(height: SHOAppSpacing.sm),
+            Text(buildDefaultHint!, style: labelStyle),
+          ],
+        ],
+      ),
     );
   }
 }

@@ -26,6 +26,7 @@ class SHOAppShell extends ConsumerStatefulWidget {
 
 class _SHOAppShellState extends ConsumerState<SHOAppShell> {
   var _offlineBannerDismissed = false;
+  var _localServerBannerDismissed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,15 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
     ref.listen<bool>(isOnlineProvider, (previous, next) {
       if (next && _offlineBannerDismissed) {
         setState(() => _offlineBannerDismissed = false);
+      }
+    });
+    ref.listen<AsyncValue<bool>>(localServerReachableProvider, (
+      previous,
+      next,
+    ) {
+      final reachable = next.maybeWhen(data: (ok) => ok, orElse: () => false);
+      if (reachable && _localServerBannerDismissed) {
+        setState(() => _localServerBannerDismissed = false);
       }
     });
 
@@ -43,9 +53,14 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
 
     final showBadge = SHOAppConfig.instance.isDebugPanelEnabled && showEnvBadge;
 
+    final localServerDown = localServerAsync.maybeWhen(
+      data: (ok) => !ok,
+      orElse: () => false,
+    );
     final showLocalServerBanner =
         config.environment.usesLocalServer &&
-        localServerAsync.maybeWhen(data: (ok) => !ok, orElse: () => false);
+        localServerDown &&
+        !_localServerBannerDismissed;
     final showOfflineBanner = !isOnline && !_offlineBannerDismissed;
 
     final topInset = MediaQuery.paddingOf(context).top;
@@ -69,6 +84,9 @@ class _SHOAppShellState extends ConsumerState<SHOAppShell> {
                         color: SHOAppColors.error.withValues(alpha: 0.92),
                         icon: Icons.dns_outlined,
                         message: l10n.localServerBanner,
+                        onDismiss: () => setState(
+                          () => _localServerBannerDismissed = true,
+                        ),
                       ),
                     if (showOfflineBanner)
                       _ShellTopBanner(

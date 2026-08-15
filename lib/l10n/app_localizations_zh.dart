@@ -317,6 +317,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugEnvRestarting => '正在切换环境并重启应用…';
 
   @override
+  String get debugCurrentCallTitle => '当前实际调用';
+
+  @override
+  String get debugCurrentCallSourceBuild => '构建默认';
+
+  @override
+  String get debugCurrentCallSourceOverride => '调试覆盖';
+
+  @override
+  String get debugCurrentCallEnv => '环境';
+
+  @override
+  String get debugCurrentCallApi => 'API';
+
+  @override
+  String get debugCurrentCallMock => 'Mock';
+
+  @override
+  String debugBuildDefaultHint(String env, String url) {
+    return '构建默认：$env · $url';
+  }
+
+  @override
+  String get debugEnvPresetHint =>
+      '下方为环境预设地址；与构建时 --dart-define 不一致时，以顶部「当前实际调用」为准。';
+
+  @override
   String get debugShowEnvBadge => '显示环境角标';
 
   @override

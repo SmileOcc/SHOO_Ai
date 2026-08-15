@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  phone        String?
+  nickname     String
+  avatarUrl    String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       Order[]
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("super_admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  link      String
+  title     String
+  sort      Int      @default(0)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Full category tree document returned by GET /categories
+model CategoryTree {
+  id        String   @id @default("default")
+  payload   Json
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id             String   @id
+  categoryId     String   @default("")
+  title          String
+  imageUrl       String
+  price          Int
+  originalPrice  Int
+  discountLabel  String   @default("")
+  rating         Float    @default(0)
+  soldCount      Int      @default(0)
+  description    String   @default("")
+  images         Json     @default("[]")
+  reviewCount    Int      @default(0)
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([enabled])
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  orderNo    String      @unique
+  userId     String?
+  user       User?       @relation(fields: [userId], references: [id])
+  status     String
+  totalCents Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  order        Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  title        String
+  imageUrl     String
+  price        Int
+  quantity     Int
+  variantLabel String @default("")
+}
+
+/// JSON documents synced from `assets/mock/*.json` for App API parity.
+model AppDocument {
+  key       String   @id
+  payload   Json
+  updatedAt DateTime @updatedAt
+}
+
+model FlashSaleFollow {
+  id        String   @id @default(cuid())
+  sessionId String
+  productId String
+  title     String   @default("")
+  imageUrl  String   @default("")
+  createdAt DateTime @default(now())
+
+  @@unique([sessionId, productId])
+  @@index([sessionId])
+}
+
+model AfterSale {
+  id           String   @id @default(cuid())
+  orderId      String
+  orderNo      String   @default("")
+  type         String
+  status       String   @default("pending")
+  reason       String   @default("")
+  productTitle String   @default("")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

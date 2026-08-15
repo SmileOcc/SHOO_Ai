@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "title": "Recommended",
+    "mode": "latest",
+    "categoryId": "",
+    "productIds": [],
+    "pageSize": 50
+  }
+}

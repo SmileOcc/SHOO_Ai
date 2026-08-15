@@ -14,8 +14,7 @@ import 'package:shoo/core/widgets/hos_product_card.dart';
 import 'package:shoo/core/widgets/hos_quick_entry_grid.dart';
 import 'package:shoo/core/widgets/hos_skeleton_box.dart';
 import 'package:shoo/features/category/domain/entities/hos_category.dart';
-import 'package:shoo/features/category/presentation/state/hos_category_controller.dart';
-import 'package:shoo/features/flash_sale/domain/hos_flash_sale_activities.dart';
+import 'package:shoo/features/home/domain/entities/hos_home_config.dart';
 import 'package:shoo/features/home/presentation/state/hos_home_controller.dart';
 
 class SHOHomePage extends SHODataPage<SHOHomeFeed> {
@@ -34,7 +33,6 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
   @override
   void invalidateData(WidgetRef ref) {
     ref.invalidate(homeFeedProvider);
-    ref.invalidate(categoriesProvider);
   }
 
   @override
@@ -53,7 +51,15 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
 
   @override
   Widget buildContent(BuildContext context, WidgetRef ref, SHOHomeFeed feed) {
-    final categoriesAsync = ref.watch(categoriesProvider);
+    final l10n = AppLocalizations.of(context);
+    final sectionTitle = feed.feedConfig.title.trim().isEmpty
+        ? l10n.recommendedTitle
+        : feed.feedConfig.title;
+    final quickItems = feed.quickEntries
+        .map(
+          (e) => SHOCategoryItem(id: e.id, name: e.title, icon: e.icon),
+        )
+        .toList();
 
     return SHOAppPullRefresh(
       onRefresh: () async {
@@ -70,26 +76,31 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
                 const SizedBox(height: SHOAppSpacing.xs),
                 SHOBannerCarousel(banners: feed.banners),
                 const SizedBox(height: SHOAppSpacing.sm),
-                categoriesAsync.when(
-                  data: (categories) => SHOQuickEntryGrid(
-                    items: _homeQuickEntries(categories),
-                    onTap: (item) => _onQuickEntryTap(context, item),
-                  ),
-                  loading: () => const Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SHOAppSpacing.pagePadding,
-                    ),
-                    child: SHOSkeletonBox(height: 90),
-                  ),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
+                if (quickItems.isNotEmpty)
+                  SHOQuickEntryGrid(
+                    items: quickItems,
+                    onTap: (item) {
+                      final entry = feed.quickEntries.firstWhere(
+                        (e) => e.id == item.id,
+                        orElse: () => SHOHomeQuickEntry(
+                          id: item.id,
+                          title: item.name,
+                          icon: item.icon,
+                          link: '/',
+                        ),
+                      );
+                      _onQuickEntryTap(context, entry);
+                    },
+                  )
+                else
+                  const SizedBox.shrink(),
                 const SizedBox(height: SHOAppSpacing.lg),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: SHOAppSpacing.pagePadding,
                   ),
                   child: Text(
-                    AppLocalizations.of(context).recommendedTitle,
+                    sectionTitle,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.6,
@@ -127,30 +138,24 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
   }
 }
 
-List<SHOCategoryItem> _homeQuickEntries(List<SHOCategoryItem> categories) {
-  final rest = categories.length > 2
-      ? categories.sublist(2)
-      : const <SHOCategoryItem>[];
-  return [
-    const SHOCategoryItem(id: 'home-flash', name: '抢购活动', icon: '⚡'),
-    const SHOCategoryItem(id: 'home-discount', name: '折扣活动', icon: '🏷️'),
-    ...rest,
-  ];
-}
+void _onQuickEntryTap(BuildContext context, SHOHomeQuickEntry entry) {
+  final raw = entry.link.trim();
+  if (raw.isEmpty) return;
 
-void _onQuickEntryTap(BuildContext context, SHOCategoryItem item) {
-  switch (item.id) {
-    case 'home-flash':
-      context.push(
-        SHOAppRoutes.flashSaleFor(activityId: SHOFlashSaleActivities.flash),
-      );
-    case 'home-discount':
-      context.push(
-        SHOAppRoutes.flashSaleFor(activityId: SHOFlashSaleActivities.discount),
-      );
-    default:
-      context.go(SHOAppRoutes.category);
+  final uri = Uri.tryParse(raw);
+  if (uri == null) {
+    context.push(raw);
+    return;
   }
+
+  final path = uri.path.isEmpty ? '/' : uri.path;
+  if (path == SHOAppRoutes.category || path == '/category') {
+    context.go(SHOAppRoutes.category);
+    return;
+  }
+
+  final location = uri.hasQuery ? '$path?${uri.query}' : path;
+  context.push(location);
 }
 
 class _SHOHomeSkeleton extends StatelessWidget {
@@ -158,25 +163,54 @@ class _SHOHomeSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
-      children: const [
-        SHOSkeletonBox(height: 140),
-        SizedBox(height: SHOAppSpacing.lg),
-        SHOSkeletonBox(height: 90),
-        SizedBox(height: SHOAppSpacing.lg),
-        SHOSkeletonBox(height: 16, width: 180),
-        SizedBox(height: SHOAppSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox()),
+    return CustomScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: SHOAppSpacing.xs),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.pagePadding,
+                ),
+                child: SHOSkeletonBox(height: 160),
+              ),
+              const SizedBox(height: SHOAppSpacing.sm),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.pagePadding,
+                ),
+                child: SHOSkeletonBox(height: 90),
+              ),
+              const SizedBox(height: SHOAppSpacing.lg),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SHOAppSpacing.pagePadding,
+                ),
+                child: SHOSkeletonBox(height: 20, width: 120),
+              ),
+              const SizedBox(height: SHOAppSpacing.md),
+            ],
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: SHOAppSpacing.pagePadding,
+          ),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: SHOAppSpacing.lg,
+              crossAxisSpacing: SHOAppSpacing.lg,
+              childAspectRatio: SHOProductCard.gridChildAspectRatio,
             ),
-            SizedBox(width: SHOAppSpacing.gridGap),
-            Expanded(
-              child: AspectRatio(aspectRatio: 0.52, child: SHOSkeletonBox()),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => const SHOSkeletonBox(),
+              childCount: 4,
             ),
-          ],
+          ),
         ),
       ],
     );

@@ -79,6 +79,16 @@ abstract final class SHOMockRouteRegistry {
     ),
     const SHOMockRouteEntry(
       method: 'GET',
+      path: '/marketing/home-quick-entries',
+      asset: 'assets/mock/home_quick_entries.json',
+    ),
+    const SHOMockRouteEntry(
+      method: 'GET',
+      path: '/marketing/home-feed-config',
+      asset: 'assets/mock/home_feed_config.json',
+    ),
+    const SHOMockRouteEntry(
+      method: 'GET',
       path: '/marketing/cart-marquee',
       asset: 'assets/mock/cart_marquee.json',
     ),

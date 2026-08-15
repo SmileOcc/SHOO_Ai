@@ -1,0 +1,217 @@
+/// WebView 功能调试页 HTML 源码（权威副本）。
+///
+/// 运行时由 [SHOWebViewConfig.debug] 通过 [htmlContent] 加载。
+/// 同步副本：`assets/webview/debug.html`（便于浏览器直接预览）。
+///
+/// 修改本文件后请同步更新 assets 副本，或运行：
+/// `dart run tool/sync_webview_debug_html.dart`（若已添加）。
+library;
+
+/// 百宝箱 → Web 调试主页面。
+const String kSHOWebViewDebugHtml = r'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WebView 功能调试</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #f5f5f5; padding: 16px; }
+    h2 { font-size: 18px; margin: 16px 0 8px; border-left: 4px solid #4CAF50; padding-left: 8px; }
+    .section { background: white; border-radius: 8px; padding: 12px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .btn { display: inline-block; padding: 10px 16px; margin: 4px; background: #1976D2; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; }
+    .btn:active { opacity: 0.8; }
+    .btn.red { background: #D32F2F; }
+    .btn.green { background: #388E3C; }
+    .btn.orange { background: #F57C00; }
+    .btn.purple { background: #7B1FA2; }
+    .info { font-size: 13px; color: #666; margin: 4px 0; word-break: break-all; }
+    .long-content { padding: 20px; background: #FFF9C4; border-radius: 4px; margin: 12px 0; }
+    a { color: #1976D2; text-decoration: underline; word-break: break-all; }
+    hr { margin: 12px 0; border: 0.5px solid #e0e0e0; }
+    .promo-img { width: 100%; max-width: 320px; height: 120px; border-radius: 8px; object-fit: cover; cursor: pointer; margin: 8px 0; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; }
+    .promo-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .promo-card { flex: 1; min-width: 140px; height: 100px; border-radius: 8px; background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; cursor: pointer; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <div class="section">
+    <h2>📄 页面信息</h2>
+    <div class="info">当前标题：<b id="pageTitle">加载中...</b></div>
+    <div class="info">当前时间：<span id="currentTime"></span>（用于验证缓存刷新）</div>
+    <div class="info">Cookie 内容：<b id="cookieDisplay"></b></div>
+    <div class="info">滚动位置：<span id="scrollY">0</span>px</div>
+    <button class="btn" onclick="updateInfo()">刷新信息</button>
+  </div>
+
+  <div class="section">
+    <h2>🔗 JavaScript Bridge（H5 → Flutter）</h2>
+    <p class="info">点击按钮发送消息到 Flutter，观察 Toast / 日志</p>
+    <button class="btn" onclick="sendBridge('hello')">发送 hello</button>
+    <button class="btn" onclick="sendBridge('toast', '来自 H5 的 Toast')">触发 Toast</button>
+    <button class="btn" onclick="sendBridge('pay')">发送支付事件</button>
+    <button class="btn green" onclick="sendBridge('close')">关闭页面</button>
+    <button class="btn orange" onclick="sendBridge('custom', JSON.stringify({action:'share', title:'调试分享'}))">发送自定义 JSON</button>
+    <br>
+    <button class="btn" onclick="requestFlutterAction()">Flutter → H5 evaluateJavaScript</button>
+    <div id="flutterResponse" class="info" style="color:#388E3C; margin-top:8px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>🧭 导航与拦截</h2>
+    <p class="info">测试 URL 拦截、重定向、系统浏览器、Deep Link 原生导航、返回键、错误页</p>
+
+    <p class="info"><b>外链 / 拦截</b></p>
+    <a href="https://www.example.com">普通外链（example.com，应用内打开）</a><br>
+    <a href="https://payment.alipay.com/mock">模拟支付链接（应触发系统浏览器）</a><br>
+    <a href="http://blocked.test">被拦截 URL（应被阻止）</a><br>
+    <a href="#section2">页面内锚点（测试返回键）</a><br>
+    <button class="btn" onclick="location.href='https://www.google.com'">跳转 Google</button>
+    <button class="btn red" onclick="location.href='http://error.test'">跳转错误 URL</button>
+
+    <hr>
+    <p class="info"><b>重定向</b>（WebView 应跟随跳转并在应用内打开目标页）</p>
+    <a href="redirect_baidu.html">本地重定向页 → 百度</a><br>
+    <a href="https://httpbin.org/redirect-to?url=https%3A%2F%2Fwww.baidu.com">HTTP 302 重定向 → 百度（需网络）</a><br>
+    <button class="btn orange" onclick="location.href='redirect_baidu.html'">按钮触发重定向到百度</button>
+
+    <hr>
+    <p class="info"><b>原生导航（Deep Link）</b></p>
+    <a href="javascript:void(0)" onclick="openDeepLink('https://shoo.app/profile')">个人中心</a><br>
+    <a href="javascript:void(0)" onclick="openDeepLink('https://shoo.app/category/products?leafId=c1-g1-l1&amp;title=%E8%B0%83%E8%AF%95%E5%95%86%E5%93%81%E5%88%97%E8%A1%A8')">商品列表（leafId=c1-g1-l1&amp;title=调试商品列表）</a><br>
+    <button class="btn green" onclick="openDeepLink('https://shoo.app/profile')">Deep Link · 个人中心</button>
+    <button class="btn" onclick="openDeepLink('https://shoo.app/category/products?leafId=c1-g1-l1&amp;title=%E8%B0%83%E8%AF%95%E5%95%86%E5%93%81%E5%88%97%E8%A1%A8')">Deep Link · 商品列表（带参数）</button>
+
+    <hr>
+    <p class="info">内部链接 / 重定向后，系统返回键应先回退网页历史；Deep Link 会打开原生页面</p>
+  </div>
+
+  <div class="section">
+    <h2>🔗 Deep Link（活动 / 广告点击统一协议）</h2>
+    <p class="info">以下入口通过 Deep Link 跳转原生页面；订单需登录校验</p>
+    <div class="promo-row">
+      <div class="promo-card" onclick="openDeepLink('https://shoo.app/product/c1-g1-l1-p1')">
+        活动图 · 商品详情<br><small>product/c1-g1-l1-p1</small>
+      </div>
+      <div class="promo-card" style="background:linear-gradient(135deg,#4facfe,#00f2fe)" onclick="openDeepLink('https://shoo.app/category/products?leafId=c1-g1-l1&title=%E5%8F%8C11%E6%B4%BB%E5%8A%A8%E5%95%86%E5%93%81')">
+        活动图 · 商品列表<br><small>category/products</small>
+      </div>
+    </div>
+    <button class="btn purple" onclick="openDeepLink('https://shoo.app/orders')">我的订单（需登录）</button>
+    <button class="btn" onclick="openDeepLink('shoo://product/c1-g1-l1-p2')">Custom Scheme 商品</button>
+    <button class="btn green" onclick="openDeepLink('/flash-sale')">App 内路径 /flash-sale</button>
+  </div>
+
+  <div class="section">
+    <h2>📜 滚动与下拉刷新</h2>
+    <div class="long-content">
+      <p>向下滚动以测试下拉刷新</p>
+      <p style="height: 600px; background: linear-gradient(#FFF9C4, #FFE082); display: flex; align-items: center; justify-content: center; color: #666;">
+        长内容区域——滚动到顶部后可下拉触发刷新
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⏳ 加载状态 & 超时</h2>
+    <p class="info">可点击模拟慢资源加载，观察进度条与超时（timeout=30s）</p>
+    <button class="btn orange" onclick="simulateSlowLoad()">模拟慢加载</button>
+    <img id="slowImg" style="display:none; width:1px; height:1px;" alt="">
+  </div>
+
+  <div id="section2" class="section" style="background:#E3F2FD;">
+    <h2>📍 锚点目标区域</h2>
+    <p>通过内部锚点跳转后，按返回键应回退到顶部。</p>
+  </div>
+
+  <script>
+    function updateInfo() {
+      document.getElementById('pageTitle').innerText = document.title;
+      document.getElementById('currentTime').innerText = new Date().toLocaleString();
+      document.getElementById('cookieDisplay').innerText = document.cookie || '(无 Cookie)';
+    }
+    updateInfo();
+
+    window.addEventListener('scroll', function() {
+      var y = window.scrollY || document.documentElement.scrollTop;
+      document.getElementById('scrollY').innerText = y;
+      try {
+        if (window.FlutterBridge) {
+          FlutterBridge.postMessage(JSON.stringify({event:'scroll', y: y}));
+        }
+      } catch(e) {}
+    });
+
+    function sendBridge(action, data) {
+      data = data || action;
+      try {
+        if (window.FlutterBridge) {
+          FlutterBridge.postMessage(JSON.stringify({action: action, data: data}));
+        } else {
+          alert('FlutterBridge 未注入');
+        }
+      } catch(e) {
+        alert('Bridge 调用失败: ' + e.message);
+      }
+    }
+
+    function openDeepLink(url) {
+      try {
+        if (window.FlutterBridge) {
+          FlutterBridge.postMessage(JSON.stringify({type: 'deeplink', url: url}));
+        } else {
+          alert('FlutterBridge 未注入，无法跳转：' + url);
+        }
+      } catch(e) {
+        alert(e.message);
+      }
+    }
+
+    function openDeepLinkClick(event, url) {
+      if (event) event.preventDefault();
+      openDeepLink(url);
+      return false;
+    }
+
+    function requestFlutterAction() {
+      try {
+        FlutterBridge.postMessage(JSON.stringify({action:'request_eval', msg:'请 Flutter 更新此页面'}));
+      } catch(e) {
+        alert(e.message);
+      }
+    }
+
+    window.updateFromFlutter = function(message) {
+      document.getElementById('flutterResponse').innerText = '来自 Flutter: ' + message;
+    };
+
+    function simulateSlowLoad() {
+      var img = document.getElementById('slowImg');
+      img.src = 'https://httpbin.org/delay/3';
+      img.style.display = 'block';
+      img.onload = function() { alert('慢资源加载完成'); };
+    }
+  </script>
+</body>
+</html>
+''';
+
+/// 本地重定向页（跳转百度），供调试「重定向」场景。
+const String kSHOWebViewRedirectBaiduHtml = r'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0;url=https://www.baidu.com/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重定向到百度</title>
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f5f5f5; color: #666; }
+  </style>
+</head>
+<body>
+  <p>正在重定向到百度…</p>
+  <script>location.replace('https://www.baidu.com/');</script>
+</body>
+</html>
+''';

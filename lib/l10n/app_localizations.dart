@@ -698,6 +698,54 @@ abstract class AppLocalizations {
   /// **'Switching environment, restarting app…'**
   String get debugEnvRestarting;
 
+  /// No description provided for @debugCurrentCallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active request target'**
+  String get debugCurrentCallTitle;
+
+  /// No description provided for @debugCurrentCallSourceBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Build default'**
+  String get debugCurrentCallSourceBuild;
+
+  /// No description provided for @debugCurrentCallSourceOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug override'**
+  String get debugCurrentCallSourceOverride;
+
+  /// No description provided for @debugCurrentCallEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Env'**
+  String get debugCurrentCallEnv;
+
+  /// No description provided for @debugCurrentCallApi.
+  ///
+  /// In en, this message translates to:
+  /// **'API'**
+  String get debugCurrentCallApi;
+
+  /// No description provided for @debugCurrentCallMock.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock'**
+  String get debugCurrentCallMock;
+
+  /// No description provided for @debugBuildDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Build default: {env} · {url}'**
+  String debugBuildDefaultHint(String env, String url);
+
+  /// No description provided for @debugEnvPresetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Presets below. If they differ from --dart-define, trust “Active request target” above.'**
+  String get debugEnvPresetHint;
+
   /// No description provided for @debugShowEnvBadge.
   ///
   /// In en, this message translates to:

@@ -321,6 +321,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugEnvRestarting => 'Switching environment, restarting app…';
 
   @override
+  String get debugCurrentCallTitle => 'Active request target';
+
+  @override
+  String get debugCurrentCallSourceBuild => 'Build default';
+
+  @override
+  String get debugCurrentCallSourceOverride => 'Debug override';
+
+  @override
+  String get debugCurrentCallEnv => 'Env';
+
+  @override
+  String get debugCurrentCallApi => 'API';
+
+  @override
+  String get debugCurrentCallMock => 'Mock';
+
+  @override
+  String debugBuildDefaultHint(String env, String url) {
+    return 'Build default: $env · $url';
+  }
+
+  @override
+  String get debugEnvPresetHint =>
+      'Presets below. If they differ from --dart-define, trust “Active request target” above.';
+
+  @override
   String get debugShowEnvBadge => 'Show environment badge';
 
   @override

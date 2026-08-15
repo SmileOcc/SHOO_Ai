@@ -8,7 +8,8 @@ abstract final class SHORsaApiHelper {
     required SHOCryptoService crypto,
     required Object plainBody,
   }) async {
-    if (config.useMockApi) {
+    // Mock 与本地 Platform API（Nest）均不解密 RSA，发送明文。
+    if (config.useMockApi || config.environment.usesLocalServer) {
       return (body: plainBody, headers: <String, dynamic>{});
     }
     final envelope = await crypto.encryptRsa(plainBody);

@@ -116,6 +116,20 @@
   "debugEnvSection": "Environment",
   "debugResetEnv": "Reset to build default",
   "debugEnvRestarting": "Switching environment, restarting app…",
+  "debugCurrentCallTitle": "Active request target",
+  "debugCurrentCallSourceBuild": "Build default",
+  "debugCurrentCallSourceOverride": "Debug override",
+  "debugCurrentCallEnv": "Env",
+  "debugCurrentCallApi": "API",
+  "debugCurrentCallMock": "Mock",
+  "debugBuildDefaultHint": "Build default: {env} · {url}",
+  "@debugBuildDefaultHint": {
+    "placeholders": {
+      "env": { "type": "String" },
+      "url": { "type": "String" }
+    }
+  },
+  "debugEnvPresetHint": "Presets below. If they differ from --dart-define, trust “Active request target” above.",
   "debugShowEnvBadge": "Show environment badge",
   "debugShowEnvBadgeHint": "Display current env at top-right (9pt red text)",
   "debugConsoleLog": "SHOAppLogger console output",

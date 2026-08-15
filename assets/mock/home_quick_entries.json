@@ -1,0 +1,40 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "home-flash",
+        "title": "抢购活动",
+        "icon": "⚡",
+        "link": "/flash-sale?activityId=activity_flash_001",
+        "sort": 0,
+        "enabled": true
+      },
+      {
+        "id": "home-discount",
+        "title": "折扣活动",
+        "icon": "🏷️",
+        "link": "/flash-sale?activityId=activity_discount_001",
+        "sort": 1,
+        "enabled": true
+      },
+      {
+        "id": "home-category",
+        "title": "全部分类",
+        "icon": "🗂️",
+        "link": "/category",
+        "sort": 2,
+        "enabled": true
+      },
+      {
+        "id": "home-coupons",
+        "title": "优惠券",
+        "icon": "🎟️",
+        "link": "/coupons",
+        "sort": 3,
+        "enabled": true
+      }
+    ]
+  }
+}

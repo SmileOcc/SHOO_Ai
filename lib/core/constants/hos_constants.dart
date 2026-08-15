@@ -7,7 +7,7 @@ abstract final class SHOAppConstants {
 
   /// 本地 Mock API Server（`server/` 目录，`npm run dev`）
   /// 资源 URL 统一为 `{base}/{resource}/{fileName}`，如 `/download/xx.pdf`、`/music/xx.zip`
-  static const String defaultLocalApiBaseUrl = 'http://127.0.0.1:3847/api/v1';
+  static const String defaultLocalApiBaseUrl = 'http://127.0.0.1:8080/api/v1';
 
   static const int localMockServerPort = 3847;
 

@@ -14,6 +14,7 @@ import 'package:shoo/core/platform/webview/hos_webview_config.dart';
 import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
 import 'package:shoo/core/platform/webview/hos_webview_route_mapper.dart';
 import 'package:shoo/core/platform/webview/hos_webview_service.dart';
+import 'package:shoo/core/platform/webview/mock/hos_webview_debug_html.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/features/activity_webview/presentation/widgets/webview/hos_webview_error_widget.dart';
@@ -228,6 +229,14 @@ class _SHOGenericWebViewContainerState
   }
 
   Future<void> _loadInitial(WebViewController controller) async {
+    final html = widget.config.htmlContent;
+    if (html != null && html.isNotEmpty) {
+      await controller.loadHtmlString(
+        html,
+        baseUrl: widget.config.htmlBaseUrl,
+      );
+      return;
+    }
     final asset = widget.config.loadAsset;
     if (asset != null && asset.isNotEmpty) {
       await controller.loadFlutterAsset(asset);
@@ -248,6 +257,16 @@ class _SHOGenericWebViewContainerState
   }
 
   Future<NavigationDecision> _resolveNavigation(String url) async {
+    if (_isLocalRedirectBaidu(url)) {
+      unawaited(
+        _controller?.loadHtmlString(
+          kSHOWebViewRedirectBaiduHtml,
+          baseUrl: widget.config.htmlBaseUrl,
+        ),
+      );
+      return NavigationDecision.prevent;
+    }
+
     if (widget.config.navigationPolicy ==
         SHOWebViewNavigationPolicy.whitelist) {
       return SHOActivityWebViewBridge.resolveNavigation(
@@ -295,6 +314,12 @@ class _SHOGenericWebViewContainerState
     }
 
     return NavigationDecision.navigate;
+  }
+
+  bool _isLocalRedirectBaidu(String url) {
+    final lower = url.toLowerCase();
+    return lower.contains('redirect_baidu.html') ||
+        lower.endsWith('/redirect_baidu');
   }
 
   void _deferDeepLink(String url) {

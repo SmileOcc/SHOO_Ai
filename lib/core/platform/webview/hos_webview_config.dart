@@ -1,4 +1,5 @@
 import 'package:shoo/core/platform/webview/hos_webview_navigation_policy.dart';
+import 'package:shoo/core/platform/webview/mock/hos_webview_debug_html.dart';
 
 /// WebView 打开模式。
 enum SHOWebViewMode {
@@ -72,6 +73,8 @@ class SHOWebViewConfig {
   const SHOWebViewConfig({
     this.url = '',
     this.loadAsset,
+    this.htmlContent,
+    this.htmlBaseUrl,
     this.mode = SHOWebViewMode.inApp,
     this.showProgressBar = true,
     this.showAppBar = true,
@@ -94,6 +97,12 @@ class SHOWebViewConfig {
 
   final String url;
   final String? loadAsset;
+
+  /// 内联 HTML 源码（优先于 [loadAsset] / [url]）。
+  final String? htmlContent;
+
+  /// [htmlContent] 的 baseUrl（相对链接解析）。
+  final String? htmlBaseUrl;
   final SHOWebViewMode mode;
   final bool showProgressBar;
   final bool showAppBar;
@@ -134,17 +143,18 @@ class SHOWebViewConfig {
     ),
   ];
 
-  /// 百宝箱 Web 调试页配置（本地 mock HTML）。
+  /// 百宝箱 Web 调试页配置（HTML 源码见 [kSHOWebViewDebugHtml]）。
   factory SHOWebViewConfig.debug() {
-    return SHOWebViewConfig(
-      loadAsset: 'assets/webview/debug.html',
+    return const SHOWebViewConfig(
+      htmlContent: kSHOWebViewDebugHtml,
+      htmlBaseUrl: 'https://shoo.local/webview/',
       title: 'WebView 功能调试',
       mode: SHOWebViewMode.inApp,
       pullToRefresh: true,
       debuggingEnabled: true,
       enableFlutterBridge: true,
       timeout: 30000,
-      cookies: const [
+      cookies: [
         SHOWebViewCookie(
           name: 'debug_token',
           value: 'sho_debug_abc123',
@@ -153,16 +163,8 @@ class SHOWebViewConfig {
       ],
       interceptors: [
         SHOUrlInterceptor(
-          pattern: 'old.example.com', // 匹配模式
-          type: SHOWebViewInterceptorType.block, // 拦截类型
-          handler: (url) async {
-            print('加载url: $url');
-            return false; // 允许加载
-          },
-        ),
-        const SHOUrlInterceptor(
-          pattern: '/personal',
-          type: SHOWebViewInterceptorType.navigateToNative,
+          pattern: 'blocked.test',
+          type: SHOWebViewInterceptorType.block,
         ),
       ],
     );
@@ -221,7 +223,9 @@ class SHOWebViewConfig {
   }
 
   bool get hasContent =>
-      url.trim().isNotEmpty || (loadAsset?.isNotEmpty ?? false);
+      url.trim().isNotEmpty ||
+      (loadAsset?.isNotEmpty ?? false) ||
+      (htmlContent?.isNotEmpty ?? false);
 
   static SHOWebViewMode _parseMode(String? raw) {
     switch (raw?.toLowerCase()) {

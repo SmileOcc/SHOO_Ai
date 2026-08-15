@@ -41,7 +41,8 @@ final dioProvider = Provider<Dio>((ref) {
     securityLevel: config.securityLevel,
     crypto: crypto,
     tokenReader: () => ref.read(authTokenProvider),
-    skipEncryption: config.useMockApi,
+    skipEncryption:
+        config.useMockApi || config.environment.usesLocalServer,
     prependInterceptors: prepend,
     appendInterceptors: append,
   );
