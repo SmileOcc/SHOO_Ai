@@ -26,6 +26,7 @@ abstract final class SHOAppConstants {
   static const String themeModeKey = 'theme_mode';
   static const String localeKey = 'locale_code';
   static const String secureTokenKey = 'auth_token';
+  static const String secureUserKey = 'auth_user_json';
   static const String secureAesKeyKey = 'aes_session_key';
   static const String secureSignSecretKey = 'request_sign_secret';
   static const String secureRsaPublicKeyKey = 'rsa_public_key_pem';

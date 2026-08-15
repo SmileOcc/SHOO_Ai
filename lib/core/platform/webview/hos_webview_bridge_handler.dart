@@ -10,6 +10,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_navigator.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
 import 'package:shoo/core/feedback/hos_toast.dart';
+import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 
 /// 通用 WebView JS Bridge（调试页 / 活动 H5 共用协议子集）。
@@ -31,7 +32,8 @@ abstract final class SHOWebViewBridgeHandler {
     if (type == 'deeplink') {
       final url = message['url']?.toString();
       if (url != null) {
-        _openDeepLink(context, ref, url);
+        final linkKindHint = message['link_kind']?.toString();
+        _openDeepLink(context, ref, url, linkKindHint: linkKindHint);
       }
       return;
     }
@@ -54,7 +56,14 @@ abstract final class SHOWebViewBridgeHandler {
         await Share.share(title);
       case 'deeplink':
         final url = data?.toString() ?? message['url']?.toString();
-        if (url != null) _openDeepLink(context, ref, url);
+        if (url != null) {
+          _openDeepLink(
+            context,
+            ref,
+            url,
+            linkKindHint: message['link_kind']?.toString(),
+          );
+        }
       case 'request_eval':
         await controller.runJavaScript(
           "window.updateFromFlutter && window.updateFromFlutter('Flutter 已执行 evaluateJavaScript');",
@@ -72,7 +81,20 @@ abstract final class SHOWebViewBridgeHandler {
     }
   }
 
-  static void _openDeepLink(BuildContext context, WidgetRef ref, String url) {
+  static void _openDeepLink(
+    BuildContext context,
+    WidgetRef ref,
+    String url, {
+    String? linkKindHint,
+  }) {
+    final resolved = SHODeepLinkResolver.resolveLink(url);
+    SHOAppLogger.i(
+      'WebView Bridge deeplink '
+      'hint=${linkKindHint ?? '-'} '
+      'kind=${resolved?.linkKind.name ?? 'unsupported'} '
+      'type=${resolved?.type.name ?? '-'} '
+      'url=$url',
+    );
     SHODeepLinkNavigator.openFromWebView(
       context,
       url,

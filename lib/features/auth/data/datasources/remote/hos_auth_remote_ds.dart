@@ -38,10 +38,13 @@ class SHOAuthApi {
     );
   }
 
-  Future<SHOAuthUser> fetchProfile() {
+  Future<SHOAuthUser> fetchProfile({String? bearerToken}) {
     return _dio.getData<SHOAuthUser>(
       '/auth/profile',
       parser: (data) => SHOAuthUser.fromJson(data as Map<String, dynamic>),
+      headers: bearerToken == null || bearerToken.isEmpty
+          ? null
+          : {'Authorization': 'Bearer $bearerToken'},
     );
   }
 

@@ -1,0 +1,32 @@
+---
+description: 本地端口与 ENV 约定；禁止擅自改端口/默认 API URL
+alwaysApply: true
+---
+
+# 本地端口与环境约定
+
+权威说明：`docs/服务启动事项.md`。
+
+## 固定端口（不要擅自修改）
+
+| 用途 | 端口 |
+|------|------|
+| Platform Nest API / App·Admin API | **8080** |
+| Admin Vite | **5173**（`/api` → 8080） |
+| 旧 Express Mock（`server/`） | **3847** |
+| Postgres | 5432 |
+
+Flutter：`defaultLocalApiBaseUrl` = `http://127.0.0.1:8080/api/v1`（`ENV=local`）。  
+**不要**把 local 默认改成 3847，也不要把 Platform 默认改成其它端口。
+
+## ENV 逻辑（简记）
+
+- `ENV=local` → **强制** `useMockApi=false`，连本机 HTTP（默认 8080）
+- 默认 / `ENV=dev` → 内置 Mock（`USE_MOCK_API` 默认 true）
+- 显式 `API_BASE_URL` 仅覆盖本次启动，不等于改仓库常量
+
+## 强制规则
+
+- **改端口、proxy、`.env` 的 PORT、`hos_constants` 里默认 Base URL / mock 端口前，必须先问用户并得到确认。**
+- 排查网络问题时优先核对服务是否已启动（见启动事项检查清单），不要先改端口「试一下」。
+- 需要临时连 3847 时：用 `--dart-define=API_BASE_URL=...`，不要改默认常量。

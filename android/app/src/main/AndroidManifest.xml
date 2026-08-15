@@ -34,8 +34,10 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="shoo" android:host="open"/>
+                <!-- Custom Scheme: shoo://product/p-1 、shoo://open/... -->
+                <data android:scheme="shoo"/>
             </intent-filter>
+            <!-- Android App Links（https://shoo.app），与 iOS applinks:shoo.app 对应 -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -47,8 +49,12 @@
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
+              android:name="flutterEmbedding"
+              android:value="2" />
+        <!-- 关闭 Flutter 引擎内置 Deep Link，统一由 app_links + SHODeepLinkListener 处理 -->
+        <meta-data
+              android:name="flutter_deeplinking_enabled"
+              android:value="false" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

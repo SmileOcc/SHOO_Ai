@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:shoo/app/router/hos_route_navigator.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/marketing/hos_popup_orchestrator.dart';
@@ -141,21 +142,8 @@ class _SHOHomePageState extends SHODataPageState<SHOHomeFeed, SHOHomePage> {
 void _onQuickEntryTap(BuildContext context, SHOHomeQuickEntry entry) {
   final raw = entry.link.trim();
   if (raw.isEmpty) return;
-
-  final uri = Uri.tryParse(raw);
-  if (uri == null) {
-    context.push(raw);
-    return;
-  }
-
-  final path = uri.path.isEmpty ? '/' : uri.path;
-  if (path == SHOAppRoutes.category || path == '/category') {
-    context.go(SHOAppRoutes.category);
-    return;
-  }
-
-  final location = uri.hasQuery ? '$path?${uri.query}' : path;
-  context.push(location);
+  // 与 Banner 一致：走 Deep Link 解析（支持 https://shoo.app/...、shoo.app/...、/path）
+  SHORouteNavigator.followLink(context, raw);
 }
 
 class _SHOHomeSkeleton extends StatelessWidget {

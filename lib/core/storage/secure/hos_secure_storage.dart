@@ -32,6 +32,19 @@ class SHOSecureStorageService {
   Future<String?> readToken() =>
       _storage.read(key: SHOAppConstants.secureTokenKey);
 
+  // ---- Cached Auth User (JSON) ----
+
+  Future<void> writeUserJson(String? json) async {
+    if (json == null || json.isEmpty) {
+      await _storage.delete(key: SHOAppConstants.secureUserKey);
+      return;
+    }
+    await _storage.write(key: SHOAppConstants.secureUserKey, value: json);
+  }
+
+  Future<String?> readUserJson() =>
+      _storage.read(key: SHOAppConstants.secureUserKey);
+
   // ---- AES Session Key ----
 
   Future<void> writeAesKey(String? key) async {

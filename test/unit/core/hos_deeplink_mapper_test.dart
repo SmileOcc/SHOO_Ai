@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_action_type.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_link_kind.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_mapper.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_resolver.dart';
 
@@ -34,6 +35,32 @@ void main() {
       expect(
         path,
         SHOAppRoutes.categoryProductsFiltered(leafId: 'c1', title: 'Test'),
+      );
+    });
+
+    test('parseLink accepts host without scheme', () {
+      final path = SHODeepLinkMapper.linkToAppPath(
+        'shoo.app/category/products?leafId=c1-g1-l1',
+      );
+      expect(
+        path,
+        SHOAppRoutes.categoryProductsFiltered(
+          leafId: 'c1-g1-l1',
+          title: '商品列表',
+        ),
+      );
+    });
+
+    test('parseLink accepts relative path with query', () {
+      final path = SHODeepLinkMapper.linkToAppPath(
+        '/category/products?leafId=c1-g1-l1&title=List',
+      );
+      expect(
+        path,
+        SHOAppRoutes.categoryProductsFiltered(
+          leafId: 'c1-g1-l1',
+          title: 'List',
+        ),
       );
     });
 
@@ -94,6 +121,23 @@ void main() {
       expect(target?.type, SHODeepLinkActionType.profile);
       expect(target?.appPath, SHOAppRoutes.profile);
       expect(target?.requiresAuth, isFalse);
+    });
+
+    test('https shoo.app is appLink kind', () {
+      final target = SHODeepLinkResolver.resolveLink(
+        'https://shoo.app/product/p-1',
+      );
+      expect(target?.linkKind, SHODeepLinkLinkKind.appLink);
+    });
+
+    test('custom scheme is customScheme kind', () {
+      final target = SHODeepLinkResolver.resolveLink('shoo://product/p-1');
+      expect(target?.linkKind, SHODeepLinkLinkKind.customScheme);
+    });
+
+    test('relative path is inAppPath kind', () {
+      final target = SHODeepLinkResolver.resolveLink('/flash-sale');
+      expect(target?.linkKind, SHODeepLinkLinkKind.inAppPath);
     });
   });
 }

@@ -192,6 +192,7 @@ abstract final class SHOAppRoutes {
   static const debugDependencies = '/debug/dependencies';
   static const debugSecureNetwork = '/debug/secure-network';
   static const debugMixin = '/debug/mixin';
+  static const debugDeepLink = '/debug/deeplink';
 
   static String debugNativeExample(String id) => '/debug/native/$id';
 

@@ -226,6 +226,13 @@ class _SHODebugPanelPageState extends ConsumerState<SHODebugPanelPage>
               onTap: () => context.push(SHOAppRoutes.debugBrand),
             ),
             ListTile(
+              leading: const Icon(Icons.link),
+              title: const Text('Deep Link / App Links'),
+              subtitle: const Text('模拟 https://shoo.app 与 shoo:// 系统唤起'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(SHOAppRoutes.debugDeepLink),
+            ),
+            ListTile(
               leading: const Icon(Icons.developer_board_outlined),
               title: Text(l10n.debugNativeEntry),
               subtitle: Text(l10n.debugNativeEntryHint),

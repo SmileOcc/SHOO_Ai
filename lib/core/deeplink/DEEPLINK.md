@@ -77,7 +77,7 @@ shoo://login?redirect=%2Fcheckout
 - Scheme: `shoo`
 - Host 非 `open` 时作为第一个路径段：`shoo://product/p-1` → pathSegments: `[product, p-1]`
 
-### 2.2 Universal Link（HTTPS）
+### 2.2 Universal Link / App Links（HTTPS）
 
 ```
 https://shoo.app/product/p-1
@@ -89,6 +89,9 @@ https://www.shoo.app/orders/o-1
 
 - 仅接受 Host: `shoo.app` 或 `www.shoo.app`
 - 路径直接映射为应用内路由
+- **Android**：`AndroidManifest` 已声明 App Links（`autoVerify`）
+- **iOS**：配置约定为 `applinks:shoo.app`（见 `SHODeepLinkConfig.associatedDomains`），**Associated Domains 暂未写入 entitlements**；系统级 Universal Link 正式上线再开
+- Flutter 引擎内置 Deep Link 已关闭（`FlutterDeepLinkingEnabled=false`），统一由 `app_links` + `SHODeepLinkListener` 处理
 
 ### 2.3 应用内相对路径
 

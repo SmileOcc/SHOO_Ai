@@ -1,6 +1,7 @@
 import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_action_type.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
+import 'package:shoo/core/deeplink/hos_deeplink_link_kind.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_mapper.dart';
 import 'package:shoo/core/deeplink/hos_deeplink_target.dart';
 
@@ -10,15 +11,8 @@ abstract final class SHODeepLinkResolver {
     final trimmed = link.trim();
     if (trimmed.isEmpty) return null;
 
-    final Uri uri;
-    if (trimmed.startsWith('http://') ||
-        trimmed.startsWith('https://') ||
-        trimmed.startsWith('${SHODeepLinkConfig.scheme}://')) {
-      uri = Uri.parse(trimmed);
-    } else {
-      final path = trimmed.startsWith('/') ? trimmed : '/$trimmed';
-      uri = Uri(path: path);
-    }
+    final uri = SHODeepLinkMapper.parseLink(trimmed);
+    if (uri == null) return null;
 
     return resolveUri(uri, rawLink: trimmed);
   }
@@ -34,11 +28,23 @@ abstract final class SHODeepLinkResolver {
       type: type,
       appPath: appPath,
       requiresAuth: requiresAuth,
+      linkKind: linkKindOf(uri),
       rawLink: rawLink ?? uri.toString(),
     );
   }
 
   static bool isDeepLink(String url) => resolveLink(url) != null;
+
+  /// 识别链接形态：App Link / Custom Scheme / 应用内路径。
+  static SHODeepLinkLinkKind linkKindOf(Uri uri) {
+    if (SHODeepLinkConfig.isAppLinkUri(uri)) {
+      return SHODeepLinkLinkKind.appLink;
+    }
+    if (SHODeepLinkConfig.isCustomSchemeUri(uri)) {
+      return SHODeepLinkLinkKind.customScheme;
+    }
+    return SHODeepLinkLinkKind.inAppPath;
+  }
 
   static SHODeepLinkActionType _actionTypeFromUri(Uri uri, String appPath) {
     final segments = _segments(uri);

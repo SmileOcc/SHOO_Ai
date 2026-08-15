@@ -3,15 +3,39 @@ import 'package:shoo/core/deeplink/hos_deeplink_config.dart';
 
 /// 将外部 URI（Custom Scheme / Universal Link）映射为 go_router 路径。
 abstract final class SHODeepLinkMapper {
-  /// 活动弹窗 / Banner 等 in-app 链接，如 `/flash-sale`、`/product/p-1`。
-  static String? linkToAppPath(String link) {
+  /// 归一化链接字符串为 [Uri]（保留 query）。
+  ///
+  /// 支持：
+  /// - `https://shoo.app/...` / `shoo://...`
+  /// - `shoo.app/category/products?leafId=...`（无 scheme 的 host 形式）
+  /// - `/category/products?leafId=...` 或 `category/products?leafId=...`
+  static Uri? parseLink(String link) {
     final trimmed = link.trim();
     if (trimmed.isEmpty) return null;
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-      return toAppPath(Uri.parse(trimmed));
+
+    if (trimmed.startsWith('http://') ||
+        trimmed.startsWith('https://') ||
+        trimmed.startsWith('${SHODeepLinkConfig.scheme}://')) {
+      return Uri.tryParse(trimmed);
     }
-    final path = trimmed.startsWith('/') ? trimmed : '/$trimmed';
-    return toAppPath(Uri(path: path));
+
+    if (trimmed.startsWith('/')) {
+      return Uri.tryParse(trimmed);
+    }
+
+    final hostCandidate = trimmed.split('/').first.split('?').first;
+    if (SHODeepLinkConfig.isSupportedHost(hostCandidate)) {
+      return Uri.tryParse('https://$trimmed');
+    }
+
+    return Uri.tryParse('/$trimmed');
+  }
+
+  /// 活动弹窗 / Banner 等 in-app 链接，如 `/flash-sale`、`/product/p-1`。
+  static String? linkToAppPath(String link) {
+    final uri = parseLink(link);
+    if (uri == null) return null;
+    return toAppPath(uri);
   }
 
   static String? toAppPath(Uri uri) {

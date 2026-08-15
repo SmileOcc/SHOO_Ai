@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shoo/core/pages/hos_tab_keep_alive_page.dart';
 import 'package:shoo/features/cart/presentation/pages/hos_cart_page.dart';
 import 'package:shoo/features/category/presentation/pages/hos_category_page.dart';
+import 'package:shoo/features/category/router.dart';
 import 'package:shoo/features/community/presentation/pages/hos_community_page.dart';
 import 'package:shoo/features/home/presentation/pages/hos_home_page.dart';
 import 'package:shoo/features/message/presentation/pages/hos_message_page.dart';
@@ -58,6 +59,9 @@ List<RouteBase> shoShellRoutes() => [
             pageBuilder: (context, state) => const NoTransitionPage(
               child: SHOTabKeepAlivePage(child: SHOCategoryPage()),
             ),
+            routes: [
+              shoCategoryProductsRoute(rootKey: rootNavigatorKey),
+            ],
           ),
         ],
       ),

@@ -1,5 +1,7 @@
 # Local Runbook
 
+更完整的环境逻辑、端口约定与故障排查见仓库根目录：**[`docs/服务启动事项.md`](../../docs/服务启动事项.md)**。
+
 ## 1. Start database
 
 ```bash

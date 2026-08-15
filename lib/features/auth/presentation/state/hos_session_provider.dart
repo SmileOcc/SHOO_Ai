@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
 import 'package:shoo/core/errors/hos_exception.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
+import 'package:shoo/features/auth/data/datasources/local/hos_auth_local_ds.dart';
 import 'package:shoo/features/auth/data/repositories/hos_auth_repository_impl.dart';
 import 'package:shoo/features/auth/domain/entities/hos_auth_user.dart';
 import 'package:shoo/features/auth/domain/repositories/hos_auth_repository.dart';
@@ -67,6 +68,12 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
   Future<void> restore() async {
     state = state.copyWith(isRestoring: true);
     try {
+      // 先注入 token，再拉 profile，避免鉴权拦截器读到空 token。
+      final peekToken = await ref.read(authLocalDsProvider).readToken();
+      if (peekToken != null && peekToken.isNotEmpty) {
+        _syncToken(peekToken);
+      }
+
       final session = await _repository.restoreSession();
       if (session == null) {
         _syncToken(null);
@@ -81,14 +88,16 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
       );
       SHOAppLogger.i('Session restored for ${session.user.nickname}');
     } on SHONetworkException catch (error) {
+      // 有 token 但无缓存用户且网络不可达：保持未登录 UI，但不要清 SecureStorage。
       SHOAppLogger.w(
         'Session restore skipped — API unreachable (${error.message}). '
         'If using local env, run: cd server && npm run dev',
       );
+      _syncToken(null);
       state = const SHOSessionState(isRestoring: false);
     } catch (error, stack) {
+      // 非鉴权失败不 logout，避免一次异常永久清掉登录态。
       SHOAppLogger.e('Session restore failed', error, stack);
-      await _repository.logout();
       _syncToken(null);
       state = const SHOSessionState(isRestoring: false);
     }

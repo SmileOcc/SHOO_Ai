@@ -24,6 +24,8 @@ platform/
 | Postgres | `127.0.0.1:5432` |
 | MinIO | `127.0.0.1:9000` (console `:9001`) |
 
+> 启动顺序、Flutter `ENV` 规则、检查清单与「勿随意改端口」：见 [`docs/服务启动事项.md`](../docs/服务启动事项.md)。
+
 ## Prerequisites
 
 - Node.js 20+ (22 recommended; Node 23 may warn on jest engines)
