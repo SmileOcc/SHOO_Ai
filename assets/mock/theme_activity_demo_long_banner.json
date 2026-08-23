@@ -1,0 +1,65 @@
+{
+  "activityId": "demo_long_banner",
+  "title": "长图大促 Demo",
+  "status": "online",
+  "expiredBehavior": "browse",
+  "navBar": {
+    "style": "transparent",
+    "titleColor": "#FFFFFF",
+    "iconColor": "#FFFFFF",
+    "showShare": true,
+    "immersive": true
+  },
+  "pageBackground": {
+    "color": "#FFF5F0"
+  },
+  "defaultStyle": {
+    "borderRadius": 12,
+    "borderWidth": 0,
+    "titleColor": "#222222",
+    "priceColor": "#E53935"
+  },
+  "modules": [
+    {
+      "moduleId": "m_banner",
+      "type": "bannerStack",
+      "sort": 10,
+      "items": [
+        {
+          "image": "https://picsum.photos/seed/theme-banner1/750/300",
+          "aspectRatio": 2.5,
+          "link": "https://shoo.app/flash-sale?activityId=activity_flash_001"
+        },
+        {
+          "image": "https://picsum.photos/seed/theme-banner2/750/280",
+          "aspectRatio": 2.7,
+          "link": "https://shoo.app/category"
+        }
+      ]
+    },
+    {
+      "moduleId": "m_marquee",
+      "type": "marquee",
+      "sort": 20,
+      "direction": "horizontal",
+      "items": [
+        {
+          "text": "全场包邮，点击查看规则",
+          "link": "https://shoo.app/webview?url=https%3A%2F%2Fexample.com%2Frules&title=%E6%B4%BB%E5%8A%A8%E8%A7%84%E5%88%99"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "type": "productListDouble",
+    "columns": 2,
+    "pageSize": 10,
+    "dataSource": {
+      "mode": "productQuery",
+      "sort": "sold"
+    },
+    "style": {
+      "backgroundColor": "#FFFFFF"
+    }
+  }
+}

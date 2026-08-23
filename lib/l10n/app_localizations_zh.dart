@@ -2257,6 +2257,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get toolboxFlashSale => '限时抢购';
 
   @override
+  String get toolboxThemeActivity => '主题活动';
+
+  @override
   String get profileActivityNotifications => '活动通知';
 
   @override

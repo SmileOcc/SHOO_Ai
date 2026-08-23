@@ -145,6 +145,15 @@ abstract final class SHOAppRoutes {
     return '$flashSale?activityId=${Uri.encodeComponent(activityId)}';
   }
 
+  static const themeActivity = '/theme-activity';
+  static const toolboxThemeActivity = '/toolbox/theme-activity';
+
+  static String themeActivityFor(String activityId, {String? channel}) {
+    final base = '$themeActivity/${Uri.encodeComponent(activityId)}';
+    if (channel == null || channel.isEmpty) return base;
+    return '$base?channel=${Uri.encodeComponent(channel)}';
+  }
+
   static const checkout = '/checkout';
 
   static String checkoutWithContext({bool fromCartStack = false}) {

@@ -16,6 +16,7 @@ enum SHODeepLinkActionType {
   coupons,
   activity,
   flashSale,
+  themeActivity,
   newArrivals,
   trending,
   webview,

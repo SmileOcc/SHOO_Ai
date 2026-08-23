@@ -1,0 +1,103 @@
+{
+  "activityId": "demo_coupon_rush",
+  "title": "券+倒计时 Demo",
+  "status": "online",
+  "expiredBehavior": "browse",
+  "navBar": {
+    "style": "solid",
+    "backgroundColor": "#E53935",
+    "titleColor": "#FFFFFF",
+    "iconColor": "#FFFFFF",
+    "showShare": false,
+    "immersive": false
+  },
+  "pageBackground": {
+    "color": "#FFF8F6"
+  },
+  "defaultStyle": {
+    "borderRadius": 10,
+    "highlightColor": "#E53935",
+    "priceColor": "#E53935"
+  },
+  "modules": [
+    {
+      "moduleId": "m_countdown",
+      "type": "countdown",
+      "sort": 10,
+      "mode": "toEnd",
+      "endAt": "2027-12-31T23:59:59+08:00",
+      "format": "DHMS",
+      "layout": "block",
+      "prefixText": "距结束",
+      "onExpire": "showText",
+      "expireText": "本场已结束",
+      "onExpireLink": "https://shoo.app/category"
+    },
+    {
+      "moduleId": "m_coupon",
+      "type": "coupon",
+      "sort": 20,
+      "layout": "horizontalScroll",
+      "items": [
+        {
+          "couponId": "c_spring_10",
+          "type": "fullReduce",
+          "amount": 10,
+          "condition": "满100可用",
+          "title": "春日券",
+          "status": "claimable",
+          "buttonText": "立即领取",
+          "claimedButtonText": "去使用",
+          "link": "https://shoo.app/category/products?leafId=c1-g1-l1&title=%E6%98%A5%E6%97%A5%E4%B8%93%E5%8C%BA"
+        },
+        {
+          "couponId": "c_spring_20",
+          "type": "fullReduce",
+          "amount": 20,
+          "condition": "满200可用",
+          "title": "大额券",
+          "status": "claimable",
+          "buttonText": "立即领取",
+          "claimedButtonText": "去使用",
+          "link": "https://shoo.app/category/products?leafId=c1-g1-l1&title=%E6%98%A5%E6%97%A5%E4%B8%93%E5%8C%BA"
+        }
+      ]
+    },
+    {
+      "moduleId": "m_grid",
+      "type": "grid",
+      "sort": 30,
+      "columns": 4,
+      "itemStyle": "iconText",
+      "items": [
+        {
+          "image": "https://picsum.photos/seed/cat1/120/120",
+          "title": "女装",
+          "link": "https://shoo.app/category/products?leafId=c1-g1-l1&title=%E5%A5%B3%E8%A3%85"
+        },
+        {
+          "image": "https://picsum.photos/seed/coupon/120/120",
+          "title": "领券",
+          "link": "https://shoo.app/coupons"
+        },
+        {
+          "image": "https://picsum.photos/seed/flash/120/120",
+          "title": "抢购",
+          "link": "https://shoo.app/flash-sale?activityId=activity_flash_001"
+        },
+        {
+          "image": "https://picsum.photos/seed/search/120/120",
+          "title": "搜索",
+          "link": "https://shoo.app/search?q=spring"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "type": "productListSingle",
+    "pageSize": 8,
+    "dataSource": {
+      "mode": "productQuery"
+    }
+  }
+}

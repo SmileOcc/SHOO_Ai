@@ -1,0 +1,142 @@
+{
+  "activityId": "demo_nine_waterfall",
+  "title": "九宫格+瀑布流 Demo",
+  "status": "online",
+  "expiredBehavior": "browse",
+  "navBar": {
+    "style": "solid",
+    "backgroundColor": "#FFFFFF",
+    "titleColor": "#222222",
+    "iconColor": "#222222",
+    "showShare": true
+  },
+  "pageBackground": {
+    "color": "#F7F7F7"
+  },
+  "defaultStyle": {
+    "borderRadius": 12,
+    "priceColor": "#E53935",
+    "itemGap": 8
+  },
+  "modules": [
+    {
+      "moduleId": "m_grid",
+      "type": "grid",
+      "sort": 10,
+      "preset": "nineGrid",
+      "columns": 3,
+      "rows": 3,
+      "itemStyle": "imageTitle",
+      "items": [
+        {
+          "image": "https://picsum.photos/seed/g1/200/200",
+          "title": "新品",
+          "link": "https://shoo.app/search?q=new"
+        },
+        {
+          "image": "https://picsum.photos/seed/g2/200/200",
+          "title": "热卖",
+          "link": "https://shoo.app/search?q=hot"
+        },
+        {
+          "image": "https://picsum.photos/seed/g3/200/200",
+          "title": "女装",
+          "link": "https://shoo.app/category/products?leafId=c1-g1-l1&title=%E5%A5%B3%E8%A3%85"
+        },
+        {
+          "image": "https://picsum.photos/seed/g4/200/200",
+          "title": "男装",
+          "link": "https://shoo.app/category"
+        },
+        {
+          "image": "https://picsum.photos/seed/g5/200/200",
+          "title": "鞋靴",
+          "link": "https://shoo.app/search?q=shoes"
+        },
+        {
+          "image": "https://picsum.photos/seed/g6/200/200",
+          "title": "箱包",
+          "link": "https://shoo.app/search?q=bag"
+        },
+        {
+          "image": "https://picsum.photos/seed/g7/200/200",
+          "title": "美妆",
+          "link": "https://shoo.app/search?q=beauty"
+        },
+        {
+          "image": "https://picsum.photos/seed/g8/200/200",
+          "title": "数码",
+          "link": "https://shoo.app/search?q=digital"
+        },
+        {
+          "image": "https://picsum.photos/seed/g9/200/200",
+          "title": "更多",
+          "link": "https://shoo.app/category"
+        }
+      ]
+    },
+    {
+      "moduleId": "m_uneven",
+      "type": "unevenGrid",
+      "sort": 20,
+      "layoutPreset": "leftBig_rightTwo",
+      "aspectRatio": 1.6,
+      "gap": 8,
+      "slots": [
+        {
+          "image": "https://picsum.photos/seed/slot1/400/400",
+          "link": "https://shoo.app/product/c1-g1-l1-p1"
+        },
+        {
+          "image": "https://picsum.photos/seed/slot2/200/200",
+          "link": "https://shoo.app/flash-sale?activityId=activity_flash_001"
+        },
+        {
+          "image": "https://picsum.photos/seed/slot3/200/200",
+          "link": "https://shoo.app/coupons"
+        }
+      ]
+    },
+    {
+      "moduleId": "m_scroll",
+      "type": "productScroll",
+      "sort": 30,
+      "cardWidth": 120,
+      "showCartButton": true,
+      "showOriginPrice": true,
+      "dataSource": {
+        "mode": "static",
+        "items": [
+          {
+            "productId": "c1-g1-l1-p1",
+            "title": "示例商品 A",
+            "price": 99,
+            "originPrice": 129,
+            "image": "https://picsum.photos/seed/pa/200/200",
+            "link": "https://shoo.app/product/c1-g1-l1-p1"
+          },
+          {
+            "productId": "c1-g1-l1-p2",
+            "title": "示例商品 B",
+            "price": 159,
+            "originPrice": 199,
+            "image": "https://picsum.photos/seed/pb/200/200",
+            "link": "https://shoo.app/product/c1-g1-l1-p2"
+          }
+        ]
+      }
+    }
+  ],
+  "footer": {
+    "type": "productWaterfall",
+    "columns": 2,
+    "pageSize": 10,
+    "dataSource": {
+      "mode": "productQuery",
+      "sort": "sold"
+    },
+    "header": {
+      "title": "为你推荐"
+    }
+  }
+}

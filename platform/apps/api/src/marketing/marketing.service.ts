@@ -101,6 +101,22 @@ export class MarketingService {
     return this.docs.getPayload('cart_marquee');
   }
 
+  async adminCartMarquee() {
+    return this.docs.getPayloadOrNull('cart_marquee');
+  }
+
+  async saveCartMarquee(payload: unknown) {
+    return this.docs.upsertPayload('cart_marquee', payload);
+  }
+
+  async adminFlashSaleCatalog() {
+    return this.docs.getPayloadOrNull('flash_sale_catalog');
+  }
+
+  async saveFlashSaleCatalog(payload: unknown) {
+    return this.docs.upsertPayload('flash_sale_catalog', payload);
+  }
+
   activityData() {
     return this.docs.getPayload('activity_data');
   }
@@ -119,6 +135,46 @@ export class MarketingService {
 
   activityUrlRules() {
     return this.docs.getPayload('activity_url_rules');
+  }
+
+  async adminActivityData() {
+    return this.docs.getPayloadOrNull('activity_data');
+  }
+
+  async saveActivityData(payload: unknown) {
+    return this.docs.upsertPayload('activity_data', payload);
+  }
+
+  async adminActivityDetail() {
+    return this.docs.getPayloadOrNull('activity_detail');
+  }
+
+  async saveActivityDetail(payload: unknown) {
+    return this.docs.upsertPayload('activity_detail', payload);
+  }
+
+  async adminActivityDetailLevel3() {
+    return this.docs.getPayloadOrNull('activity_level3_detail');
+  }
+
+  async saveActivityDetailLevel3(payload: unknown) {
+    return this.docs.upsertPayload('activity_level3_detail', payload);
+  }
+
+  async adminActivityUserCheck() {
+    return this.docs.getPayloadOrNull('activity_user_check');
+  }
+
+  async saveActivityUserCheck(payload: unknown) {
+    return this.docs.upsertPayload('activity_user_check', payload);
+  }
+
+  async adminActivityUrlRules() {
+    return this.docs.getPayloadOrNull('activity_url_rules');
+  }
+
+  async saveActivityUrlRules(payload: unknown) {
+    return this.docs.upsertPayload('activity_url_rules', payload);
   }
 
   async flashSaleCalendar(query: Record<string, string>) {
@@ -230,10 +286,6 @@ export class MarketingService {
         where: { sessionId, productId },
       });
     }
-    return { success: true };
-  }
-
-  claimCoupon(_id: string) {
     return { success: true };
   }
 }

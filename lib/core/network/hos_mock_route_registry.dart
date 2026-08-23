@@ -247,6 +247,16 @@ abstract final class SHOMockRouteRegistry {
       path: '/push/flash-sale/cancel',
       asset: 'assets/mock/push_register_ok.json',
     ),
+    const SHOMockRouteEntry(
+      method: 'GET',
+      path: '/theme-activities/{activityId}/products',
+      asset: 'assets/mock/products.json',
+    ),
+    const SHOMockRouteEntry(
+      method: 'GET',
+      path: '/theme-activities/{activityId}',
+      asset: 'assets/mock/theme_activity_demo_long_banner.json',
+    ),
   ];
 
   static void register(SHOMockRouteEntry entry) => _routes.add(entry);

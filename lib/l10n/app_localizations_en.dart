@@ -2312,6 +2312,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolboxFlashSale => 'Flash Sale';
 
   @override
+  String get toolboxThemeActivity => 'Theme Activity';
+
+  @override
   String get profileActivityNotifications => 'Activity Alerts';
 
   @override

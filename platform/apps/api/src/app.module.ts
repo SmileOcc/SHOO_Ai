@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CouponModule } from './coupon/coupon.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ContentModule } from './content/content.module';
 import { DocumentsModule } from './documents/documents.module';
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
     DocumentsModule,
     HealthModule,
     IamModule,
+    CouponModule,
     CatalogModule,
     TradeModule,
     UserModule,

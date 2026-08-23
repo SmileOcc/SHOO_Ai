@@ -38,8 +38,15 @@ export class CatalogAppController {
   }
 
   @Get('products/:id/reviews')
-  productReviews(@Param('id') id: string) {
-    return this.catalog.getProductReviews(id);
+  productReviews(
+    @Param('id') id: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+  ) {
+    return this.catalog.getProductReviews(id, {
+      page: page ? Number(page) : undefined,
+      pageSize: pageSize ? Number(pageSize) : undefined,
+    });
   }
 
   @Get('products/:id')

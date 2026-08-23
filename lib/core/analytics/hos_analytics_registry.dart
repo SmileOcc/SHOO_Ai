@@ -769,6 +769,180 @@ abstract final class SHOAnalyticsRegistry {
     ],
   );
 
+  static const themeActivityConfigLoad = SHOAnalyticsEventDef(
+    key: 'theme_activity_config_load',
+    title: 'Theme activity config load',
+    description: 'Remote or mock theme activity config fetch',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_long_banner',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'success',
+        type: SHOAnalyticsFieldType.boolValue,
+        required: true,
+        example: true,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'duration_ms',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 240,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'source',
+        type: SHOAnalyticsFieldType.string,
+        description: 'mock / remote',
+        example: 'remote',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'channel',
+        type: SHOAnalyticsFieldType.string,
+        example: 'push',
+      ),
+    ],
+  );
+
+  static const themeActivityRefresh = SHOAnalyticsEventDef(
+    key: 'theme_activity_refresh',
+    title: 'Theme activity refresh',
+    description: 'Pull-to-refresh reload config and footer',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_long_banner',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'success',
+        type: SHOAnalyticsFieldType.boolValue,
+        required: true,
+        example: true,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'duration_ms',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 180,
+      ),
+    ],
+  );
+
+  static const themeActivityLinkClick = SHOAnalyticsEventDef(
+    key: 'theme_activity_link_click',
+    title: 'Theme activity link click',
+    description: 'Module link tap routed through ThemeActivityLinkHandler',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_long_banner',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'link',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'https://shoo.app/product/p_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'module_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'banner_main',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'item_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'item_01',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'resolved_action_type',
+        type: SHOAnalyticsFieldType.string,
+        example: 'productDetail',
+      ),
+    ],
+  );
+
+  static const themeActivityShare = SHOAnalyticsEventDef(
+    key: 'theme_activity_share',
+    title: 'Theme activity share',
+    description: 'User shared theme activity via system sheet',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_long_banner',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'channel',
+        type: SHOAnalyticsFieldType.string,
+        example: 'push',
+      ),
+    ],
+  );
+
+  static const themeActivityFooterLoadMore = SHOAnalyticsEventDef(
+    key: 'theme_activity_footer_load_more',
+    title: 'Theme activity footer load more',
+    description: 'Footer product list pagination',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_long_banner',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'page',
+        type: SHOAnalyticsFieldType.intValue,
+        required: true,
+        example: 2,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'success',
+        type: SHOAnalyticsFieldType.boolValue,
+        required: true,
+        example: true,
+      ),
+    ],
+  );
+
+  static const themeActivityCouponClaim = SHOAnalyticsEventDef(
+    key: 'theme_activity_coupon_claim',
+    title: 'Theme activity coupon claim',
+    description: 'Coupon claim inside theme activity page',
+    fields: [
+      SHOAnalyticsFieldDef(
+        name: 'activity_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'demo_coupon_rush',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'coupon_id',
+        type: SHOAnalyticsFieldType.string,
+        required: true,
+        example: 'c_001',
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'success',
+        type: SHOAnalyticsFieldType.boolValue,
+        required: true,
+        example: true,
+      ),
+      SHOAnalyticsFieldDef(
+        name: 'module_id',
+        type: SHOAnalyticsFieldType.string,
+        example: 'coupon_main',
+      ),
+    ],
+  );
+
   static const bridgeError = SHOAnalyticsEventDef(
     key: 'bridge_error',
     title: 'WebView bridge error',
@@ -832,6 +1006,12 @@ abstract final class SHOAnalyticsRegistry {
     webViewPageLoad,
     pageRenderError,
     bridgeError,
+    themeActivityConfigLoad,
+    themeActivityRefresh,
+    themeActivityLinkClick,
+    themeActivityShare,
+    themeActivityFooterLoadMore,
+    themeActivityCouponClaim,
   ];
 
   static SHOAnalyticsEventDef? find(String key) {

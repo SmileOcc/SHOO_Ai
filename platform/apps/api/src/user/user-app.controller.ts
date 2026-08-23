@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { CouponService } from '../coupon/coupon.service';
 import { DocumentsService } from '../documents/documents.service';
+import { UserAuthGuard } from '../iam/user-auth.guard';
 import { UserService } from './user.service';
 
 @Controller('v1')
@@ -7,6 +10,7 @@ export class UserAppController {
   constructor(
     private readonly docs: DocumentsService,
     private readonly users: UserService,
+    private readonly couponService: CouponService,
   ) {}
 
   @Get('messages')
@@ -20,8 +24,9 @@ export class UserAppController {
   }
 
   @Get('coupons')
-  coupons() {
-    return this.docs.getPayload('coupons');
+  @UseGuards(UserAuthGuard)
+  coupons(@Req() req: Request & { user?: { sub: string } }) {
+    return this.couponService.listUserCoupons(req.user!.sub);
   }
 
   @Get('after-sales')

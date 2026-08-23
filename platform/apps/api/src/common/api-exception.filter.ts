@@ -32,7 +32,13 @@ export class ApiExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       code: status,
       message,
-      data: null,
+      data:
+        exception instanceof HttpException &&
+        exception.getResponse() &&
+        typeof exception.getResponse() === 'object' &&
+        'validation' in (exception.getResponse() as object)
+          ? (exception.getResponse() as { validation: unknown }).validation
+          : null,
     });
   }
 }

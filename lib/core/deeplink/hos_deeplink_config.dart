@@ -34,6 +34,14 @@ abstract final class SHODeepLinkConfig {
 
   static Uri activityLink() => Uri.parse('https://$host/activity');
 
+  static Uri themeActivityLink(String activityId, {String? channel}) {
+    final base = 'https://$host/theme-activity/${Uri.encodeComponent(activityId)}';
+    if (channel == null || channel.isEmpty) {
+      return Uri.parse(base);
+    }
+    return Uri.parse('$base?channel=${Uri.encodeComponent(channel)}');
+  }
+
   static Uri orderLink(String orderId) =>
       Uri.parse('https://$host/orders/$orderId');
 

@@ -4386,6 +4386,12 @@ abstract class AppLocalizations {
   /// **'Flash Sale'**
   String get toolboxFlashSale;
 
+  /// No description provided for @toolboxThemeActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Activity'**
+  String get toolboxThemeActivity;
+
   /// No description provided for @profileActivityNotifications.
   ///
   /// In en, this message translates to:

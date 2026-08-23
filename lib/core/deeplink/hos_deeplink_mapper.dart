@@ -105,6 +105,14 @@ abstract final class SHODeepLinkMapper {
           return SHOAppRoutes.flashSaleFor(activityId: activityId);
         }
         return SHOAppRoutes.flashSale;
+      case 'theme-activity':
+        if (segments.length >= 2) {
+          return SHOAppRoutes.themeActivityFor(
+            segments[1],
+            channel: uri.queryParameters['channel'],
+          );
+        }
+        return SHOAppRoutes.toolboxThemeActivity;
       case 'new-arrivals':
         return '${SHOAppRoutes.search}?q=new%20arrivals';
       case 'trending':

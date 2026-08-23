@@ -128,4 +128,45 @@ export class CatalogAdminController {
   deleteProduct(@Param('id') id: string) {
     return this.catalog.deleteProduct(id);
   }
+
+  @Get('search-hot')
+  getSearchHot() {
+    return this.catalog.adminSearchHot();
+  }
+
+  @Put('search-hot')
+  saveSearchHot(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.catalog.saveSearchHot(payload);
+  }
+
+  @Get('reviews-catalog')
+  getReviewsCatalog() {
+    return this.catalog.adminReviewsCatalog();
+  }
+
+  @Put('reviews-catalog')
+  saveReviewsCatalog(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.catalog.saveReviewsCatalog(payload);
+  }
+
+  @Get('products/:productId/reviews')
+  getProductReviews(@Param('productId') productId: string) {
+    return this.catalog.adminProductReviews(productId);
+  }
+
+  @Put('products/:productId/reviews')
+  saveProductReviews(
+    @Param('productId') productId: string,
+    @Body() body: unknown,
+  ) {
+    return this.catalog.saveProductReviews(productId, body);
+  }
 }

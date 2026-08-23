@@ -84,6 +84,10 @@ abstract final class SHODeepLinkResolver {
         return SHODeepLinkActionType.webview;
       case 'flash-sale':
         return SHODeepLinkActionType.flashSale;
+      case 'theme-activity':
+        return segments.length >= 2
+            ? SHODeepLinkActionType.themeActivity
+            : SHODeepLinkActionType.unknown;
       case 'new-arrivals':
         return SHODeepLinkActionType.newArrivals;
       case 'trending':

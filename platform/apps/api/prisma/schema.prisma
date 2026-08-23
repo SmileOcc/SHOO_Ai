@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String       @id @default(cuid())
+  email        String       @unique
   phone        String?
   nickname     String
   avatarUrl    String?
   passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   orders       Order[]
+  userCoupons  UserCoupon[]
 }
 
 model AdminUser {
@@ -69,15 +70,17 @@ model Product {
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  orderNo    String      @unique
-  userId     String?
-  user       User?       @relation(fields: [userId], references: [id])
-  status     String
-  totalCents Int
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  items      OrderItem[]
+  id              String      @id @default(cuid())
+  orderNo         String      @unique
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  status          String
+  totalCents      Int
+  shippingAddress String      @default("")
+  hasLogistics    Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
 }
 
 model OrderItem {
@@ -121,4 +124,54 @@ model AfterSale {
   productTitle String   @default("")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+/// Coupon template — wallet, theme activity, flash-sale share the same id space.
+model CouponTemplate {
+  id              String       @id
+  title           String
+  description     String       @default("")
+  type            String       @default("fixed") // fixed | percent
+  discountCents   Int          @default(0)
+  discountPercent Int          @default(0)
+  minOrderCents   Int          @default(0)
+  validDays       Int          @default(30)
+  stock           Int?
+  claimedCount    Int          @default(0)
+  enabled         Boolean      @default(true)
+  source          String       @default("wallet") // wallet | theme | flash
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  userCoupons     UserCoupon[]
+}
+
+model UserCoupon {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId String
+  template   CouponTemplate @relation(fields: [templateId], references: [id])
+  claimedAt  DateTime       @default(now())
+  expiresAt  DateTime
+  isUsed     Boolean        @default(false)
+
+  @@unique([userId, templateId])
+  @@index([userId])
+}
+
+/// ThemeActivity page config CMS (see docs/Flutter主题活动ThemeActivity技术方案.md)
+model ThemeActivity {
+  /// Same as config.activityId — Deep Link /theme-activity/{activityId}
+  activityId      String    @id
+  title           String
+  status          String    @default("draft") // draft | online | offline
+  startAt         DateTime?
+  endAt           DateTime?
+  expiredBehavior String    @default("browse") // block | browse
+  /// Full page JSON (navBar, modules, footer, defaultStyle, …)
+  config          Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
 }

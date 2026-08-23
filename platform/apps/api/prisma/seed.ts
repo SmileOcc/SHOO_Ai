@@ -33,6 +33,32 @@ function tryReadMock<T>(file: string): T | null {
   }
 }
 
+function resolveMockPath(file: string): string | null {
+  const candidates = [
+    process.env.MOCK_DATA_DIR,
+    path.resolve(__dirname, '../../../../../assets/mock'),
+    path.resolve(process.cwd(), '../../../assets/mock'),
+    path.resolve(process.cwd(), '../../../../assets/mock'),
+  ].filter(Boolean) as string[];
+
+  for (const dir of candidates) {
+    const full = path.join(dir, file);
+    if (fs.existsSync(full)) return full;
+  }
+  return null;
+}
+
+/** Read mock JSON as-is (no {code,data} envelope). */
+function tryReadRawJson<T>(file: string): T | null {
+  const full = resolveMockPath(file);
+  if (!full) return null;
+  try {
+    return JSON.parse(fs.readFileSync(full, 'utf8')) as T;
+  } catch {
+    return null;
+  }
+}
+
 async function upsertDocument(key: string, payload: unknown) {
   await prisma.appDocument.upsert({
     where: { key },
@@ -181,7 +207,27 @@ async function main() {
     }>;
   }>('orders.json');
 
+  const orderDetail = tryReadMock<{
+    id: string;
+    shippingAddress?: string;
+    hasLogistics?: boolean;
+  }>('order_detail.json');
+  const orderExtras: Record<
+    string,
+    { shippingAddress: string; hasLogistics: boolean }
+  > = {};
+  if (orderDetail) {
+    orderExtras[orderDetail.id] = {
+      shippingAddress: orderDetail.shippingAddress ?? '',
+      hasLogistics: orderDetail.hasLogistics ?? false,
+    };
+  }
+
   for (const o of orders.items) {
+    const extra = orderExtras[o.id] ?? {
+      shippingAddress: '',
+      hasLogistics: o.status === 'shipped' || o.status === 'delivered',
+    };
     await prisma.orderItem.deleteMany({ where: { orderId: o.id } });
     await prisma.order.upsert({
       where: { id: o.id },
@@ -190,6 +236,8 @@ async function main() {
         orderNo: o.orderNo,
         status: o.status,
         totalCents: o.totalCents,
+        shippingAddress: extra.shippingAddress,
+        hasLogistics: extra.hasLogistics,
         createdAt: new Date(o.createdAt.replace(' ', 'T') + ':00'),
         items: {
           create: o.items.map((i) => ({
@@ -206,8 +254,40 @@ async function main() {
         orderNo: o.orderNo,
         status: o.status,
         totalCents: o.totalCents,
+        shippingAddress: extra.shippingAddress,
+        hasLogistics: extra.hasLogistics,
+        items: {
+          create: o.items.map((i) => ({
+            productId: i.productId,
+            title: i.title,
+            imageUrl: i.imageUrl,
+            price: i.price,
+            quantity: i.quantity,
+            variantLabel: i.variantLabel ?? '',
+          })),
+        },
       },
     });
+  }
+
+  const logisticsTemplate = tryReadMock<{
+    orderId?: string;
+    carrier?: string;
+    trackingNumber?: string;
+    events?: unknown[];
+  }>('order_logistics.json');
+  if (logisticsTemplate) {
+    const orderId = logisticsTemplate.orderId ?? 'o1';
+    await upsertDocument('order_logistics_catalog', {
+      byOrder: {
+        [orderId]: {
+          carrier: logisticsTemplate.carrier ?? '',
+          trackingNumber: logisticsTemplate.trackingNumber ?? '',
+          events: logisticsTemplate.events ?? [],
+        },
+      },
+    });
+    console.log(`Order logistics catalog seeded for ${orderId}`);
   }
 
   // Document-backed domains (App API parity)
@@ -319,6 +399,218 @@ async function main() {
     });
   }
   console.log(`Flash-sale follows seeded: ${followItems.length}`);
+
+  const themeFiles = [
+    'theme_activity_demo_long_banner.json',
+    'theme_activity_demo_coupon_rush.json',
+    'theme_activity_demo_nine_waterfall.json',
+    'theme_activity_demo_all_modules.json',
+  ];
+  for (const file of themeFiles) {
+    const config = tryReadRawJson<Record<string, unknown>>(file);
+    if (!config) {
+      console.warn(`Skip missing theme activity: ${file}`);
+      continue;
+    }
+    const activityId = String(config.activityId ?? '');
+    const title = String(config.title ?? activityId);
+    const status = String(config.status ?? 'online');
+    if (!activityId) continue;
+    const configJson = config as object;
+    await prisma.themeActivity.upsert({
+      where: { activityId },
+      create: {
+        activityId,
+        title,
+        status,
+        expiredBehavior: String(config.expiredBehavior ?? 'browse'),
+        startAt:
+          config.startAt != null ? new Date(String(config.startAt)) : null,
+        endAt: config.endAt != null ? new Date(String(config.endAt)) : null,
+        config: configJson,
+      },
+      update: {
+        title,
+        status,
+        expiredBehavior: String(config.expiredBehavior ?? 'browse'),
+        startAt:
+          config.startAt != null ? new Date(String(config.startAt)) : null,
+        endAt: config.endAt != null ? new Date(String(config.endAt)) : null,
+        config: configJson,
+      },
+    });
+    console.log(`ThemeActivity seeded: ${activityId}`);
+  }
+
+  // Coupon templates (wallet + theme + flash-sale ids)
+  const couponTemplates: Array<{
+    id: string;
+    title: string;
+    description: string;
+    type: string;
+    discountCents: number;
+    discountPercent: number;
+    minOrderCents: number;
+    source: string;
+  }> = [];
+
+  const walletCoupons = tryReadMock<
+    Array<{
+      id: string;
+      title: string;
+      description?: string;
+      type?: string;
+      discountCents?: number;
+      discountPercent?: number;
+      minOrderCents?: number;
+    }>
+  >('coupons.json');
+  if (walletCoupons) {
+    for (const item of walletCoupons) {
+      couponTemplates.push({
+        id: item.id,
+        title: item.title,
+        description: item.description ?? '',
+        type: item.type ?? 'fixed',
+        discountCents: item.discountCents ?? 0,
+        discountPercent: item.discountPercent ?? 0,
+        minOrderCents: item.minOrderCents ?? 0,
+        source: 'wallet',
+      });
+    }
+  }
+
+  const extraTemplates = [
+    {
+      id: 'c_all_10',
+      title: '新人券',
+      description: '满99可用',
+      type: 'fixed',
+      discountCents: 1000,
+      discountPercent: 0,
+      minOrderCents: 9900,
+      source: 'theme',
+    },
+    {
+      id: 'c_all_20',
+      title: '满减券',
+      description: '满199可用',
+      type: 'fixed',
+      discountCents: 2000,
+      discountPercent: 0,
+      minOrderCents: 19900,
+      source: 'theme',
+    },
+    {
+      id: 'c_all_30',
+      title: '大额券',
+      description: '满299可用',
+      type: 'fixed',
+      discountCents: 3000,
+      discountPercent: 0,
+      minOrderCents: 29900,
+      source: 'theme',
+    },
+    {
+      id: 'fc-10-1',
+      title: '满200减30',
+      description: '全场通用',
+      type: 'fixed',
+      discountCents: 3000,
+      discountPercent: 0,
+      minOrderCents: 20000,
+      source: 'flash',
+    },
+    {
+      id: 'fc-10-2',
+      title: '满500减80',
+      description: '限抢购商品',
+      type: 'fixed',
+      discountCents: 8000,
+      discountPercent: 0,
+      minOrderCents: 50000,
+      source: 'flash',
+    },
+    {
+      id: 'fc-10-3',
+      title: '9折券',
+      description: '会员专享',
+      type: 'percent',
+      discountCents: 0,
+      discountPercent: 10,
+      minOrderCents: 0,
+      source: 'flash',
+    },
+    {
+      id: 'fc-14-1',
+      title: '满300减50',
+      description: '品类满减',
+      type: 'fixed',
+      discountCents: 5000,
+      discountPercent: 0,
+      minOrderCents: 30000,
+      source: 'flash',
+    },
+    {
+      id: 'fc-14-2',
+      title: '满100减15',
+      description: '跨店满减',
+      type: 'fixed',
+      discountCents: 1500,
+      discountPercent: 0,
+      minOrderCents: 10000,
+      source: 'flash',
+    },
+    {
+      id: 'fc-20-1',
+      title: '满400减60',
+      description: '限时满减',
+      type: 'fixed',
+      discountCents: 6000,
+      discountPercent: 0,
+      minOrderCents: 40000,
+      source: 'flash',
+    },
+    {
+      id: 'fc-20-2',
+      title: '满150减25',
+      description: '夜间专场',
+      type: 'fixed',
+      discountCents: 2500,
+      discountPercent: 0,
+      minOrderCents: 15000,
+      source: 'flash',
+    },
+  ];
+  couponTemplates.push(...extraTemplates);
+
+  for (const item of couponTemplates) {
+    await prisma.couponTemplate.upsert({
+      where: { id: item.id },
+      create: {
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        type: item.type,
+        discountCents: item.discountCents,
+        discountPercent: item.discountPercent,
+        minOrderCents: item.minOrderCents,
+        source: item.source,
+        validDays: 30,
+        enabled: true,
+      },
+      update: {
+        title: item.title,
+        description: item.description,
+        type: item.type,
+        discountCents: item.discountCents,
+        discountPercent: item.discountPercent,
+        minOrderCents: item.minOrderCents,
+        source: item.source,
+      },
+    });
+  }
+  console.log(`Coupon templates upserted: ${couponTemplates.length}`);
 
   console.log('Seed complete.');
   console.log(`Admin login: ${adminEmail} / ${adminPassword}`);

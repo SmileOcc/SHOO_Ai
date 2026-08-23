@@ -119,6 +119,12 @@ class _SHOToolboxPageState extends ConsumerState<SHOToolboxPage>
             onTap: () => context.push(SHOAppRoutes.flashSale),
           ),
           _ToolboxMenuItem(
+            icon: Icons.local_fire_department_outlined,
+            color: const Color(0xFFFF7043),
+            label: l10n.toolboxThemeActivity,
+            onTap: () => context.push(SHOAppRoutes.toolboxThemeActivity),
+          ),
+          _ToolboxMenuItem(
             icon: Icons.contacts_outlined,
             color: const Color(0xFF1E88E5),
             label: l10n.toolboxContacts,

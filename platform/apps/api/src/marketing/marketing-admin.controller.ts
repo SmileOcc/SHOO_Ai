@@ -67,4 +67,102 @@ export class MarketingAdminController {
         : body;
     return this.marketing.saveHomeFeedConfig(payload ?? {});
   }
+
+  @Get('cart-marquee')
+  getCartMarquee() {
+    return this.marketing.adminCartMarquee();
+  }
+
+  @Put('cart-marquee')
+  saveCartMarquee(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveCartMarquee(payload);
+  }
+
+  @Get('flash-sale-catalog')
+  getFlashSaleCatalog() {
+    return this.marketing.adminFlashSaleCatalog();
+  }
+
+  @Put('flash-sale-catalog')
+  saveFlashSaleCatalog(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveFlashSaleCatalog(payload);
+  }
+
+  @Get('activity-data')
+  getActivityData() {
+    return this.marketing.adminActivityData();
+  }
+
+  @Put('activity-data')
+  saveActivityData(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveActivityData(payload);
+  }
+
+  @Get('activity-detail')
+  getActivityDetail() {
+    return this.marketing.adminActivityDetail();
+  }
+
+  @Put('activity-detail')
+  saveActivityDetail(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveActivityDetail(payload);
+  }
+
+  @Get('activity-level3-detail')
+  getActivityLevel3Detail() {
+    return this.marketing.adminActivityDetailLevel3();
+  }
+
+  @Put('activity-level3-detail')
+  saveActivityLevel3Detail(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveActivityDetailLevel3(payload);
+  }
+
+  @Get('activity-user-check')
+  getActivityUserCheck() {
+    return this.marketing.adminActivityUserCheck();
+  }
+
+  @Put('activity-user-check')
+  saveActivityUserCheck(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveActivityUserCheck(payload);
+  }
+
+  @Get('activity-url-rules')
+  getActivityUrlRules() {
+    return this.marketing.adminActivityUrlRules();
+  }
+
+  @Put('activity-url-rules')
+  saveActivityUrlRules(@Body() body: { payload?: unknown } | unknown) {
+    const payload =
+      body && typeof body === 'object' && 'payload' in body
+        ? body.payload
+        : body;
+    return this.marketing.saveActivityUrlRules(payload);
+  }
 }

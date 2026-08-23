@@ -144,6 +144,23 @@ npm run seed
 
 ## Next
 
-ThemeActivity CMS, media upload (MinIO), Admin pages for coupons/flash sale, RBAC, remote deploy.
+Media upload (MinIO), Admin pages for coupons/flash sale, RBAC, remote deploy.
+
+## ThemeActivity
+
+**App**
+
+- `GET /api/v1/theme-activities/{activityId}` — page config（仅 `online`）
+- `GET /api/v1/theme-activities/{activityId}/products?page=&pageSize=` — footer 商品分页
+
+**Admin**
+
+- `GET/POST /api/admin/v1/marketing/theme-activities`
+- `GET/PUT/DELETE /api/admin/v1/marketing/theme-activities/{activityId}`
+- `POST /api/admin/v1/marketing/theme-activities/validate`
+
+Admin console: `http://127.0.0.1:5173/theme-activities`
+
+See `docs/Flutter主题活动ThemeActivity技术方案.md`.
 
 See `docs/shoo-backend-platform-design.md`.

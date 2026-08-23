@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
+import 'package:shoo/features/coupon/presentation/state/hos_coupon_controller.dart';
 import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_coupon.dart';
@@ -239,6 +240,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
     state = state.copyWith(
       claimedCouponIds: {...state.claimedCouponIds, couponId},
     );
+    _ref.invalidate(couponsProvider);
   }
 
   Future<bool> toggleFollow(SHOFlashSaleProduct product) async {

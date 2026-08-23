@@ -1,9 +1,15 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { CouponService } from '../coupon/coupon.service';
+import { UserAuthGuard } from '../iam/user-auth.guard';
 import { MarketingService } from './marketing.service';
 
 @Controller('v1')
 export class MarketingAppController {
-  constructor(private readonly marketing: MarketingService) {}
+  constructor(
+    private readonly marketing: MarketingService,
+    private readonly coupons: CouponService,
+  ) {}
 
   @Get('marketing/activity-popup')
   activityPopup() {
@@ -91,7 +97,11 @@ export class MarketingAppController {
   }
 
   @Post('flash-sale/coupons/:id/claim')
-  claimCoupon(@Param('id') id: string) {
-    return this.marketing.claimCoupon(id);
+  @UseGuards(UserAuthGuard)
+  claimCoupon(
+    @Param('id') id: string,
+    @Req() req: Request & { user?: { sub: string } },
+  ) {
+    return this.coupons.claimCoupon(req.user!.sub, id);
   }
 }

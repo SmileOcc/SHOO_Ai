@@ -6,6 +6,13 @@ import {
   UnorderedListOutlined,
   DashboardOutlined,
   HomeOutlined,
+  FireOutlined,
+  GiftOutlined,
+  ThunderboltOutlined,
+  NotificationOutlined,
+  SearchOutlined,
+  CommentOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -36,6 +43,41 @@ export default function AdminLayout() {
               icon: <HomeOutlined />,
               label: '首页配置',
             },
+            {
+              key: '/theme-activities',
+              icon: <FireOutlined />,
+              label: '主题活动',
+            },
+            {
+              key: '/coupons',
+              icon: <GiftOutlined />,
+              label: '优惠券',
+            },
+            {
+              key: '/flash-sale',
+              icon: <ThunderboltOutlined />,
+              label: '闪购配置',
+            },
+            {
+              key: '/cart-marquee',
+              icon: <NotificationOutlined />,
+              label: '购物车跑马灯',
+            },
+            {
+              key: '/search-hot',
+              icon: <SearchOutlined />,
+              label: '搜索热词',
+            },
+            {
+              key: '/reviews',
+              icon: <CommentOutlined />,
+              label: '商品评价',
+            },
+            {
+              key: '/legacy-activity',
+              icon: <GlobalOutlined />,
+              label: '旧版活动',
+            },
             { key: '/banners', icon: <PictureOutlined />, label: 'Banners' },
             { key: '/products', icon: <ShoppingOutlined />, label: 'Products' },
             {
@@ -46,7 +88,7 @@ export default function AdminLayout() {
             {
               key: '/orders',
               icon: <UnorderedListOutlined />,
-              label: 'Orders',
+              label: '订单管理',
             },
           ]}
         />

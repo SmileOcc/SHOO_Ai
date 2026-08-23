@@ -113,13 +113,34 @@ export class CatalogService {
     throw new NotFoundException(`Product ${id} not found`);
   }
 
-  async getProductReviews(id: string) {
+  async getProductReviews(
+    id: string,
+    query: { page?: number; pageSize?: number } = {},
+  ) {
     const catalog = await this.docs.getPayloadOrNull<{
-      byProduct?: Record<string, unknown>;
+      byProduct?: Record<
+        string,
+        {
+          averageRating?: number;
+          totalCount?: number;
+          items?: unknown[];
+          hasMore?: boolean;
+        }
+      >;
     }>('reviews_catalog');
     const reviews = catalog?.byProduct?.[id];
     if (reviews) {
-      return reviews;
+      const page = Math.max(1, Number(query.page) || 1);
+      const pageSize = Math.min(50, Math.max(1, Number(query.pageSize) || 20));
+      const items = Array.isArray(reviews.items) ? reviews.items : [];
+      const start = (page - 1) * pageSize;
+      const slice = items.slice(start, start + pageSize);
+      return {
+        averageRating: reviews.averageRating ?? 0,
+        totalCount: reviews.totalCount ?? items.length,
+        items: slice,
+        hasMore: start + pageSize < items.length,
+      };
     }
 
     const flashCatalog = await this.docs.getPayloadOrNull('flash_sale_catalog');
@@ -354,5 +375,38 @@ export class CatalogService {
 
   deleteProduct(id: string) {
     return this.prisma.product.delete({ where: { id } });
+  }
+
+  async adminSearchHot() {
+    return this.docs.getPayloadOrNull('search_hot');
+  }
+
+  async saveSearchHot(payload: unknown) {
+    return this.docs.upsertPayload('search_hot', payload);
+  }
+
+  async adminReviewsCatalog() {
+    return this.docs.getPayloadOrNull('reviews_catalog');
+  }
+
+  async saveReviewsCatalog(payload: unknown) {
+    return this.docs.upsertPayload('reviews_catalog', payload);
+  }
+
+  async adminProductReviews(productId: string) {
+    const catalog = await this.docs.getPayloadOrNull<{
+      byProduct?: Record<string, unknown>;
+    }>('reviews_catalog');
+    return catalog?.byProduct?.[productId] ?? null;
+  }
+
+  async saveProductReviews(productId: string, payload: unknown) {
+    const catalog = (await this.docs.getPayloadOrNull<{
+      byProduct?: Record<string, unknown>;
+    }>('reviews_catalog')) ?? { byProduct: {} };
+    const byProduct = { ...(catalog.byProduct ?? {}) };
+    byProduct[productId] = payload;
+    await this.docs.upsertPayload('reviews_catalog', { byProduct });
+    return byProduct[productId];
   }
 }

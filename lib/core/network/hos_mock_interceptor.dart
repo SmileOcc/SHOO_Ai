@@ -9,6 +9,7 @@ import 'package:shoo/core/network/hos_mock_dynamic.dart';
 import 'package:shoo/core/network/hos_mock_flash_sale_follow_store.dart';
 import 'package:shoo/core/network/hos_mock_order_store.dart';
 import 'package:shoo/core/network/hos_mock_route_registry.dart';
+import 'package:shoo/core/network/hos_theme_activity_mock_dynamic.dart';
 
 /// 拦截 Dio 请求并返回本地 JSON Mock 数据。
 class SHOMockInterceptor extends Interceptor {
@@ -47,6 +48,44 @@ class SHOMockInterceptor extends Interceptor {
     await Future<void>.delayed(config.mockNetworkDelay);
 
     try {
+      if (entry.method == 'GET' && entry.path == '/theme-activities/{activityId}') {
+        final activityId =
+            themeActivityIdFromPath(entry.path, path) ?? 'demo_long_banner';
+        final raw = await rootBundle.loadString(
+          themeActivityMockAsset(activityId),
+        );
+        final config = jsonDecode(raw) as Map<String, dynamic>;
+        handler.resolve(
+          Response(
+            requestOptions: options,
+            statusCode: 200,
+            data: {'code': 0, 'message': 'ok', 'data': config},
+          ),
+        );
+        return;
+      }
+
+      if (entry.method == 'GET' &&
+          entry.path == '/theme-activities/{activityId}/products') {
+        final productsRaw = await rootBundle.loadString(
+          'assets/mock/products.json',
+        );
+        final productsEnvelope =
+            jsonDecode(productsRaw) as Map<String, dynamic>;
+        final data = resolveThemeActivityProducts(
+          productsEnvelope,
+          query: options.queryParameters,
+        );
+        handler.resolve(
+          Response(
+            requestOptions: options,
+            statusCode: 200,
+            data: data,
+          ),
+        );
+        return;
+      }
+
       if (entry.method == 'GET' && entry.path == '/orders/{id}') {
         final orderId = mockPathParam(entry.path, path, 'id');
         final cached = orderId == null ? null : SHOMockOrderStore.get(orderId);

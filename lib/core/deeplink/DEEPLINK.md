@@ -131,7 +131,8 @@ flash-sale
 | `webview?url=..&title=..` | WebView 页 | 否 |
 | `login` | `/login` | — |
 | `login?redirect=/checkout` | `/login`（登录后跳转） | — |
-| `flash-sale` | `/search?q=flash sale` | 否 |
+| `flash-sale` | `/flash-sale` | 否 |
+| `theme-activity/{activityId}` | `/theme-activity/:activityId` | 否 |
 | `new-arrivals` | `/search?q=new arrivals` | 否 |
 | `trending` | `/search?q=trending` | 否 |
 

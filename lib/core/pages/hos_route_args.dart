@@ -73,6 +73,27 @@ class SHOQueryIdRouteArgs implements SHORouteArgs {
   }
 }
 
+/// `/theme-activity/:activityId` 主题活动参数。
+class SHOThemeActivityRouteArgs implements SHORouteArgs {
+  const SHOThemeActivityRouteArgs({
+    required this.activityId,
+    this.channel,
+  });
+
+  final String activityId;
+  final String? channel;
+
+  factory SHOThemeActivityRouteArgs.fromState(GoRouterState state) {
+    return SHOThemeActivityRouteArgs(
+      activityId: SHOPathIdRouteArgs.fromState(
+        state,
+        key: 'activityId',
+      ).id,
+      channel: state.uri.queryParameters['channel'],
+    );
+  }
+}
+
 /// `/flash-sale?activityId=` 活动页参数。
 class SHOFlashSaleRouteArgs implements SHORouteArgs {
   const SHOFlashSaleRouteArgs({required this.activityId});
@@ -356,6 +377,9 @@ extension SHORouteStateArgs on GoRouterState {
 
   SHOFlashSaleRouteArgs get flashSaleArgs =>
       SHOFlashSaleRouteArgs.fromState(this);
+
+  SHOThemeActivityRouteArgs get themeActivityArgs =>
+      SHOThemeActivityRouteArgs.fromState(this);
 
   SHOWebViewRouteArgs get webViewArgs => SHOWebViewRouteArgs.fromState(this);
 

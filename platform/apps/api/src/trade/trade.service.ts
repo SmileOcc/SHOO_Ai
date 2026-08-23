@@ -43,6 +43,26 @@ export class TradeService {
   }
 
   async getLogistics(orderId: string) {
+    const catalog = await this.docs.getPayloadOrNull<{
+      byOrder?: Record<
+        string,
+        {
+          carrier?: string;
+          trackingNumber?: string;
+          events?: unknown[];
+        }
+      >;
+    }>('order_logistics_catalog');
+    const entry = catalog?.byOrder?.[orderId];
+    if (entry) {
+      return {
+        orderId,
+        carrier: entry.carrier ?? '',
+        trackingNumber: entry.trackingNumber ?? '',
+        events: entry.events ?? [],
+      };
+    }
+
     const template = await this.docs.getPayload<{
       orderId?: string;
       carrier?: string;
@@ -53,6 +73,66 @@ export class TradeService {
       ...template,
       orderId,
     };
+  }
+
+  async adminGetOrder(id: string) {
+    return this.getOrder(id);
+  }
+
+  async adminUpdateOrder(
+    id: string,
+    body: Partial<{
+      status: string;
+      shippingAddress: string;
+      hasLogistics: boolean;
+    }>,
+  ) {
+    const order = await this.prisma.order.update({
+      where: { id },
+      data: {
+        ...(body.status != null ? { status: body.status } : {}),
+        ...(body.shippingAddress != null
+          ? { shippingAddress: body.shippingAddress }
+          : {}),
+        ...(body.hasLogistics != null ? { hasLogistics: body.hasLogistics } : {}),
+      },
+      include: { items: true },
+    });
+    return this.toAppOrder(order);
+  }
+
+  async adminGetLogistics(orderId: string) {
+    return this.getLogistics(orderId);
+  }
+
+  async adminSaveLogistics(
+    orderId: string,
+    body: {
+      carrier?: string;
+      trackingNumber?: string;
+      events?: Array<{
+        time: string;
+        status: string;
+        description: string;
+        isActive?: boolean;
+      }>;
+    },
+  ) {
+    const catalog = (await this.docs.getPayloadOrNull<{
+      byOrder?: Record<string, unknown>;
+    }>('order_logistics_catalog')) ?? { byOrder: {} };
+    const byOrder = { ...(catalog.byOrder ?? {}) };
+    byOrder[orderId] = {
+      carrier: body.carrier ?? '',
+      trackingNumber: body.trackingNumber ?? '',
+      events: body.events ?? [],
+    };
+    await this.docs.upsertPayload('order_logistics_catalog', { byOrder });
+    await this.prisma.order.update({
+      where: { id: orderId },
+      data: { hasLogistics: true },
+    });
+    return this.getLogistics(orderId);
   }
 
   async createOrder(body: {
@@ -164,6 +244,8 @@ export class TradeService {
     orderNo: string;
     status: string;
     totalCents: number;
+    shippingAddress?: string;
+    hasLogistics?: boolean;
     createdAt: Date;
     items: Array<{
       productId: string;
@@ -183,6 +265,8 @@ export class TradeService {
       status: order.status,
       totalCents: order.totalCents,
       createdAt,
+      shippingAddress: order.shippingAddress ?? '',
+      hasLogistics: order.hasLogistics ?? false,
       items: order.items.map((i) => ({
         productId: i.productId,
         title: i.title,

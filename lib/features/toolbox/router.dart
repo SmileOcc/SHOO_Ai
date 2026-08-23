@@ -10,6 +10,7 @@ import 'package:shoo/features/toolbox/presentation/pages/hos_download_list_page.
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_web_debug_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_toolbox_web_page.dart';
+import 'package:shoo/features/theme_activity/presentation/pages/hos_theme_activity_templates_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_txt_reader_route_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_music_player_route_page.dart';
 import 'package:shoo/features/toolbox/presentation/pages/hos_video_player_route_page.dart';
@@ -50,6 +51,11 @@ List<RouteBase> shoToolboxRoutes({
         path: 'web-debug',
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SHOToolboxWebDebugPage(),
+      ),
+      GoRoute(
+        path: 'theme-activity',
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SHOThemeActivityTemplatesPage(),
       ),
       GoRoute(
         path: 'web',
