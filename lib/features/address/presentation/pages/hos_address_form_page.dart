@@ -9,7 +9,11 @@ import 'package:shoo/core/utils/hos_validators.dart';
 import 'package:shoo/core/widgets/hos_button.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/address/domain/entities/hos_address.dart';
+import 'package:shoo/features/address/domain/entities/hos_address_region_ext.dart';
+import 'package:shoo/features/address/domain/entities/hos_region_node.dart';
 import 'package:shoo/features/address/presentation/state/hos_address_controller.dart';
+import 'package:shoo/features/address/presentation/state/hos_region_controller.dart';
+import 'package:shoo/features/address/presentation/widgets/hos_address_region_field.dart';
 import 'package:shoo/features/address/presentation/widgets/hos_address_text_field.dart';
 
 final _addressFormCreateProvider = Provider<AsyncValue<SHOAddress?>>(
@@ -33,12 +37,12 @@ class _SHOAddressFormPageState
   late final TextEditingController _phoneCtrl;
   late final TextEditingController _line1Ctrl;
   late final TextEditingController _line2Ctrl;
-  late final TextEditingController _cityCtrl;
-  late final TextEditingController _regionCtrl;
   late final TextEditingController _postalCtrl;
   var _isDefault = false;
   var _saving = false;
   var _addressInitialized = false;
+  SHOAddressRegionSelection _regionSelection =
+      const SHOAddressRegionSelection();
 
   bool get _isEditing => widget.addressId != null;
 
@@ -72,8 +76,6 @@ class _SHOAddressFormPageState
     _phoneCtrl = TextEditingController();
     _line1Ctrl = TextEditingController();
     _line2Ctrl = TextEditingController();
-    _cityCtrl = TextEditingController();
-    _regionCtrl = TextEditingController();
     _postalCtrl = TextEditingController();
   }
 
@@ -84,10 +86,9 @@ class _SHOAddressFormPageState
     _phoneCtrl.text = address.phone;
     _line1Ctrl.text = address.line1;
     _line2Ctrl.text = address.line2;
-    _cityCtrl.text = address.city;
-    _regionCtrl.text = address.region;
     _postalCtrl.text = address.postalCode;
     _isDefault = address.isDefault;
+    _regionSelection = address.regionSelection;
   }
 
   @override
@@ -96,8 +97,6 @@ class _SHOAddressFormPageState
     _phoneCtrl.dispose();
     _line1Ctrl.dispose();
     _line2Ctrl.dispose();
-    _cityCtrl.dispose();
-    _regionCtrl.dispose();
     _postalCtrl.dispose();
     super.dispose();
   }
@@ -113,17 +112,16 @@ class _SHOAddressFormPageState
           widget.addressId ?? 'addr_${DateTime.now().millisecondsSinceEpoch}';
       final shouldDefault = _isDefault || addresses.isEmpty;
 
-      final address = SHOAddress(
+      final base = SHOAddress(
         id: id,
         name: _nameCtrl.text.trim(),
         phone: _phoneCtrl.text.trim(),
         line1: _line1Ctrl.text.trim(),
         line2: _line2Ctrl.text.trim(),
-        city: _cityCtrl.text.trim(),
-        region: _regionCtrl.text.trim(),
         postalCode: _postalCtrl.text.trim(),
         isDefault: shouldDefault,
       );
+      final address = _regionSelection.applyTo(base);
 
       await ref.read(addressesProvider.notifier).save(address);
       if (!mounted) return;
@@ -156,6 +154,8 @@ class _SHOAddressFormPageState
     }
 
     final l10n = AppLocalizations.of(context);
+    final regionConfigs = ref.watch(regionMetaCountriesProvider).valueOrNull ??
+        const <SHORegionCountryConfig>[];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -182,6 +182,14 @@ class _SHOAddressFormPageState
               ]),
             ),
             const SizedBox(height: SHOAppSpacing.lg),
+            SHOAddressRegionField(
+              selection: _regionSelection,
+              configs: regionConfigs,
+              onChanged: (value) => setState(() => _regionSelection = value),
+              validator: (value) =>
+                  validateAddressRegion(l10n, value, regionConfigs),
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
             SHOAddressTextField(
               label: l10n.addressLine1Label,
               controller: _line1Ctrl,
@@ -192,20 +200,6 @@ class _SHOAddressFormPageState
             SHOAddressTextField(
               label: l10n.addressLine2Label,
               controller: _line2Ctrl,
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-            SHOAddressTextField(
-              label: l10n.addressCityLabel,
-              controller: _cityCtrl,
-              required: true,
-              validator: SHOValidators.required(l10n),
-            ),
-            const SizedBox(height: SHOAppSpacing.lg),
-            SHOAddressTextField(
-              label: l10n.addressRegionLabel,
-              controller: _regionCtrl,
-              required: true,
-              validator: SHOValidators.required(l10n),
             ),
             const SizedBox(height: SHOAppSpacing.lg),
             SHOAddressTextField(

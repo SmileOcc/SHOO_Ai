@@ -23,11 +23,14 @@ class SHOAddressRepository {
 
   Future<List<SHOAddress>> getAddresses() async {
     final cached = _addressStorage.read();
-    if (cached != null && cached.isNotEmpty) return cached;
+    if (cached != null && cached.isNotEmpty) {
+      return cached.map((item) => item.normalized()).toList();
+    }
 
     final remote = await _api.fetchAddresses();
-    await _addressStorage.write(remote);
-    return remote;
+    final normalized = remote.map((item) => item.normalized()).toList();
+    await _addressStorage.write(normalized);
+    return normalized;
   }
 
   Future<void> upsertAddress(SHOAddress address) async {

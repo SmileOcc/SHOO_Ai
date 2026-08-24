@@ -28,6 +28,34 @@ class SHOMockInterceptor extends Interceptor {
     final apiPrefix = _extractApiPrefix(options.uri.path);
     final path = options.uri.path.replaceFirst(apiPrefix, '');
 
+    if (options.method == 'GET' && path.startsWith('/regions')) {
+      await Future<void>.delayed(config.mockNetworkDelay);
+      try {
+        final data = await _loadRegionsMock(path, options.queryParameters);
+        handler.resolve(
+          Response(
+            requestOptions: options,
+            statusCode: 200,
+            data: {'code': 0, 'message': 'ok', 'data': data},
+          ),
+        );
+      } catch (error, stack) {
+        SHOAppLogger.e('Mock regions failed', error, stack);
+        handler.reject(
+          DioException(
+            requestOptions: options,
+            response: Response(
+              requestOptions: options,
+              statusCode: 404,
+              data: {'code': 404, 'message': error.toString(), 'data': null},
+            ),
+            type: DioExceptionType.badResponse,
+          ),
+        );
+      }
+      return;
+    }
+
     final entry = SHOMockRouteRegistry.match(options.method, path);
     if (entry == null) {
       SHOAppLogger.w('Mock route not found: ${options.method} $path');
@@ -355,5 +383,31 @@ class SHOMockInterceptor extends Interceptor {
       return '/${parts[1]}/${parts[2]}';
     }
     return rest;
+  }
+
+  static Future<Map<String, dynamic>> _loadRegionsMock(
+    String path,
+    Map<String, dynamic> query,
+  ) async {
+    if (path == '/regions/meta') {
+      final raw = await rootBundle.loadString('assets/mock/regions/meta.json');
+      return jsonDecode(raw) as Map<String, dynamic>;
+    }
+    if (path == '/regions/countries') {
+      final raw = await rootBundle.loadString(
+        'assets/mock/regions/countries.json',
+      );
+      return jsonDecode(raw) as Map<String, dynamic>;
+    }
+    if (path == '/regions/children') {
+      final country = '${query['country'] ?? ''}'.toUpperCase();
+      final parent = '${query['parentCode'] ?? ''}'.trim();
+      final effectiveParent = parent.isEmpty ? country : parent;
+      final asset =
+          'assets/mock/regions/children/$country/$effectiveParent.json';
+      final raw = await rootBundle.loadString(asset);
+      return jsonDecode(raw) as Map<String, dynamic>;
+    }
+    throw StateError('Mock region route not found: $path');
   }
 }

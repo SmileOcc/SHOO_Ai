@@ -26,10 +26,19 @@ mixin _$SHOAddress {
   String get phone => throw _privateConstructorUsedError;
   String get line1 => throw _privateConstructorUsedError;
   String get line2 => throw _privateConstructorUsedError;
+  String get countryCode => throw _privateConstructorUsedError;
+  String get countryName => throw _privateConstructorUsedError;
+  String get regionL2Code => throw _privateConstructorUsedError;
+  String get regionL2Name => throw _privateConstructorUsedError;
+  String get regionL3Code => throw _privateConstructorUsedError;
+  String get regionL3Name => throw _privateConstructorUsedError;
+  String get regionL4Code => throw _privateConstructorUsedError;
+  String get regionL4Name => throw _privateConstructorUsedError;
   String get city => throw _privateConstructorUsedError;
   String get region => throw _privateConstructorUsedError;
   String get postalCode => throw _privateConstructorUsedError;
   bool get isDefault => throw _privateConstructorUsedError;
+  bool get needsRegionReselect => throw _privateConstructorUsedError;
 
   /// Serializes this SHOAddress to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,10 +63,19 @@ abstract class $SHOAddressCopyWith<$Res> {
     String phone,
     String line1,
     String line2,
+    String countryCode,
+    String countryName,
+    String regionL2Code,
+    String regionL2Name,
+    String regionL3Code,
+    String regionL3Name,
+    String regionL4Code,
+    String regionL4Name,
     String city,
     String region,
     String postalCode,
     bool isDefault,
+    bool needsRegionReselect,
   });
 }
 
@@ -81,10 +99,19 @@ class _$SHOAddressCopyWithImpl<$Res, $Val extends SHOAddress>
     Object? phone = null,
     Object? line1 = null,
     Object? line2 = null,
+    Object? countryCode = null,
+    Object? countryName = null,
+    Object? regionL2Code = null,
+    Object? regionL2Name = null,
+    Object? regionL3Code = null,
+    Object? regionL3Name = null,
+    Object? regionL4Code = null,
+    Object? regionL4Name = null,
     Object? city = null,
     Object? region = null,
     Object? postalCode = null,
     Object? isDefault = null,
+    Object? needsRegionReselect = null,
   }) {
     return _then(
       _value.copyWith(
@@ -108,6 +135,38 @@ class _$SHOAddressCopyWithImpl<$Res, $Val extends SHOAddress>
                 ? _value.line2
                 : line2 // ignore: cast_nullable_to_non_nullable
                       as String,
+            countryCode: null == countryCode
+                ? _value.countryCode
+                : countryCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            countryName: null == countryName
+                ? _value.countryName
+                : countryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL2Code: null == regionL2Code
+                ? _value.regionL2Code
+                : regionL2Code // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL2Name: null == regionL2Name
+                ? _value.regionL2Name
+                : regionL2Name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL3Code: null == regionL3Code
+                ? _value.regionL3Code
+                : regionL3Code // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL3Name: null == regionL3Name
+                ? _value.regionL3Name
+                : regionL3Name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL4Code: null == regionL4Code
+                ? _value.regionL4Code
+                : regionL4Code // ignore: cast_nullable_to_non_nullable
+                      as String,
+            regionL4Name: null == regionL4Name
+                ? _value.regionL4Name
+                : regionL4Name // ignore: cast_nullable_to_non_nullable
+                      as String,
             city: null == city
                 ? _value.city
                 : city // ignore: cast_nullable_to_non_nullable
@@ -123,6 +182,10 @@ class _$SHOAddressCopyWithImpl<$Res, $Val extends SHOAddress>
             isDefault: null == isDefault
                 ? _value.isDefault
                 : isDefault // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            needsRegionReselect: null == needsRegionReselect
+                ? _value.needsRegionReselect
+                : needsRegionReselect // ignore: cast_nullable_to_non_nullable
                       as bool,
           )
           as $Val,
@@ -145,10 +208,19 @@ abstract class _$$SHOAddressImplCopyWith<$Res>
     String phone,
     String line1,
     String line2,
+    String countryCode,
+    String countryName,
+    String regionL2Code,
+    String regionL2Name,
+    String regionL3Code,
+    String regionL3Name,
+    String regionL4Code,
+    String regionL4Name,
     String city,
     String region,
     String postalCode,
     bool isDefault,
+    bool needsRegionReselect,
   });
 }
 
@@ -171,10 +243,19 @@ class __$$SHOAddressImplCopyWithImpl<$Res>
     Object? phone = null,
     Object? line1 = null,
     Object? line2 = null,
+    Object? countryCode = null,
+    Object? countryName = null,
+    Object? regionL2Code = null,
+    Object? regionL2Name = null,
+    Object? regionL3Code = null,
+    Object? regionL3Name = null,
+    Object? regionL4Code = null,
+    Object? regionL4Name = null,
     Object? city = null,
     Object? region = null,
     Object? postalCode = null,
     Object? isDefault = null,
+    Object? needsRegionReselect = null,
   }) {
     return _then(
       _$SHOAddressImpl(
@@ -198,6 +279,38 @@ class __$$SHOAddressImplCopyWithImpl<$Res>
             ? _value.line2
             : line2 // ignore: cast_nullable_to_non_nullable
                   as String,
+        countryCode: null == countryCode
+            ? _value.countryCode
+            : countryCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        countryName: null == countryName
+            ? _value.countryName
+            : countryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL2Code: null == regionL2Code
+            ? _value.regionL2Code
+            : regionL2Code // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL2Name: null == regionL2Name
+            ? _value.regionL2Name
+            : regionL2Name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL3Code: null == regionL3Code
+            ? _value.regionL3Code
+            : regionL3Code // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL3Name: null == regionL3Name
+            ? _value.regionL3Name
+            : regionL3Name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL4Code: null == regionL4Code
+            ? _value.regionL4Code
+            : regionL4Code // ignore: cast_nullable_to_non_nullable
+                  as String,
+        regionL4Name: null == regionL4Name
+            ? _value.regionL4Name
+            : regionL4Name // ignore: cast_nullable_to_non_nullable
+                  as String,
         city: null == city
             ? _value.city
             : city // ignore: cast_nullable_to_non_nullable
@@ -214,6 +327,10 @@ class __$$SHOAddressImplCopyWithImpl<$Res>
             ? _value.isDefault
             : isDefault // ignore: cast_nullable_to_non_nullable
                   as bool,
+        needsRegionReselect: null == needsRegionReselect
+            ? _value.needsRegionReselect
+            : needsRegionReselect // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -228,10 +345,19 @@ class _$SHOAddressImpl extends _SHOAddress {
     required this.phone,
     required this.line1,
     this.line2 = '',
-    required this.city,
-    required this.region,
+    this.countryCode = '',
+    this.countryName = '',
+    this.regionL2Code = '',
+    this.regionL2Name = '',
+    this.regionL3Code = '',
+    this.regionL3Name = '',
+    this.regionL4Code = '',
+    this.regionL4Name = '',
+    this.city = '',
+    this.region = '',
     this.postalCode = '',
     this.isDefault = false,
+    this.needsRegionReselect = false,
   }) : super._();
 
   factory _$SHOAddressImpl.fromJson(Map<String, dynamic> json) =>
@@ -249,8 +375,34 @@ class _$SHOAddressImpl extends _SHOAddress {
   @JsonKey()
   final String line2;
   @override
+  @JsonKey()
+  final String countryCode;
+  @override
+  @JsonKey()
+  final String countryName;
+  @override
+  @JsonKey()
+  final String regionL2Code;
+  @override
+  @JsonKey()
+  final String regionL2Name;
+  @override
+  @JsonKey()
+  final String regionL3Code;
+  @override
+  @JsonKey()
+  final String regionL3Name;
+  @override
+  @JsonKey()
+  final String regionL4Code;
+  @override
+  @JsonKey()
+  final String regionL4Name;
+  @override
+  @JsonKey()
   final String city;
   @override
+  @JsonKey()
   final String region;
   @override
   @JsonKey()
@@ -258,10 +410,13 @@ class _$SHOAddressImpl extends _SHOAddress {
   @override
   @JsonKey()
   final bool isDefault;
+  @override
+  @JsonKey()
+  final bool needsRegionReselect;
 
   @override
   String toString() {
-    return 'SHOAddress(id: $id, name: $name, phone: $phone, line1: $line1, line2: $line2, city: $city, region: $region, postalCode: $postalCode, isDefault: $isDefault)';
+    return 'SHOAddress(id: $id, name: $name, phone: $phone, line1: $line1, line2: $line2, countryCode: $countryCode, countryName: $countryName, regionL2Code: $regionL2Code, regionL2Name: $regionL2Name, regionL3Code: $regionL3Code, regionL3Name: $regionL3Name, regionL4Code: $regionL4Code, regionL4Name: $regionL4Name, city: $city, region: $region, postalCode: $postalCode, isDefault: $isDefault, needsRegionReselect: $needsRegionReselect)';
   }
 
   @override
@@ -274,12 +429,30 @@ class _$SHOAddressImpl extends _SHOAddress {
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.line1, line1) || other.line1 == line1) &&
             (identical(other.line2, line2) || other.line2 == line2) &&
+            (identical(other.countryCode, countryCode) ||
+                other.countryCode == countryCode) &&
+            (identical(other.countryName, countryName) ||
+                other.countryName == countryName) &&
+            (identical(other.regionL2Code, regionL2Code) ||
+                other.regionL2Code == regionL2Code) &&
+            (identical(other.regionL2Name, regionL2Name) ||
+                other.regionL2Name == regionL2Name) &&
+            (identical(other.regionL3Code, regionL3Code) ||
+                other.regionL3Code == regionL3Code) &&
+            (identical(other.regionL3Name, regionL3Name) ||
+                other.regionL3Name == regionL3Name) &&
+            (identical(other.regionL4Code, regionL4Code) ||
+                other.regionL4Code == regionL4Code) &&
+            (identical(other.regionL4Name, regionL4Name) ||
+                other.regionL4Name == regionL4Name) &&
             (identical(other.city, city) || other.city == city) &&
             (identical(other.region, region) || other.region == region) &&
             (identical(other.postalCode, postalCode) ||
                 other.postalCode == postalCode) &&
             (identical(other.isDefault, isDefault) ||
-                other.isDefault == isDefault));
+                other.isDefault == isDefault) &&
+            (identical(other.needsRegionReselect, needsRegionReselect) ||
+                other.needsRegionReselect == needsRegionReselect));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,10 +464,19 @@ class _$SHOAddressImpl extends _SHOAddress {
     phone,
     line1,
     line2,
+    countryCode,
+    countryName,
+    regionL2Code,
+    regionL2Name,
+    regionL3Code,
+    regionL3Name,
+    regionL4Code,
+    regionL4Name,
     city,
     region,
     postalCode,
     isDefault,
+    needsRegionReselect,
   );
 
   /// Create a copy of SHOAddress
@@ -318,10 +500,19 @@ abstract class _SHOAddress extends SHOAddress {
     required final String phone,
     required final String line1,
     final String line2,
-    required final String city,
-    required final String region,
+    final String countryCode,
+    final String countryName,
+    final String regionL2Code,
+    final String regionL2Name,
+    final String regionL3Code,
+    final String regionL3Name,
+    final String regionL4Code,
+    final String regionL4Name,
+    final String city,
+    final String region,
     final String postalCode,
     final bool isDefault,
+    final bool needsRegionReselect,
   }) = _$SHOAddressImpl;
   const _SHOAddress._() : super._();
 
@@ -339,6 +530,22 @@ abstract class _SHOAddress extends SHOAddress {
   @override
   String get line2;
   @override
+  String get countryCode;
+  @override
+  String get countryName;
+  @override
+  String get regionL2Code;
+  @override
+  String get regionL2Name;
+  @override
+  String get regionL3Code;
+  @override
+  String get regionL3Name;
+  @override
+  String get regionL4Code;
+  @override
+  String get regionL4Name;
+  @override
   String get city;
   @override
   String get region;
@@ -346,6 +553,8 @@ abstract class _SHOAddress extends SHOAddress {
   String get postalCode;
   @override
   bool get isDefault;
+  @override
+  bool get needsRegionReselect;
 
   /// Create a copy of SHOAddress
   /// with the given fields replaced by the non-null parameter values.

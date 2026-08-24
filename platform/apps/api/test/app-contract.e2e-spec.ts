@@ -307,5 +307,35 @@ describe('API contract (e2e)', () => {
       expect(data.items[0].stock).toBeGreaterThan(0);
       expect(Array.isArray(data.items[0].skus)).toBe(true);
     });
+    it('GET /api/v1/regions/children returns Shenzhen districts', async () => {
+      const res = await request(app.getHttpServer()).get(
+        '/api/v1/regions/children?country=CN&parentCode=4403',
+      );
+      expect(res.status).toBe(200);
+      expectEnvelope(res.body);
+      const items = (res.body.data as { items: Array<{ name: string }> }).items;
+      expect(items.some((item) => item.name.includes('南山'))).toBe(true);
+    });
+  });
+
+  describe('region library', () => {
+    it('GET /api/v1/regions/meta returns countries config', async () => {
+      const res = await request(app.getHttpServer()).get('/api/v1/regions/meta');
+      expect(res.status).toBe(200);
+      expectEnvelope(res.body);
+      const countries = (res.body.data as { countries: unknown[] }).countries;
+      expect(countries.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('GET /api/v1/regions/countries returns CN and US', async () => {
+      const res = await request(app.getHttpServer()).get(
+        '/api/v1/regions/countries',
+      );
+      expect(res.status).toBe(200);
+      expectEnvelope(res.body);
+      const items = (res.body.data as { items: Array<{ code: string }> })
+        .items;
+      expect(items.map((item) => item.code).sort()).toEqual(['CN', 'US']);
+    });
   });
 });

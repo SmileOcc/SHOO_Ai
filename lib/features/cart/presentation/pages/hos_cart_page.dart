@@ -1234,7 +1234,12 @@ class _SHOCartFooter extends ConsumerWidget {
       return l10n.couponSelectHint;
     }();
     final address = addressAsync.valueOrNull;
-    final city = address?.city.trim() ?? '';
+    final city =
+        (address?.regionL3Name.isNotEmpty == true
+                ? address!.regionL3Name
+                : address?.city)
+            ?.trim() ??
+        '';
 
     return SafeArea(
       top: false,

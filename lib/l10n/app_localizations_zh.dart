@@ -1542,10 +1542,37 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addressLine2Label => '门牌号 / 楼层（选填）';
 
   @override
+  String get addressRegionLabel => '所在地区';
+
+  @override
+  String get addressRegionSelectHint => '请选择国家/省市区';
+
+  @override
+  String get addressRegionPickerTitle => '选择地区';
+
+  @override
+  String get addressRegionIncomplete => '请选择完整的所在地区';
+
+  @override
+  String get addressRegionLevelCountry => '国家';
+
+  @override
+  String get addressRegionLevelProvince => '省份';
+
+  @override
+  String get addressRegionLevelCity => '城市';
+
+  @override
+  String get addressRegionLevelDistrict => '区/县';
+
+  @override
+  String get addressRegionSave => '保存';
+
+  @override
   String get addressCityLabel => '城市';
 
   @override
-  String get addressRegionLabel => '省 / 州';
+  String get addressRegionLegacyLabel => '省 / 州';
 
   @override
   String get addressPostalCodeLabel => '邮编（选填）';

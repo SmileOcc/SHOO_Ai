@@ -8,6 +8,7 @@ import { IamModule } from './iam/iam.module';
 import { MarketingModule } from './marketing/marketing.module';
 import { OpsModule } from './ops/ops.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { RegionModule } from './region/region.module';
 import { TradeModule } from './trade/trade.module';
 import { UserModule } from './user/user.module';
 
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
     ContentModule,
     MarketingModule,
     OpsModule,
+    RegionModule,
   ],
 })
 export class AppModule {}

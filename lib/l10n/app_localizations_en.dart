@@ -1580,10 +1580,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addressLine2Label => 'Apt / floor (optional)';
 
   @override
+  String get addressRegionLabel => 'Region';
+
+  @override
+  String get addressRegionSelectHint => 'Select country / state / city';
+
+  @override
+  String get addressRegionPickerTitle => 'Select region';
+
+  @override
+  String get addressRegionIncomplete => 'Please complete region selection';
+
+  @override
+  String get addressRegionLevelCountry => 'Country';
+
+  @override
+  String get addressRegionLevelProvince => 'State / province';
+
+  @override
+  String get addressRegionLevelCity => 'City';
+
+  @override
+  String get addressRegionLevelDistrict => 'District';
+
+  @override
+  String get addressRegionSave => 'Save';
+
+  @override
   String get addressCityLabel => 'City';
 
   @override
-  String get addressRegionLabel => 'State / region';
+  String get addressRegionLegacyLabel => 'State / region';
 
   @override
   String get addressPostalCodeLabel => 'Postal code (optional)';

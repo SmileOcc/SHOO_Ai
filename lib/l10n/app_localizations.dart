@@ -3008,17 +3008,71 @@ abstract class AppLocalizations {
   /// **'Apt / floor (optional)'**
   String get addressLine2Label;
 
+  /// No description provided for @addressRegionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get addressRegionLabel;
+
+  /// No description provided for @addressRegionSelectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select country / state / city'**
+  String get addressRegionSelectHint;
+
+  /// No description provided for @addressRegionPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select region'**
+  String get addressRegionPickerTitle;
+
+  /// No description provided for @addressRegionIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete region selection'**
+  String get addressRegionIncomplete;
+
+  /// No description provided for @addressRegionLevelCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get addressRegionLevelCountry;
+
+  /// No description provided for @addressRegionLevelProvince.
+  ///
+  /// In en, this message translates to:
+  /// **'State / province'**
+  String get addressRegionLevelProvince;
+
+  /// No description provided for @addressRegionLevelCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get addressRegionLevelCity;
+
+  /// No description provided for @addressRegionLevelDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get addressRegionLevelDistrict;
+
+  /// No description provided for @addressRegionSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get addressRegionSave;
+
   /// No description provided for @addressCityLabel.
   ///
   /// In en, this message translates to:
   /// **'City'**
   String get addressCityLabel;
 
-  /// No description provided for @addressRegionLabel.
+  /// No description provided for @addressRegionLegacyLabel.
   ///
   /// In en, this message translates to:
   /// **'State / region'**
-  String get addressRegionLabel;
+  String get addressRegionLegacyLabel;
 
   /// No description provided for @addressPostalCodeLabel.
   ///
