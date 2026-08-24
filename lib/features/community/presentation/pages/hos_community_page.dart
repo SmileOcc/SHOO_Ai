@@ -5,6 +5,7 @@ import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_pull_refresh.dart';
 import 'package:shoo/core/widgets/hos_empty_state.dart';
 import 'package:shoo/core/widgets/hos_error_view.dart';
@@ -129,8 +130,10 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
               else ...[
                 SliverList.separated(
                   itemCount: feedState.items.length,
-                  separatorBuilder: (_, __) =>
-                      const Divider(height: 1, color: SHOAppColors.divider),
+                  separatorBuilder: (_, __) => Divider(
+                    height: 1,
+                    color: context.shoTheme.divider,
+                  ),
                   itemBuilder: (context, index) {
                     return SHOCommunityFeedCell(item: feedState.items[index]);
                   },
@@ -184,9 +187,9 @@ class _SHOCommunityPageState extends ConsumerState<SHOCommunityPage>
         child: Center(
           child: Text(
             l10n.pagedListNoMore,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: SHOAppColors.textMuted),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: context.shoTheme.textMuted,
+            ),
           ),
         ),
       );

@@ -11,6 +11,7 @@ import 'package:shoo/core/l10n/hos_locale_provider.dart';
 import 'package:shoo/core/logging/hos_log_manager.dart';
 import 'package:shoo/core/logging/hos_log_report_service.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shoo/core/permissions/hos_permission_service.dart';
 import 'package:shoo/core/widgets/hos_dialog.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
@@ -32,6 +33,7 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
     with SHOPageRouteAnalyticsMixin, SHOAppPageMixin, SHOAppTrackedPageMixin {
   int _logBytes = 0;
   int _cacheBytes = 0;
+  String? _cameraPermissionLabel;
 
   @override
   String get pageName => 'settings';
@@ -40,6 +42,27 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
   void initState() {
     super.initState();
     _reloadSizes();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _reloadCameraPermission();
+    });
+  }
+
+  Future<void> _reloadCameraPermission() async {
+    final status = await ref.read(permissionServiceProvider).status(
+      Permission.camera,
+    );
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    setState(() {
+      _cameraPermissionLabel = _permissionLabel(l10n, status);
+    });
+  }
+
+  String _permissionLabel(AppLocalizations l10n, PermissionStatus status) {
+    if (status.isGranted) return l10n.settingsPermissionGranted;
+    if (status.isPermanentlyDenied) return l10n.settingsPermissionDenied;
+    if (status.isDenied) return l10n.settingsPermissionDenied;
+    return l10n.settingsPermissionUnknown;
   }
 
   Future<void> _reloadSizes() async {
@@ -166,12 +189,41 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
                   leading: const Icon(Icons.language_outlined, size: 20),
                   onTap: () => _showLocalePicker(context, ref),
                 ),
+                SHOSettingsTile(
+                  title: l10n.settingsNotifications,
+                  leading: const Icon(Icons.notifications_outlined, size: 20),
+                  onTap: () => context.push(SHOAppRoutes.settingsNotifications),
+                ),
               ],
             ),
             const SizedBox(height: SHOAppSpacing.lg),
             SHOSettingsGroup(
               title: l10n.settingsGroupAccount,
               children: [
+                SHOSettingsTile(
+                  title: l10n.settingsProfile,
+                  leading: const Icon(Icons.person_outline, size: 20),
+                  onTap: () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                    context.push(SHOAppRoutes.settingsProfile);
+                  },
+                ),
+                SHOSettingsTile(
+                  title: l10n.settingsSecurity,
+                  leading: const Icon(Icons.lock_outline, size: 20),
+                  onTap: () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                    context.push(SHOAppRoutes.settingsSecurity);
+                  },
+                ),
+                SHOSettingsTile(
+                  title: l10n.settingsPaymentTitle,
+                  leading: const Icon(Icons.account_balance_wallet_outlined, size: 20),
+                  onTap: () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                    context.push(SHOAppRoutes.settingsPayment);
+                  },
+                ),
                 SHOSettingsTile(
                   title: l10n.profileAddresses,
                   leading: const Icon(Icons.location_on_outlined, size: 20),
@@ -184,10 +236,32 @@ class _SHOSettingsPageState extends ConsumerState<SHOSettingsPage>
                 ),
                 SHOSettingsTile(
                   title: l10n.profileCameraPermission,
+                  subtitle: _cameraPermissionLabel,
                   leading: const Icon(Icons.camera_alt_outlined, size: 20),
                   trailing: const SizedBox.shrink(),
-                  onTap: () =>
-                      ref.read(permissionServiceProvider).requestCamera(),
+                  onTap: () async {
+                    await ref.read(permissionServiceProvider).requestCamera();
+                    await _reloadCameraPermission();
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: SHOAppSpacing.lg),
+            SHOSettingsGroup(
+              title: l10n.settingsGroupSupport,
+              children: [
+                SHOSettingsTile(
+                  title: l10n.settingsHelp,
+                  leading: const Icon(Icons.help_outline, size: 20),
+                  onTap: () => context.push(SHOAppRoutes.settingsHelp),
+                ),
+                SHOSettingsTile(
+                  title: l10n.profileMessages,
+                  leading: const Icon(Icons.chat_bubble_outline, size: 20),
+                  onTap: () {
+                    if (!SHOAuthGuard.requireAuth(context, ref)) return;
+                    context.push(SHOAppRoutes.messages);
+                  },
                 ),
               ],
             ),

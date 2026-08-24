@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_expandable_text.dart';
 import 'package:shoo/core/widgets/hos_price_text.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
@@ -49,6 +50,9 @@ class _StandardPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,9 +68,10 @@ class _StandardPost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
               if (item.coverUrl.isNotEmpty) ...[
@@ -83,7 +88,7 @@ class _StandardPost extends StatelessWidget {
             maxLines: 3,
             fontSize: 13,
             height: 1.4,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         SHOCommunityTappableSection(
@@ -118,6 +123,8 @@ class _MultiImagePost extends StatelessWidget {
     final images = item.imageUrls.isNotEmpty
         ? item.imageUrls
         : (item.coverUrl.isNotEmpty ? [item.coverUrl] : <String>[]);
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,9 +141,10 @@ class _MultiImagePost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -148,7 +156,7 @@ class _MultiImagePost extends StatelessWidget {
             text: item.summary,
             maxLines: 2,
             fontSize: 13,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         if (images.isNotEmpty) ...[
@@ -226,6 +234,10 @@ class _PollPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,9 +253,10 @@ class _PollPost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -255,7 +268,7 @@ class _PollPost extends StatelessWidget {
             text: item.summary,
             maxLines: 2,
             fontSize: 13,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         SHOCommunityTappableSection(
@@ -270,10 +283,7 @@ class _PollPost extends StatelessWidget {
               ],
               Text(
                 '${item.pollParticipants} 人参与 · ${item.pollEndsIn}',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: SHOAppColors.textMuted,
-                ),
+                style: TextStyle(fontSize: 11, color: muted),
               ),
             ],
           ),
@@ -290,12 +300,15 @@ class _PollBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.shoTheme;
+    final onSurface = shoCommunityPrimaryTextColor(context);
+
     return Stack(
       children: [
         Container(
           height: 32,
           decoration: BoxDecoration(
-            color: SHOAppColors.surfaceMuted,
+            color: theme.surfaceMuted,
             borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
           ),
         ),
@@ -316,7 +329,10 @@ class _PollBar extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Text(option.label, style: const TextStyle(fontSize: 12)),
+                child: Text(
+                  option.label,
+                  style: TextStyle(fontSize: 12, color: onSurface),
+                ),
               ),
               Text(
                 '${option.percent}%',
@@ -343,6 +359,10 @@ class _ProductSharePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = item.product;
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final theme = context.shoTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -358,9 +378,10 @@ class _ProductSharePost extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.md),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -372,7 +393,7 @@ class _ProductSharePost extends StatelessWidget {
             text: item.summary,
             maxLines: 3,
             fontSize: 13,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         if (product != null && product.productId.isNotEmpty) ...[
@@ -382,7 +403,7 @@ class _ProductSharePost extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(SHOAppSpacing.md),
               decoration: BoxDecoration(
-                color: SHOAppColors.surfaceMuted,
+                color: theme.surfaceMuted,
                 borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
               ),
               child: Row(
@@ -404,9 +425,10 @@ class _ProductSharePost extends StatelessWidget {
                           product.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
+                            color: onSurface,
                           ),
                         ),
                         const SizedBox(height: SHOAppSpacing.xs),

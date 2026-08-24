@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 import 'package:shoo/features/community/presentation/widgets/hos_community_format.dart';
@@ -22,7 +23,7 @@ class SHOCommunityFeedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = Padding(padding: padding, child: child);
     return Material(
-      color: SHOAppColors.surface,
+      color: context.shoSurface,
       child: onTap == null ? content : InkWell(onTap: onTap, child: content),
     );
   }
@@ -63,20 +64,24 @@ class SHOCommunityAuthorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.shoTheme;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Row(
       children: [
         CircleAvatar(
           radius: 16,
-          backgroundColor: SHOAppColors.surfaceMuted,
+          backgroundColor: theme.surfaceMuted,
           backgroundImage: author.avatarUrl.isNotEmpty
               ? NetworkImage(author.avatarUrl)
               : null,
           child: author.avatarUrl.isEmpty
               ? Text(
                   author.name.isNotEmpty ? author.name.characters.first : '?',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
+                    color: onSurface,
                   ),
                 )
               : null,
@@ -93,10 +98,10 @@ class SHOCommunityAuthorRow extends StatelessWidget {
                       author.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: SHOAppColors.textPrimary,
+                        color: onSurface,
                       ),
                     ),
                   ),
@@ -128,10 +133,7 @@ class SHOCommunityAuthorRow extends StatelessWidget {
               if (publishedAt.isNotEmpty)
                 Text(
                   shoCommunityFormatRelativeTime(publishedAt),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: SHOAppColors.textMuted,
-                  ),
+                  style: TextStyle(fontSize: 11, color: theme.textMuted),
                 ),
             ],
           ),
@@ -184,14 +186,15 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final muted = context.shoTheme.textMuted;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: SHOAppColors.textMuted),
+        Icon(icon, size: 14, color: muted),
         const SizedBox(width: 2),
         Text(
           shoCommunityFormatCount(value),
-          style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
+          style: TextStyle(fontSize: 11, color: muted),
         ),
       ],
     );
@@ -206,6 +209,7 @@ class SHOCommunityTagRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tags.isEmpty) return const SizedBox.shrink();
+    final theme = context.shoTheme;
     return Wrap(
       spacing: SHOAppSpacing.xs,
       runSpacing: SHOAppSpacing.xs,
@@ -216,15 +220,12 @@ class SHOCommunityTagRow extends StatelessWidget {
             vertical: 2,
           ),
           decoration: BoxDecoration(
-            color: SHOAppColors.surfaceMuted,
+            color: theme.surfaceMuted,
             borderRadius: BorderRadius.circular(SHOAppSpacing.tagRadius),
           ),
           child: Text(
             '#$tag',
-            style: const TextStyle(
-              fontSize: 10,
-              color: SHOAppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 10, color: theme.textSecondary),
           ),
         );
       }).toList(),
@@ -299,19 +300,32 @@ class SHOCommunityAdLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (label.isEmpty) return const SizedBox.shrink();
+    final theme = context.shoTheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: SHOAppSpacing.sm,
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        border: Border.all(color: SHOAppColors.border),
+        border: Border.all(color: theme.border),
         borderRadius: BorderRadius.circular(SHOAppSpacing.tagRadius),
       ),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 10, color: SHOAppColors.textMuted),
+        style: TextStyle(fontSize: 10, color: theme.textMuted),
       ),
     );
   }
 }
+
+/// 社区 Feed 正文/摘要常用次级文字色。
+Color shoCommunitySecondaryTextColor(BuildContext context) =>
+    context.shoTheme.textSecondary;
+
+/// 社区 Feed 元信息/统计常用弱化文字色。
+Color shoCommunityMutedTextColor(BuildContext context) =>
+    context.shoTheme.textMuted;
+
+/// 社区 Feed 标题常用主文字色。
+Color shoCommunityPrimaryTextColor(BuildContext context) =>
+    Theme.of(context).colorScheme.onSurface;

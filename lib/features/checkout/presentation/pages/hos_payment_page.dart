@@ -19,6 +19,7 @@ import 'package:shoo/features/order/presentation/state/hos_order_controller.dart
 import 'package:shoo/features/order/presentation/state/hos_order_refresh.dart';
 import 'package:shoo/features/checkout/data/datasources/remote/hos_checkout_remote_ds.dart';
 import 'package:shoo/features/checkout/domain/entities/hos_payment_method.dart';
+import 'package:shoo/features/checkout/presentation/state/hos_payment_prefs_provider.dart';
 import 'package:shoo/core/navigation/hos_payment_flow_navigation.dart';
 import 'package:shoo/features/checkout/presentation/widgets/hos_payment_dialog.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_payment_countdown.dart';
@@ -222,7 +223,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
   }
 }
 
-class _PaymentCashierView extends StatelessWidget {
+class _PaymentCashierView extends ConsumerWidget {
   const _PaymentCashierView({
     required this.order,
     required this.onSelectMethod,
@@ -232,8 +233,9 @@ class _PaymentCashierView extends StatelessWidget {
   final ValueChanged<SHOPaymentMethod> onSelectMethod;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final defaultMethod = ref.watch(paymentPrefsProvider).defaultMethod;
 
     return ListView(
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
@@ -285,6 +287,7 @@ class _PaymentCashierView extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: SHOAppSpacing.sm),
             child: _PaymentMethodTile(
               method: method,
+              isDefault: method == defaultMethod,
               onTap: () => onSelectMethod(method),
             ),
           ),
@@ -395,10 +398,15 @@ class _OrderSummaryCard extends StatelessWidget {
 }
 
 class _PaymentMethodTile extends StatelessWidget {
-  const _PaymentMethodTile({required this.method, required this.onTap});
+  const _PaymentMethodTile({
+    required this.method,
+    required this.onTap,
+    this.isDefault = false,
+  });
 
   final SHOPaymentMethod method;
   final VoidCallback onTap;
+  final bool isDefault;
 
   @override
   Widget build(BuildContext context) {
@@ -428,11 +436,24 @@ class _PaymentMethodTile extends StatelessWidget {
               ),
               const SizedBox(width: SHOAppSpacing.md),
               Expanded(
-                child: Text(
-                  method.label(l10n),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      method.label(l10n),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    if (isDefault)
+                      Text(
+                        l10n.settingsPaymentDefaultBadge,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: SHOAppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               Icon(

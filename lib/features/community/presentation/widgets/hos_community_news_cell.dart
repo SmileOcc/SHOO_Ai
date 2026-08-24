@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_expandable_text.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 import 'package:shoo/features/community/presentation/widgets/hos_community_cell_shared.dart';
@@ -52,6 +53,9 @@ class _HeadlineNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -78,11 +82,11 @@ class _HeadlineNews extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
                   height: 1.3,
-                  color: SHOAppColors.textPrimary,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -95,7 +99,7 @@ class _HeadlineNews extends StatelessWidget {
             maxLines: 2,
             fontSize: 13,
             height: 1.4,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         SHOCommunityTappableSection(
@@ -123,6 +127,9 @@ class _ImageTextNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return SHOCommunityTappableSection(
       onTap: onTap,
       child: Row(
@@ -138,19 +145,17 @@ class _ImageTextNews extends StatelessWidget {
                   item.title,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     height: 1.35,
+                    color: onSurface,
                   ),
                 ),
                 const SizedBox(height: SHOAppSpacing.sm),
                 Text(
                   '${item.source.isNotEmpty ? '${item.source} · ' : ''}${item.category}',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: SHOAppColors.textMuted,
-                  ),
+                  style: TextStyle(fontSize: 11, color: muted),
                 ),
               ],
             ),
@@ -184,6 +189,8 @@ class _TripleImageNews extends StatelessWidget {
     final images = item.imageUrls.isNotEmpty
         ? item.imageUrls.take(3).toList()
         : (item.coverUrl.isNotEmpty ? [item.coverUrl] : <String>[]);
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
 
     return SHOCommunityTappableSection(
       onTap: onTap,
@@ -192,7 +199,11 @@ class _TripleImageNews extends StatelessWidget {
         children: [
           Text(
             item.title,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: onSurface,
+            ),
           ),
           if (images.isNotEmpty) ...[
             const SizedBox(height: SHOAppSpacing.md),
@@ -213,7 +224,7 @@ class _TripleImageNews extends StatelessWidget {
           const SizedBox(height: SHOAppSpacing.sm),
           Text(
             item.source,
-            style: const TextStyle(fontSize: 11, color: SHOAppColors.textMuted),
+            style: TextStyle(fontSize: 11, color: muted),
           ),
         ],
       ),
@@ -229,6 +240,9 @@ class _VideoNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return SHOCommunityTappableSection(
       onTap: onTap,
       child: Column(
@@ -236,7 +250,11 @@ class _VideoNews extends StatelessWidget {
         children: [
           Text(
             item.title,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: onSurface,
+            ),
           ),
           const SizedBox(height: SHOAppSpacing.md),
           SHOCommunityCoverImage(
@@ -265,10 +283,7 @@ class _VideoNews extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: Text(
                   item.videoDuration,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: SHOAppColors.textMuted,
-                  ),
+                  style: TextStyle(fontSize: 11, color: muted),
                 ),
               ),
             ),
@@ -286,11 +301,22 @@ class _TopicCardNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.shoTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SHOAppSpacing.cardRadius),
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFFF5F5), Color(0xFFFFFBF0)],
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  SHOAppColors.accent.withValues(alpha: 0.12),
+                  theme.surfaceMuted,
+                ]
+              : const [Color(0xFFFFF5F5), Color(0xFFFFFBF0)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -303,7 +329,11 @@ class _TopicCardNews extends StatelessWidget {
             onTap: onTap,
             child: Text(
               item.title,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                color: onSurface,
+              ),
             ),
           ),
           if (item.summary.isNotEmpty) ...[
@@ -312,7 +342,7 @@ class _TopicCardNews extends StatelessWidget {
               text: item.summary,
               maxLines: 2,
               fontSize: 12,
-              color: SHOAppColors.textSecondary,
+              color: secondary,
             ),
           ],
           SHOCommunityTappableSection(
@@ -331,10 +361,7 @@ class _TopicCardNews extends StatelessWidget {
                   const SizedBox(width: SHOAppSpacing.sm),
                   Text(
                     '${item.topicDiscussCount} 讨论 · ${item.topicPostCount} 帖子',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: SHOAppColors.textMuted,
-                    ),
+                    style: TextStyle(fontSize: 11, color: muted),
                   ),
                 ],
               ),

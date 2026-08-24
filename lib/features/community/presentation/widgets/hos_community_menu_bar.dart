@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:shoo/core/feedback/hos_toast.dart';
-import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 
 class SHOCommunityMenuBar extends StatelessWidget {
@@ -69,9 +69,9 @@ class _MenuChip extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10,
-                color: SHOAppColors.textSecondary,
+                color: context.shoTheme.textSecondary,
               ),
             ),
           ],

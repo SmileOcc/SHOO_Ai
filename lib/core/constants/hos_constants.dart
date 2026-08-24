@@ -43,5 +43,11 @@ abstract final class SHOAppConstants {
   static const String debugShowEnvBadgeKey = 'debug_show_env_badge';
   static const String debugConsoleLogEnabledKey = 'debug_console_log_enabled';
 
+  static const String notifyOrderUpdatesKey = 'notify_order_updates';
+  static const String notifyPromotionsKey = 'notify_promotions';
+  static const String notifyFlashSaleKey = 'notify_flash_sale';
+  static const String defaultPaymentMethodKey = 'default_payment_method';
+  static const String biometricLoginEnabledKey = 'biometric_login_enabled';
+
   static const List<String> defaultSkuSizes = ['S', 'M', 'L', 'XL'];
 }

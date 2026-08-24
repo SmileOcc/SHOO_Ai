@@ -156,6 +156,212 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsGroupAbout => '关于';
 
   @override
+  String get settingsGroupSupport => '帮助与支持';
+
+  @override
+  String get settingsNotifications => '消息通知';
+
+  @override
+  String get settingsNotificationsTitle => '消息通知';
+
+  @override
+  String get settingsNotificationsGroup => '通知类型';
+
+  @override
+  String get settingsNotificationsHint => '管理你希望接收的推送与站内提醒。';
+
+  @override
+  String get settingsNotifyOrderUpdates => '订单动态';
+
+  @override
+  String get settingsNotifyOrderUpdatesHint => '发货、签收、售后进度等订单相关提醒';
+
+  @override
+  String get settingsNotifyPromotions => '优惠活动';
+
+  @override
+  String get settingsNotifyPromotionsHint => '促销、满减、新人礼等营销消息';
+
+  @override
+  String get settingsNotifyFlashSale => '秒杀提醒';
+
+  @override
+  String get settingsNotifyFlashSaleHint => '你关注的秒杀商品开抢提醒';
+
+  @override
+  String get settingsProfile => '个人资料';
+
+  @override
+  String get settingsProfileTitle => '个人资料';
+
+  @override
+  String get settingsProfileNickname => '昵称';
+
+  @override
+  String get settingsProfileEmail => '邮箱';
+
+  @override
+  String get settingsProfileAvatarHint => '点击头像可更换';
+
+  @override
+  String get settingsProfileNotBound => '未绑定';
+
+  @override
+  String get settingsProfileSaved => '资料已保存';
+
+  @override
+  String get settingsProfileLoginRequired => '请先登录后编辑资料';
+
+  @override
+  String get settingsSecurity => '账号与安全';
+
+  @override
+  String get settingsSecurityTitle => '账号与安全';
+
+  @override
+  String get settingsSecurityHint => '定期修改密码有助于保护账号安全。';
+
+  @override
+  String get settingsSecurityCurrentPassword => '当前密码';
+
+  @override
+  String get settingsSecurityNewPassword => '新密码';
+
+  @override
+  String get settingsSecurityConfirmPassword => '确认新密码';
+
+  @override
+  String get settingsSecuritySubmit => '修改密码';
+
+  @override
+  String get settingsSecuritySaved => '密码修改成功';
+
+  @override
+  String get settingsSecurityConfirmRequired => '请确认新密码';
+
+  @override
+  String get settingsSecurityConfirmMismatch => '两次输入的新密码不一致';
+
+  @override
+  String get settingsSecurityPasswordTooShort => '密码至少 6 位';
+
+  @override
+  String get settingsSecurityLoginGroup => '登录方式';
+
+  @override
+  String get settingsBiometricLogin => '生物识别登录';
+
+  @override
+  String get settingsBiometricLoginHint => '设备支持时，登录优先使用面容/指纹';
+
+  @override
+  String get settingsDeleteAccount => '注销账号';
+
+  @override
+  String get settingsDeleteAccountTitle => '注销账号';
+
+  @override
+  String get settingsDeleteAccountMessage => '注销后本地登录态将被清除，此操作不可撤销。';
+
+  @override
+  String get settingsDeleteAccountConfirm => '确认注销';
+
+  @override
+  String get settingsDeleteAccountVerifyTitle => '验证密码';
+
+  @override
+  String get settingsDeleteAccountDone => '账号已注销';
+
+  @override
+  String get settingsPaymentTitle => '支付方式';
+
+  @override
+  String get settingsPaymentHint => '设置默认支付方式，结算时将优先展示。';
+
+  @override
+  String get settingsPaymentDefaultBadge => '默认';
+
+  @override
+  String get settingsPaymentBankCards => '银行卡管理';
+
+  @override
+  String get settingsPaymentBankCardsHint => '绑定银行卡后可快捷支付';
+
+  @override
+  String get settingsComingSoon => '即将上线';
+
+  @override
+  String get settingsPermissionGranted => '已授权';
+
+  @override
+  String get settingsPermissionDenied => '未授权';
+
+  @override
+  String get settingsPermissionUnknown => '未知';
+
+  @override
+  String get settingsProfilePickGallery => '从相册选择';
+
+  @override
+  String get settingsProfilePickCamera => '拍照';
+
+  @override
+  String get settingsHelp => '帮助中心';
+
+  @override
+  String get settingsHelpTitle => '帮助中心';
+
+  @override
+  String get settingsHelpSubtitle => '常见问题与客服入口';
+
+  @override
+  String get settingsHelpFaqTitle => '常见问题';
+
+  @override
+  String get settingsHelpContact => '联系客服';
+
+  @override
+  String get settingsHelpContactHint => '通过消息中心联系在线客服';
+
+  @override
+  String get settingsHelpAfterSale => '售后服务';
+
+  @override
+  String get settingsHelpFaqOrderTrackQ => '如何查看物流？';
+
+  @override
+  String get settingsHelpFaqOrderTrackA =>
+      '进入「我的订单」，选择对应订单即可查看物流轨迹；已发货订单会显示快递公司与运单号。';
+
+  @override
+  String get settingsHelpFaqRefundQ => '如何申请退款/退货？';
+
+  @override
+  String get settingsHelpFaqRefundA =>
+      '在订单详情或「售后服务」中提交申请，按提示选择原因并上传凭证，审核通过后将原路退款。';
+
+  @override
+  String get settingsHelpFaqCouponQ => '优惠券如何使用？';
+
+  @override
+  String get settingsHelpFaqCouponA =>
+      '结算前在购物车或结算页选择可用优惠券；部分券有品类、金额门槛限制，以券面说明为准。';
+
+  @override
+  String get settingsHelpFaqAddressQ => '收货地址如何修改？';
+
+  @override
+  String get settingsHelpFaqAddressA =>
+      '在「设置 > 收货地址」中新增或编辑地址；未发货订单可在订单详情中尝试修改收货信息。';
+
+  @override
+  String get settingsHelpFaqPaymentQ => '支付失败怎么办？';
+
+  @override
+  String get settingsHelpFaqPaymentA =>
+      '请确认网络与支付账户余额；若已扣款但订单未生成，请保留支付凭证并联系客服处理。';
+
+  @override
   String get settingsAbout => '关于我们';
 
   @override

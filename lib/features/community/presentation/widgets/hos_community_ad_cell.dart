@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/core/widgets/hos_expandable_text.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/core/widgets/hos_price_text.dart';
@@ -47,6 +48,10 @@ class _BannerAd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,10 +67,7 @@ class _BannerAd extends StatelessWidget {
                   if (item.readCount > 0)
                     Text(
                       '${item.readCount} 浏览',
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: SHOAppColors.textMuted,
-                      ),
+                      style: TextStyle(fontSize: 10, color: muted),
                     ),
                 ],
               ),
@@ -78,9 +80,10 @@ class _BannerAd extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -91,7 +94,7 @@ class _BannerAd extends StatelessWidget {
             text: item.summary,
             maxLines: 2,
             fontSize: 11,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
       ],
     );
@@ -107,6 +110,9 @@ class _NativeProductAd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = item.product;
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,7 +120,7 @@ class _NativeProductAd extends StatelessWidget {
           children: [
             SHOCommunityAdLabel(label: item.adLabel),
             const Spacer(),
-            const Icon(Icons.shopping_bag_outlined, size: 14),
+            Icon(Icons.shopping_bag_outlined, size: 14, color: onSurface),
           ],
         ),
         const SizedBox(height: SHOAppSpacing.md),
@@ -141,9 +147,10 @@ class _NativeProductAd extends StatelessWidget {
                       item.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
+                        color: onSurface,
                       ),
                     ),
                     if (product != null) ...[
@@ -165,7 +172,7 @@ class _NativeProductAd extends StatelessWidget {
             text: item.summary,
             maxLines: 2,
             fontSize: 11,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
       ],
@@ -181,6 +188,10 @@ class _BrandStoryAd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final muted = shoCommunityMutedTextColor(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -206,9 +217,10 @@ class _BrandStoryAd extends StatelessWidget {
                           item.brandName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
+                            color: onSurface,
                           ),
                         ),
                         if (item.brandSlogan.isNotEmpty)
@@ -216,10 +228,7 @@ class _BrandStoryAd extends StatelessWidget {
                             item.brandSlogan,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: SHOAppColors.textMuted,
-                            ),
+                            style: TextStyle(fontSize: 10, color: muted),
                           ),
                       ],
                     ),
@@ -236,9 +245,10 @@ class _BrandStoryAd extends StatelessWidget {
               const SizedBox(height: SHOAppSpacing.sm),
               Text(
                 item.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
+                  color: onSurface,
                 ),
               ),
             ],
@@ -249,7 +259,7 @@ class _BrandStoryAd extends StatelessWidget {
             text: item.summary,
             maxLines: 2,
             fontSize: 11,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
       ],
     );
@@ -281,6 +291,10 @@ class _CarouselAdState extends State<_CarouselAd> {
   @override
   Widget build(BuildContext context) {
     final cards = widget.item.carouselCards;
+    final onSurface = shoCommunityPrimaryTextColor(context);
+    final secondary = shoCommunitySecondaryTextColor(context);
+    final theme = context.shoTheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -293,9 +307,10 @@ class _CarouselAdState extends State<_CarouselAd> {
                   widget.item.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
+                    color: onSurface,
                   ),
                 ),
               ),
@@ -310,7 +325,7 @@ class _CarouselAdState extends State<_CarouselAd> {
             text: widget.item.summary,
             maxLines: 2,
             fontSize: 11,
-            color: SHOAppColors.textSecondary,
+            color: secondary,
           ),
         ],
         const SizedBox(height: SHOAppSpacing.md),
@@ -395,8 +410,8 @@ class _CarouselAdState extends State<_CarouselAd> {
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     color: i == _index
-                        ? SHOAppColors.primary
-                        : SHOAppColors.border,
+                        ? SHOAppColors.accent
+                        : theme.border,
                     borderRadius: BorderRadius.circular(3),
                   ),
                 );

@@ -135,6 +135,11 @@ abstract final class SHOAppRoutes {
   static const settings = '/settings';
   static const settingsAbout = '/settings/about';
   static const settingsCache = '/settings/cache';
+  static const settingsNotifications = '/settings/notifications';
+  static const settingsProfile = '/settings/profile';
+  static const settingsSecurity = '/settings/security';
+  static const settingsHelp = '/settings/help';
+  static const settingsPayment = '/settings/payment';
   static const messages = '/messages';
   static const search = '/search';
   static const flashSale = '/flash-sale';

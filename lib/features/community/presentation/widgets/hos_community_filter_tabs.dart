@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shoo/core/analytics/hos_analytics_manager.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
+import 'package:shoo/core/theme/hos_theme_extension.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/community/domain/entities/hos_community_models.dart';
 
@@ -22,6 +23,9 @@ class SHOCommunityFilterTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+    final muted = context.shoTheme.textMuted;
+
     return Row(
       children: sorts.map((sort) {
         final isSelected = sort == selected;
@@ -49,9 +53,7 @@ class SHOCommunityFilterTabs extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                    color: isSelected
-                        ? SHOAppColors.textPrimary
-                        : SHOAppColors.textMuted,
+                    color: isSelected ? onSurface : muted,
                   ),
                 ),
                 const SizedBox(height: SHOAppSpacing.xs),

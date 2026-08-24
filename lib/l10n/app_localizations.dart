@@ -392,6 +392,408 @@ abstract class AppLocalizations {
   /// **'About'**
   String get settingsGroupAbout;
 
+  /// No description provided for @settingsGroupSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get settingsGroupSupport;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotificationsTitle;
+
+  /// No description provided for @settingsNotificationsGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification types'**
+  String get settingsNotificationsGroup;
+
+  /// No description provided for @settingsNotificationsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose which alerts you want to receive.'**
+  String get settingsNotificationsHint;
+
+  /// No description provided for @settingsNotifyOrderUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Order updates'**
+  String get settingsNotifyOrderUpdates;
+
+  /// No description provided for @settingsNotifyOrderUpdatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping, delivery, and after-sale progress'**
+  String get settingsNotifyOrderUpdatesHint;
+
+  /// No description provided for @settingsNotifyPromotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotions'**
+  String get settingsNotifyPromotions;
+
+  /// No description provided for @settingsNotifyPromotionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales, coupons, and marketing messages'**
+  String get settingsNotifyPromotionsHint;
+
+  /// No description provided for @settingsNotifyFlashSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Flash sale alerts'**
+  String get settingsNotifyFlashSale;
+
+  /// No description provided for @settingsNotifyFlashSaleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders for flash sales you follow'**
+  String get settingsNotifyFlashSaleHint;
+
+  /// No description provided for @settingsProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get settingsProfileTitle;
+
+  /// No description provided for @settingsProfileNickname.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get settingsProfileNickname;
+
+  /// No description provided for @settingsProfileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get settingsProfileEmail;
+
+  /// No description provided for @settingsProfileAvatarHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap avatar to change'**
+  String get settingsProfileAvatarHint;
+
+  /// No description provided for @settingsProfileNotBound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not linked'**
+  String get settingsProfileNotBound;
+
+  /// No description provided for @settingsProfileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved'**
+  String get settingsProfileSaved;
+
+  /// No description provided for @settingsProfileLoginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to edit your profile'**
+  String get settingsProfileLoginRequired;
+
+  /// No description provided for @settingsSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & security'**
+  String get settingsSecurity;
+
+  /// No description provided for @settingsSecurityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & security'**
+  String get settingsSecurityTitle;
+
+  /// No description provided for @settingsSecurityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating your password regularly helps keep your account safe.'**
+  String get settingsSecurityHint;
+
+  /// No description provided for @settingsSecurityCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get settingsSecurityCurrentPassword;
+
+  /// No description provided for @settingsSecurityNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get settingsSecurityNewPassword;
+
+  /// No description provided for @settingsSecurityConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get settingsSecurityConfirmPassword;
+
+  /// No description provided for @settingsSecuritySubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Update password'**
+  String get settingsSecuritySubmit;
+
+  /// No description provided for @settingsSecuritySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated'**
+  String get settingsSecuritySaved;
+
+  /// No description provided for @settingsSecurityConfirmRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your new password'**
+  String get settingsSecurityConfirmRequired;
+
+  /// No description provided for @settingsSecurityConfirmMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'New passwords do not match'**
+  String get settingsSecurityConfirmMismatch;
+
+  /// No description provided for @settingsSecurityPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get settingsSecurityPasswordTooShort;
+
+  /// No description provided for @settingsSecurityLoginGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in options'**
+  String get settingsSecurityLoginGroup;
+
+  /// No description provided for @settingsBiometricLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric sign-in'**
+  String get settingsBiometricLogin;
+
+  /// No description provided for @settingsBiometricLoginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Face ID / fingerprint when supported'**
+  String get settingsBiometricLoginHint;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get settingsDeleteAccountTitle;
+
+  /// No description provided for @settingsDeleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This clears your local sign-in state and cannot be undone.'**
+  String get settingsDeleteAccountMessage;
+
+  /// No description provided for @settingsDeleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get settingsDeleteAccountConfirm;
+
+  /// No description provided for @settingsDeleteAccountVerifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify password'**
+  String get settingsDeleteAccountVerifyTitle;
+
+  /// No description provided for @settingsDeleteAccountDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted'**
+  String get settingsDeleteAccountDone;
+
+  /// No description provided for @settingsPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get settingsPaymentTitle;
+
+  /// No description provided for @settingsPaymentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your default payment method for checkout.'**
+  String get settingsPaymentHint;
+
+  /// No description provided for @settingsPaymentDefaultBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get settingsPaymentDefaultBadge;
+
+  /// No description provided for @settingsPaymentBankCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank cards'**
+  String get settingsPaymentBankCards;
+
+  /// No description provided for @settingsPaymentBankCardsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a card for faster checkout'**
+  String get settingsPaymentBankCardsHint;
+
+  /// No description provided for @settingsComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get settingsComingSoon;
+
+  /// No description provided for @settingsPermissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Granted'**
+  String get settingsPermissionGranted;
+
+  /// No description provided for @settingsPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get settingsPermissionDenied;
+
+  /// No description provided for @settingsPermissionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get settingsPermissionUnknown;
+
+  /// No description provided for @settingsProfilePickGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get settingsProfilePickGallery;
+
+  /// No description provided for @settingsProfilePickCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get settingsProfilePickCamera;
+
+  /// No description provided for @settingsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help center'**
+  String get settingsHelp;
+
+  /// No description provided for @settingsHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help center'**
+  String get settingsHelpTitle;
+
+  /// No description provided for @settingsHelpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQs and customer support'**
+  String get settingsHelpSubtitle;
+
+  /// No description provided for @settingsHelpFaqTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently asked questions'**
+  String get settingsHelpFaqTitle;
+
+  /// No description provided for @settingsHelpContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get settingsHelpContact;
+
+  /// No description provided for @settingsHelpContactHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with support via Messages'**
+  String get settingsHelpContactHint;
+
+  /// No description provided for @settingsHelpAfterSale.
+  ///
+  /// In en, this message translates to:
+  /// **'After-sales service'**
+  String get settingsHelpAfterSale;
+
+  /// No description provided for @settingsHelpFaqOrderTrackQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I track my order?'**
+  String get settingsHelpFaqOrderTrackQ;
+
+  /// No description provided for @settingsHelpFaqOrderTrackA.
+  ///
+  /// In en, this message translates to:
+  /// **'Open My Orders and select an order to view tracking. Shipped orders show the carrier and tracking number.'**
+  String get settingsHelpFaqOrderTrackA;
+
+  /// No description provided for @settingsHelpFaqRefundQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I request a refund or return?'**
+  String get settingsHelpFaqRefundQ;
+
+  /// No description provided for @settingsHelpFaqRefundA.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit a request from order details or After-sales. Follow the steps, upload proof if needed, and refunds go back to your original payment method.'**
+  String get settingsHelpFaqRefundA;
+
+  /// No description provided for @settingsHelpFaqCouponQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I use coupons?'**
+  String get settingsHelpFaqCouponQ;
+
+  /// No description provided for @settingsHelpFaqCouponA.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an eligible coupon at checkout. Some coupons have category or minimum spend requirements.'**
+  String get settingsHelpFaqCouponA;
+
+  /// No description provided for @settingsHelpFaqAddressQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change my shipping address?'**
+  String get settingsHelpFaqAddressQ;
+
+  /// No description provided for @settingsHelpFaqAddressA.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings > Addresses to add or edit addresses. For unshipped orders, you may update the address from order details.'**
+  String get settingsHelpFaqAddressA;
+
+  /// No description provided for @settingsHelpFaqPaymentQ.
+  ///
+  /// In en, this message translates to:
+  /// **'What if payment fails?'**
+  String get settingsHelpFaqPaymentQ;
+
+  /// No description provided for @settingsHelpFaqPaymentA.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your network and account balance. If you were charged but no order was created, keep your receipt and contact support.'**
+  String get settingsHelpFaqPaymentA;
+
   /// No description provided for @settingsAbout.
   ///
   /// In en, this message translates to:

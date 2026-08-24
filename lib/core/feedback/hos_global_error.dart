@@ -92,11 +92,19 @@ class SHOGlobalErrorController extends Notifier<SHOGlobalErrorEvent?> {
       _pending.add(event); // Widget 未初始化，排队等待
       return;
     }
-    state = event; // 更新状态，触发 Listener 响应
+    final controller = _bound!;
+    Future<void>.microtask(() {
+      if (!identical(_bound, controller)) return;
+      controller.state = event;
+    });
   }
 
   /// 消费错误（展示完成后清除状态）
-  void consume() => state = null;
+  void consume() {
+    Future<void>.microtask(() {
+      state = null;
+    });
+  }
 
   // 绑定 Controller + 处理等待队列
   static void bind(SHOGlobalErrorController controller) {

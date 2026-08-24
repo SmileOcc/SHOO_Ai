@@ -139,6 +139,18 @@ class SHOSessionNotifier extends Notifier<SHOSessionState> {
       );
     }
   }
+
+  Future<void> updateProfile(SHOAuthUser user) async {
+    if (!state.isAuthenticated) return;
+    await ref.read(authLocalDsProvider).writeUser(user);
+    state = state.copyWith(user: user);
+    SHOAppLogger.i('Profile updated for ${user.nickname}');
+  }
+
+  Future<void> deleteAccount() async {
+    SHOAppLogger.w('Account deletion requested — clearing local session');
+    await logout();
+  }
 }
 
 /*

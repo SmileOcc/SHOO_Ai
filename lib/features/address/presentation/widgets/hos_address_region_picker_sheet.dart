@@ -214,18 +214,6 @@ class _SHOAddressRegionPickerSheetState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final metaAsync = ref.watch(regionMetaCountriesProvider);
-    final countriesAsync = ref.watch(regionCountriesProvider);
-    final shouldFetchChildren = _pickLevel > 1 && _parentCode.isNotEmpty;
-    final childrenAsync = shouldFetchChildren
-        ? ref.watch(
-            regionChildrenProvider((
-              countryCode: _selection.countryCode.isEmpty
-                  ? 'CN'
-                  : _selection.countryCode,
-              parentCode: _parentCode,
-            )),
-          )
-        : null;
 
     return metaAsync.when(
       loading: () => const SizedBox(
@@ -239,18 +227,24 @@ class _SHOAddressRegionPickerSheetState
       data: (configs) {
         final Widget body;
         if (_pickLevel == 1) {
-          body = countriesAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text(e.toString())),
-            data: (items) => _buildList(context, items, configs),
+          body = _RegionCountryList(
+            configs: configs,
+            pickLevel: _pickLevel,
+            selectedCode: _selectedCodeAtLevel(_pickLevel),
+            onPick: (node) => _onPick(node, configs),
           );
-        } else if (childrenAsync == null) {
+        } else if (_parentCode.isEmpty) {
           body = _buildCompleteHint(context, l10n, configs);
         } else {
-          body = childrenAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text(e.toString())),
-            data: (result) => _buildList(context, result.items, configs),
+          body = _RegionChildrenList(
+            countryCode: _selection.countryCode.isEmpty
+                ? 'CN'
+                : _selection.countryCode,
+            parentCode: _parentCode,
+            configs: configs,
+            pickLevel: _pickLevel,
+            selectedCode: _selectedCodeAtLevel(_pickLevel),
+            onPick: (node) => _onPick(node, configs),
           );
         }
 
@@ -362,12 +356,90 @@ class _SHOAddressRegionPickerSheetState
       ),
     );
   }
+}
 
-  Widget _buildList(
-    BuildContext context,
-    List<SHORegionNode> items,
-    List<SHORegionCountryConfig> configs,
-  ) {
+class _RegionCountryList extends ConsumerWidget {
+  const _RegionCountryList({
+    required this.configs,
+    required this.pickLevel,
+    required this.selectedCode,
+    required this.onPick,
+  });
+
+  final List<SHORegionCountryConfig> configs;
+  final int pickLevel;
+  final String? selectedCode;
+  final ValueChanged<SHORegionNode> onPick;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final countriesAsync = ref.watch(regionCountriesProvider);
+    return countriesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(e.toString())),
+      data: (items) => _RegionNodeList(
+        items: items,
+        pickLevel: pickLevel,
+        selectedCode: selectedCode,
+        onPick: onPick,
+      ),
+    );
+  }
+}
+
+class _RegionChildrenList extends ConsumerWidget {
+  const _RegionChildrenList({
+    required this.countryCode,
+    required this.parentCode,
+    required this.configs,
+    required this.pickLevel,
+    required this.selectedCode,
+    required this.onPick,
+  });
+
+  final String countryCode;
+  final String parentCode;
+  final List<SHORegionCountryConfig> configs;
+  final int pickLevel;
+  final String? selectedCode;
+  final ValueChanged<SHORegionNode> onPick;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final childrenAsync = ref.watch(
+      regionChildrenProvider((
+        countryCode: countryCode,
+        parentCode: parentCode,
+      )),
+    );
+    return childrenAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(e.toString())),
+      data: (result) => _RegionNodeList(
+        items: result.items,
+        pickLevel: pickLevel,
+        selectedCode: selectedCode,
+        onPick: onPick,
+      ),
+    );
+  }
+}
+
+class _RegionNodeList extends StatelessWidget {
+  const _RegionNodeList({
+    required this.items,
+    required this.pickLevel,
+    required this.selectedCode,
+    required this.onPick,
+  });
+
+  final List<SHORegionNode> items;
+  final int pickLevel;
+  final String? selectedCode;
+  final ValueChanged<SHORegionNode> onPick;
+
+  @override
+  Widget build(BuildContext context) {
     if (items.isEmpty) {
       return Center(
         child: Text(
@@ -376,8 +448,6 @@ class _SHOAddressRegionPickerSheetState
         ),
       );
     }
-
-    final selectedCode = _selectedCodeAtLevel(_pickLevel);
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: SHOAppSpacing.sm),
@@ -401,7 +471,7 @@ class _SHOAddressRegionPickerSheetState
               : item.hasChildren
               ? Icon(Icons.chevron_right, color: context.shoTheme.textMuted)
               : null,
-          onTap: () => _onPick(item, configs),
+          onTap: () => onPick(item),
         );
       },
     );

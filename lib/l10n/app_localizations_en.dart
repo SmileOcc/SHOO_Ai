@@ -158,6 +158,223 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsGroupAbout => 'About';
 
   @override
+  String get settingsGroupSupport => 'Help & Support';
+
+  @override
+  String get settingsNotifications => 'Notifications';
+
+  @override
+  String get settingsNotificationsTitle => 'Notifications';
+
+  @override
+  String get settingsNotificationsGroup => 'Notification types';
+
+  @override
+  String get settingsNotificationsHint =>
+      'Choose which alerts you want to receive.';
+
+  @override
+  String get settingsNotifyOrderUpdates => 'Order updates';
+
+  @override
+  String get settingsNotifyOrderUpdatesHint =>
+      'Shipping, delivery, and after-sale progress';
+
+  @override
+  String get settingsNotifyPromotions => 'Promotions';
+
+  @override
+  String get settingsNotifyPromotionsHint =>
+      'Sales, coupons, and marketing messages';
+
+  @override
+  String get settingsNotifyFlashSale => 'Flash sale alerts';
+
+  @override
+  String get settingsNotifyFlashSaleHint =>
+      'Reminders for flash sales you follow';
+
+  @override
+  String get settingsProfile => 'Profile';
+
+  @override
+  String get settingsProfileTitle => 'Edit profile';
+
+  @override
+  String get settingsProfileNickname => 'Nickname';
+
+  @override
+  String get settingsProfileEmail => 'Email';
+
+  @override
+  String get settingsProfileAvatarHint => 'Tap avatar to change';
+
+  @override
+  String get settingsProfileNotBound => 'Not linked';
+
+  @override
+  String get settingsProfileSaved => 'Profile saved';
+
+  @override
+  String get settingsProfileLoginRequired =>
+      'Please sign in to edit your profile';
+
+  @override
+  String get settingsSecurity => 'Account & security';
+
+  @override
+  String get settingsSecurityTitle => 'Account & security';
+
+  @override
+  String get settingsSecurityHint =>
+      'Updating your password regularly helps keep your account safe.';
+
+  @override
+  String get settingsSecurityCurrentPassword => 'Current password';
+
+  @override
+  String get settingsSecurityNewPassword => 'New password';
+
+  @override
+  String get settingsSecurityConfirmPassword => 'Confirm new password';
+
+  @override
+  String get settingsSecuritySubmit => 'Update password';
+
+  @override
+  String get settingsSecuritySaved => 'Password updated';
+
+  @override
+  String get settingsSecurityConfirmRequired =>
+      'Please confirm your new password';
+
+  @override
+  String get settingsSecurityConfirmMismatch => 'New passwords do not match';
+
+  @override
+  String get settingsSecurityPasswordTooShort =>
+      'Password must be at least 6 characters';
+
+  @override
+  String get settingsSecurityLoginGroup => 'Sign-in options';
+
+  @override
+  String get settingsBiometricLogin => 'Biometric sign-in';
+
+  @override
+  String get settingsBiometricLoginHint =>
+      'Use Face ID / fingerprint when supported';
+
+  @override
+  String get settingsDeleteAccount => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountTitle => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountMessage =>
+      'This clears your local sign-in state and cannot be undone.';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'Delete';
+
+  @override
+  String get settingsDeleteAccountVerifyTitle => 'Verify password';
+
+  @override
+  String get settingsDeleteAccountDone => 'Account deleted';
+
+  @override
+  String get settingsPaymentTitle => 'Payment methods';
+
+  @override
+  String get settingsPaymentHint =>
+      'Choose your default payment method for checkout.';
+
+  @override
+  String get settingsPaymentDefaultBadge => 'Default';
+
+  @override
+  String get settingsPaymentBankCards => 'Bank cards';
+
+  @override
+  String get settingsPaymentBankCardsHint => 'Link a card for faster checkout';
+
+  @override
+  String get settingsComingSoon => 'Coming soon';
+
+  @override
+  String get settingsPermissionGranted => 'Granted';
+
+  @override
+  String get settingsPermissionDenied => 'Denied';
+
+  @override
+  String get settingsPermissionUnknown => 'Unknown';
+
+  @override
+  String get settingsProfilePickGallery => 'Choose from gallery';
+
+  @override
+  String get settingsProfilePickCamera => 'Take photo';
+
+  @override
+  String get settingsHelp => 'Help center';
+
+  @override
+  String get settingsHelpTitle => 'Help center';
+
+  @override
+  String get settingsHelpSubtitle => 'FAQs and customer support';
+
+  @override
+  String get settingsHelpFaqTitle => 'Frequently asked questions';
+
+  @override
+  String get settingsHelpContact => 'Contact support';
+
+  @override
+  String get settingsHelpContactHint => 'Chat with support via Messages';
+
+  @override
+  String get settingsHelpAfterSale => 'After-sales service';
+
+  @override
+  String get settingsHelpFaqOrderTrackQ => 'How do I track my order?';
+
+  @override
+  String get settingsHelpFaqOrderTrackA =>
+      'Open My Orders and select an order to view tracking. Shipped orders show the carrier and tracking number.';
+
+  @override
+  String get settingsHelpFaqRefundQ => 'How do I request a refund or return?';
+
+  @override
+  String get settingsHelpFaqRefundA =>
+      'Submit a request from order details or After-sales. Follow the steps, upload proof if needed, and refunds go back to your original payment method.';
+
+  @override
+  String get settingsHelpFaqCouponQ => 'How do I use coupons?';
+
+  @override
+  String get settingsHelpFaqCouponA =>
+      'Select an eligible coupon at checkout. Some coupons have category or minimum spend requirements.';
+
+  @override
+  String get settingsHelpFaqAddressQ => 'How do I change my shipping address?';
+
+  @override
+  String get settingsHelpFaqAddressA =>
+      'Go to Settings > Addresses to add or edit addresses. For unshipped orders, you may update the address from order details.';
+
+  @override
+  String get settingsHelpFaqPaymentQ => 'What if payment fails?';
+
+  @override
+  String get settingsHelpFaqPaymentA =>
+      'Check your network and account balance. If you were charged but no order was created, keep your receipt and contact support.';
+
+  @override
   String get settingsAbout => 'About Us';
 
   @override

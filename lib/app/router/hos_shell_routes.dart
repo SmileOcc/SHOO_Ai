@@ -10,6 +10,11 @@ import 'package:shoo/features/message/presentation/pages/hos_message_page.dart';
 import 'package:shoo/features/profile/presentation/pages/hos_profile_page.dart';
 import 'package:shoo/features/profile/presentation/pages/hos_about_page.dart';
 import 'package:shoo/features/profile/presentation/pages/hos_settings_cache_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_help_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_notifications_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_profile_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_payment_page.dart';
+import 'package:shoo/features/profile/presentation/pages/hos_settings_security_page.dart';
 import 'package:shoo/features/profile/presentation/pages/hos_settings_page.dart';
 import 'package:shoo/app/shell/hos_main_shell.dart';
 import 'package:shoo/app/router/hos_router_keys.dart';
@@ -25,6 +30,26 @@ List<RouteBase> shoShellRoutes() => [
       GoRoute(
         path: 'cache',
         builder: (context, state) => const SHOSettingsCachePage(),
+      ),
+      GoRoute(
+        path: 'notifications',
+        builder: (context, state) => const SHOSettingsNotificationsPage(),
+      ),
+      GoRoute(
+        path: 'profile',
+        builder: (context, state) => const SHOSettingsProfilePage(),
+      ),
+      GoRoute(
+        path: 'security',
+        builder: (context, state) => const SHOSettingsSecurityPage(),
+      ),
+      GoRoute(
+        path: 'help',
+        builder: (context, state) => const SHOSettingsHelpPage(),
+      ),
+      GoRoute(
+        path: 'payment',
+        builder: (context, state) => const SHOSettingsPaymentPage(),
       ),
     ],
   ),

@@ -14,6 +14,7 @@ import 'package:shoo/core/notifications/hos_flash_sale_reminder_bootstrap.dart';
 import 'package:shoo/core/notifications/hos_flash_sale_reminder_nav.dart';
 import 'package:shoo/core/notifications/hos_push_notification_service.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_follow.dart';
+import 'package:shoo/features/profile/presentation/state/hos_notification_prefs_provider.dart';
 
 class SHOFlashSaleReminderPayload {
   const SHOFlashSaleReminderPayload({
@@ -200,6 +201,9 @@ class SHOFlashSaleReminderService {
 
   Future<void> scheduleReminder(SHOFlashSaleFollow follow) async {
     await initialize();
+    if (!_ref.read(notificationPrefsProvider).flashSaleReminders) {
+      return;
+    }
     final start = DateTime.tryParse(follow.sessionStartAt)?.toLocal();
     if (start == null) return;
     final fireAt = start.subtract(_lead);
@@ -255,6 +259,9 @@ class SHOFlashSaleReminderService {
 
   /// 前台轮询：若到达 T-5min 且未弹过，返回 payload。
   SHOFlashSaleReminderPayload? pollForegroundPopup(SHOFlashSaleFollow follow) {
+    if (!_ref.read(notificationPrefsProvider).flashSaleReminders) {
+      return null;
+    }
     if (!_ref.read(appInForegroundProvider)) return null;
 
     final start = DateTime.tryParse(follow.sessionStartAt)?.toLocal();

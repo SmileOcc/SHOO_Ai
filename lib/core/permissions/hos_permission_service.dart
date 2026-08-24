@@ -36,5 +36,7 @@ class SHOPermissionService {
 
   Future<bool> requestLocation() => request(Permission.locationWhenInUse);
 
+  Future<PermissionStatus> status(Permission permission) => permission.status;
+
   Future<void> openSettings() => openAppSettings();
 }

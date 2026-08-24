@@ -9,6 +9,7 @@ import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
+import 'package:shoo/core/widgets/hos_user_avatar.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart'
     show SHOSessionState, sessionProvider;
 import 'package:shoo/l10n/app_localizations.dart';
@@ -100,6 +101,7 @@ class _SHOProfilePageState extends ConsumerState<SHOProfilePage>
               onMessages: () => context.push(SHOAppRoutes.messages),
               onSettings: () => context.push(SHOAppRoutes.settings),
               onLogin: () => context.push(SHOAppRoutes.login),
+              onEditProfile: () => context.push(SHOAppRoutes.settingsProfile),
             ),
           ),
           SliverPadding(
@@ -201,6 +203,7 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.onMessages,
     required this.onSettings,
     required this.onLogin,
+    required this.onEditProfile,
   });
 
   final double topInset;
@@ -213,6 +216,7 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
   final VoidCallback onMessages;
   final VoidCallback onSettings;
   final VoidCallback onLogin;
+  final VoidCallback onEditProfile;
 
   static const expandedHeight = SHOProfilePage._headerExpandedHeight;
 
@@ -305,12 +309,18 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
             top: avatarTop,
             right: 96,
             child: GestureDetector(
-              onTap: session.isAuthenticated ? null : onLogin,
+              onTap: session.isAuthenticated ? onEditProfile : onLogin,
               behavior: HitTestBehavior.opaque,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _SHOProfileAvatar(session: session, radius: avatarRadius),
+                  SHOUserAvatar(
+                    avatarUrl: session.user?.avatarUrl,
+                    radius: avatarRadius,
+                    backgroundColor: Colors.white24,
+                    foregroundColor: Colors.white,
+                    fallbackText: displayName,
+                  ),
                   SizedBox(width: nameGap),
                   Expanded(
                     child: Column(
@@ -355,6 +365,12 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
                       Icons.chevron_right,
                       color: Colors.white70,
                       size: 20,
+                    )
+                  else if (session.isAuthenticated && t > 0.5)
+                    const Icon(
+                      Icons.edit_outlined,
+                      color: Colors.white70,
+                      size: 18,
                     ),
                 ],
               ),
@@ -370,27 +386,7 @@ class _SHOProfileHeaderDelegate extends SliverPersistentHeaderDelegate {
     return old.session != session ||
         old.displayName != displayName ||
         old.subtitle != subtitle ||
-        old.topInset != topInset;
-  }
-}
-
-class _SHOProfileAvatar extends StatelessWidget {
-  const _SHOProfileAvatar({required this.session, required this.radius});
-
-  final SHOSessionState session;
-  final double radius;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: Colors.white24,
-      backgroundImage: session.user?.avatarUrl != null
-          ? NetworkImage(session.user!.avatarUrl!)
-          : null,
-      child: session.user?.avatarUrl == null
-          ? Icon(Icons.person, color: Colors.white, size: radius)
-          : null,
-    );
+        old.topInset != topInset ||
+        old.onEditProfile != onEditProfile;
   }
 }
