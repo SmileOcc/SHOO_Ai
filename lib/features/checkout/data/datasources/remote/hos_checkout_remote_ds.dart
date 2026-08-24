@@ -27,11 +27,13 @@ class SHOCheckoutApi {
     required String addressId,
     required List<Map<String, dynamic>> items,
     String? couponId,
+    int? totalCents,
   }) async {
     final plainBody = {
       'addressId': addressId,
       'items': items,
       if (couponId != null) 'couponId': couponId,
+      if (totalCents != null) 'totalCents': totalCents,
     };
     final prepared = await SHORsaApiHelper.prepareRsaPost(
       config: _config,
@@ -50,7 +52,8 @@ class SHOCheckoutApi {
   Future<SHOPaymentResult> payOrder(String orderId) {
     return _dio.postData<SHOPaymentResult>(
       '/orders/$orderId/pay',
-      parser: (data) => SHOPaymentResult.fromJson(data as Map<String, dynamic>),
+      parser: (data) =>
+          SHOPaymentResult.fromResponse(data as Map<String, dynamic>),
     );
   }
 }

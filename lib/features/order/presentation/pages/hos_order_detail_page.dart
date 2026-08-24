@@ -13,6 +13,7 @@ import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/state/hos_order_controller.dart';
+import 'package:shoo/features/order/presentation/widgets/hos_order_payment_countdown.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_status_label.dart';
 
 bool _canApplyAfterSale(SHOOrderStatus status) =>
@@ -114,6 +115,13 @@ class _SHOOrderDetailPageState
           label: l10n.orderStatusLabel,
           value: shoOrderStatusLabel(context, detail.status),
         ),
+        if (detail.isAwaitingPayment && detail.paymentDeadline != null) ...[
+          const SizedBox(height: SHOAppSpacing.sm),
+          SHOOrderPaymentCountdown(
+            deadline: detail.paymentDeadline!,
+            onExpired: () => invalidateData(ref),
+          ),
+        ],
         _SHOInfoRow(label: l10n.orderCreatedAtLabel, value: detail.createdAt),
         if (detail.shippingAddress.isNotEmpty) ...[
           const SizedBox(height: SHOAppSpacing.md),
@@ -205,6 +213,14 @@ class _SHOOrderDetailPageState
             ),
           ],
         ),
+        if (detail.isAwaitingPayment) ...[
+          const SizedBox(height: SHOAppSpacing.xl),
+          SHOAppButton(
+            label: l10n.orderPayNowAction,
+            isExpanded: true,
+            onPressed: () => context.push(SHOAppRoutes.payment(detail.id)),
+          ),
+        ],
         if (detail.hasLogistics) ...[
           const SizedBox(height: SHOAppSpacing.xl),
           SHOAppButton(

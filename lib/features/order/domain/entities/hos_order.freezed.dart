@@ -303,6 +303,7 @@ mixin _$SHOOrderSummary {
   SHOOrderStatus get status => throw _privateConstructorUsedError;
   int get totalCents => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
+  String get paymentDeadlineAt => throw _privateConstructorUsedError;
   List<SHOOrderItem> get items => throw _privateConstructorUsedError;
 
   /// Serializes this SHOOrderSummary to a JSON map.
@@ -328,6 +329,7 @@ abstract class $SHOOrderSummaryCopyWith<$Res> {
     SHOOrderStatus status,
     int totalCents,
     String createdAt,
+    String paymentDeadlineAt,
     List<SHOOrderItem> items,
   });
 }
@@ -352,6 +354,7 @@ class _$SHOOrderSummaryCopyWithImpl<$Res, $Val extends SHOOrderSummary>
     Object? status = null,
     Object? totalCents = null,
     Object? createdAt = null,
+    Object? paymentDeadlineAt = null,
     Object? items = null,
   }) {
     return _then(
@@ -375,6 +378,10 @@ class _$SHOOrderSummaryCopyWithImpl<$Res, $Val extends SHOOrderSummary>
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+            paymentDeadlineAt: null == paymentDeadlineAt
+                ? _value.paymentDeadlineAt
+                : paymentDeadlineAt // ignore: cast_nullable_to_non_nullable
                       as String,
             items: null == items
                 ? _value.items
@@ -401,6 +408,7 @@ abstract class _$$SHOOrderSummaryImplCopyWith<$Res>
     SHOOrderStatus status,
     int totalCents,
     String createdAt,
+    String paymentDeadlineAt,
     List<SHOOrderItem> items,
   });
 }
@@ -424,6 +432,7 @@ class __$$SHOOrderSummaryImplCopyWithImpl<$Res>
     Object? status = null,
     Object? totalCents = null,
     Object? createdAt = null,
+    Object? paymentDeadlineAt = null,
     Object? items = null,
   }) {
     return _then(
@@ -448,6 +457,10 @@ class __$$SHOOrderSummaryImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        paymentDeadlineAt: null == paymentDeadlineAt
+            ? _value.paymentDeadlineAt
+            : paymentDeadlineAt // ignore: cast_nullable_to_non_nullable
+                  as String,
         items: null == items
             ? _value._items
             : items // ignore: cast_nullable_to_non_nullable
@@ -459,15 +472,17 @@ class __$$SHOOrderSummaryImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
+class _$SHOOrderSummaryImpl extends _SHOOrderSummary {
   const _$SHOOrderSummaryImpl({
     required this.id,
     required this.orderNo,
     required this.status,
     required this.totalCents,
     required this.createdAt,
+    this.paymentDeadlineAt = '',
     final List<SHOOrderItem> items = const <SHOOrderItem>[],
-  }) : _items = items;
+  }) : _items = items,
+       super._();
 
   factory _$SHOOrderSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$SHOOrderSummaryImplFromJson(json);
@@ -482,6 +497,9 @@ class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
   final int totalCents;
   @override
   final String createdAt;
+  @override
+  @JsonKey()
+  final String paymentDeadlineAt;
   final List<SHOOrderItem> _items;
   @override
   @JsonKey()
@@ -493,7 +511,7 @@ class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
 
   @override
   String toString() {
-    return 'SHOOrderSummary(id: $id, orderNo: $orderNo, status: $status, totalCents: $totalCents, createdAt: $createdAt, items: $items)';
+    return 'SHOOrderSummary(id: $id, orderNo: $orderNo, status: $status, totalCents: $totalCents, createdAt: $createdAt, paymentDeadlineAt: $paymentDeadlineAt, items: $items)';
   }
 
   @override
@@ -508,6 +526,8 @@ class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
                 other.totalCents == totalCents) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.paymentDeadlineAt, paymentDeadlineAt) ||
+                other.paymentDeadlineAt == paymentDeadlineAt) &&
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
@@ -520,6 +540,7 @@ class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
     status,
     totalCents,
     createdAt,
+    paymentDeadlineAt,
     const DeepCollectionEquality().hash(_items),
   );
 
@@ -540,15 +561,17 @@ class _$SHOOrderSummaryImpl implements _SHOOrderSummary {
   }
 }
 
-abstract class _SHOOrderSummary implements SHOOrderSummary {
+abstract class _SHOOrderSummary extends SHOOrderSummary {
   const factory _SHOOrderSummary({
     required final String id,
     required final String orderNo,
     required final SHOOrderStatus status,
     required final int totalCents,
     required final String createdAt,
+    final String paymentDeadlineAt,
     final List<SHOOrderItem> items,
   }) = _$SHOOrderSummaryImpl;
+  const _SHOOrderSummary._() : super._();
 
   factory _SHOOrderSummary.fromJson(Map<String, dynamic> json) =
       _$SHOOrderSummaryImpl.fromJson;
@@ -563,6 +586,8 @@ abstract class _SHOOrderSummary implements SHOOrderSummary {
   int get totalCents;
   @override
   String get createdAt;
+  @override
+  String get paymentDeadlineAt;
   @override
   List<SHOOrderItem> get items;
 
@@ -585,6 +610,7 @@ mixin _$SHOOrderDetail {
   SHOOrderStatus get status => throw _privateConstructorUsedError;
   int get totalCents => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
+  String get paymentDeadlineAt => throw _privateConstructorUsedError;
   String get shippingAddress => throw _privateConstructorUsedError;
   List<SHOOrderItem> get items => throw _privateConstructorUsedError;
   bool get hasLogistics => throw _privateConstructorUsedError;
@@ -612,6 +638,7 @@ abstract class $SHOOrderDetailCopyWith<$Res> {
     SHOOrderStatus status,
     int totalCents,
     String createdAt,
+    String paymentDeadlineAt,
     String shippingAddress,
     List<SHOOrderItem> items,
     bool hasLogistics,
@@ -638,6 +665,7 @@ class _$SHOOrderDetailCopyWithImpl<$Res, $Val extends SHOOrderDetail>
     Object? status = null,
     Object? totalCents = null,
     Object? createdAt = null,
+    Object? paymentDeadlineAt = null,
     Object? shippingAddress = null,
     Object? items = null,
     Object? hasLogistics = null,
@@ -663,6 +691,10 @@ class _$SHOOrderDetailCopyWithImpl<$Res, $Val extends SHOOrderDetail>
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+            paymentDeadlineAt: null == paymentDeadlineAt
+                ? _value.paymentDeadlineAt
+                : paymentDeadlineAt // ignore: cast_nullable_to_non_nullable
                       as String,
             shippingAddress: null == shippingAddress
                 ? _value.shippingAddress
@@ -697,6 +729,7 @@ abstract class _$$SHOOrderDetailImplCopyWith<$Res>
     SHOOrderStatus status,
     int totalCents,
     String createdAt,
+    String paymentDeadlineAt,
     String shippingAddress,
     List<SHOOrderItem> items,
     bool hasLogistics,
@@ -722,6 +755,7 @@ class __$$SHOOrderDetailImplCopyWithImpl<$Res>
     Object? status = null,
     Object? totalCents = null,
     Object? createdAt = null,
+    Object? paymentDeadlineAt = null,
     Object? shippingAddress = null,
     Object? items = null,
     Object? hasLogistics = null,
@@ -748,6 +782,10 @@ class __$$SHOOrderDetailImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        paymentDeadlineAt: null == paymentDeadlineAt
+            ? _value.paymentDeadlineAt
+            : paymentDeadlineAt // ignore: cast_nullable_to_non_nullable
+                  as String,
         shippingAddress: null == shippingAddress
             ? _value.shippingAddress
             : shippingAddress // ignore: cast_nullable_to_non_nullable
@@ -767,17 +805,19 @@ class __$$SHOOrderDetailImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SHOOrderDetailImpl implements _SHOOrderDetail {
+class _$SHOOrderDetailImpl extends _SHOOrderDetail {
   const _$SHOOrderDetailImpl({
     required this.id,
     required this.orderNo,
     required this.status,
     required this.totalCents,
     required this.createdAt,
+    this.paymentDeadlineAt = '',
     this.shippingAddress = '',
     final List<SHOOrderItem> items = const <SHOOrderItem>[],
     this.hasLogistics = false,
-  }) : _items = items;
+  }) : _items = items,
+       super._();
 
   factory _$SHOOrderDetailImpl.fromJson(Map<String, dynamic> json) =>
       _$$SHOOrderDetailImplFromJson(json);
@@ -792,6 +832,9 @@ class _$SHOOrderDetailImpl implements _SHOOrderDetail {
   final int totalCents;
   @override
   final String createdAt;
+  @override
+  @JsonKey()
+  final String paymentDeadlineAt;
   @override
   @JsonKey()
   final String shippingAddress;
@@ -810,7 +853,7 @@ class _$SHOOrderDetailImpl implements _SHOOrderDetail {
 
   @override
   String toString() {
-    return 'SHOOrderDetail(id: $id, orderNo: $orderNo, status: $status, totalCents: $totalCents, createdAt: $createdAt, shippingAddress: $shippingAddress, items: $items, hasLogistics: $hasLogistics)';
+    return 'SHOOrderDetail(id: $id, orderNo: $orderNo, status: $status, totalCents: $totalCents, createdAt: $createdAt, paymentDeadlineAt: $paymentDeadlineAt, shippingAddress: $shippingAddress, items: $items, hasLogistics: $hasLogistics)';
   }
 
   @override
@@ -825,6 +868,8 @@ class _$SHOOrderDetailImpl implements _SHOOrderDetail {
                 other.totalCents == totalCents) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.paymentDeadlineAt, paymentDeadlineAt) ||
+                other.paymentDeadlineAt == paymentDeadlineAt) &&
             (identical(other.shippingAddress, shippingAddress) ||
                 other.shippingAddress == shippingAddress) &&
             const DeepCollectionEquality().equals(other._items, _items) &&
@@ -841,6 +886,7 @@ class _$SHOOrderDetailImpl implements _SHOOrderDetail {
     status,
     totalCents,
     createdAt,
+    paymentDeadlineAt,
     shippingAddress,
     const DeepCollectionEquality().hash(_items),
     hasLogistics,
@@ -863,17 +909,19 @@ class _$SHOOrderDetailImpl implements _SHOOrderDetail {
   }
 }
 
-abstract class _SHOOrderDetail implements SHOOrderDetail {
+abstract class _SHOOrderDetail extends SHOOrderDetail {
   const factory _SHOOrderDetail({
     required final String id,
     required final String orderNo,
     required final SHOOrderStatus status,
     required final int totalCents,
     required final String createdAt,
+    final String paymentDeadlineAt,
     final String shippingAddress,
     final List<SHOOrderItem> items,
     final bool hasLogistics,
   }) = _$SHOOrderDetailImpl;
+  const _SHOOrderDetail._() : super._();
 
   factory _SHOOrderDetail.fromJson(Map<String, dynamic> json) =
       _$SHOOrderDetailImpl.fromJson;
@@ -888,6 +936,8 @@ abstract class _SHOOrderDetail implements SHOOrderDetail {
   int get totalCents;
   @override
   String get createdAt;
+  @override
+  String get paymentDeadlineAt;
   @override
   String get shippingAddress;
   @override

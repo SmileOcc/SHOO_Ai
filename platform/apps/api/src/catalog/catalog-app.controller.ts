@@ -29,12 +29,19 @@ export class CatalogAppController {
   }
 
   @Get('products/batch')
-  batchProducts(@Query('ids') ids?: string) {
+  batchProducts(
+    @Query('ids') ids?: string,
+    @Query('skuIds') skuIds?: string,
+  ) {
     const list = (ids ?? '')
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean);
-    return this.catalog.batchProducts(list);
+    const skuList = (skuIds ?? '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return this.catalog.batchProducts(list, skuList);
   }
 
   @Get('products/:id/reviews')

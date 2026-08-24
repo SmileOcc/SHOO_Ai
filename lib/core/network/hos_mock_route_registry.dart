@@ -224,6 +224,11 @@ abstract final class SHOMockRouteRegistry {
     ),
     const SHOMockRouteEntry(
       method: 'POST',
+      path: '/coupons/{id}/claim',
+      asset: 'assets/mock/flash_sale_claim_ok.json',
+    ),
+    const SHOMockRouteEntry(
+      method: 'POST',
       path: '/flash-sale/coupons/{id}/claim',
       asset: 'assets/mock/flash_sale_claim_ok.json',
     ),

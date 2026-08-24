@@ -48,6 +48,4 @@ class SHOFlashSaleRepository {
     required String sessionId,
     required String productId,
   }) => _api.unfollow(sessionId: sessionId, productId: productId);
-
-  Future<void> claimCoupon(String couponId) => _api.claimCoupon(couponId);
 }

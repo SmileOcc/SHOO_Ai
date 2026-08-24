@@ -4,12 +4,19 @@ import { AdminAuthGuard } from './admin-auth.guard';
 import { AuthAdminController } from './auth-admin.controller';
 import { AuthAppController } from './auth-app.controller';
 import { IamService } from './iam.service';
+import { OptionalUserAuthGuard } from './optional-user-auth.guard';
 import { UserAuthGuard } from './user-auth.guard';
 
 @Module({
   imports: [JwtModule.register({})],
   controllers: [AuthAppController, AuthAdminController],
-  providers: [IamService, AdminAuthGuard, UserAuthGuard],
-  exports: [IamService, AdminAuthGuard, UserAuthGuard, JwtModule],
+  providers: [IamService, AdminAuthGuard, UserAuthGuard, OptionalUserAuthGuard],
+  exports: [
+    IamService,
+    AdminAuthGuard,
+    UserAuthGuard,
+    OptionalUserAuthGuard,
+    JwtModule,
+  ],
 })
 export class IamModule {}

@@ -33,27 +33,41 @@ class SHOOrderItem with _$SHOOrderItem {
 
 @freezed
 class SHOOrderSummary with _$SHOOrderSummary {
+  const SHOOrderSummary._();
+
   const factory SHOOrderSummary({
     required String id,
     required String orderNo,
     required SHOOrderStatus status,
     required int totalCents,
     required String createdAt,
+    @Default('') String paymentDeadlineAt,
     @Default(<SHOOrderItem>[]) List<SHOOrderItem> items,
   }) = _SHOOrderSummary;
 
   factory SHOOrderSummary.fromJson(Map<String, dynamic> json) =>
       _$SHOOrderSummaryFromJson(json);
+
+  DateTime? get paymentDeadline =>
+      paymentDeadlineAt.isEmpty ? null : DateTime.tryParse(paymentDeadlineAt);
+
+  bool get isAwaitingPayment =>
+      status == SHOOrderStatus.pendingPayment &&
+      paymentDeadline != null &&
+      paymentDeadline!.isAfter(DateTime.now());
 }
 
 @freezed
 class SHOOrderDetail with _$SHOOrderDetail {
+  const SHOOrderDetail._();
+
   const factory SHOOrderDetail({
     required String id,
     required String orderNo,
     required SHOOrderStatus status,
     required int totalCents,
     required String createdAt,
+    @Default('') String paymentDeadlineAt,
     @Default('') String shippingAddress,
     @Default(<SHOOrderItem>[]) List<SHOOrderItem> items,
     @Default(false) bool hasLogistics,
@@ -61,6 +75,14 @@ class SHOOrderDetail with _$SHOOrderDetail {
 
   factory SHOOrderDetail.fromJson(Map<String, dynamic> json) =>
       _$SHOOrderDetailFromJson(json);
+
+  DateTime? get paymentDeadline =>
+      paymentDeadlineAt.isEmpty ? null : DateTime.tryParse(paymentDeadlineAt);
+
+  bool get isAwaitingPayment =>
+      status == SHOOrderStatus.pendingPayment &&
+      paymentDeadline != null &&
+      paymentDeadline!.isAfter(DateTime.now());
 }
 
 @freezed

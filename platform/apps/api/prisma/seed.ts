@@ -1,71 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import * as fs from 'fs';
-import * as path from 'path';
+import { seedCouponTemplates } from './seed/domains/coupons';
+import {
+  seedDocuments,
+  seedOrderLogisticsCatalog,
+} from './seed/domains/documents';
+import { readMock, tryReadMock, tryReadRawJson } from './seed/lib/mock-reader';
 
 const prisma = new PrismaClient();
-
-type Envelope<T> = { code: number; message: string; data: T };
-
-function readMock<T>(file: string): T {
-  const candidates = [
-    process.env.MOCK_DATA_DIR,
-    path.resolve(__dirname, '../../../../../assets/mock'),
-    path.resolve(process.cwd(), '../../../assets/mock'),
-    path.resolve(process.cwd(), '../../../../assets/mock'),
-  ].filter(Boolean) as string[];
-
-  for (const dir of candidates) {
-    const full = path.join(dir, file);
-    if (fs.existsSync(full)) {
-      const raw = JSON.parse(fs.readFileSync(full, 'utf8')) as Envelope<T>;
-      return raw.data;
-    }
-  }
-  throw new Error(`Mock file not found: ${file}`);
-}
-
-function tryReadMock<T>(file: string): T | null {
-  try {
-    return readMock<T>(file);
-  } catch {
-    return null;
-  }
-}
-
-function resolveMockPath(file: string): string | null {
-  const candidates = [
-    process.env.MOCK_DATA_DIR,
-    path.resolve(__dirname, '../../../../../assets/mock'),
-    path.resolve(process.cwd(), '../../../assets/mock'),
-    path.resolve(process.cwd(), '../../../../assets/mock'),
-  ].filter(Boolean) as string[];
-
-  for (const dir of candidates) {
-    const full = path.join(dir, file);
-    if (fs.existsSync(full)) return full;
-  }
-  return null;
-}
-
-/** Read mock JSON as-is (no {code,data} envelope). */
-function tryReadRawJson<T>(file: string): T | null {
-  const full = resolveMockPath(file);
-  if (!full) return null;
-  try {
-    return JSON.parse(fs.readFileSync(full, 'utf8')) as T;
-  } catch {
-    return null;
-  }
-}
-
-async function upsertDocument(key: string, payload: unknown) {
-  await prisma.appDocument.upsert({
-    where: { key },
-    create: { key, payload: payload as object },
-    update: { payload: payload as object },
-  });
-}
 
 async function main() {
   console.log('Seeding SHOO platform from assets/mock...');
@@ -97,6 +39,10 @@ async function main() {
     },
     update: {},
   });
+  const demoUser = await prisma.user.findUnique({
+    where: { email: 'user@shoo.mock' },
+  });
+  const demoUserId = demoUser?.id;
 
   const banners = readMock<
     Array<{ id: string; imageUrl: string; link: string; title: string }>
@@ -236,6 +182,7 @@ async function main() {
         orderNo: o.orderNo,
         status: o.status,
         totalCents: o.totalCents,
+        userId: demoUserId,
         shippingAddress: extra.shippingAddress,
         hasLogistics: extra.hasLogistics,
         createdAt: new Date(o.createdAt.replace(' ', 'T') + ':00'),
@@ -254,6 +201,7 @@ async function main() {
         orderNo: o.orderNo,
         status: o.status,
         totalCents: o.totalCents,
+        userId: demoUserId,
         shippingAddress: extra.shippingAddress,
         hasLogistics: extra.hasLogistics,
         items: {
@@ -270,65 +218,9 @@ async function main() {
     });
   }
 
-  const logisticsTemplate = tryReadMock<{
-    orderId?: string;
-    carrier?: string;
-    trackingNumber?: string;
-    events?: unknown[];
-  }>('order_logistics.json');
-  if (logisticsTemplate) {
-    const orderId = logisticsTemplate.orderId ?? 'o1';
-    await upsertDocument('order_logistics_catalog', {
-      byOrder: {
-        [orderId]: {
-          carrier: logisticsTemplate.carrier ?? '',
-          trackingNumber: logisticsTemplate.trackingNumber ?? '',
-          events: logisticsTemplate.events ?? [],
-        },
-      },
-    });
-    console.log(`Order logistics catalog seeded for ${orderId}`);
-  }
+  await seedOrderLogisticsCatalog(prisma);
 
-  // Document-backed domains (App API parity)
-  const documentFiles: Array<[string, string]> = [
-    ['messages', 'messages.json'],
-    ['addresses', 'addresses.json'],
-    ['coupons', 'coupons.json'],
-    ['search_hot', 'search_hot.json'],
-    ['search', 'search.json'],
-    ['reviews_catalog', 'product_reviews_catalog.json'],
-    ['order_logistics', 'order_logistics.json'],
-    ['after_sales', 'after_sales.json'],
-    ['after_sale_create', 'after_sale_create.json'],
-    ['community_feed', 'community_feed.json'],
-    ['activity_popup', 'activity_popup.json'],
-    ['home_quick_entries', 'home_quick_entries.json'],
-    ['home_feed_config', 'home_feed_config.json'],
-    ['cart_marquee', 'cart_marquee.json'],
-    ['activity_data', 'activity_data.json'],
-    ['activity_detail', 'activity_detail.json'],
-    ['activity_level3_detail', 'activity_level3_detail.json'],
-    ['activity_user_check', 'activity_user_check.json'],
-    ['activity_url_rules', 'activity_url_rules.json'],
-    ['flash_sale_catalog', 'flash_sale_catalog.json'],
-    ['flash_sale_follows', 'flash_sale_follows.json'],
-    ['app_version', 'app_version.json'],
-    ['cart', 'cart.json'],
-    ['contacts', 'contacts.json'],
-    ['documents', 'documents.json'],
-    ['push_register_ok', 'push_register_ok.json'],
-  ];
-
-  for (const [key, file] of documentFiles) {
-    const data = tryReadMock<unknown>(file);
-    if (data == null) {
-      console.warn(`Skip missing mock: ${file}`);
-      continue;
-    }
-    await upsertDocument(key, data);
-    console.log(`Document seeded: ${key}`);
-  }
+  await seedDocuments(prisma);
 
   const afterSales = tryReadMock<
     Array<{
@@ -391,6 +283,7 @@ async function main() {
     if (!item.sessionId || !item.productId) continue;
     await prisma.flashSaleFollow.create({
       data: {
+        userId: demoUserId ?? '',
         sessionId: item.sessionId,
         productId: item.productId,
         title: item.title ?? '',
@@ -442,175 +335,7 @@ async function main() {
     console.log(`ThemeActivity seeded: ${activityId}`);
   }
 
-  // Coupon templates (wallet + theme + flash-sale ids)
-  const couponTemplates: Array<{
-    id: string;
-    title: string;
-    description: string;
-    type: string;
-    discountCents: number;
-    discountPercent: number;
-    minOrderCents: number;
-    source: string;
-  }> = [];
-
-  const walletCoupons = tryReadMock<
-    Array<{
-      id: string;
-      title: string;
-      description?: string;
-      type?: string;
-      discountCents?: number;
-      discountPercent?: number;
-      minOrderCents?: number;
-    }>
-  >('coupons.json');
-  if (walletCoupons) {
-    for (const item of walletCoupons) {
-      couponTemplates.push({
-        id: item.id,
-        title: item.title,
-        description: item.description ?? '',
-        type: item.type ?? 'fixed',
-        discountCents: item.discountCents ?? 0,
-        discountPercent: item.discountPercent ?? 0,
-        minOrderCents: item.minOrderCents ?? 0,
-        source: 'wallet',
-      });
-    }
-  }
-
-  const extraTemplates = [
-    {
-      id: 'c_all_10',
-      title: '新人券',
-      description: '满99可用',
-      type: 'fixed',
-      discountCents: 1000,
-      discountPercent: 0,
-      minOrderCents: 9900,
-      source: 'theme',
-    },
-    {
-      id: 'c_all_20',
-      title: '满减券',
-      description: '满199可用',
-      type: 'fixed',
-      discountCents: 2000,
-      discountPercent: 0,
-      minOrderCents: 19900,
-      source: 'theme',
-    },
-    {
-      id: 'c_all_30',
-      title: '大额券',
-      description: '满299可用',
-      type: 'fixed',
-      discountCents: 3000,
-      discountPercent: 0,
-      minOrderCents: 29900,
-      source: 'theme',
-    },
-    {
-      id: 'fc-10-1',
-      title: '满200减30',
-      description: '全场通用',
-      type: 'fixed',
-      discountCents: 3000,
-      discountPercent: 0,
-      minOrderCents: 20000,
-      source: 'flash',
-    },
-    {
-      id: 'fc-10-2',
-      title: '满500减80',
-      description: '限抢购商品',
-      type: 'fixed',
-      discountCents: 8000,
-      discountPercent: 0,
-      minOrderCents: 50000,
-      source: 'flash',
-    },
-    {
-      id: 'fc-10-3',
-      title: '9折券',
-      description: '会员专享',
-      type: 'percent',
-      discountCents: 0,
-      discountPercent: 10,
-      minOrderCents: 0,
-      source: 'flash',
-    },
-    {
-      id: 'fc-14-1',
-      title: '满300减50',
-      description: '品类满减',
-      type: 'fixed',
-      discountCents: 5000,
-      discountPercent: 0,
-      minOrderCents: 30000,
-      source: 'flash',
-    },
-    {
-      id: 'fc-14-2',
-      title: '满100减15',
-      description: '跨店满减',
-      type: 'fixed',
-      discountCents: 1500,
-      discountPercent: 0,
-      minOrderCents: 10000,
-      source: 'flash',
-    },
-    {
-      id: 'fc-20-1',
-      title: '满400减60',
-      description: '限时满减',
-      type: 'fixed',
-      discountCents: 6000,
-      discountPercent: 0,
-      minOrderCents: 40000,
-      source: 'flash',
-    },
-    {
-      id: 'fc-20-2',
-      title: '满150减25',
-      description: '夜间专场',
-      type: 'fixed',
-      discountCents: 2500,
-      discountPercent: 0,
-      minOrderCents: 15000,
-      source: 'flash',
-    },
-  ];
-  couponTemplates.push(...extraTemplates);
-
-  for (const item of couponTemplates) {
-    await prisma.couponTemplate.upsert({
-      where: { id: item.id },
-      create: {
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        type: item.type,
-        discountCents: item.discountCents,
-        discountPercent: item.discountPercent,
-        minOrderCents: item.minOrderCents,
-        source: item.source,
-        validDays: 30,
-        enabled: true,
-      },
-      update: {
-        title: item.title,
-        description: item.description,
-        type: item.type,
-        discountCents: item.discountCents,
-        discountPercent: item.discountPercent,
-        minOrderCents: item.minOrderCents,
-        source: item.source,
-      },
-    });
-  }
-  console.log(`Coupon templates upserted: ${couponTemplates.length}`);
+  await seedCouponTemplates(prisma);
 
   console.log('Seed complete.');
   console.log(`Admin login: ${adminEmail} / ${adminPassword}`);

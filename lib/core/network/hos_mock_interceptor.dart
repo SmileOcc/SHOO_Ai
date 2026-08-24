@@ -86,7 +86,54 @@ class SHOMockInterceptor extends Interceptor {
         return;
       }
 
+      if (entry.method == 'GET' && entry.path == '/orders') {
+        SHOMockOrderStore.expireStaleOrders();
+        final raw = await rootBundle.loadString(entry.asset);
+        final envelope = jsonDecode(raw) as Map<String, dynamic>;
+        final data = Map<String, dynamic>.from(envelope['data'] as Map);
+        var items = (data['items'] as List)
+            .whereType<Map<String, dynamic>>()
+            .map(Map<String, dynamic>.from)
+            .toList();
+        final storeItems = SHOMockOrderStore.listAll();
+        final seen = items.map((order) => order['id']?.toString()).toSet();
+        for (final order in storeItems) {
+          final id = order['id']?.toString();
+          if (id == null || seen.contains(id)) continue;
+          items.insert(0, order);
+        }
+        final status = options.queryParameters['status']?.toString();
+        if (status != null && status.isNotEmpty) {
+          items = items.where((order) => order['status'] == status).toList();
+        }
+        final page =
+            int.tryParse('${options.queryParameters['page'] ?? 1}') ?? 1;
+        final pageSize =
+            int.tryParse('${options.queryParameters['pageSize'] ?? 20}') ?? 20;
+        final start = (page - 1) * pageSize;
+        final slice = items.skip(start).take(pageSize).toList();
+        handler.resolve(
+          Response(
+            requestOptions: options,
+            statusCode: 200,
+            data: {
+              'code': 0,
+              'message': 'ok',
+              'data': {
+                'items': slice,
+                'page': page,
+                'pageSize': pageSize,
+                'total': items.length,
+                'hasMore': start + slice.length < items.length,
+              },
+            },
+          ),
+        );
+        return;
+      }
+
       if (entry.method == 'GET' && entry.path == '/orders/{id}') {
+        SHOMockOrderStore.expireStaleOrders();
         final orderId = mockPathParam(entry.path, path, 'id');
         final cached = orderId == null ? null : SHOMockOrderStore.get(orderId);
         if (cached != null) {
@@ -199,20 +246,73 @@ class SHOMockInterceptor extends Interceptor {
               );
               return;
             }
+            final normalizedItems = items
+                .whereType<Map>()
+                .map((item) => Map<String, dynamic>.from(item))
+                .toList();
+            final created = SHOMockOrderStore.createFromCheckout(
+              items: normalizedItems,
+              totalCents: (body['totalCents'] as num?)?.toInt(),
+            );
+            if (created == null) {
+              handler.reject(
+                DioException(
+                  requestOptions: options,
+                  response: Response(
+                    requestOptions: options,
+                    statusCode: 400,
+                    data: {
+                      'code': 400,
+                      'message': 'Insufficient stock',
+                      'data': null,
+                    },
+                  ),
+                  type: DioExceptionType.badResponse,
+                ),
+              );
+              return;
+            }
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 200,
+                data: {'code': 0, 'message': 'ok', 'data': created},
+              ),
+            );
+            return;
           }
         }
       }
 
-      if (entry.method == 'POST' && entry.path == '/orders') {
-        final orderData = data['data'];
-        if (orderData is Map<String, dynamic>) {
-          SHOMockOrderStore.putPending(orderData);
-        }
-      }
-
       if (entry.method == 'POST' && entry.path == '/orders/{id}/pay') {
+        SHOMockOrderStore.expireStaleOrders();
         final orderId = mockPathParam(entry.path, path, 'id');
-        if (orderId != null) SHOMockOrderStore.markPaid(orderId);
+        if (orderId != null) {
+          final cached = SHOMockOrderStore.get(orderId);
+          if (cached != null && cached['status'] == 'pending_payment') {
+            SHOMockOrderStore.markPaid(orderId);
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 200,
+                data: {
+                  'code': 0,
+                  'message': 'ok',
+                  'data': {
+                    'orderId': orderId,
+                    'status': 'paid',
+                    'paidAt': SHOMockOrderStore.listAll().firstWhere(
+                      (order) => order['id'] == orderId,
+                      orElse: () => {'createdAt': ''},
+                    )['createdAt'],
+                    'message': 'Mock payment successful',
+                  },
+                },
+              ),
+            );
+            return;
+          }
+        }
       }
 
       SHOAppLogger.d('Mock hit', '${options.method} $path → ${entry.asset}');

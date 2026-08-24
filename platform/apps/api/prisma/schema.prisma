@@ -78,6 +78,7 @@ model Order {
   totalCents      Int
   shippingAddress String      @default("")
   hasLogistics    Boolean     @default(false)
+  paymentDeadlineAt DateTime?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
@@ -104,13 +105,15 @@ model AppDocument {
 
 model FlashSaleFollow {
   id        String   @id @default(cuid())
+  userId    String
   sessionId String
   productId String
   title     String   @default("")
   imageUrl  String   @default("")
   createdAt DateTime @default(now())
 
-  @@unique([sessionId, productId])
+  @@unique([userId, sessionId, productId])
+  @@index([userId])
   @@index([sessionId])
 }
 

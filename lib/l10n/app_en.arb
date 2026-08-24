@@ -434,6 +434,20 @@
   "@cartSavedHint": {
     "placeholders": { "amount": { "type": "String" } }
   },
+  "cartCouponAppliedHint": "{title} · −{amount}",
+  "@cartCouponAppliedHint": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+  "cartCouponAvailableHint": "{count} available · up to −{amount}",
+  "@cartCouponAvailableHint": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "amount": { "type": "String" }
+    }
+  },
   "cartFullReductionProgress": "Spend {amount} more for {label}",
   "@cartFullReductionProgress": {
     "placeholders": {
@@ -544,6 +558,12 @@
   "orderNoLabel": "Order No.",
   "orderStatusLabel": "Status",
   "orderCreatedAtLabel": "Placed at",
+  "orderPaymentCountdown": "Pay within {time}",
+  "@orderPaymentCountdown": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "orderPaymentExpired": "Payment expired — order cancelled",
+  "orderPayNowAction": "Pay now",
   "orderShippingAddress": "Shipping address",
   "orderItemsTitle": "Items",
   "orderTotalLabel": "Total",

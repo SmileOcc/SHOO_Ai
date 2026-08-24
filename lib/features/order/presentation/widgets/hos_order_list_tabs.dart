@@ -48,12 +48,3 @@ SHOOrderStatus? _parseStatusFilter(String? raw) {
     _ => null,
   };
 }
-
-List<SHOOrderSummary> filterOrdersByTab(
-  List<SHOOrderSummary> orders,
-  SHOOrderListTab tab,
-) {
-  final status = tab.statusFilter;
-  if (status == null) return orders;
-  return orders.where((o) => o.status == status).toList();
-}

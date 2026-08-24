@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/widgets/hos_countdown_ticker.dart';
 
 class SHOFlashSaleCountdown extends StatefulWidget {
   const SHOFlashSaleCountdown({
@@ -23,44 +22,28 @@ class SHOFlashSaleCountdown extends StatefulWidget {
   State<SHOFlashSaleCountdown> createState() => _SHOFlashSaleCountdownState();
 }
 
-class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
-  Timer? _timer;
-  Duration _remaining = Duration.zero;
-
+class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown>
+    with SHOCountdownTickerMixin<SHOFlashSaleCountdown> {
   @override
   void initState() {
     super.initState();
-    _tick();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
+    _restart();
   }
 
   @override
   void didUpdateWidget(SHOFlashSaleCountdown oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.targetIso != widget.targetIso) _tick();
+    if (oldWidget.targetIso != widget.targetIso) _restart();
   }
 
-  void _tick() {
-    // 1. 解析目标时间（ISO 格式）
+  void _restart() {
     final target = DateTime.tryParse(widget.targetIso)?.toLocal();
-    if (target == null) return;
-    // 2. 实时计算剩余时间
-    final diff = target.difference(DateTime.now());
-    if (!mounted) return;
-    //表示时间差是否为负数 判断目标时间是否已经过去
-    //一个 边界条件检查 ，确保倒计时结束后不会显示负数时间
-    if (diff.isNegative) {
-      _timer?.cancel();
-      setState(() => _remaining = Duration.zero);
-      widget.onComplete?.call();
-      return;
-    }
-    setState(() => _remaining = diff);
+    startCountdown(target, onComplete: widget.onComplete);
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    disposeCountdownTicker();
     super.dispose();
   }
 
@@ -69,7 +52,7 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
     final accent = widget.accentColor ?? SHOAppColors.accent;
     final prefixClr = widget.prefixColor ?? SHOAppColors.textSecondary;
 
-    if (_remaining <= Duration.zero) {
+    if (countdownExpired || countdownRemaining <= Duration.zero) {
       return Text(
         widget.prefix,
         style: const TextStyle(
@@ -80,9 +63,7 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
       );
     }
 
-    final h = _remaining.inHours.remainder(24).toString().padLeft(2, '0');
-    final m = _remaining.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = _remaining.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final digits = formatCountdownDuration(countdownRemaining);
 
     return RichText(
       text: TextSpan(
@@ -90,7 +71,7 @@ class _SHOFlashSaleCountdownState extends State<SHOFlashSaleCountdown> {
         children: [
           TextSpan(text: '${widget.prefix} '),
           TextSpan(
-            text: '$h:$m:$s',
+            text: digits,
             style: TextStyle(
               fontWeight: FontWeight.w800,
               color: accent,

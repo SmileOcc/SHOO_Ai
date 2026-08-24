@@ -26,31 +26,31 @@ class SHODebugFeedbackAsyncDemo extends ConsumerWidget {
   final ValueChanged<String> onAction;
 
   static const _codeSnippetEn = '''
-final ordersAsync = ref.watch(ordersProvider);
+final ordersAsync = ref.watch(ordersPagedProvider(SHOOrderListTab.all));
 
 return ordersAsync.when(
-  data: (list) => OrderList(list: list),
+  data: (paged) => OrderList(list: paged.items),
   loading: () => const Center(child: CircularProgressIndicator()),
   error: (error, stackTrace) {
     ref.showGlobalError(error);
     return ErrorRetryView(
       message: 'Load failed',
-      onRetry: () => ref.invalidate(ordersProvider),
+      onRetry: () => ref.invalidate(ordersPagedProvider(SHOOrderListTab.all)),
     );
   },
 );''';
 
   static const _codeSnippetZh = '''
-final ordersAsync = ref.watch(ordersProvider);
+final ordersAsync = ref.watch(ordersPagedProvider(SHOOrderListTab.all));
 
 return ordersAsync.when(
-  data: (list) => OrderList(list: list),
+  data: (paged) => OrderList(list: paged.items),
   loading: () => const Center(child: CircularProgressIndicator()),
   error: (error, stackTrace) {
     ref.showGlobalError(error);
     return ErrorRetryView(
       message: '加载失败',
-      onRetry: () => ref.invalidate(ordersProvider),
+      onRetry: () => ref.invalidate(ordersPagedProvider(SHOOrderListTab.all)),
     );
   },
 );''';

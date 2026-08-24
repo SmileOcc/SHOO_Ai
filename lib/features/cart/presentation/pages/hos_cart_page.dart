@@ -658,7 +658,9 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
   SHOCartItem get item => widget.item;
 
   bool get _swipeEnabled =>
-      !widget.managing && widget.onSwipeOpenChanged != null;
+      !widget.managing &&
+      !item.unavailable &&
+      widget.onSwipeOpenChanged != null;
 
   @override
   void didUpdateWidget(covariant _SHOCartLineTile oldWidget) {
@@ -705,12 +707,12 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
     final l10n = AppLocalizations.of(context);
     final atMaxStock = !item.unavailable && item.quantity >= item.stock;
     final unit = item.effectiveUnitCents;
+    final isUnavailable = item.unavailable;
+    final muted = context.shoTheme.textMuted;
 
-    final content = Opacity(
-      opacity: item.unavailable ? 0.5 : 1,
-      child: ColoredBox(
-        color: context.shoSurface,
-        child: Padding(
+    final content = ColoredBox(
+      color: isUnavailable ? context.shoTheme.surfaceMuted : context.shoSurface,
+      child: Padding(
           padding: const EdgeInsets.fromLTRB(
             SHOAppSpacing.sm,
             SHOAppSpacing.lg,
@@ -754,10 +756,25 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
                           child: SizedBox(
                             width: _imageSize,
                             height: _imageSize,
-                            child: SHOAppNetworkImage(
-                              url: item.imageUrl,
-                              memCacheWidth: 176,
-                            ),
+                            child: isUnavailable
+                                ? ColorFiltered(
+                                    colorFilter: const ColorFilter.matrix(
+                                      <double>[
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0.2126, 0.7152, 0.0722, 0, 0,
+                                        0, 0, 0, 0.55, 0,
+                                      ],
+                                    ),
+                                    child: SHOAppNetworkImage(
+                                      url: item.imageUrl,
+                                      memCacheWidth: 176,
+                                    ),
+                                  )
+                                : SHOAppNetworkImage(
+                                    url: item.imageUrl,
+                                    memCacheWidth: 176,
+                                  ),
                           ),
                         ),
                         const SizedBox(width: SHOAppSpacing.md),
@@ -774,16 +791,17 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
                                       fontSize: 13,
                                       height: 1.25,
                                       fontWeight: FontWeight.w600,
+                                      color: isUnavailable ? muted : null,
                                     ),
                               ),
-                              if (item.unavailable)
+                              if (isUnavailable)
                                 Text(
                                   l10n.cartItemUnavailable,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(
-                                        color: SHOAppColors.error,
+                                        color: muted,
                                         fontSize: 11,
                                       ),
                                 )
@@ -885,7 +903,9 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
                                                 .titleSmall
                                                 ?.copyWith(
                                                   fontWeight: FontWeight.w800,
-                                                  color: SHOAppColors.sale,
+                                                  color: isUnavailable
+                                                      ? muted
+                                                      : SHOAppColors.sale,
                                                 ),
                                           ),
                                           if (item.showStrikeListPrice) ...[
@@ -936,7 +956,6 @@ class _SHOCartLineTileState extends State<_SHOCartLineTile> {
             ],
           ),
         ),
-      ),
     );
 
     if (!_swipeEnabled) return content;
@@ -1159,15 +1178,13 @@ class _SHOCartFooter extends ConsumerWidget {
         ref.watch(couponsProvider).valueOrNull ?? const <SHOCoupon>[];
     final selectedCoupon = ref.watch(selectedCouponProvider);
     final addressAsync = ref.watch(selectedAddressProvider);
-    final subtotal = cart.selectedTotalCents;
+    final selectedItems = cart.selectedItems;
+    final subtotal = SHOCartPricing.subtotalCentsFor(items: selectedItems);
     final shipping = SHOCartPricing.shippingCentsFor(subtotal);
     final freeGap = SHOCartPricing.freeShippingGapCents(subtotal);
-    final preview = SHOPriceCalculator.calculateOrderPrice(
-      subtotalCents: subtotal,
+    final preview = SHOCartPricing.previewForSelectedItems(
+      items: selectedItems,
       coupon: selectedCoupon,
-      fullReductionTiers: SHOCartPricing.defaultFullReductionTiers,
-      shippingCents: shipping,
-      activitySavedCents: cart.selectedActivitySavedCents,
     );
     final bestCoupon = selectedCoupon == null
         ? SHOCartPricing.bestCouponFor(
@@ -1175,12 +1192,12 @@ class _SHOCartFooter extends ConsumerWidget {
             coupons: coupons,
           )
         : null;
-    final bestCouponDiscount = bestCoupon == null
-        ? 0
-        : SHOPriceCalculator.calculateCouponDiscount(
+    final eligibleCoupons = selectedCoupon == null
+        ? SHOCartPricing.eligibleCouponsFor(
             subtotalCents: subtotal,
-            coupon: bestCoupon,
-          );
+            coupons: coupons,
+          )
+        : const <SHOCoupon>[];
     final saved =
         (preview.discountCents +
                 preview.fullReductionCents +
@@ -1190,11 +1207,32 @@ class _SHOCartFooter extends ConsumerWidget {
     final progressGap = nextTier == null
         ? 0
         : (nextTier.minOrderCents - subtotal).clamp(0, 1 << 31);
-    final couponLabel =
-        selectedCoupon?.title ??
-        (bestCoupon != null
-            ? '${bestCoupon.title} · ${l10n.cartSavedHint(priceFormatter.formatCents(bestCouponDiscount))}'
-            : l10n.couponSelectHint);
+    final couponLabel = () {
+      if (selectedCoupon != null) {
+        final appliedDiscount = SHOPriceCalculator.calculateCouponDiscount(
+          subtotalCents: subtotal,
+          coupon: selectedCoupon,
+        );
+        if (appliedDiscount > 0) {
+          return l10n.cartCouponAppliedHint(
+            selectedCoupon.title,
+            priceFormatter.formatCents(appliedDiscount),
+          );
+        }
+        return selectedCoupon.title;
+      }
+      if (eligibleCoupons.isNotEmpty && bestCoupon != null) {
+        final maxDiscount = SHOPriceCalculator.calculateCouponDiscount(
+          subtotalCents: subtotal,
+          coupon: bestCoupon,
+        );
+        return l10n.cartCouponAvailableHint(
+          eligibleCoupons.length,
+          priceFormatter.formatCents(maxDiscount),
+        );
+      }
+      return l10n.couponSelectHint;
+    }();
     final address = addressAsync.valueOrNull;
     final city = address?.city.trim() ?? '';
 

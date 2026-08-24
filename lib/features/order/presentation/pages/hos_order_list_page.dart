@@ -13,6 +13,7 @@ import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_list_tabs.dart';
+import 'package:shoo/features/order/presentation/widgets/hos_order_payment_countdown.dart';
 import 'package:shoo/features/order/presentation/widgets/hos_order_status_label.dart';
 import 'package:shoo/features/order/presentation/state/hos_orders_paged_controller.dart';
 
@@ -140,13 +141,13 @@ class _SHOOrderListTabPageState
 
   @override
   ProviderListenable<AsyncValue<SHOPagedListState<SHOOrderSummary>>>
-  get pagedProvider => ordersPagedProvider;
+  get pagedProvider => ordersPagedProvider(widget.tab);
 
   @override
   ScrollController? get scrollController => _scrollController;
 
   @override
-  bool get enableLoadMore => widget.tab == SHOOrderListTab.all;
+  bool get enableLoadMore => true;
 
   @override
   void dispose() {
@@ -156,18 +157,11 @@ class _SHOOrderListTabPageState
 
   @override
   void refreshPaged(WidgetRef ref) =>
-      ref.read(ordersPagedProvider.notifier).refresh();
+      ref.read(ordersPagedProvider(widget.tab).notifier).refresh(widget.tab);
 
   @override
   void loadMorePaged(WidgetRef ref) =>
-      ref.read(ordersPagedProvider.notifier).loadMore();
-
-  @override
-  SHOPagedListState<SHOOrderSummary> transformPaged(
-    SHOPagedListState<SHOOrderSummary> paged,
-  ) {
-    return paged.copyWith(items: filterOrdersByTab(paged.items, widget.tab));
-  }
+      ref.read(ordersPagedProvider(widget.tab).notifier).loadMore(widget.tab);
 
   @override
   String? emptyMessage(BuildContext context) =>
@@ -230,6 +224,13 @@ class _SHOOrderCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (order.isAwaitingPayment && order.paymentDeadline != null) ...[
+              const SizedBox(height: SHOAppSpacing.xs),
+              SHOOrderPaymentCountdown(
+                deadline: order.paymentDeadline!,
+                compact: true,
+              ),
+            ],
             const SizedBox(height: SHOAppSpacing.md),
             if (firstItem != null)
               Row(

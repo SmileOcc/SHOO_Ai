@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoo/core/logging/hos_logger.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
+import 'package:shoo/features/coupon/domain/use_cases/hos_claim_coupon_use_case.dart';
 import 'package:shoo/features/coupon/presentation/state/hos_coupon_controller.dart';
 import 'package:shoo/features/flash_sale/data/repositories/hos_flash_sale_repository_impl.dart';
 import 'package:shoo/features/flash_sale/domain/entities/hos_flash_sale_calendar.dart';
@@ -192,9 +192,6 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
 
   Future<void> refresh() async {
     state = state.copyWith(isRefreshing: true, clearError: true);
-    SHOAppLogger.i("refresh");
-    await Future<void>.delayed(const Duration(seconds: 5));
-    SHOAppLogger.i("refresh = start");
     try {
       final calendar = await _repo.getCalendar(activityId: activityId);
       state = state.copyWith(calendar: calendar, isRefreshing: false);
@@ -210,10 +207,6 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
 
     state = state.copyWith(isLoadingMore: true, clearError: true);
     try {
-      SHOAppLogger.i("loadMore");
-      await Future<void>.delayed(const Duration(seconds: 5));
-      SHOAppLogger.i("loadMore = start");
-
       final next = await _repo.getPage(
         activityId: activityId,
         date: state.selectedDate,
@@ -236,7 +229,7 @@ class SHOFlashSaleController extends StateNotifier<SHOFlashSalePageState> {
   }
 
   Future<void> claimCoupon(String couponId) async {
-    await _repo.claimCoupon(couponId);
+    await _ref.read(claimCouponUseCaseProvider)(couponId);
     state = state.copyWith(
       claimedCouponIds: {...state.claimedCouponIds, couponId},
     );

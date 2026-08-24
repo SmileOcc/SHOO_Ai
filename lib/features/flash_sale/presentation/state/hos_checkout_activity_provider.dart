@@ -81,13 +81,8 @@ SHOCheckoutActivityLine? buildCheckoutActivityLineFromActivity({
 
 List<SHOFullReductionTier> mergedFullReductionTiers(
   Map<String, SHOCheckoutActivityLine> lines,
-) {
-  final all = <SHOFullReductionTier>[];
-  for (final line in lines.values) {
-    all.addAll(line.fullReductionTiers);
-  }
-  return all;
-}
+) =>
+    collectActivityFullReductionTiers(lines);
 
 int checkoutActivitySavedCents({
   required Map<String, SHOCheckoutActivityLine> lines,

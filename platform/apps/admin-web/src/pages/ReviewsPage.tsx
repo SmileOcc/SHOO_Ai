@@ -1,6 +1,8 @@
 import { Button, Card, Input, Space, Tabs, Typography, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { apiGet, apiPut } from '../api';
+import JsonDocumentEditor from '../components/JsonDocumentEditor';
+import { useJsonDocument } from '../hooks/useJsonDocument';
 
 type ReviewItem = {
   id: string;
@@ -20,23 +22,29 @@ type ProductReviews = {
   hasMore?: boolean;
 };
 
+function ReviewsCatalogTab() {
+  const { jsonText, setJsonText, loading, load, save } = useJsonDocument({
+    path: '/admin/v1/catalog/reviews-catalog',
+    successMessage: '评价目录已保存',
+  });
+
+  return (
+    <JsonDocumentEditor
+      title="全量目录 JSON"
+      jsonText={jsonText}
+      loading={loading}
+      rows={24}
+      onChange={setJsonText}
+      onReload={() => void load()}
+      onSave={() => void save()}
+    />
+  );
+}
+
 export default function ReviewsPage() {
   const [productId, setProductId] = useState('c1-g1-l1-p1');
   const [productJson, setProductJson] = useState('{}');
-  const [catalogJson, setCatalogJson] = useState('{}');
   const [loading, setLoading] = useState(false);
-
-  const loadCatalog = async () => {
-    setLoading(true);
-    try {
-      const data = await apiGet<Record<string, unknown>>(
-        '/admin/v1/catalog/reviews-catalog',
-      );
-      setCatalogJson(JSON.stringify(data ?? {}, null, 2));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const loadProduct = async (id: string) => {
     setLoading(true);
@@ -51,7 +59,6 @@ export default function ReviewsPage() {
   };
 
   useEffect(() => {
-    void loadCatalog();
     void loadProduct(productId);
   }, []);
 
@@ -59,6 +66,7 @@ export default function ReviewsPage() {
     <div>
       <Typography.Title level={3}>商品评价</Typography.Title>
       <Tabs
+        destroyOnHidden
         items={[
           {
             key: 'product',
@@ -112,38 +120,7 @@ export default function ReviewsPage() {
           {
             key: 'catalog',
             label: '全量目录 JSON',
-            children: (
-              <Card>
-                <Space style={{ marginBottom: 12 }}>
-                  <Button onClick={() => void loadCatalog()} loading={loading}>
-                    重新加载
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={loading}
-                    onClick={async () => {
-                      try {
-                        const payload = JSON.parse(catalogJson) as unknown;
-                        await apiPut('/admin/v1/catalog/reviews-catalog', payload);
-                        message.success('评价目录已保存');
-                      } catch (error) {
-                        message.error(
-                          error instanceof Error ? error.message : 'JSON 格式错误',
-                        );
-                      }
-                    }}
-                  >
-                    保存全量
-                  </Button>
-                </Space>
-                <Input.TextArea
-                  value={catalogJson}
-                  onChange={(e) => setCatalogJson(e.target.value)}
-                  rows={24}
-                  style={{ fontFamily: 'monospace' }}
-                />
-              </Card>
-            ),
+            children: <ReviewsCatalogTab />,
           },
         ]}
       />

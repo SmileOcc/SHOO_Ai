@@ -1,59 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoo/core/network/hos_dio_client.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/features/coupon/data/repositories/hos_coupon_repository_impl.dart';
+import 'package:shoo/features/coupon/domain/use_cases/hos_claim_coupon_use_case.dart';
 import 'package:shoo/features/coupon/presentation/state/hos_coupon_controller.dart';
 import 'package:shoo/features/theme_activity/data/repositories/hos_theme_activity_repository_impl.dart';
-import 'package:shoo/features/theme_activity/domain/entities/hos_theme_activity_config.dart';
 import 'package:shoo/features/theme_activity/domain/entities/hos_theme_activity_product.dart';
 import 'package:shoo/features/theme_activity/presentation/analytics/hos_theme_activity_analytics.dart';
-
-class SHOThemeActivityPageState {
-  const SHOThemeActivityPageState({
-    this.config,
-    this.footerProducts,
-    this.isLoading = false,
-    this.isRefreshing = false,
-    this.isLoadingMore = false,
-    this.error,
-    this.claimedCouponIds = const {},
-    this.claimingCouponIds = const {},
-  });
-
-  final SHOThemeActivityConfig? config;
-  final SHOThemeActivityProductPage? footerProducts;
-  final bool isLoading;
-  final bool isRefreshing;
-  final bool isLoadingMore;
-  final String? error;
-  final Set<String> claimedCouponIds;
-  final Set<String> claimingCouponIds;
-
-  bool get hasFooter => config?.footer != null;
-
-  SHOThemeActivityPageState copyWith({
-    SHOThemeActivityConfig? config,
-    SHOThemeActivityProductPage? footerProducts,
-    bool? isLoading,
-    bool? isRefreshing,
-    bool? isLoadingMore,
-    String? error,
-    Set<String>? claimedCouponIds,
-    Set<String>? claimingCouponIds,
-    bool clearError = false,
-  }) {
-    return SHOThemeActivityPageState(
-      config: config ?? this.config,
-      footerProducts: footerProducts ?? this.footerProducts,
-      isLoading: isLoading ?? this.isLoading,
-      isRefreshing: isRefreshing ?? this.isRefreshing,
-      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      error: clearError ? null : (error ?? this.error),
-      claimedCouponIds: claimedCouponIds ?? this.claimedCouponIds,
-      claimingCouponIds: claimingCouponIds ?? this.claimingCouponIds,
-    );
-  }
-}
+import 'package:shoo/features/theme_activity/presentation/state/hos_theme_activity_page_state.dart';
 
 final themeActivityControllerProvider = StateNotifierProvider.family<
     SHOThemeActivityController,
@@ -74,12 +27,12 @@ class SHOThemeActivityController extends StateNotifier<SHOThemeActivityPageState
 
   Future<void> initialize({String? channel}) async {
     if (state.config != null && state.error == null) return;
-    state = state.copyWith(isLoading: true, clearError: true);
+    state = state.copyWith(isLoading: true, error: null);
     await _loadConfig(resetFooter: true, channel: channel, isRefresh: false);
   }
 
   Future<void> refresh({String? channel}) async {
-    state = state.copyWith(isRefreshing: true, clearError: true);
+    state = state.copyWith(isRefreshing: true, error: null);
     await _loadConfig(resetFooter: true, channel: channel, isRefresh: true);
   }
 
@@ -96,24 +49,16 @@ class SHOThemeActivityController extends StateNotifier<SHOThemeActivityPageState
 
     state = state.copyWith(
       claimingCouponIds: {...state.claimingCouponIds, couponId},
-      clearError: true,
+      error: null,
     );
 
     try {
-      final dio = _ref.read(dioProvider);
-      final result = await dio.postData<Map<String, dynamic>>(
-        '/flash-sale/coupons/$couponId/claim',
-        parser: (data) =>
-            data is Map<String, dynamic> ? data : <String, dynamic>{},
-      );
+      await _ref.read(claimCouponUseCaseProvider)(couponId);
       if (!mounted) return;
-      final status = result['status'] as String? ?? 'claimed';
-      if (status == 'claimed' || result['success'] == true) {
-        state = state.copyWith(
-          claimedCouponIds: {...state.claimedCouponIds, couponId},
-        );
-        _ref.invalidate(couponsProvider);
-      }
+      state = state.copyWith(
+        claimedCouponIds: {...state.claimedCouponIds, couponId},
+      );
+      _ref.invalidate(couponsProvider);
       await SHOThemeActivityAnalytics.trackCouponClaim(
         activityId: activityId,
         couponId: couponId,
@@ -146,7 +91,7 @@ class SHOThemeActivityController extends StateNotifier<SHOThemeActivityPageState
     if (state.isLoadingMore) return;
 
     final nextPage = current.page + 1;
-    state = state.copyWith(isLoadingMore: true, clearError: true);
+    state = state.copyWith(isLoadingMore: true, error: null);
     try {
       final next = await _repo.getProducts(
         activityId: activityId,
@@ -201,7 +146,7 @@ class SHOThemeActivityController extends StateNotifier<SHOThemeActivityPageState
         footerProducts: resetFooter ? footerProducts : state.footerProducts,
         isLoading: false,
         isRefreshing: false,
-        clearError: true,
+        error: null,
         claimedCouponIds: {...state.claimedCouponIds, ...ownedCouponIds},
       );
       if (isRefresh) {

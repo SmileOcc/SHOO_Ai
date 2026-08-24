@@ -413,6 +413,20 @@
   "@cartSavedHint": {
     "placeholders": { "amount": { "type": "String" } }
   },
+  "cartCouponAppliedHint": "{title} · 减 {amount}",
+  "@cartCouponAppliedHint": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+  "cartCouponAvailableHint": "{count}张可用 · 最高减 {amount}",
+  "@cartCouponAvailableHint": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "amount": { "type": "String" }
+    }
+  },
   "cartFullReductionProgress": "再买 {amount} 可享{label}",
   "@cartFullReductionProgress": {
     "placeholders": {
@@ -518,6 +532,12 @@
   "orderNoLabel": "订单编号",
   "orderStatusLabel": "订单状态",
   "orderCreatedAtLabel": "下单时间",
+  "orderPaymentCountdown": "请在 {time} 内完成支付",
+  "@orderPaymentCountdown": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "orderPaymentExpired": "支付超时，订单已取消",
+  "orderPayNowAction": "去支付",
   "orderShippingAddress": "收货地址",
   "orderItemsTitle": "商品清单",
   "orderTotalLabel": "合计",

@@ -1,22 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/pagination/hos_paged_mergeable_family_async_notifier.dart';
 import 'package:shoo/features/review/data/repositories/hos_review_repository_impl.dart';
 import 'package:shoo/features/review/domain/entities/hos_review.dart';
 
-import 'package:shoo/core/pagination/hos_paged_container.dart';
-
-class SHOReviewsPagedState implements SHOPagedContainer<SHOProductReview> {
-  const SHOReviewsPagedState({
+class SHOReviewsPagedState extends SHOPagedMergeableContainer<SHOProductReview> {
+  SHOReviewsPagedState({
     this.summary,
     this.items = const [],
-    this.page = 0,
+    this.page = 1,
     this.hasMore = true,
     this.isLoadingMore = false,
   });
 
   final SHOProductReviewSummary? summary;
   final List<SHOProductReview> items;
+  @override
   final int page;
   final bool hasMore;
   final bool isLoadingMore;
@@ -29,6 +29,28 @@ class SHOReviewsPagedState implements SHOPagedContainer<SHOProductReview> {
 
   @override
   bool get pagedIsLoadingMore => isLoadingMore;
+
+  @override
+  SHOReviewsPagedState copyWithLoadingMore(bool loading) {
+    return SHOReviewsPagedState(
+      summary: summary,
+      items: items,
+      page: page,
+      hasMore: hasMore,
+      isLoadingMore: loading,
+    );
+  }
+
+  @override
+  SHOReviewsPagedState mergeNextPage(SHOPagedMergeableContainer<SHOProductReview> next) {
+    final nextPage = next as SHOReviewsPagedState;
+    return SHOReviewsPagedState(
+      summary: summary ?? nextPage.summary,
+      items: [...items, ...nextPage.items],
+      page: nextPage.page,
+      hasMore: nextPage.hasMore,
+    );
+  }
 }
 
 final reviewsPagedProvider =
@@ -39,52 +61,17 @@ final reviewsPagedProvider =
     >(ReviewsPagedNotifier.new);
 
 class ReviewsPagedNotifier
-    extends AutoDisposeFamilyAsyncNotifier<SHOReviewsPagedState, String> {
+    extends AutoDisposeFamilyAsyncNotifier<SHOReviewsPagedState, String>
+    with SHOPagedMergeableFamilyAsyncNotifier<SHOProductReview, SHOReviewsPagedState, String> {
   @override
-  Future<SHOReviewsPagedState> build(String productId) =>
-      _fetchPage(productId, 1);
+  SHOReviewsPagedState emptyState(String arg) => SHOReviewsPagedState();
 
-  Future<void> refresh(String productId) async {
-    state = const AsyncLoading();
-    state = AsyncData(await _fetchPage(productId, 1));
-  }
-
-  Future<void> loadMore(String productId) async {
-    final current = state.valueOrNull;
-    if (current == null || !current.hasMore || current.isLoadingMore) return;
-
-    state = AsyncData(
-      SHOReviewsPagedState(
-        summary: current.summary,
-        items: current.items,
-        page: current.page,
-        hasMore: current.hasMore,
-        isLoadingMore: true,
-      ),
-    );
-
-    try {
-      final repo = ref.read(reviewRepositoryProvider);
-      final nextPage = current.page + 1;
-      final summary = await repo.getReviewsPage(
-        productId,
-        page: nextPage,
-        pageSize: SHOAppConstants.listPageSize,
-      );
-      state = AsyncData(
-        SHOReviewsPagedState(
-          summary: current.summary ?? summary,
-          items: [...current.items, ...summary.items],
-          page: nextPage,
-          hasMore: summary.hasMore,
-        ),
-      );
-    } catch (error, stack) {
-      state = AsyncError(error, stack);
-    }
-  }
-
-  Future<SHOReviewsPagedState> _fetchPage(String productId, int page) async {
+  @override
+  Future<SHOReviewsPagedState> fetchPage(
+    String productId,
+    int page, {
+    bool refreshing = false,
+  }) async {
     final repo = ref.read(reviewRepositoryProvider);
     final summary = await repo.getReviewsPage(
       productId,

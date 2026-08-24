@@ -1,6 +1,6 @@
-import { Button, Card, Input, Space, Tabs, Typography, message } from 'antd';
-import { useEffect, useState } from 'react';
-import { apiGet, apiPut } from '../api';
+import { Button, Card, Input, Space, Tabs, Typography } from 'antd';
+import { useState } from 'react';
+import { useJsonDocument } from '../hooks/useJsonDocument';
 
 type DocTab = {
   key: string;
@@ -42,27 +42,37 @@ const DOC_TABS: DocTab[] = [
   },
 ];
 
+function LegacyActivityTab({ tab }: { tab: DocTab }) {
+  const { jsonText, setJsonText, loading, load, save } = useJsonDocument({
+    path: tab.path,
+    successMessage: `${tab.label} 已保存`,
+  });
+
+  return (
+    <Card>
+      <Typography.Paragraph type="secondary">
+        {tab.description}
+      </Typography.Paragraph>
+      <Space style={{ marginBottom: 12 }}>
+        <Button onClick={() => void load()} loading={loading}>
+          重新加载
+        </Button>
+        <Button type="primary" loading={loading} onClick={() => void save()}>
+          保存
+        </Button>
+      </Space>
+      <Input.TextArea
+        value={jsonText}
+        onChange={(e) => setJsonText(e.target.value)}
+        rows={24}
+        style={{ fontFamily: 'monospace' }}
+      />
+    </Card>
+  );
+}
+
 export default function LegacyActivityPage() {
   const [activeKey, setActiveKey] = useState('data');
-  const [jsonByKey, setJsonByKey] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-
-  const loadTab = async (tab: DocTab) => {
-    setLoading(true);
-    try {
-      const data = await apiGet<unknown>(tab.path);
-      setJsonByKey((prev) => ({
-        ...prev,
-        [tab.key]: JSON.stringify(data ?? {}, null, 2),
-      }));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    void loadTab(DOC_TABS[0]);
-  }, []);
 
   return (
     <div>
@@ -73,54 +83,12 @@ export default function LegacyActivityPage() {
       </Typography.Paragraph>
       <Tabs
         activeKey={activeKey}
-        onChange={(key) => {
-          setActiveKey(key);
-          const tab = DOC_TABS.find((t) => t.key === key);
-          if (tab && !jsonByKey[key]) void loadTab(tab);
-        }}
+        destroyOnHidden
+        onChange={setActiveKey}
         items={DOC_TABS.map((tab) => ({
           key: tab.key,
           label: tab.label,
-          children: (
-            <Card>
-              <Typography.Paragraph type="secondary">
-                {tab.description}
-              </Typography.Paragraph>
-              <Space style={{ marginBottom: 12 }}>
-                <Button onClick={() => void loadTab(tab)} loading={loading}>
-                  重新加载
-                </Button>
-                <Button
-                  type="primary"
-                  loading={loading}
-                  onClick={async () => {
-                    try {
-                      const payload = JSON.parse(jsonByKey[tab.key] ?? '{}') as unknown;
-                      await apiPut(tab.path, payload);
-                      message.success(`${tab.label} 已保存`);
-                    } catch (error) {
-                      message.error(
-                        error instanceof Error ? error.message : 'JSON 格式错误',
-                      );
-                    }
-                  }}
-                >
-                  保存
-                </Button>
-              </Space>
-              <Input.TextArea
-                value={jsonByKey[tab.key] ?? ''}
-                onChange={(e) =>
-                  setJsonByKey((prev) => ({
-                    ...prev,
-                    [tab.key]: e.target.value,
-                  }))
-                }
-                rows={24}
-                style={{ fontFamily: 'monospace' }}
-              />
-            </Card>
-          ),
+          children: <LegacyActivityTab tab={tab} />,
         }))}
       />
     </div>

@@ -1,8 +1,11 @@
 import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { CouponService } from '../coupon/coupon.service';
+import { OptionalUserAuthGuard } from '../iam/optional-user-auth.guard';
 import { UserAuthGuard } from '../iam/user-auth.guard';
 import { MarketingService } from './marketing.service';
+
+type AuthedRequest = Request & { user?: { sub: string } };
 
 @Controller('v1')
 export class MarketingAppController {
@@ -10,6 +13,10 @@ export class MarketingAppController {
     private readonly marketing: MarketingService,
     private readonly coupons: CouponService,
   ) {}
+
+  private userId(req: AuthedRequest): string | undefined {
+    return req.user?.sub;
+  }
 
   @Get('marketing/activity-popup')
   activityPopup() {
@@ -62,22 +69,33 @@ export class MarketingAppController {
   }
 
   @Get('flash-sale/page')
-  flashSalePage(@Query() query: Record<string, string>) {
-    return this.marketing.flashSalePage(query);
+  @UseGuards(OptionalUserAuthGuard)
+  flashSalePage(
+    @Req() req: AuthedRequest,
+    @Query() query: Record<string, string>,
+  ) {
+    return this.marketing.flashSalePage(query, this.userId(req));
   }
 
   @Get('flash-sale/product-activity')
-  flashSaleProductActivity(@Query() query: Record<string, string>) {
-    return this.marketing.flashSaleProductActivity(query);
+  @UseGuards(OptionalUserAuthGuard)
+  flashSaleProductActivity(
+    @Req() req: AuthedRequest,
+    @Query() query: Record<string, string>,
+  ) {
+    return this.marketing.flashSaleProductActivity(query, this.userId(req));
   }
 
   @Get('flash-sale/follows')
-  flashSaleFollows() {
-    return this.marketing.listFollows();
+  @UseGuards(UserAuthGuard)
+  flashSaleFollows(@Req() req: AuthedRequest) {
+    return this.marketing.listFollows(req.user!.sub);
   }
 
   @Post('flash-sale/follow')
+  @UseGuards(UserAuthGuard)
   flashSaleFollow(
+    @Req() req: AuthedRequest,
     @Body()
     body: {
       sessionId?: string;
@@ -86,21 +104,23 @@ export class MarketingAppController {
       imageUrl?: string;
     },
   ) {
-    return this.marketing.follow(body);
+    return this.marketing.follow(req.user!.sub, body);
   }
 
   @Post('flash-sale/unfollow')
+  @UseGuards(UserAuthGuard)
   flashSaleUnfollow(
+    @Req() req: AuthedRequest,
     @Body() body: { sessionId?: string; productId?: string },
   ) {
-    return this.marketing.unfollow(body);
+    return this.marketing.unfollow(req.user!.sub, body);
   }
 
   @Post('flash-sale/coupons/:id/claim')
   @UseGuards(UserAuthGuard)
   claimCoupon(
     @Param('id') id: string,
-    @Req() req: Request & { user?: { sub: string } },
+    @Req() req: AuthedRequest,
   ) {
     return this.coupons.claimCoupon(req.user!.sub, id);
   }

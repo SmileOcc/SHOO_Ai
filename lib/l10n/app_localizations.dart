@@ -2168,6 +2168,18 @@ abstract class AppLocalizations {
   /// **'Saved {amount}'**
   String cartSavedHint(String amount);
 
+  /// No description provided for @cartCouponAppliedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · −{amount}'**
+  String cartCouponAppliedHint(String title, String amount);
+
+  /// No description provided for @cartCouponAvailableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} available · up to −{amount}'**
+  String cartCouponAvailableHint(int count, String amount);
+
   /// No description provided for @cartFullReductionProgress.
   ///
   /// In en, this message translates to:
@@ -2617,6 +2629,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Placed at'**
   String get orderCreatedAtLabel;
+
+  /// No description provided for @orderPaymentCountdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay within {time}'**
+  String orderPaymentCountdown(String time);
+
+  /// No description provided for @orderPaymentExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment expired — order cancelled'**
+  String get orderPaymentExpired;
+
+  /// No description provided for @orderPayNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay now'**
+  String get orderPayNowAction;
 
   /// No description provided for @orderShippingAddress.
   ///

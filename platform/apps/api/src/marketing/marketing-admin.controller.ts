@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { JsonObjectPipe } from '../common/json-object.pipe';
+import { unwrapPayload } from '../common/unwrap-payload';
 import { AdminAuthGuard } from '../iam/admin-auth.guard';
 import { MarketingService } from './marketing.service';
 
@@ -13,12 +15,8 @@ export class MarketingAdminController {
   }
 
   @Put('activity-popup')
-  saveActivityPopup(@Body() body: { payload?: unknown } | Record<string, unknown>) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityPopup(payload);
+  saveActivityPopup(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityPopup(unwrapPayload(body));
   }
 
   @Get('home-quick-entries')
@@ -27,10 +25,9 @@ export class MarketingAdminController {
   }
 
   @Put('home-quick-entries')
-  saveHomeQuickEntries(
-    @Body()
-    body: {
-      items?: Array<{
+  saveHomeQuickEntries(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    const payload = unwrapPayload<{
+      items: Array<{
         id: string;
         title: string;
         icon?: string;
@@ -38,19 +35,7 @@ export class MarketingAdminController {
         sort?: number;
         enabled?: boolean;
       }>;
-      payload?: {
-        items: Array<{
-          id: string;
-          title: string;
-          icon?: string;
-          link: string;
-          sort?: number;
-          enabled?: boolean;
-        }>;
-      };
-    },
-  ) {
-    const payload = body.payload ?? { items: body.items ?? [] };
+    }>(body);
     return this.marketing.saveHomeQuickEntries(payload);
   }
 
@@ -60,12 +45,10 @@ export class MarketingAdminController {
   }
 
   @Put('home-feed-config')
-  saveHomeFeedConfig(@Body() body: Record<string, unknown>) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body && body.payload
-        ? (body.payload as Record<string, unknown>)
-        : body;
-    return this.marketing.saveHomeFeedConfig(payload ?? {});
+  saveHomeFeedConfig(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveHomeFeedConfig(
+      unwrapPayload<Record<string, unknown>>(body) ?? {},
+    );
   }
 
   @Get('cart-marquee')
@@ -74,12 +57,8 @@ export class MarketingAdminController {
   }
 
   @Put('cart-marquee')
-  saveCartMarquee(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveCartMarquee(payload);
+  saveCartMarquee(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveCartMarquee(unwrapPayload(body));
   }
 
   @Get('flash-sale-catalog')
@@ -88,12 +67,8 @@ export class MarketingAdminController {
   }
 
   @Put('flash-sale-catalog')
-  saveFlashSaleCatalog(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveFlashSaleCatalog(payload);
+  saveFlashSaleCatalog(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveFlashSaleCatalog(unwrapPayload(body));
   }
 
   @Get('activity-data')
@@ -102,12 +77,8 @@ export class MarketingAdminController {
   }
 
   @Put('activity-data')
-  saveActivityData(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityData(payload);
+  saveActivityData(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityData(unwrapPayload(body));
   }
 
   @Get('activity-detail')
@@ -116,12 +87,8 @@ export class MarketingAdminController {
   }
 
   @Put('activity-detail')
-  saveActivityDetail(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityDetail(payload);
+  saveActivityDetail(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityDetail(unwrapPayload(body));
   }
 
   @Get('activity-level3-detail')
@@ -130,12 +97,8 @@ export class MarketingAdminController {
   }
 
   @Put('activity-level3-detail')
-  saveActivityLevel3Detail(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityDetailLevel3(payload);
+  saveActivityLevel3Detail(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityDetailLevel3(unwrapPayload(body));
   }
 
   @Get('activity-user-check')
@@ -144,12 +107,8 @@ export class MarketingAdminController {
   }
 
   @Put('activity-user-check')
-  saveActivityUserCheck(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityUserCheck(payload);
+  saveActivityUserCheck(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityUserCheck(unwrapPayload(body));
   }
 
   @Get('activity-url-rules')
@@ -158,11 +117,7 @@ export class MarketingAdminController {
   }
 
   @Put('activity-url-rules')
-  saveActivityUrlRules(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.marketing.saveActivityUrlRules(payload);
+  saveActivityUrlRules(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.marketing.saveActivityUrlRules(unwrapPayload(body));
   }
 }

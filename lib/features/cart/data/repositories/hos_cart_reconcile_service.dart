@@ -80,8 +80,8 @@ class SHOCartReconcileService {
     // 提取所有产品 ID 和带规格的 SKU ID（ID 包含 '::' 表示带规格，格式为 productId::skuId）
     final productIds = snapshot.items.map((i) => i.productId).toSet().toList();
     final skuIds = snapshot.items
+        .where((i) => i.variantLabel.trim().isNotEmpty || _hasSkuLineId(i.id))
         .map((i) => i.id)
-        .where((id) => id.contains('::'))
         .toSet()
         .toList();
 
@@ -142,7 +142,10 @@ class SHOCartReconcileService {
       final listFromRemote = remote.originalPrice > 0
           ? remote.originalPrice
           : catalogPrice;
-      final stock = (sku?.stock ?? remote.stock).clamp(0, 1 << 31);
+      final productStock = remote.stock > 0
+          ? remote.stock
+          : mockStockFor(item.productId);
+      final stock = (sku?.stock ?? productStock).clamp(0, 1 << 31);
 
       // 库存为0
       if (stock <= 0) {
@@ -221,30 +224,40 @@ class SHOCartReconcileService {
     SHOProductBatchItem remote,
     SHOCartItem item,
   ) {
-    // 没有规格标签且 ID 不含 '::'，说明是普通商品，不需要解析 SKU
-    if (item.variantLabel.isEmpty && !item.id.contains('::')) {
+    final variant = item.variantLabel.trim();
+    final hasSkuSuffix = _hasSkuLineId(item.id);
+
+    // 无规格行：按商品级库存对账。
+    if (variant.isEmpty && !hasSkuSuffix) {
       return null;
     }
 
-    // 优先按完整 ID（包含 ::）查找 SKU
+    // 服务端未下发 SKU 维度时，仍按商品级库存处理（避免误标失效）。
+    if (remote.skus.isEmpty) {
+      return null;
+    }
+
+    // 优先按完整 skuId 查找。
     final byId = remote.skuFor(item.id);
     if (byId != null) return byId;
 
-    // 按规格标签查找 SKU
+    // 按规格文案查找。
     for (final sku in remote.skus) {
-      if (sku.variantLabel == item.variantLabel) return sku;
+      if (sku.variantLabel == variant) return sku;
     }
 
-    // 有规格但服务端未返回匹配 SKU → 视为规格失效
-    if (item.variantLabel.isNotEmpty || item.id.contains('::')) {
-      return SHOProductSkuStatus(
-        skuId: item.id,
-        variantLabel: item.variantLabel,
-        stock: 0,
-        available: false,
-      );
-    }
+    // 有规格但服务端无匹配 SKU → 规格失效。
+    return SHOProductSkuStatus(
+      skuId: item.id,
+      variantLabel: variant,
+      stock: 0,
+      available: false,
+    );
+  }
 
-    return null;
+  bool _hasSkuLineId(String lineId) {
+    final index = lineId.indexOf('::');
+    if (index < 0) return false;
+    return lineId.substring(index + 2).trim().isNotEmpty;
   }
 }

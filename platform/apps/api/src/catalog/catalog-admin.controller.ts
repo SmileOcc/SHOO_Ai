@@ -10,6 +10,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { JsonObjectPipe } from '../common/json-object.pipe';
+import { unwrapPayload } from '../common/unwrap-payload';
 import { AdminAuthGuard } from '../iam/admin-auth.guard';
 import { CatalogService } from './catalog.service';
 
@@ -63,8 +65,8 @@ export class CatalogAdminController {
   }
 
   @Put('categories')
-  saveCategories(@Body() body: { payload: unknown }) {
-    return this.catalog.adminSaveCategories(body.payload);
+  saveCategories(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.catalog.adminSaveCategories(unwrapPayload(body));
   }
 
   @Get('products')
@@ -135,12 +137,8 @@ export class CatalogAdminController {
   }
 
   @Put('search-hot')
-  saveSearchHot(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.catalog.saveSearchHot(payload);
+  saveSearchHot(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.catalog.saveSearchHot(unwrapPayload(body));
   }
 
   @Get('reviews-catalog')
@@ -149,12 +147,8 @@ export class CatalogAdminController {
   }
 
   @Put('reviews-catalog')
-  saveReviewsCatalog(@Body() body: { payload?: unknown } | unknown) {
-    const payload =
-      body && typeof body === 'object' && 'payload' in body
-        ? body.payload
-        : body;
-    return this.catalog.saveReviewsCatalog(payload);
+  saveReviewsCatalog(@Body(JsonObjectPipe) body: Record<string, unknown>) {
+    return this.catalog.saveReviewsCatalog(unwrapPayload(body));
   }
 
   @Get('products/:productId/reviews')
@@ -165,7 +159,7 @@ export class CatalogAdminController {
   @Put('products/:productId/reviews')
   saveProductReviews(
     @Param('productId') productId: string,
-    @Body() body: unknown,
+    @Body(JsonObjectPipe) body: Record<string, unknown>,
   ) {
     return this.catalog.saveProductReviews(productId, body);
   }

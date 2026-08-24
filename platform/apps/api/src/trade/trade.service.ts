@@ -1,20 +1,41 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { formatAppDate } from '../common/format-app-date';
 import { DocumentsService } from '../documents/documents.service';
 import { PrismaService } from '../prisma/prisma.service';
+import {
+  ORDER_PAYMENT_WINDOW_MS,
+  StockReservationService,
+} from './stock-reservation.service';
 
 @Injectable()
 export class TradeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly docs: DocumentsService,
+    private readonly stock: StockReservationService,
   ) {}
 
-  async listOrders(query: { page?: number; pageSize?: number }) {
+  async listOrders(query: {
+    userId: string;
+    page?: number;
+    pageSize?: number;
+    status?: string;
+  }) {
+    await this.expireStalePendingOrders(query.userId);
     const page = Math.max(1, Number(query.page) || 1);
     const pageSize = Math.min(100, Math.max(1, Number(query.pageSize) || 20));
+    const where = {
+      userId: query.userId,
+      ...(query.status ? { status: query.status } : {}),
+    };
     const [total, rows] = await Promise.all([
-      this.prisma.order.count(),
+      this.prisma.order.count({ where }),
       this.prisma.order.findMany({
+        where,
         skip: (page - 1) * pageSize,
         take: pageSize,
         orderBy: { createdAt: 'desc' },
@@ -31,18 +52,16 @@ export class TradeService {
     };
   }
 
-  async getOrder(id: string) {
-    const order = await this.prisma.order.findUnique({
-      where: { id },
-      include: { items: true },
-    });
-    if (!order) {
-      throw new NotFoundException(`Order ${id} not found`);
+  async getOrder(id: string, userId?: string) {
+    if (userId) {
+      await this.expireStalePendingOrders(userId);
     }
+    const order = await this.findOrderForUser(id, userId);
     return this.toAppOrder(order);
   }
 
-  async getLogistics(orderId: string) {
+  async getLogistics(orderId: string, userId?: string) {
+    await this.findOrderForUser(orderId, userId);
     const catalog = await this.docs.getPayloadOrNull<{
       byOrder?: Record<
         string,
@@ -76,7 +95,14 @@ export class TradeService {
   }
 
   async adminGetOrder(id: string) {
-    return this.getOrder(id);
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: { items: true },
+    });
+    if (!order) {
+      throw new NotFoundException(`Order ${id} not found`);
+    }
+    return this.toAppOrder(order);
   }
 
   async adminUpdateOrder(
@@ -152,7 +178,6 @@ export class TradeService {
     void body.addressId;
     void body.couponId;
 
-    // App 若仍发送 RSA 密文且本地 API 未解密，会出现 { algorithm, payload } 而无 items。
     if (
       body &&
       typeof body === 'object' &&
@@ -169,17 +194,23 @@ export class TradeService {
     if (items.length === 0) {
       throw new BadRequestException('Order items are required');
     }
+    if (!body.userId) {
+      throw new BadRequestException('User is required');
+    }
 
     const totalCents =
       body.totalCents ??
       items.reduce((sum, i) => sum + Number(i.price) * Number(i.quantity), 0);
+    const paymentDeadlineAt = new Date(Date.now() + ORDER_PAYMENT_WINDOW_MS);
     const orderNo = `SH${Date.now()}`;
+
     const order = await this.prisma.order.create({
       data: {
         orderNo,
         status: 'pending_payment',
         totalCents,
         userId: body.userId,
+        paymentDeadlineAt,
         items: {
           create: items.map((i) => ({
             productId: i.productId,
@@ -193,18 +224,36 @@ export class TradeService {
       },
       include: { items: true },
     });
+
+    await this.stock.lockForOrder(order.id, items, paymentDeadlineAt);
     return this.toAppOrder(order);
   }
 
-  async payOrder(id: string) {
+  async payOrder(id: string, userId?: string) {
+    const existing = await this.findOrderForUser(id, userId);
+    if (existing.status !== 'pending_payment') {
+      throw new BadRequestException('Order is not awaiting payment');
+    }
+    if (
+      existing.paymentDeadlineAt &&
+      existing.paymentDeadlineAt.getTime() <= Date.now()
+    ) {
+      await this.cancelPendingOrder(existing.id);
+      throw new BadRequestException('Order payment window expired');
+    }
+
     const order = await this.prisma.order.update({
       where: { id },
       data: { status: 'paid' },
       include: { items: true },
     });
+    await this.stock.consumeForOrder(id);
+    const appOrder = this.toAppOrder(order);
     return {
-      success: true,
-      order: this.toAppOrder(order),
+      orderId: appOrder.id,
+      status: appOrder.status,
+      paidAt: formatAppDate(order.updatedAt ?? order.createdAt),
+      message: 'Payment successful',
     };
   }
 
@@ -239,6 +288,45 @@ export class TradeService {
     return this.toAppOrder(order);
   }
 
+  private async expireStalePendingOrders(userId: string) {
+    const now = new Date();
+    const stale = await this.prisma.order.findMany({
+      where: {
+        userId,
+        status: 'pending_payment',
+        paymentDeadlineAt: { lt: now },
+      },
+      select: { id: true },
+    });
+    for (const row of stale) {
+      await this.cancelPendingOrder(row.id);
+    }
+  }
+
+  private async cancelPendingOrder(orderId: string) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      select: { id: true, status: true },
+    });
+    if (!order || order.status !== 'pending_payment') return;
+    await this.stock.releaseForOrder(orderId);
+    await this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'cancelled' },
+    });
+  }
+
+  private async findOrderForUser(id: string, userId?: string) {
+    const order = await this.prisma.order.findFirst({
+      where: userId ? { id, userId } : { id },
+      include: { items: true },
+    });
+    if (!order) {
+      throw new NotFoundException(`Order ${id} not found`);
+    }
+    return order;
+  }
+
   private toAppOrder(order: {
     id: string;
     orderNo: string;
@@ -247,6 +335,7 @@ export class TradeService {
     shippingAddress?: string;
     hasLogistics?: boolean;
     createdAt: Date;
+    paymentDeadlineAt?: Date | null;
     items: Array<{
       productId: string;
       title: string;
@@ -256,15 +345,14 @@ export class TradeService {
       variantLabel: string;
     }>;
   }) {
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const d = order.createdAt;
-    const createdAt = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const createdAt = formatAppDate(order.createdAt);
     return {
       id: order.id,
       orderNo: order.orderNo,
       status: order.status,
       totalCents: order.totalCents,
       createdAt,
+      paymentDeadlineAt: order.paymentDeadlineAt?.toISOString() ?? '',
       shippingAddress: order.shippingAddress ?? '',
       hasLogistics: order.hasLogistics ?? false,
       items: order.items.map((i) => ({

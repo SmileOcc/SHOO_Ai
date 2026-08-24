@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { AdminAuthGuard } from '../iam/admin-auth.guard';
 import { CouponService } from './coupon.service';
+import { CreateCouponTemplateDto } from './dto/create-coupon-template.dto';
+import { UpdateCouponTemplateDto } from './dto/update-coupon-template.dto';
 
 @Controller('admin/v1/coupons')
 @UseGuards(AdminAuthGuard)
@@ -22,41 +24,14 @@ export class CouponAdminController {
   }
 
   @Post('templates')
-  createTemplate(
-    @Body()
-    body: {
-      id: string;
-      title: string;
-      description?: string;
-      type?: string;
-      discountCents?: number;
-      discountPercent?: number;
-      minOrderCents?: number;
-      validDays?: number;
-      stock?: number | null;
-      enabled?: boolean;
-      source?: string;
-    },
-  ) {
+  createTemplate(@Body() body: CreateCouponTemplateDto) {
     return this.coupons.createTemplate(body);
   }
 
   @Patch('templates/:id')
   updateTemplate(
     @Param('id') id: string,
-    @Body()
-    body: Partial<{
-      title: string;
-      description: string;
-      type: string;
-      discountCents: number;
-      discountPercent: number;
-      minOrderCents: number;
-      validDays: number;
-      stock: number | null;
-      enabled: boolean;
-      source: string;
-    }>,
+    @Body() body: UpdateCouponTemplateDto,
   ) {
     return this.coupons.updateTemplate(id, body);
   }

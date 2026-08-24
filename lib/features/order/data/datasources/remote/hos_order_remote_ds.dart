@@ -17,16 +17,29 @@ class SHOOrderApi {
   Future<SHOPageResult<SHOOrderSummary>> fetchOrders({
     int page = 1,
     int pageSize = 10,
+    SHOOrderStatus? status,
   }) {
     return _dio.getData<SHOPageResult<SHOOrderSummary>>(
       '/orders',
-      queryParameters: {'page': page, 'pageSize': pageSize},
+      queryParameters: {
+        'page': page,
+        'pageSize': pageSize,
+        if (status != null) 'status': _statusQueryValue(status),
+      },
       parser: (data) => SHOPageResult.fromJson(
         data as Map<String, dynamic>,
         (json) => SHOOrderSummary.fromJson(json as Map<String, dynamic>),
       ),
     );
   }
+
+  static String _statusQueryValue(SHOOrderStatus status) => switch (status) {
+    SHOOrderStatus.pendingPayment => 'pending_payment',
+    SHOOrderStatus.paid => 'paid',
+    SHOOrderStatus.shipped => 'shipped',
+    SHOOrderStatus.delivered => 'delivered',
+    SHOOrderStatus.cancelled => 'cancelled',
+  };
 
   Future<SHOOrderDetail> fetchOrderDetail(String id) {
     return _dio.getData<SHOOrderDetail>(

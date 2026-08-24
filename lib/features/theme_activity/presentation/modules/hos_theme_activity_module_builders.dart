@@ -8,6 +8,7 @@ import 'package:shoo/features/theme_activity/presentation/modules/hos_theme_marq
 import 'package:shoo/features/theme_activity/presentation/modules/hos_theme_product_scroll_module.dart';
 import 'package:shoo/features/theme_activity/presentation/modules/hos_theme_uneven_grid_module.dart';
 import 'package:shoo/features/theme_activity/presentation/modules/hos_theme_web_module.dart';
+import 'package:shoo/features/theme_activity/presentation/modules/hos_theme_hotspot_overlay.dart';
 import 'package:shoo/features/theme_activity/presentation/navigation/hos_theme_activity_link_handler.dart';
 import 'package:shoo/features/theme_activity/presentation/style/hos_module_style.dart';
 
@@ -127,10 +128,14 @@ Widget _buildBannerRow(
     fallback: 2.5,
   );
   final link = module.raw['link'] as String?;
-  return _linkedImage(
-    context,
-    image: image,
-    aspectRatio: aspectRatio,
+  final hotspots = parseThemeHotspots(module.raw['hotspots']);
+  return buildThemeHotspotImage(
+    context: context,
+    image: AspectRatio(
+      aspectRatio: aspectRatio,
+      child: SHOAppNetworkImage(url: image, fit: BoxFit.cover),
+    ),
+    hotspots: hotspots,
     link: link,
     defaultLink: module.raw['defaultLink'] as String?,
     moduleId: module.moduleId,
@@ -151,11 +156,15 @@ Widget _buildBannerStack(
     final image = raw['image'] as String? ?? '';
     if (image.isEmpty) continue;
     final aspectRatio = themeNumber(raw['aspectRatio'], fallback: 2.5);
+    final hotspots = parseThemeHotspots(raw['hotspots']);
     children.add(
-      _linkedImage(
-        context,
-        image: image,
-        aspectRatio: aspectRatio,
+      buildThemeHotspotImage(
+        context: context,
+        image: AspectRatio(
+          aspectRatio: aspectRatio,
+          child: SHOAppNetworkImage(url: image, fit: BoxFit.cover),
+        ),
+        hotspots: hotspots,
         link: raw['link'] as String?,
         defaultLink: module.raw['defaultLink'] as String?,
         moduleId: module.moduleId,
@@ -239,31 +248,5 @@ Widget _buildGrid(
         ),
       );
     },
-  );
-}
-
-Widget _linkedImage(
-  BuildContext context, {
-  required String image,
-  required double aspectRatio,
-  String? link,
-  String? defaultLink,
-  String? moduleId,
-  String? itemId,
-}) {
-  final target = (link != null && link.isNotEmpty) ? link : defaultLink;
-  return AspectRatio(
-    aspectRatio: aspectRatio,
-    child: InkWell(
-      onTap: target == null || target.isEmpty
-          ? null
-          : () => SHOThemeActivityLinkHandler.open(
-                context,
-                target,
-                moduleId: moduleId,
-                itemId: itemId,
-              ),
-      child: SHOAppNetworkImage(url: image, fit: BoxFit.cover),
-    ),
   );
 }

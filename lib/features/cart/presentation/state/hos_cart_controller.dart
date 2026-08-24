@@ -38,8 +38,17 @@ class SHOCartNotifier extends Notifier<SHOCartSnapshot> {
     state = next;
   }
 
-  String _lineId(String productId, String variantLabel) =>
-      '$productId::$variantLabel';
+  String _lineId(String productId, String variantLabel) {
+    final variant = variantLabel.trim();
+    if (variant.isEmpty) return productId;
+    return '$productId::$variant';
+  }
+
+  bool _hasSkuLineId(String lineId) {
+    final index = lineId.indexOf('::');
+    if (index < 0) return false;
+    return lineId.substring(index + 2).trim().isNotEmpty;
+  }
 
   int _stockFor(String productId, {int? preferred}) {
     if (preferred != null && preferred > 0) return preferred;

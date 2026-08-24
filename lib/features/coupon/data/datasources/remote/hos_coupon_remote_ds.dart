@@ -21,4 +21,11 @@ class SHOCouponApi {
           .toList(),
     );
   }
+
+  Future<void> claimCoupon(String couponId) {
+    return _dio.postData<void>(
+      '/coupons/$couponId/claim',
+      parser: (_) {},
+    );
+  }
 }

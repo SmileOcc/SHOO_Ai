@@ -40,7 +40,23 @@
       },
       "image": "https://picsum.photos/seed/all-banner-row/750/280",
       "aspectRatio": 2.6,
-      "link": "https://shoo.app/flash-sale?activityId=activity_flash_001"
+      "link": "https://shoo.app/flash-sale?activityId=activity_flash_001",
+      "hotspots": [
+        {
+          "x": 5,
+          "y": 10,
+          "w": 40,
+          "h": 80,
+          "link": "https://shoo.app/search?q=hotspot-left"
+        },
+        {
+          "x": 55,
+          "y": 10,
+          "w": 40,
+          "h": 80,
+          "link": "https://shoo.app/category"
+        }
+      ]
     },
     {
       "moduleId": "m_banner_stack",

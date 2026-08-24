@@ -1,52 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:shoo/core/constants/hos_constants.dart';
+import 'package:shoo/core/pagination/hos_paged_family_async_notifier.dart';
 import 'package:shoo/core/pagination/hos_paged_list_state.dart';
 import 'package:shoo/features/order/data/repositories/hos_order_repository_impl.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
+import 'package:shoo/features/order/presentation/widgets/hos_order_list_tabs.dart';
 
 final ordersPagedProvider =
-    AutoDisposeAsyncNotifierProvider<
+    AutoDisposeAsyncNotifierProviderFamily<
       OrdersPagedNotifier,
-      SHOPagedListState<SHOOrderSummary>
+      SHOPagedListState<SHOOrderSummary>,
+      SHOOrderListTab
     >(OrdersPagedNotifier.new);
 
 class OrdersPagedNotifier
-    extends AutoDisposeAsyncNotifier<SHOPagedListState<SHOOrderSummary>> {
+    extends
+        AutoDisposeFamilyAsyncNotifier<
+          SHOPagedListState<SHOOrderSummary>,
+          SHOOrderListTab
+        >
+    with SHOPagedFamilyAsyncNotifier<SHOOrderSummary, SHOOrderListTab> {
   @override
-  Future<SHOPagedListState<SHOOrderSummary>> build() => _fetchPage(1);
-
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    state = AsyncData(await _fetchPage(1, refreshing: true));
-  }
-
-  Future<void> loadMore() async {
-    final current = state.valueOrNull;
-    if (current == null || !current.hasMore || current.isLoadingMore) return;
-
-    state = AsyncData(current.copyWith(isLoadingMore: true));
-    try {
-      final repo = ref.read(orderRepositoryProvider);
-      final nextPage = current.page + 1;
-      final page = await repo.getOrdersPage(
-        page: nextPage,
-        pageSize: SHOAppConstants.listPageSize,
-      );
-      state = AsyncData(
-        current.copyWith(
-          items: [...current.items, ...page.items],
-          page: nextPage,
-          hasMore: page.hasMore,
-          isLoadingMore: false,
-        ),
-      );
-    } catch (error, stack) {
-      state = AsyncError(error, stack);
-    }
-  }
-
-  Future<SHOPagedListState<SHOOrderSummary>> _fetchPage(
+  Future<SHOPagedListState<SHOOrderSummary>> fetchPage(
+    SHOOrderListTab tab,
     int page, {
     bool refreshing = false,
   }) async {
@@ -54,6 +31,7 @@ class OrdersPagedNotifier
     final result = await repo.getOrdersPage(
       page: page,
       pageSize: SHOAppConstants.listPageSize,
+      status: tab.statusFilter,
     );
     return SHOPagedListState(
       items: result.items,

@@ -9,6 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AdminAuthGuard } from '../iam/admin-auth.guard';
+import { SaveOrderLogisticsDto, UpdateOrderDto } from './dto/admin-order.dto';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { TradeService } from './trade.service';
 
 @Controller('admin/v1/trade')
@@ -35,20 +37,12 @@ export class TradeAdminController {
   }
 
   @Patch('orders/:id')
-  updateOrder(
-    @Param('id') id: string,
-    @Body()
-    body: Partial<{
-      status: string;
-      shippingAddress: string;
-      hasLogistics: boolean;
-    }>,
-  ) {
+  updateOrder(@Param('id') id: string, @Body() body: UpdateOrderDto) {
     return this.trade.adminUpdateOrder(id, body);
   }
 
   @Patch('orders/:id/status')
-  updateStatus(@Param('id') id: string, @Body() body: { status: string }) {
+  updateStatus(@Param('id') id: string, @Body() body: UpdateOrderStatusDto) {
     return this.trade.adminUpdateStatus(id, body.status);
   }
 
@@ -60,17 +54,7 @@ export class TradeAdminController {
   @Put('orders/:id/logistics')
   saveLogistics(
     @Param('id') id: string,
-    @Body()
-    body: {
-      carrier?: string;
-      trackingNumber?: string;
-      events?: Array<{
-        time: string;
-        status: string;
-        description: string;
-        isActive?: boolean;
-      }>;
-    },
+    @Body() body: SaveOrderLogisticsDto,
   ) {
     return this.trade.adminSaveLogistics(id, body);
   }

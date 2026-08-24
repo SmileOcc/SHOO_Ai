@@ -1131,6 +1131,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String cartCouponAppliedHint(String title, String amount) {
+    return '$title · −$amount';
+  }
+
+  @override
+  String cartCouponAvailableHint(int count, String amount) {
+    return '$count available · up to −$amount';
+  }
+
+  @override
   String cartFullReductionProgress(String amount, String label) {
     return 'Spend $amount more for $label';
   }
@@ -1372,6 +1382,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderCreatedAtLabel => 'Placed at';
+
+  @override
+  String orderPaymentCountdown(String time) {
+    return 'Pay within $time';
+  }
+
+  @override
+  String get orderPaymentExpired => 'Payment expired — order cancelled';
+
+  @override
+  String get orderPayNowAction => 'Pay now';
 
   @override
   String get orderShippingAddress => 'Shipping address';

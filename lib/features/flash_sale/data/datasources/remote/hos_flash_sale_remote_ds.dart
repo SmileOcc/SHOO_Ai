@@ -83,10 +83,6 @@ class SHOFlashSaleApi {
     );
   }
 
-  Future<void> claimCoupon(String couponId) {
-    return _dio.post<void>('/flash-sale/coupons/$couponId/claim');
-  }
-
   String _sortParam(SHOFlashSaleSort sort) {
     switch (sort) {
       case SHOFlashSaleSort.hot:

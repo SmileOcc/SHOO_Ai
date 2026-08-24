@@ -34,6 +34,7 @@ _$SHOOrderSummaryImpl _$$SHOOrderSummaryImplFromJson(
   status: $enumDecode(_$SHOOrderStatusEnumMap, json['status']),
   totalCents: (json['totalCents'] as num).toInt(),
   createdAt: json['createdAt'] as String,
+  paymentDeadlineAt: json['paymentDeadlineAt'] as String? ?? '',
   items:
       (json['items'] as List<dynamic>?)
           ?.map((e) => SHOOrderItem.fromJson(e as Map<String, dynamic>))
@@ -49,6 +50,7 @@ Map<String, dynamic> _$$SHOOrderSummaryImplToJson(
   'status': _$SHOOrderStatusEnumMap[instance.status]!,
   'totalCents': instance.totalCents,
   'createdAt': instance.createdAt,
+  'paymentDeadlineAt': instance.paymentDeadlineAt,
   'items': instance.items,
 };
 
@@ -67,6 +69,7 @@ _$SHOOrderDetailImpl _$$SHOOrderDetailImplFromJson(Map<String, dynamic> json) =>
       status: $enumDecode(_$SHOOrderStatusEnumMap, json['status']),
       totalCents: (json['totalCents'] as num).toInt(),
       createdAt: json['createdAt'] as String,
+      paymentDeadlineAt: json['paymentDeadlineAt'] as String? ?? '',
       shippingAddress: json['shippingAddress'] as String? ?? '',
       items:
           (json['items'] as List<dynamic>?)
@@ -84,6 +87,7 @@ Map<String, dynamic> _$$SHOOrderDetailImplToJson(
   'status': _$SHOOrderStatusEnumMap[instance.status]!,
   'totalCents': instance.totalCents,
   'createdAt': instance.createdAt,
+  'paymentDeadlineAt': instance.paymentDeadlineAt,
   'shippingAddress': instance.shippingAddress,
   'items': instance.items,
   'hasLogistics': instance.hasLogistics,

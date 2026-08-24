@@ -1,5 +1,6 @@
 import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/core/pricing/hos_price_calculator.dart';
+import 'package:shoo/features/cart/domain/entities/hos_cart.dart';
 import 'package:shoo/features/coupon/domain/entities/hos_coupon.dart';
 
 /// 购物袋价格预览（券 + 满减 + 运费）。
@@ -40,6 +41,73 @@ abstract final class SHOCartPricing {
     return freeShippingThresholdCents - merchandiseSubtotalCents;
   }
 
+  /// 勾选商品小计（分）。
+  static int subtotalCentsFor({
+    required List<SHOCartItem> items,
+    Map<String, SHOCheckoutActivityLine> activityLines = const {},
+  }) {
+    var total = 0;
+    for (final item in items) {
+      final line = activityLines[item.productId];
+      final unit = line?.unitPriceCents ?? item.effectiveUnitCents;
+      total += unit * item.quantity;
+    }
+    return total;
+  }
+
+  /// 活动已省金额（展示用，不参与 total 扣减）。
+  static int activitySavedCentsFor({
+    required List<SHOCartItem> items,
+    Map<String, SHOCheckoutActivityLine> activityLines = const {},
+  }) {
+    var saved = 0;
+    for (final item in items) {
+      final line = activityLines[item.productId];
+      if (line != null) {
+        if (line.originalUnitPriceCents <= line.unitPriceCents) continue;
+        saved +=
+            (line.originalUnitPriceCents - line.unitPriceCents) * item.quantity;
+        continue;
+      }
+      if (item.showStrikeListPrice) {
+        saved += (item.listPrice - item.effectiveUnitCents) * item.quantity;
+      }
+    }
+    return saved;
+  }
+
+  /// 平台满减 + 活动附带的满减阶梯。
+  static List<SHOFullReductionTier> fullReductionTiersFor({
+    Map<String, SHOCheckoutActivityLine> activityLines = const {},
+  }) {
+    return [
+      ...defaultFullReductionTiers,
+      ...collectActivityFullReductionTiers(activityLines),
+    ];
+  }
+
+  /// 购物车 / 结算页共用的价格预览（券仅在实际选中时生效）。
+  static SHOPriceBreakdown previewForSelectedItems({
+    required List<SHOCartItem> items,
+    Map<String, SHOCheckoutActivityLine> activityLines = const {},
+    SHOCoupon? coupon,
+  }) {
+    final subtotal = subtotalCentsFor(
+      items: items,
+      activityLines: activityLines,
+    );
+    return SHOPriceCalculator.calculateOrderPrice(
+      subtotalCents: subtotal,
+      coupon: coupon,
+      fullReductionTiers: fullReductionTiersFor(activityLines: activityLines),
+      shippingCents: shippingCentsFor(subtotal),
+      activitySavedCents: activitySavedCentsFor(
+        items: items,
+        activityLines: activityLines,
+      ),
+    );
+  }
+
   /// 在可用券中选「抵扣最多」的一张（预估用）。
   static SHOCoupon? bestCouponFor({
     required int subtotalCents,
@@ -58,6 +126,23 @@ abstract final class SHOCartPricing {
       }
     }
     return best;
+  }
+
+  /// 当前订单金额下可用的优惠券（抵扣 > 0）。
+  static List<SHOCoupon> eligibleCouponsFor({
+    required int subtotalCents,
+    required List<SHOCoupon> coupons,
+  }) {
+    return coupons
+        .where(
+          (coupon) =>
+              SHOPriceCalculator.calculateCouponDiscount(
+                subtotalCents: subtotalCents,
+                coupon: coupon,
+              ) >
+              0,
+        )
+        .toList(growable: false);
   }
 
   static SHOPriceBreakdown preview({

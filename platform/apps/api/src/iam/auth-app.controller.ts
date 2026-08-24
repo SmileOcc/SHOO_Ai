@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { IamService } from './iam.service';
 import { UserAuthGuard } from './user-auth.guard';
 
@@ -8,22 +10,12 @@ export class AuthAppController {
   constructor(private readonly iam: IamService) {}
 
   @Post('login')
-  login(
-    @Body() body: { email?: string; phone?: string; password?: string },
-  ) {
-    return this.iam.login(body ?? {});
+  login(@Body() body: LoginDto) {
+    return this.iam.login(body);
   }
 
   @Post('register')
-  register(
-    @Body()
-    body: {
-      email: string;
-      password: string;
-      nickname?: string;
-      phone?: string;
-    },
-  ) {
+  register(@Body() body: RegisterDto) {
     return this.iam.register(body);
   }
 

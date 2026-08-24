@@ -182,7 +182,7 @@ export class MarketingService {
     return resolveFlashSaleCalendar({ code: 0, message: 'ok', data }, query);
   }
 
-  async flashSalePage(query: Record<string, string>) {
+  async flashSalePage(query: Record<string, string>, userId?: string) {
     const data = await this.docs.getPayload('flash_sale_catalog');
     const page = resolveFlashSalePage(
       { code: 0, message: 'ok', data },
@@ -195,7 +195,9 @@ export class MarketingService {
         [key: string]: unknown;
       };
     };
-    const follows = await this.prisma.flashSaleFollow.findMany();
+    const follows = userId
+      ? await this.prisma.flashSaleFollow.findMany({ where: { userId } })
+      : [];
     const followed = new Set(
       follows.map((f) => `${f.sessionId}::${f.productId}`),
     );
@@ -214,7 +216,10 @@ export class MarketingService {
     };
   }
 
-  async flashSaleProductActivity(query: Record<string, string>) {
+  async flashSaleProductActivity(
+    query: Record<string, string>,
+    userId?: string,
+  ) {
     const data = await this.docs.getPayload('flash_sale_catalog');
     const result = resolveFlashSaleProductActivity(
       { code: 0, message: 'ok', data },
@@ -224,10 +229,11 @@ export class MarketingService {
       message: string;
       data: (Record<string, unknown> & { isFollowed?: boolean }) | null;
     };
-    if (result.data && query.sessionId && query.productId) {
+    if (result.data && query.sessionId && query.productId && userId) {
       const followed = await this.prisma.flashSaleFollow.findUnique({
         where: {
-          sessionId_productId: {
+          userId_sessionId_productId: {
+            userId,
             sessionId: query.sessionId,
             productId: query.productId,
           },
@@ -238,8 +244,9 @@ export class MarketingService {
     return result;
   }
 
-  async listFollows() {
+  async listFollows(userId: string) {
     const rows = await this.prisma.flashSaleFollow.findMany({
+      where: { userId },
       orderBy: { createdAt: 'desc' },
     });
     return rows.map((row) => ({
@@ -250,20 +257,24 @@ export class MarketingService {
     }));
   }
 
-  async follow(body: {
-    sessionId?: string;
-    productId?: string;
-    title?: string;
-    imageUrl?: string;
-  }) {
+  async follow(
+    userId: string,
+    body: {
+      sessionId?: string;
+      productId?: string;
+      title?: string;
+      imageUrl?: string;
+    },
+  ) {
     const sessionId = body.sessionId ?? '';
     const productId = body.productId ?? '';
     if (sessionId && productId) {
       await this.prisma.flashSaleFollow.upsert({
         where: {
-          sessionId_productId: { sessionId, productId },
+          userId_sessionId_productId: { userId, sessionId, productId },
         },
         create: {
+          userId,
           sessionId,
           productId,
           title: body.title ?? '',
@@ -278,12 +289,15 @@ export class MarketingService {
     return { success: true };
   }
 
-  async unfollow(body: { sessionId?: string; productId?: string }) {
+  async unfollow(
+    userId: string,
+    body: { sessionId?: string; productId?: string },
+  ) {
     const sessionId = body.sessionId ?? '';
     const productId = body.productId ?? '';
     if (sessionId && productId) {
       await this.prisma.flashSaleFollow.deleteMany({
-        where: { sessionId, productId },
+        where: { userId, sessionId, productId },
       });
     }
     return { success: true };

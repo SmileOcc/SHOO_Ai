@@ -14,13 +14,14 @@ import 'package:shoo/core/widgets/hos_button.dart';
 import 'package:shoo/core/widgets/hos_loading_state.dart';
 import 'package:shoo/core/widgets/hos_network_image.dart';
 import 'package:shoo/l10n/app_localizations.dart';
-import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
 import 'package:shoo/features/order/domain/entities/hos_order.dart';
 import 'package:shoo/features/order/presentation/state/hos_order_controller.dart';
+import 'package:shoo/features/order/presentation/state/hos_order_refresh.dart';
 import 'package:shoo/features/checkout/data/datasources/remote/hos_checkout_remote_ds.dart';
 import 'package:shoo/features/checkout/domain/entities/hos_payment_method.dart';
 import 'package:shoo/core/navigation/hos_payment_flow_navigation.dart';
 import 'package:shoo/features/checkout/presentation/widgets/hos_payment_dialog.dart';
+import 'package:shoo/features/order/presentation/widgets/hos_order_payment_countdown.dart';
 
 class SHOPaymentPage extends ConsumerStatefulWidget {
   const SHOPaymentPage({
@@ -78,13 +79,11 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
 
   void _returnToCart() {
     if (!mounted) return;
-    context.pop();
     if (context.canPop()) context.pop();
   }
 
   void _continueShopping() {
     if (!mounted) return;
-    context.pop();
     if (context.canPop()) context.pop();
     if (widget.fromCartStack && context.canPop()) {
       context.pop();
@@ -118,9 +117,7 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
 
     try {
       await ref.read(checkoutApiProvider).payOrder(widget.orderId);
-      await ref.read(cartProvider.notifier).removeSelected();
-      ref.invalidate(ordersProvider);
-      ref.invalidate(orderDetailProvider(widget.orderId));
+      invalidateOrderCaches(ref, orderId: widget.orderId);
       if (!mounted) return;
       setState(() {
         _paid = true;
@@ -175,12 +172,18 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
 
     if (cashierOrder != null && _shouldShowCashier(cashierOrder)) {
       return buildTrackedPage(
-        Scaffold(
-          appBar: AppBar(title: Text(l10n.paymentTitle)),
-          body: _PaymentCashierView(
-            order: cashierOrder,
-            onSelectMethod: (method) =>
-                _openPaymentDialog(cashierOrder, method),
+        PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) _returnToCart();
+          },
+          child: Scaffold(
+            appBar: AppBar(title: Text(l10n.paymentTitle)),
+            body: _PaymentCashierView(
+              order: cashierOrder,
+              onSelectMethod: (method) =>
+                  _openPaymentDialog(cashierOrder, method),
+            ),
           ),
         ),
       );
@@ -195,9 +198,15 @@ class _SHOPaymentPageState extends ConsumerState<SHOPaymentPage>
           error: (error, _) => Center(child: Text(error.toString())),
           data: (order) {
             if (_shouldShowCashier(order)) {
-              return _PaymentCashierView(
-                order: order,
-                onSelectMethod: (method) => _openPaymentDialog(order, method),
+              return PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) {
+                  if (!didPop) _returnToCart();
+                },
+                child: _PaymentCashierView(
+                  order: order,
+                  onSelectMethod: (method) => _openPaymentDialog(order, method),
+                ),
               );
             }
             return _PaymentSuccessView(
@@ -230,6 +239,10 @@ class _PaymentCashierView extends StatelessWidget {
       padding: const EdgeInsets.all(SHOAppSpacing.pagePadding),
       children: [
         _OrderSummaryCard(order: order),
+        if (order.isAwaitingPayment && order.paymentDeadline != null) ...[
+          const SizedBox(height: SHOAppSpacing.md),
+          SHOOrderPaymentCountdown(deadline: order.paymentDeadline!),
+        ],
         const SizedBox(height: SHOAppSpacing.xl),
         Container(
           width: double.infinity,

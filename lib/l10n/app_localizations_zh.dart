@@ -1098,6 +1098,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String cartCouponAppliedHint(String title, String amount) {
+    return '$title · 减 $amount';
+  }
+
+  @override
+  String cartCouponAvailableHint(int count, String amount) {
+    return '$count张可用 · 最高减 $amount';
+  }
+
+  @override
   String cartFullReductionProgress(String amount, String label) {
     return '再买 $amount 可享$label';
   }
@@ -1337,6 +1347,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get orderCreatedAtLabel => '下单时间';
+
+  @override
+  String orderPaymentCountdown(String time) {
+    return '请在 $time 内完成支付';
+  }
+
+  @override
+  String get orderPaymentExpired => '支付超时，订单已取消';
+
+  @override
+  String get orderPayNowAction => '去支付';
 
   @override
   String get orderShippingAddress => '收货地址';

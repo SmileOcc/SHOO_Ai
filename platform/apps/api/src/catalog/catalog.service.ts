@@ -7,6 +7,7 @@ import {
   isFlashSaleProductId,
   lookupFlashSaleProductDetail,
 } from '../marketing/flash-sale-mock';
+import { toCartBatchItem } from './catalog-batch.util';
 
 @Injectable()
 export class CatalogService {
@@ -211,28 +212,21 @@ export class CatalogService {
     return this.docs.getPayload('search');
   }
 
-  async batchProducts(ids: string[]) {
+  async batchProducts(ids: string[], skuIds: string[] = []) {
     if (!ids.length) {
-      return { items: [] };
+      return { items: [], missingIds: [] as string[] };
     }
-    const items = await this.prisma.product.findMany({
+
+    const requestedSkuIds = new Set(skuIds);
+    const rows = await this.prisma.product.findMany({
       where: { id: { in: ids }, enabled: true },
     });
+    const byId = new Map(rows.map((product) => [product.id, product]));
+    const missingIds = ids.filter((id) => !byId.has(id));
+
     return {
-      items: items.map((product) => ({
-        id: product.id,
-        categoryId: product.categoryId,
-        title: product.title,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        discountLabel: product.discountLabel,
-        rating: product.rating,
-        soldCount: product.soldCount,
-        description: product.description,
-        images: product.images,
-        reviewCount: product.reviewCount,
-      })),
+      items: rows.map((product) => toCartBatchItem(product, requestedSkuIds)),
+      missingIds,
     };
   }
 

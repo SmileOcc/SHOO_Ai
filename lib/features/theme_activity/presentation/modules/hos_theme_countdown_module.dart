@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shoo/core/theme/hos_colors.dart';
+import 'package:shoo/core/widgets/hos_countdown_ticker.dart';
 import 'package:shoo/features/theme_activity/presentation/navigation/hos_theme_activity_link_handler.dart';
 import 'package:shoo/features/theme_activity/presentation/style/hos_module_style.dart';
 
@@ -20,22 +19,19 @@ class SHOThemeCountdownModule extends StatefulWidget {
       _SHOThemeCountdownModuleState();
 }
 
-class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule> {
-  Timer? _timer;
-  Duration _remaining = Duration.zero;
-  bool _expired = false;
+class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule>
+    with SHOCountdownTickerMixin<SHOThemeCountdownModule> {
   bool _hidden = false;
 
   @override
   void initState() {
     super.initState();
-    _tick();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
+    startCountdown(_target, onComplete: _handleExpire);
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    disposeCountdownTicker();
     super.dispose();
   }
 
@@ -48,22 +44,12 @@ class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule> {
     return DateTime.tryParse(raw.toString())?.toLocal();
   }
 
-  void _tick() {
-    final target = _target;
-    if (target == null) return;
-    final diff = target.difference(DateTime.now());
-    if (!mounted) return;
-
-    if (diff.isNegative) {
-      _timer?.cancel();
-      setState(() {
-        _remaining = Duration.zero;
-        _expired = true;
-      });
-      _handleExpire();
-      return;
-    }
-    setState(() => _remaining = diff);
+  SHOCountdownFormat get _format {
+    return switch (widget.raw['format'] as String? ?? 'HMS') {
+      'MS' => SHOCountdownFormat.ms,
+      'DHMS' => SHOCountdownFormat.dhms,
+      _ => SHOCountdownFormat.hms,
+    };
   }
 
   void _handleExpire() {
@@ -83,28 +69,6 @@ class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule> {
     }
   }
 
-  String _formatDuration() {
-    final format = widget.raw['format'] as String? ?? 'HMS';
-    final d = _remaining;
-    if (format == 'MS') {
-      final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-      final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-      return '$m:$s';
-    }
-    if (format == 'DHMS') {
-      final days = d.inDays;
-      final h = d.inHours.remainder(24).toString().padLeft(2, '0');
-      final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-      final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-      if (days > 0) return '$days天 $h:$m:$s';
-      return '$h:$m:$s';
-    }
-    final h = d.inHours.remainder(24).toString().padLeft(2, '0');
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$h:$m:$s';
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_hidden) return const SizedBox.shrink();
@@ -117,7 +81,7 @@ class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule> {
     final suffix = widget.raw['suffixText'] as String? ?? '';
     final layout = widget.raw['layout'] as String? ?? 'inline';
 
-    if (_expired) {
+    if (countdownExpired) {
       final onExpire = widget.raw['onExpire'] as String? ?? 'showText';
       if (onExpire == 'hide') return const SizedBox.shrink();
       final text = widget.raw['expireText'] as String? ?? '';
@@ -135,7 +99,10 @@ class _SHOThemeCountdownModuleState extends State<SHOThemeCountdownModule> {
       );
     }
 
-    final digits = _formatDuration();
+    final digits = formatCountdownDuration(
+      countdownRemaining,
+      format: _format,
+    );
     final content = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,

@@ -89,3 +89,14 @@ extension SHOFullReductionCalculator on List<SHOFullReductionTier> {
     return picked;
   }
 }
+
+/// 汇总活动行附带的满减阶梯。
+List<SHOFullReductionTier> collectActivityFullReductionTiers(
+  Map<String, SHOCheckoutActivityLine> lines,
+) {
+  final all = <SHOFullReductionTier>[];
+  for (final line in lines.values) {
+    all.addAll(line.fullReductionTiers);
+  }
+  return all;
+}

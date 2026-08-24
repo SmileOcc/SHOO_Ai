@@ -6,7 +6,6 @@ import 'package:shoo/app/router/hos_routes.dart';
 import 'package:shoo/core/analytics/hos_analytics.dart';
 import 'package:shoo/core/analytics/hos_page_analytics.dart';
 import 'package:shoo/core/pages/hos_pages.dart';
-import 'package:shoo/core/pricing/hos_full_reduction.dart';
 import 'package:shoo/core/pricing/hos_price_calculator.dart';
 import 'package:shoo/core/theme/hos_spacing.dart';
 import 'package:shoo/core/theme/hos_theme_extension.dart';
@@ -18,11 +17,12 @@ import 'package:shoo/core/widgets/hos_price_breakdown.dart';
 import 'package:shoo/features/auth/presentation/state/hos_session_provider.dart';
 import 'package:shoo/l10n/app_localizations.dart';
 import 'package:shoo/features/address/presentation/state/hos_address_controller.dart';
-import 'package:shoo/features/cart/domain/entities/hos_cart.dart';
+import 'package:shoo/features/cart/domain/hos_cart_pricing.dart';
 import 'package:shoo/features/cart/presentation/state/hos_cart_controller.dart';
 import 'package:shoo/features/coupon/domain/entities/hos_coupon.dart';
 import 'package:shoo/features/coupon/presentation/state/hos_coupon_controller.dart';
 import 'package:shoo/features/checkout/data/datasources/remote/hos_checkout_remote_ds.dart';
+import 'package:shoo/features/checkout/domain/hos_checkout_order_payload.dart';
 import 'package:shoo/features/flash_sale/presentation/state/hos_checkout_activity_provider.dart';
 
 class SHOCheckoutPage extends ConsumerStatefulWidget {
@@ -96,7 +96,15 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
     final coupon = _resolveCoupon(couponId);
 
     final activityLines = ref.read(checkoutActivityLinesProvider);
-    final subtotal = _subtotalCents(items, activityLines);
+    final subtotal = SHOCartPricing.subtotalCentsFor(
+      items: items,
+      activityLines: activityLines,
+    );
+    final breakdown = SHOCartPricing.previewForSelectedItems(
+      items: items,
+      activityLines: activityLines,
+      coupon: coupon,
+    );
 
     setState(() => _submitting = true);
     try {
@@ -104,6 +112,7 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
           .read(checkoutApiProvider)
           .createOrder(
             addressId: address.id,
+            totalCents: breakdown.totalCents,
             couponId:
                 coupon != null &&
                     SHOPriceCalculator.couponIneligibleReason(
@@ -113,24 +122,22 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
                         null
                 ? couponId
                 : null,
-            items: items.map((i) {
-              final line = activityLines[i.productId];
-              return {
-                'productId': i.productId,
-                'quantity': i.quantity,
-                'variantLabel': i.variantLabel,
-                if (line != null) ...{
-                  'sessionId': line.sessionId,
-                  'unitPriceCents': line.unitPriceCents,
-                },
-              };
-            }).toList(),
+            items: items
+                .map(
+                  (item) => SHOCheckoutOrderPayload.itemFromCart(
+                    item: item,
+                    activityLine: activityLines[item.productId],
+                  ),
+                )
+                .toList(),
           );
+      await ref.read(cartProvider.notifier).removeSelected();
+      clearCheckoutActivityLines(ref);
       if (mounted) {
         final fromCartStack =
             GoRouterState.of(context).uri.queryParameters['fromCartStack'] ==
             '1';
-        context.push(
+        context.pushReplacement(
           SHOAppRoutes.payment(order.id, fromCartStack: fromCartStack),
           extra: order,
         );
@@ -167,13 +174,10 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
     final addressAsync = ref.watch(selectedAddressProvider);
     final selectedCoupon = _displayCoupon();
     final activityLines = ref.watch(checkoutActivityLinesProvider);
-    final subtotal = _subtotalCents(items, activityLines);
-    final activitySaved = _activitySavedCents(items, activityLines);
-    final breakdown = SHOPriceCalculator.calculateOrderPrice(
-      subtotalCents: subtotal,
+    final breakdown = SHOCartPricing.previewForSelectedItems(
+      items: items,
+      activityLines: activityLines,
       coupon: selectedCoupon,
-      fullReductionTiers: mergedFullReductionTiers(activityLines),
-      activitySavedCents: activitySaved,
     );
 
     if (items.isEmpty) {
@@ -343,33 +347,5 @@ class _SHOCheckoutPageState extends ConsumerState<SHOCheckoutPage>
         ),
       ),
     );
-  }
-
-  int _subtotalCents(
-    List<SHOCartItem> items,
-    Map<String, SHOCheckoutActivityLine> activityLines,
-  ) {
-    var total = 0;
-    for (final item in items) {
-      final line = activityLines[item.productId];
-      final unit = line?.unitPriceCents ?? item.price;
-      total += unit * item.quantity;
-    }
-    return total;
-  }
-
-  int _activitySavedCents(
-    List<SHOCartItem> items,
-    Map<String, SHOCheckoutActivityLine> activityLines,
-  ) {
-    var saved = 0;
-    for (final item in items) {
-      final line = activityLines[item.productId];
-      if (line == null) continue;
-      if (line.originalUnitPriceCents <= line.unitPriceCents) continue;
-      saved +=
-          (line.originalUnitPriceCents - line.unitPriceCents) * item.quantity;
-    }
-    return saved;
   }
 }
